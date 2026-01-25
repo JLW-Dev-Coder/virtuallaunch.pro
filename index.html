@@ -2,63 +2,36 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
 <title>Lentax — White-labeled systems for calm, repeatable delivery</title>
-<meta content="Lentax installs white-labeled portals, workflows, and automation that reduce follow-up, protect scope, and make delivery predictable." name="description"/>
-<meta content="Lentax — Calm systems for service businesses" property="og:title"/>
-<meta content="White-labeled portals, workflows, and automation that reduce follow-up, protect scope, and make delivery predictable." property="og:description"/>
-<meta content="website" property="og:type"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<link crossorigin href="https://fonts.gstatic.com" rel="preconnect"/>
+
+<meta name="description" content="Lentax installs white-labeled portals, workflows, and automation that reduce follow-up, protect scope, and make delivery predictable."/>
+<meta property="og:title" content="Lentax — Calm systems for service businesses"/>
+<meta property="og:description" content="White-labeled portals, workflows, and automation that reduce follow-up, protect scope, and make delivery predictable."/>
+<meta property="og:type" content="website"/>
+<meta name="twitter:card" content="summary_large_image"/>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link href="./styles.css" rel="stylesheet"/>
-
-<style>
-  .hero { position: relative; }
-  .hero__inner { position: relative; z-index: 2; }
-
-  /* Full-bleed ocean lottie (no distortion): full viewport width, centered, fixed height */
-  .hero__ocean {
-    bottom: -56px;
-    height: clamp(220px, 26vw, 380px);
-    left: 0;
-    opacity: 0.9;
-    overflow: hidden;
-    pointer-events: none;
-    position: absolute;
-    width: 100vw;
-    z-index: 1;
-  }
-
-  .hero__ocean::after {
-    background: radial-gradient(circle at 50% 60%, rgba(182, 255, 95, 0.22), transparent 62%);
-    content: "";
-    inset: -40px 0 -80px 0;
-    position: absolute;
-  }
-
-  .hero__ocean dotlottie-wc {
-    height: 100%;
-    width: 100%;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero__ocean { display: none; }
-  }
-</style>
 </head>
 
 <body>
-<div aria-hidden="true" class="bg">
+
+<!-- Background -->
+<div class="bg" aria-hidden="true">
   <div class="bg__glow bg__glow--a bg__glow--drift"></div>
   <div class="bg__glow bg__glow--b bg__glow--drift"></div>
   <div class="bg__grid bg__grid--pan"></div>
 </div>
 
+<!-- Header -->
 <header class="header">
   <div class="container header__inner">
-    <a aria-label="Lentax home" class="brand" href="./index.html">
-      <span aria-hidden="true" class="brand__mark brand__mark--logo">
+
+    <a class="brand" href="./index.html" aria-label="Lentax home">
+      <span class="brand__mark brand__mark--logo" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Lentax logo">
           <defs>
             <clipPath id="clip-sail-orange">
@@ -82,40 +55,44 @@
           <g clip-path="url(#clip-sail-orange)">
             <rect x="80" y="28" width="52" height="56" fill="url(#pattern-bank)"/>
           </g>
-          <path d="M 38 82 L 122 82 L 96 114 Q 80 126 64 114 Z" fill="currentColor"/>
+          <path d="M38 82 L122 82 L96 114 Q80 126 64 114 Z" fill="currentColor"/>
         </svg>
       </span>
       <span class="brand__name">Lentax.co</span>
     </a>
 
     <div class="header__right">
-      <nav aria-label="Primary" class="nav">
+      <nav class="nav" aria-label="Primary">
         <a class="nav__link" href="#about">About</a>
         <a class="nav__link" href="#artifacts">Artifacts</a>
         <a class="nav__link" href="#installs">Installs</a>
-        <a class="nav__link" href="https://secure.lentax.co/tax-monitor-setup-appt" rel="noopener" target="_blank">Book</a>
+        <a class="nav__link" href="https://secure.lentax.co/tax-monitor-setup-appt" target="_blank" rel="noopener">Book</a>
         <a class="nav__link" href="#blog">Blog</a>
       </nav>
 
-      <span aria-hidden="true" class="header__divider"></span>
+      <span class="header__divider" aria-hidden="true"></span>
 
       <a class="nav__link nav__link--strong" href="#signin">Sign In</a>
       <a class="btn btn--primary" href="#get-started">Get Started</a>
     </div>
+
   </div>
 </header>
 
+<!-- Main -->
 <main class="main">
-<section class="hero" id="top">
-  <div aria-hidden="true" class="hero__ocean" id="heroOcean"></div>
 
+<section class="hero" id="top">
   <div class="container hero__inner">
+
     <div class="pill reveal">
-      <span aria-hidden="true" class="pill__dot"></span>
+      <span class="pill__dot" aria-hidden="true"></span>
       <span>Calm systems. Repeatable delivery.</span>
     </div>
 
-    <h1 class="hero__title reveal">White-Labeled<br/>Delivery Systems</h1>
+    <h1 class="hero__title reveal">
+      White-Labeled<br/>Delivery Systems
+    </h1>
 
     <p class="hero__subtitle reveal">
       Launch clean. Deliver predictably. Scale without friction.
@@ -126,6 +103,7 @@
       <a class="btn btn--ghost" href="#agencies">Virtual Agencies</a>
       <a class="btn btn--ghost" href="#professionals">Virtual Professionals</a>
     </div>
+
   </div>
 </section>
 
@@ -133,7 +111,7 @@
   <div class="container">
     <div class="section__head">
       <h2 class="section__title reveal">About</h2>
-      <p class="section__subtitle reveal">Founder-led now. Built to hand off cleanly later.</p>
+      <p class="section__subtitle reveal">Founder-led today. Built to hand off cleanly tomorrow.</p>
     </div>
   </div>
 </section>
@@ -142,270 +120,72 @@
   <div class="container">
     <div class="section__head">
       <h2 class="section__title reveal">Artifacts</h2>
-      <p class="section__subtitle reveal">Comparisons, IRS data context, and how outputs stay client-safe.</p>
+      <p class="section__subtitle reveal">Comparisons, IRS context, and decision-safe outputs.</p>
     </div>
   </div>
 </section>
 
 <section class="section" id="installs">
-<div class="container">
-<div class="section__head">
-<h2 class="section__title reveal">Installs</h2>
-<p class="section__subtitle reveal">Lentax installs systems. Each install routes to its own page.</p>
-</div>
-<div class="grid">
-<article class="card">
-<div class="card__top">
-<div class="card__title">VA Agency Setup</div>
-<div class="card__tag">Ops</div>
-</div>
-<p class="card__text">Portal + workflow install for agencies and operators.</p>
-<div class="card__actions">
-<a class="btn btn--ghost btn--sm" href="https://lentax.co/" rel="noopener" target="_blank">Open</a>
-</div>
-</article>
-
-<article class="card card--accent">
-<div class="card__top">
-<div class="card__title">Tax Monitor Setup</div>
-<div class="card__tag">Monitoring</div>
-</div>
-<p class="card__text">Monitoring workflow, portal delivery, and client-safe reporting.</p>
-<div class="card__actions">
-<a class="btn btn--ghost btn--sm" href="https://taxmonitor.pro/" rel="noopener" target="_blank">Open</a>
-</div>
-</article>
-
-<article class="card">
-<div class="card__top">
-<div class="card__title">VA Starter Track Setup</div>
-<div class="card__tag">Delivery</div>
-</div>
-<p class="card__text">A starter portal + tasks to deliver services consistently.</p>
-<div class="card__actions">
-<a class="btn btn--ghost btn--sm" href="https://lentax.co/" rel="noopener" target="_blank">Open</a>
-</div>
-</article>
-</div>
-</div>
-</section>
-
-<section class="section section--alt" id="security">
-<div class="container">
-<div class="section__head">
-<h2 class="section__title reveal">Security</h2>
-<p class="section__subtitle reveal">Short, client-safe explanations you can stand behind.</p>
-</div>
-<div class="grid grid--3">
-<article class="card">
-<div class="card__top">
-<div class="card__title">Access control</div>
-<div class="card__tag">Roles</div>
-</div>
-<p class="card__text">Role-based visibility for staff and clients.</p>
-</article>
-<article class="card">
-<div class="card__top">
-<div class="card__title">Auditability</div>
-<div class="card__tag">Artifacts</div>
-</div>
-<p class="card__text">Structured outputs that show what happened and when.</p>
-</article>
-<article class="card">
-<div class="card__top">
-<div class="card__title">Transport</div>
-<div class="card__tag">Encryption</div>
-</div>
-<p class="card__text">Encrypted connections and controlled sharing paths.</p>
-</article>
-</div>
-</div>
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title reveal">Installs</h2>
+      <p class="section__subtitle reveal">Each install is scoped, structured, and standalone.</p>
+    </div>
+  </div>
 </section>
 
 <section class="section" id="blog">
   <div class="container">
     <div class="section__head">
       <h2 class="section__title reveal">Blog</h2>
-      <p class="section__subtitle reveal">Your blog port lives here.</p>
+      <p class="section__subtitle reveal">Operational thinking, not marketing noise.</p>
     </div>
   </div>
 </section>
 
-<section class="section" id="faq">
-<div class="container">
-<div class="section__head">
-<h2 class="section__title reveal">FAQ</h2>
-<p class="section__subtitle reveal">High-signal answers. No fluff.</p>
-</div>
-<div class="faq">
-<details class="qa">
-<summary class="qa__q">Is Lentax the same thing as Tax Monitor?</summary>
-<div class="qa__a">No. Lentax is the umbrella site. Tax Monitor has its own landing page and routes out from here.</div>
-</details>
-<details class="qa">
-<summary class="qa__q">Do I need to switch systems to use an install?</summary>
-<div class="qa__a">No. Installs are designed to add a structured layer without disrupting your current workflow.</div>
-</details>
-<details class="qa">
-<summary class="qa__q">Can I start with one install and add others later?</summary>
-<div class="qa__a">Yes. Lentax is built to stack installs over time without rebuilding your client experience.</div>
-</details>
-</div>
-</div>
-</section>
-
-<section class="section section--cta" id="start">
-<div class="container">
-<div class="cta">
-<div class="cta__copy">
-<h2 class="cta__title">Start with one install</h2>
-<p class="cta__subtitle">Pick the first system you want live. Everything else stacks later.</p>
-</div>
-<form class="cta__form" onsubmit="return false;">
-<label class="field">
-<span class="field__label">Email</span>
-<input class="field__input" name="email" placeholder="you@company.com" required type="email"/>
-</label>
-<label class="field">
-<span class="field__label">What are you trying to fix?</span>
-<input class="field__input" name="goal" placeholder="Reduce follow-up and standardize delivery" required type="text"/>
-</label>
-<div class="cta__actions">
-<button class="btn btn--primary btn--wide" type="submit">Request access</button>
-<a class="btn btn--ghost btn--wide" href="#installs">Explore</a>
-</div>
-<p aria-live="polite" class="micro" id="status" role="status"></p>
-</form>
-</div>
-</div>
-</section>
 </main>
 
+<!-- Footer -->
 <footer class="footer">
-<div class="container footer__inner reveal">
-<div class="footer__left">
-<div class="footer__brand">
-<span aria-hidden="true" class="brand__mark brand__mark--logo">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Lentax">
-  <defs>
-    <clipPath id="clip-sail-orange-footer">
-      <polygon points="86,32 124,78 86,78" />
-    </clipPath>
-    <pattern id="pattern-bank-footer" width="22" height="18" patternUnits="userSpaceOnUse">
-      <path d="M3 7 L11 2 L19 7 Z" fill="#E67300" opacity="0.45"/>
-      <rect x="4" y="7" width="14" height="2" rx="1" fill="#E67300" opacity="0.45"/>
-      <rect x="5" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-      <rect x="9" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-      <rect x="13" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-      <rect x="17" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-      <rect x="4" y="15" width="14" height="2" rx="1" fill="#E67300" opacity="0.45"/>
-    </pattern>
-  </defs>
+  <div class="container footer__inner reveal">
+    <div class="footer__left">
+      <div class="footer__brand">
+        <span class="brand__name">Lentax.co</span>
+      </div>
+      <div class="micro">© <span id="year"></span> Lentax. All rights reserved.</div>
+    </div>
 
-  <circle cx="80" cy="80" r="72" fill="none" stroke="currentColor" stroke-width="8"/>
-  <rect x="78" y="28" width="4" height="70" rx="2" fill="currentColor"/>
-  <polygon points="74,32 36,78 74,78" fill="currentColor"/>
-  <polygon points="86,32 124,78 86,78" fill="#FFA500"/>
-  <g clip-path="url(#clip-sail-orange-footer)">
-    <rect x="80" y="28" width="52" height="56" fill="url(#pattern-bank-footer)"/>
-  </g>
-  <path d="M 38 82 L 122 82 L 96 114 Q 80 126 64 114 Z" fill="currentColor"/>
-</svg>
-</span>
-<span class="brand__name">Lentax.co</span>
-</div>
-<div class="micro">© <span id="year"></span> Lentax. All rights reserved.</div>
-</div>
-<div class="footer__right">
-<a class="footer__link" href="#about">About</a>
-<a class="footer__link" href="#artifacts">Artifacts</a>
-<a class="footer__link" href="#installs">Installs</a>
-<a class="footer__link" href="#blog">Blog</a>
-</div>
-</div>
+    <div class="footer__right">
+      <a class="footer__link" href="#about">About</a>
+      <a class="footer__link" href="#artifacts">Artifacts</a>
+      <a class="footer__link" href="#installs">Installs</a>
+      <a class="footer__link" href="#blog">Blog</a>
+    </div>
+  </div>
 </footer>
 
 <script>
   document.documentElement.classList.add("js");
-  const $ = (s) => document.querySelector(s);
-  const $$ = (s) => Array.from(document.querySelectorAll(s));
 
-  function setStatus(text) {
-    const el = $("#status");
-    if (el) el.textContent = text;
-  }
-
-  const form = $(".cta__form");
-  if (form) {
-    form.addEventListener("submit", () => {
-      setStatus("Submitted. We will follow up.");
-      form.reset();
-    });
-  }
+  const year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   if (reduceMotion) {
-    $$(".reveal").forEach((el) => el.classList.add("is-inview"));
+    document.querySelectorAll(".reveal").forEach(el => el.classList.add("is-inview"));
   } else {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          e.target.classList.add("is-inview");
-          io.unobserve(e.target);
-        });
-      },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.14 }
-    );
-    $$(".reveal").forEach((el) => io.observe(el));
-  }
-
-  const y = $("#year");
-  if (y) y.textContent = String(new Date().getFullYear());
-
-  (function () {
-    const hero = document.querySelector(".hero");
-    const mount = document.getElementById("heroOcean");
-    if (!hero || !mount) return;
-    if (reduceMotion) return;
-
-    function loadPlayer() {
-      if (document.querySelector('script[data-dotlottie="1"]')) return Promise.resolve();
-      return new Promise((resolve, reject) => {
-        const s = document.createElement("script");
-        s.dataset.dotlottie = "1";
-        s.type = "module";
-        s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js";
-        s.onload = resolve;
-        s.onerror = reject;
-        document.head.appendChild(s);
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add("is-inview");
+        io.unobserve(e.target);
       });
-    }
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.14 });
 
-    function mountLottie() {
-      if (mount.dataset.mounted === "1") return;
-      mount.dataset.mounted = "1";
-      mount.innerHTML =
-        '<dotlottie-wc ' +
-        'src="https://lottie.host/968ae1d6-cacd-47f8-8c21-8f24e0023684/s6OXIZJd0K.lottie" ' +
-        'speed="1" autoplay loop ' +
-        'style="width:100%;height:100%"></dotlottie-wc>';
-    }
-
-    const io2 = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        io2.disconnect();
-        const run = () => loadPlayer().then(mountLottie).catch(() => {});
-        if ("requestIdleCallback" in window) requestIdleCallback(run, { timeout: 1200 });
-        else setTimeout(run, 0);
-      },
-      { rootMargin: "200px 0px 200px 0px", threshold: 0.01 }
-    );
-
-    io2.observe(hero);
-  })();
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+  }
 </script>
+
 </body>
 </html>
