@@ -53,6 +53,18 @@
       from { transform: translate3d(0,0,0); }
       to { transform: translate3d(-56px,-56px,0); }
     }
+
+    .lentax-glow-drift {
+      animation: glowDrift 14s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    @keyframes glowDrift {
+      0% { transform: translate3d(0,0,0); }
+      33% { transform: translate3d(16px,-10px,0); }
+      66% { transform: translate3d(-12px,14px,0); }
+      100% { transform: translate3d(0,0,0); }
+    }
   </style>
 </head>
 
@@ -100,13 +112,11 @@
       </p>
 
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a href="#start"
-           class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400">
+        <a href="#start" class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400">
           Start with one install
         </a>
-        <a href="#dashboard-preview"
-           class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold hover:border-white/25">
-          See the platform →
+        <a href="#what-you-get" class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold hover:border-white/25">
+          See what you get →
         </a>
       </div>
     </section>
@@ -132,7 +142,192 @@
       </div>
     </section>
 
-    <!-- DASHBOARD PREVIEW (INSERTED HERE) -->
+    <!-- WHAT YOU GET (UPDATED HEADER FORMAT LIKE SCREENSHOT) -->
+    <section id="what-you-get" class="border-t border-white/10">
+      <div class="mx-auto max-w-6xl px-4 py-16">
+        <div class="mx-auto max-w-4xl text-center">
+          <a class="text-xs font-extrabold tracking-wide text-brand-400 hover:text-brand-400" href="#what-you-get">
+            Why Lentax?
+          </a>
+
+          <h2 class="mt-4 text-3xl font-extrabold tracking-tight md:text-5xl">
+            Powerful systems designed for calm delivery
+          </h2>
+
+          <p class="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
+            Running delivery through messy portals is tough. Keeping track of leads, follow-ups, and client work can feel like a full-time job.
+            That’s where Lentax comes in.
+          </p>
+
+          <p class="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-white/75 md:text-base">
+            With Lentax, you’ll stop losing time to back-and-forth and start delivering with clear next steps.
+            Install one system, then stack only when you’re ready.
+          </p>
+        </div>
+
+        <!-- Cards: 6-col grid. Row 1: 3 cards. Row 2: 2 cards centered. -->
+        <div class="mt-14 grid gap-6 md:grid-cols-6 md:items-stretch">
+          <!-- Card 1 -->
+          <article class="h-full rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:col-span-2">
+            <div class="flex h-full flex-col">
+              <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                <svg viewBox="0 0 24 24" class="h-7 w-7 text-brand-400" fill="currentColor" aria-hidden="true">
+                  <path d="M7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2z"/>
+                  <path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+              </div>
+
+              <h3 class="text-lg font-extrabold tracking-tight">Automated follow-up</h3>
+
+              <ul class="mt-4 space-y-3 text-sm text-white/80">
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Engage leads with timed sequences.</span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Reduce manual reminders and back-and-forth.</span>
+                </li>
+              </ul>
+
+              <div class="mt-auto pt-6">
+                <a class="inline-flex items-center gap-2 text-sm font-extrabold text-white/90 hover:text-white" href="./installs.html">
+                  Learn more <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="h-full rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:col-span-2">
+            <div class="flex h-full flex-col">
+              <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                <svg viewBox="0 0 24 24" class="h-7 w-7 text-brand-400" fill="currentColor" aria-hidden="true">
+                  <path d="M12 1a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm1 6v5h4v2h-6V7h2z"/>
+                </svg>
+              </div>
+
+              <h3 class="text-lg font-extrabold tracking-tight">Recurring campaigns</h3>
+
+              <ul class="mt-4 space-y-3 text-sm text-white/80">
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Re-engage past clients automatically.</span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Keep your calendar full with consistent touchpoints.</span>
+                </li>
+              </ul>
+
+              <div class="mt-auto pt-6">
+                <a class="inline-flex items-center gap-2 text-sm font-extrabold text-white/90 hover:text-white" href="./pricing.html">
+                  View pricing <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="h-full rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:col-span-2">
+            <div class="flex h-full flex-col">
+              <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                <svg viewBox="0 0 24 24" class="h-7 w-7 text-brand-400" fill="currentColor" aria-hidden="true">
+                  <path d="M4 4h16v6H4V4zm0 10h10v6H4v-6zm12 0h4v6h-4v-6z"/>
+                </svg>
+              </div>
+
+              <h3 class="text-lg font-extrabold tracking-tight">Customizable templates</h3>
+
+              <ul class="mt-4 space-y-3 text-sm text-white/80">
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Launch-ready portal structure.</span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Brand it later without breaking workflows.</span>
+                </li>
+              </ul>
+
+              <div class="mt-auto pt-6">
+                <a class="inline-flex items-center gap-2 text-sm font-extrabold text-white/90 hover:text-white" href="./book.html">
+                  Book / demo <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 (row 2; spans 3) -->
+          <article class="h-full rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:col-span-3">
+            <div class="flex h-full flex-col">
+              <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                <svg viewBox="0 0 24 24" class="h-7 w-7 text-brand-400" fill="currentColor" aria-hidden="true">
+                  <path d="M4 19V5h2v14H4zm4 0V9h2v10H8zm4 0V3h2v16h-2zm4 0v-6h2v6h-2zm4 0V7h2v12h-2z"/>
+                </svg>
+              </div>
+
+              <h3 class="text-lg font-extrabold tracking-tight">Centralized management</h3>
+
+              <ul class="mt-4 space-y-3 text-sm text-white/80">
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Track work in one place with clear status.</span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Reduce “what’s next?” questions by design.</span>
+                </li>
+              </ul>
+
+              <div class="mt-auto pt-6">
+                <a class="inline-flex items-center gap-2 text-sm font-extrabold text-white/90 hover:text-white" href="./installs.html">
+                  Explore installs <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5 (row 2; spans 3) -->
+          <article class="h-full rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:col-span-3">
+            <div class="flex h-full flex-col">
+              <div class="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+                <svg viewBox="0 0 24 24" class="h-7 w-7 text-brand-400" fill="currentColor" aria-hidden="true">
+                  <path d="M10 2h4v2h-4V2zM4 6h16v14H4V6zm2 2v10h12V8H6z"/>
+                </svg>
+              </div>
+
+              <h3 class="text-lg font-extrabold tracking-tight">Performance insights</h3>
+
+              <ul class="mt-4 space-y-3 text-sm text-white/80">
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Simple metrics that show what’s stuck.</span>
+                </li>
+                <li class="flex gap-3">
+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-500/15 text-brand-300">✓</span>
+                  <span>Prioritize next actions with confidence.</span>
+                </li>
+              </ul>
+
+              <div class="mt-auto pt-6">
+                <a class="inline-flex items-center gap-2 text-sm font-extrabold text-white/90 hover:text-white" href="./pricing.html">
+                  See pricing <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mt-12 flex justify-center">
+          <a class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="./book.html">
+            Book / demo →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD PREVIEW -->
     <section id="dashboard-preview" class="border-t border-white/10">
       <div class="mx-auto max-w-6xl px-4 py-16">
         <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -143,7 +338,6 @@
             </p>
           </div>
 
-          <!-- Tabs (static visual) -->
           <div class="flex gap-2 text-sm">
             <span class="rounded-full bg-white/10 px-4 py-2">Tax Monitor</span>
             <span class="rounded-full border border-white/15 px-4 py-2 text-white/60">VA Agency</span>
@@ -151,7 +345,6 @@
           </div>
         </div>
 
-        <!-- PREVIEW MOCK -->
         <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
           <div class="grid gap-4 md:grid-cols-3">
             <div class="rounded-xl border border-white/10 bg-ink-800 p-4">
@@ -201,13 +394,11 @@
           <p class="mt-2 text-sm text-white/75">
             Pick the first system you want live. Everything else stacks later.
           </p>
-          <div class="mt-6 flex gap-3">
-            <a href="./pricing.html"
-               class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400">
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+            <a href="./pricing.html" class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400">
               View pricing
             </a>
-            <a href="./book.html"
-               class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold hover:border-white/25">
+            <a href="./book.html" class="rounded-xl border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold hover:border-white/25">
               Book / demo
             </a>
           </div>
