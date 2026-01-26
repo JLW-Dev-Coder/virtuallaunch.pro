@@ -3,11 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Lentax — Calm, White-Labeled Delivery Systems</title>
+
   <meta name="description" content="White-labeled systems for calm, repeatable delivery. Install once. Stack later." />
 
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Lentax — Calm, White-Labeled Delivery Systems" />
+  <meta property="og:description" content="White-labeled portals, workflows, and dashboards for predictable service delivery." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts (kept from original build) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Tailwind config -->
   <script>
     tailwind.config = {
       theme: {
@@ -25,13 +42,22 @@
     };
   </script>
 
-  <!-- Your existing preview CSS (tm-admin-*, va-agency-*, va-starter-*, tabs, etc.) -->
-  <link rel="stylesheet" href="./style.css" />
+  <!-- EXISTING DASHBOARD / PREVIEW STYLES (tm-admin, va-agency, va-starter, tabs, etc.) -->
+  <!-- IMPORTANT: filename is plural -->
+  <link rel="stylesheet" href="./styles.css" />
 
+  <!-- Site-specific helpers -->
   <style>
     html { scroll-behavior: smooth; }
 
-    .container { margin-left: auto; margin-right: auto; max-width: 72rem; padding-left: 1rem; padding-right: 1rem; }
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 72rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
     .container--wide { max-width: 75rem; }
 
     .dash-preview-wrap { margin-top: 24px; }
@@ -47,7 +73,9 @@
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
     }
 
-    .lentax-grid-pan { animation: gridPan 22s linear infinite; }
+    .lentax-grid-pan {
+      animation: gridPan 22s linear infinite;
+    }
 
     @keyframes gridPan {
       from { transform: translate3d(0,0,0); }
@@ -59,6 +87,7 @@
     }
   </style>
 </head>
+
 
 <body class="bg-ink-950 text-white antialiased">
   <div class="pointer-events-none fixed inset-0 -z-20 lentax-grid lentax-grid-pan opacity-60"></div>
