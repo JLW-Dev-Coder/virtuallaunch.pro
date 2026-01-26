@@ -15,433 +15,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <link href="./styles.css" rel="stylesheet"/>
 
-  <!-- Minimal add-ons for tabs + preview switching + VA Starter mock -->
-  <style>
-    .preview--hidden { display: none; }
-
-    .section__head--tabs {
-      align-items: flex-end;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      justify-content: space-between;
-    }
-
-    .section__head-copy { min-width: 240px; }
-
-    .tabs-inline {
-      align-items: center;
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .tab {
-      -webkit-tap-highlight-color: transparent;
-      appearance: none;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      color: inherit;
-      cursor: pointer;
-      font: inherit;
-      font-size: 13px;
-      padding: 10px 12px;
-      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    .tab:hover { transform: translateY(-1px); }
-
-    .tab--active {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.25);
-    }
-
-    /* TM: topbar "Client Experience" button */
-    .tm-admin-topbar__clientbtn {
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 10px;
-      color: inherit;
-      cursor: pointer;
-      display: inline-flex;
-      font: inherit;
-      font-size: 12px;
-      gap: 8px;
-      padding: 8px 10px;
-      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
-      white-space: nowrap;
-    }
-    .tm-admin-topbar__clientbtn:hover {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.26);
-      transform: translateY(-1px);
-    }
-    .tm-admin-topbar__clientdot {
-      background: rgba(255,255,255,0.75);
-      border-radius: 999px;
-      height: 6px;
-      width: 6px;
-    }
-
-    /* VA Starter mock */
-    .va-starter-preview {
-      border-radius: 18px;
-      overflow: hidden;
-    }
-
-    .va-starter-shell {
-      background: #e7e6f0;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 18px;
-      display: grid;
-      grid-template-columns: 250px 1fr;
-      min-height: 620px;
-      overflow: hidden;
-    }
-
-    .va-starter-sidebar {
-      background: #101114;
-      color: rgba(255,255,255,0.86);
-      padding: 18px 16px;
-    }
-
-    .va-starter-brand {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .va-starter-brand__logo {
-      align-items: center;
-      background: #ffffff;
-      border-radius: 12px;
-      display: inline-flex;
-      height: 44px;
-      justify-content: center;
-      width: 44px;
-    }
-
-    .va-starter-brand__logo svg { height: 30px; width: 30px; }
-
-    .va-starter-profile {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      margin: 10px 0 18px;
-    }
-
-    .va-starter-profile__avatar {
-      background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 999px;
-      height: 42px;
-      width: 42px;
-    }
-
-    .va-starter-profile__name {
-      color: rgba(255,255,255,0.92);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .va-starter-profile__link {
-      color: rgba(255,255,255,0.65);
-      display: inline-block;
-      font-size: 12px;
-      margin-top: 2px;
-      text-decoration: none;
-    }
-
-    .va-starter-nav { display: grid; gap: 8px; margin-top: 10px; }
-
-    .va-starter-nav__item {
-      align-items: center;
-      border-radius: 12px;
-      color: rgba(255,255,255,0.86);
-      display: flex;
-      gap: 10px;
-      padding: 10px 10px;
-      text-decoration: none;
-    }
-
-    .va-starter-nav__item--active { background: rgba(255,255,255,0.08); }
-
-    .va-starter-nav__icon {
-      background: rgba(255,255,255,0.14);
-      border-radius: 8px;
-      height: 18px;
-      width: 18px;
-    }
-
-    .va-starter-main {
-      background: #ffffff;
-      display: grid;
-      grid-template-rows: 56px 1fr;
-      min-width: 0;
-    }
-
-    .va-starter-topbar {
-      align-items: center;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 16px;
-    }
-
-    .va-starter-topbar__left { align-items: center; display: inline-flex; gap: 10px; }
-
-    .va-starter-iconbtn {
-      align-items: center;
-      background: rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 10px;
-      cursor: pointer;
-      display: inline-flex;
-      font: inherit;
-      height: 34px;
-      justify-content: center;
-      padding: 0;
-      width: 34px;
-    }
-
-    .va-starter-topbar__right { align-items: center; display: inline-flex; gap: 10px; }
-
-    .va-starter-topbar__chip {
-      background: rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 999px;
-      font-size: 12px;
-      padding: 8px 10px;
-    }
-
-    .va-starter-userpic {
-      background: linear-gradient(135deg, rgba(0,0,0,0.12), rgba(0,0,0,0.04));
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 999px;
-      height: 34px;
-      width: 34px;
-    }
-
-    .va-starter-content {
-      background: #c8c7d6;
-      padding: 18px 18px 22px;
-    }
-
-    .va-starter-title {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      margin: 6px 0 6px;
-      text-align: center;
-    }
-
-    .va-starter-subtitle {
-      color: rgba(0,0,0,0.62);
-      margin: 0 auto 18px;
-      max-width: 760px;
-      text-align: center;
-    }
-
-    .va-starter-grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(12, 1fr);
-    }
-
-    .va-card {
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-      overflow: hidden;
-    }
-
-    .va-card__head {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      padding: 14px 14px 10px;
-    }
-
-    .va-card__title { font-weight: 800; }
-
-    .va-card__miniicon {
-      background: rgba(0,0,0,0.06);
-      border: 1px solid rgba(0,0,0,0.10);
-      border-radius: 8px;
-      height: 26px;
-      width: 26px;
-    }
-
-    .va-card__body { padding: 0 14px 14px; }
-
-    .va-span-4 { grid-column: span 4; }
-    .va-span-6 { grid-column: span 6; }
-    .va-span-12 { grid-column: span 12; }
-
-    .va-welcome-box {
-      background: rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      display: grid;
-      gap: 10px;
-      grid-template-columns: 66px 1fr;
-      padding: 12px;
-    }
-
-    .va-mint {
-      background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.10), rgba(0,0,0,0.03));
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 14px;
-      height: 66px;
-      width: 66px;
-    }
-
-    .va-welcome-title { font-weight: 800; margin: 0; }
-    .va-welcome-text { color: rgba(0,0,0,0.70); font-size: 13px; margin: 0; }
-    .va-welcome-cta {
-      background: rgba(255,255,255,0.90);
-      border: 1px solid rgba(0,0,0,0.10);
-      border-radius: 10px;
-      display: inline-flex;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 8px 10px;
-      width: fit-content;
-    }
-
-    .va-bars { display: grid; gap: 10px; margin-top: 6px; }
-    .va-bar {
-      align-items: center;
-      border-radius: 10px;
-      display: flex;
-      font-size: 12px;
-      gap: 10px;
-      overflow: hidden;
-    }
-    .va-bar__label {
-      background: rgba(255,255,255,0.64);
-      border-right: 1px solid rgba(0,0,0,0.06);
-      min-width: 190px;
-      padding: 8px 10px;
-      white-space: nowrap;
-    }
-    .va-bar__fill { height: 12px; width: 100%; }
-    .va-bar__fill--a { background: #2f7cf6; }
-    .va-bar__fill--b { background: #1b8f2a; }
-    .va-bar__fill--c { background: #7f9a10; }
-    .va-bar__fill--d { background: #6a4b7a; }
-    .va-bar__fill--e { background: #b04a10; }
-    .va-bar__fill--f { background: #f2c300; }
-    .va-bar__fill--g { background: #31c56a; }
-    .va-bar__fill--h { background: #cf18a4; }
-
-    .va-primary-btn {
-      align-items: center;
-      background: #1f56ff;
-      border: 0;
-      border-radius: 10px;
-      color: #fff;
-      cursor: pointer;
-      display: inline-flex;
-      font: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 14px;
-      padding: 10px 12px;
-      width: 180px;
-    }
-
-    .va-chart {
-      background: rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      height: 180px;
-      position: relative;
-    }
-    .va-chart::before {
-      content: "";
-      inset: 10px;
-      position: absolute;
-      background:
-        linear-gradient(to right, rgba(0,0,0,0.08) 1px, transparent 1px) 0 0 / 24px 24px,
-        linear-gradient(to bottom, rgba(0,0,0,0.08) 1px, transparent 1px) 0 0 / 24px 24px;
-      border-radius: 10px;
-      opacity: 0.55;
-    }
-    .va-chart-bars {
-      align-items: end;
-      bottom: 18px;
-      display: flex;
-      gap: 18px;
-      left: 18px;
-      position: absolute;
-      right: 18px;
-      top: 18px;
-    }
-    .va-chart-bar { border-radius: 8px 8px 2px 2px; width: 18%; }
-    .va-chart-bar--a { background: #2f7cf6; height: 78%; }
-    .va-chart-bar--b { background: #b04a10; height: 78%; }
-    .va-chart-bar--c { background: #f2c300; height: 10%; }
-    .va-chart-bar--d { background: #1b8f2a; height: 58%; }
-
-    .va-table {
-      background: rgba(255,255,255,0.86);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    .va-table__row {
-      align-items: center;
-      border-top: 1px solid rgba(0,0,0,0.06);
-      display: grid;
-      font-size: 12px;
-      gap: 10px;
-      grid-template-columns: 26px 1fr 120px;
-      padding: 10px 12px;
-    }
-
-    .va-table__row:first-child { border-top: 0; }
-
-    .va-dot {
-      border: 1px solid rgba(0,0,0,0.16);
-      border-radius: 999px;
-      height: 18px;
-      width: 18px;
-    }
-
-    .va-pillline {
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .va-pill {
-      background: rgba(0,0,0,0.06);
-      border: 1px solid rgba(0,0,0,0.10);
-      border-radius: 999px;
-      font-size: 11px;
-      padding: 4px 8px;
-      white-space: nowrap;
-    }
-
-    @media (max-width: 980px) {
-      .va-span-4, .va-span-6 { grid-column: span 12; }
-      .va-starter-shell { grid-template-columns: 1fr; }
-      .va-starter-sidebar { display: none; }
-    }
-  </style>
 </head>
 
 <body>
@@ -526,82 +99,66 @@
       </div>
     </section>
 
-    <section class="section" id="products">
-      <div class="container">
-        <div class="section__head">
-          <h2 class="section__title reveal">Products</h2>
-          <p class="section__subtitle reveal">Installs are same-day or within 48 hours.</p>
+    <!-- Replace your entire <section class="section" id="products"> ... </section> with this -->
+<section class="section" id="products">
+  <div class="container">
+    <div class="section__head">
+      <h2 class="section__title reveal">Outcomes</h2>
+      <p class="section__subtitle reveal">Agnostic benefits that apply across every install.</p>
+    </div>
+
+    <div class="outcomes-grid">
+      <article class="outcome-card reveal">
+        <div class="outcome-icon outcome-icon--a" aria-hidden="true">
+          <span class="outcome-icon__tick"></span>
         </div>
+        <div class="outcome-kicker">Streamline operations</div>
+        <p class="outcome-text">Organized workflows and efficient processes.</p>
+      </article>
 
-        <div class="grid">
-          <article class="card">
-            <div class="card__top">
-              <div class="card__title">Local SEO</div>
-              <div class="card__tag">Visibility</div>
-            </div>
-            <p class="card__text">A calm lead flow layer for local operators.</p>
-            <div class="card__actions">
-              <a class="btn btn--ghost btn--sm" href="https://lentax.co/" rel="noopener" target="_blank">Open</a>
-            </div>
-          </article>
-
-          <article class="card card--accent">
-            <div class="card__top">
-              <div class="card__title">Tax Monitor</div>
-              <div class="card__tag">Monitoring</div>
-            </div>
-            <p class="card__text">Your existing TM landing page stays separate. This routes out.</p>
-            <div class="card__actions">
-              <a class="btn btn--ghost btn--sm" href="https://taxmonitor.pro/" rel="noopener" target="_blank">Open</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card__top">
-              <div class="card__title">Tax Pro Memberships</div>
-              <div class="card__tag">Delivery</div>
-            </div>
-            <p class="card__text">Firm-facing systems, onboarding, and packaged delivery.</p>
-            <div class="card__actions">
-              <a class="btn btn--ghost btn--sm" href="https://lentax.co/" rel="noopener" target="_blank">Open</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card__top">
-              <div class="card__title">Taxpayer Memberships</div>
-              <div class="card__tag">Client UX</div>
-            </div>
-            <p class="card__text">Client portal experience and membership flow.</p>
-            <div class="card__actions">
-              <a class="btn btn--ghost btn--sm" href="https://lentax.co/" rel="noopener" target="_blank">Open</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card__top">
-              <div class="card__title">VA Agency Setup</div>
-              <div class="card__tag">Ops</div>
-            </div>
-            <p class="card__text">Portal + workflow install for agencies and operators.</p>
-            <div class="card__actions">
-              <a class="btn btn--ghost btn--sm" href="https://lentax.co/" rel="noopener" target="_blank">Open</a>
-            </div>
-          </article>
-
-          <article class="card">
-            <div class="card__top">
-              <div class="card__title">Support + Training</div>
-              <div class="card__tag">Enablement</div>
-            </div>
-            <p class="card__text">Implementation, training, and ongoing support routing.</p>
-            <div class="card__actions">
-              <a class="btn btn--ghost btn--sm" href="#start">Start</a>
-            </div>
-          </article>
+      <article class="outcome-card reveal">
+        <div class="outcome-icon outcome-icon--b" aria-hidden="true">
+          <span class="outcome-icon__tick"></span>
         </div>
-      </div>
-    </section>
+        <div class="outcome-kicker">Improve delivery quality</div>
+        <p class="outcome-text">Clear tasks, clean handoffs, and less ambiguity.</p>
+      </article>
+
+      <article class="outcome-card reveal">
+        <div class="outcome-icon outcome-icon--c" aria-hidden="true">
+          <span class="outcome-icon__tick"></span>
+        </div>
+        <div class="outcome-kicker">Enhance client experience</div>
+        <p class="outcome-text">Professional communication and predictable touchpoints.</p>
+      </article>
+
+      <article class="outcome-card reveal">
+        <div class="outcome-icon outcome-icon--d" aria-hidden="true">
+          <span class="outcome-icon__tick"></span>
+        </div>
+        <div class="outcome-kicker">Scale your team</div>
+        <p class="outcome-text">Easier onboarding as volume grows.</p>
+      </article>
+
+      <article class="outcome-card reveal">
+        <div class="outcome-icon outcome-icon--e" aria-hidden="true">
+          <span class="outcome-icon__tick"></span>
+        </div>
+        <div class="outcome-kicker">Standardize execution</div>
+        <p class="outcome-text">Repeatable processes your team can follow every time.</p>
+      </article>
+
+      <article class="outcome-card reveal">
+        <div class="outcome-icon outcome-icon--f" aria-hidden="true">
+          <span class="outcome-icon__tick"></span>
+        </div>
+        <div class="outcome-kicker">Boost productivity</div>
+        <p class="outcome-text">Faster turnaround and reliable task completion.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
 
     <section class="section" id="dashboard-preview">
       <div class="container">
