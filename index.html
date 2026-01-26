@@ -29,9 +29,6 @@
     tailwind.config = {
       theme: {
         extend: {
-          maxWidth: {
-            '6-5xl': '77.5rem' /* 1240px */
-          },
           colors: {
             brand: { 500: "#f97316", 400: "#fb923c" },
             ink: { 950: "#070a10", 900: "#0b1220", 800: "#111a2e", 700: "#152237" }
@@ -44,7 +41,6 @@
       }
     };
   </script>
-
 
   <!-- EXISTING DASHBOARD / PREVIEW STYLES (tm-admin, va-agency, va-starter, tabs, etc.) -->
   <!-- IMPORTANT: filename is plural -->
@@ -100,7 +96,7 @@
 
   <!-- FLOATING TOP MENU (sticky, with top breathing space like CleanWorks) -->
   <div class="sticky top-0 z-50 pt-4">
-    <header class="mx-auto  px-4">
+    <header class="mx-auto max-w-6xl px-4">
       <div class="rounded-2xl border border-white/10 bg-ink-950/80 shadow-topbar backdrop-blur">
         <div class="flex items-center justify-between px-4 py-4 md:px-6">
           <a class="flex items-center gap-3" href="./index.html" aria-label="Lentax home">
@@ -132,7 +128,7 @@
 
   <main id="top">
     <!-- HERO (bigger like CleanWorks) -->
-    <section class="mx-auto  px-4 pb-10 pt-16 md:pb-14 md:pt-24">
+    <section class="mx-auto max-w-6xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
       <p class="mx-auto mb-5 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
         Calm, white-labeled delivery systems
       </p>
@@ -981,7 +977,7 @@
 
     <!-- WHY IT WORKS (header + 5 cards like CleanWorks pattern) -->
     <section class="border-t border-white/10">
-      <div class="mx-auto  px-4 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">WHY LENTAX WORKS</p>
           <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Predictable delivery by design</h2>
@@ -1024,7 +1020,7 @@
 
     <!-- BENEFITS (large, 4 cards) -->
     <section class="border-t border-white/10">
-      <div class="mx-auto  px-4 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">BENEFITS</p>
           <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">What you get</h2>
@@ -1060,7 +1056,7 @@
 
     <!-- WHO IT’S FOR -->
     <section class="border-t border-white/10">
-      <div class="mx-auto  px-4 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">WHO IT’S FOR</p>
           <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Built for service businesses that want calm</h2>
@@ -1098,7 +1094,7 @@
 
     <!-- ARTIFACTS / RESULTS -->
     <section id="artifacts" class="border-t border-white/10">
-      <div class="mx-auto  px-4 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div class="grid gap-6 lg:grid-cols-12">
           <div class="lg:col-span-5">
             <div class="lg:sticky lg:top-28">
@@ -1175,7 +1171,7 @@
 
     <!-- FAQ -->
     <section class="border-t border-white/10">
-      <div class="mx-auto  px-4 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div class="mx-auto max-w-3xl text-center">
           <h2 class="text-3xl font-extrabold md:text-4xl">Frequently asked questions</h2>
         </div>
@@ -1216,7 +1212,7 @@
 
     <!-- CTA -->
     <section class="border-t border-white/10">
-      <div class="mx-auto  px-4 py-14 md:py-16">
+      <div class="mx-auto max-w-6xl px-4 py-14 md:py-16">
         <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 via-white/5 to-emerald-300/10 p-10 text-center shadow-soft md:p-14">
           <h2 class="mx-auto max-w-4xl text-3xl font-extrabold md:text-5xl">
             Start calm delivery today.
@@ -1237,7 +1233,7 @@
 
   <!-- MENU -->
   <section class="border-t border-white/10">
-    <div class="mx-auto  px-4 py-12">
+    <div class="mx-auto max-w-6xl px-4 py-12">
       <div class="flex flex-col items-center gap-4">
         <a class="flex items-center gap-3" href="./index.html" aria-label="Lentax home">
           <div class="h-9 w-9 rounded-xl bg-gradient-to-br from-brand-500 to-emerald-300"></div>
@@ -1256,7 +1252,7 @@
 
   <!-- FOOTER -->
   <footer class="border-t border-white/10">
-    <div class="mx-auto flex  flex-col gap-4 px-4 py-8 text-sm text-white/70 md:flex-row md:items-center md:justify-between">
+    <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-white/70 md:flex-row md:items-center md:justify-between">
       <div>
         © <span id="year"></span> Lentax.co. All rights reserved.
       </div>
