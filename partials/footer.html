@@ -1,78 +1,52 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Virtual Launch Pro — Footer Partial</title>
+<!-- FOOTER PARTIAL -->
+<section class="border-t border-white/10">
+  <div class="mx-auto max-w-6-5xl px-4 py-12">
+    <div class="flex flex-col items-center gap-6">
 
-  <meta name="description" content="Virtual Launch Pro shared footer partial." />
+      <!-- Logo -->
+      <a
+        class="flex items-center"
+        href="/index.html"
+        aria-label="Virtual Launch Pro home"
+      >
+        <span aria-hidden="true" class="inline-flex items-center h-10">
+          <img
+            src="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
+            alt="Virtual Launch Pro logo"
+            class="h-25 w-auto"
+            decoding="async"
+            loading="lazy"
+          />
+        </span>
+      </a>
 
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+      <!-- Menu -->
+      <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/80">
+        <a class="hover:text-white" href="/about.html">About</a>
+        <a class="hover:text-white" href="/blog/">Blog</a>
+        <a class="hover:text-white" href="/installs.html">Installs</a>
+        <a class="hover:text-white" href="/pricing.html">Pricing</a>
+        <a class="hover:text-white" href="/book.html">Book / Demo</a>
+      </nav>
 
-<body class="bg-ink-950 text-white antialiased">
-
-  <!-- LOGO + MENU -->
-  <section class="border-t border-white/10">
-    <div class="mx-auto max-w-6-5xl px-4 py-12">
-      <div class="flex flex-col items-center gap-6">
-
-        <!-- Logo -->
-        <a
-          class="flex items-center"
-          href="/index.html"
-          aria-label="Virtual Launch Pro home"
-        >
-          <span aria-hidden="true" class="inline-flex items-center h-10">
-            <img
-              src="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
-              alt="Virtual Launch Pro logo"
-              class="h-25 w-auto"
-              decoding="async"
-              loading="lazy"
-            />
-          </span>
-        </a>
-
-        <!-- Menu -->
-        <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/80">
-          <a class="hover:text-white" href="/about.html">About</a>
-          <a class="hover:text-white" href="/installs.html">Installs</a>
-          <a class="hover:text-white" href="/pricing.html">Pricing</a>
-          <a class="hover:text-white" href="/book.html">Book / Demo</a>
-        </nav>
-
-      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER LEGAL ROW -->
-  <footer class="border-t border-white/10">
-    <div
-      class="mx-auto max-w-6-5xl px-4 py-8 text-sm text-white/70
-             flex flex-col gap-4
-             md:flex-row md:items-center md:justify-between"
-    >
-      <div>
-        © <span id="year"></span> Virtual Launch Pro.
-        Owned and operated by Lenore, Inc.
-      </div>
-
-      <div class="flex gap-6">
-        <a class="hover:text-white" href="/privacy.html">Privacy Policy</a>
-        <a class="hover:text-white" href="/terms.html">Terms of Service</a>
-      </div>
+<footer class="border-t border-white/10">
+  <div
+    class="mx-auto max-w-6-5xl px-4 py-8 text-sm text-white/70
+           flex flex-col gap-4
+           md:flex-row md:items-center md:justify-between"
+  >
+    <div>
+      © <span id="year"></span> Virtual Launch Pro.
+      Owned and operated by Lenore, Inc.
     </div>
-  </footer>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-
-</body>
-</html>
+    <div class="flex gap-6">
+      <a class="hover:text-white" href="/privacy.html">Privacy Policy</a>
+      <a class="hover:text-white" href="/terms.html">Terms of Service</a>
+    </div>
+  </div>
+</footer>
