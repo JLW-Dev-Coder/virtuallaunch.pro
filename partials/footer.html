@@ -17,17 +17,22 @@
 
 <body class="bg-ink-950 text-white antialiased">
 
-  <!-- FOOTER (shared partial) -->
-  <footer class="mt-24 border-t border-white/10">
-    <div class="mx-auto max-w-6-5xl px-4 py-10">
-      <div class="text-sm text-white/70 space-y-1">
-        <p>Copyright © 2020+ Virtual Launch Pro.</p>
-        <p>Owned and operated by Lenore, Inc.</p>
-        <p>1175 Avocado Avenue, Suite 101 PMB 1010</p>
-        <p>El Cajon, CA 92020</p>
+  <!-- FOOTER (matches index.html) -->
+  <footer class="border-t border-white/10">
+    <div class="mx-auto flex max-w-6-5xl flex-col gap-4 px-4 py-8 text-sm text-white/70 md:flex-row md:items-center md:justify-between">
+      <div>
+        © <span id="year"></span> Copyright © 2020+ Virtual Launch Pro. Owned and operated by Lenore, Inc.
+      </div>
+      <div class="flex gap-6">
+        <a class="hover:text-white" href="./privacy.html">Privacy Policy</a>
+        <a class="hover:text-white" href="./terms.html">Terms of Service</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 
 </body>
 </html>
