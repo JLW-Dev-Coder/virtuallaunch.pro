@@ -3,34 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
   <title>Lentax — Calm, White-Labeled Delivery Systems</title>
-
   <meta name="description" content="White-labeled systems for calm, repeatable delivery. Install once. Stack later." />
-
-  <!-- Open Graph / Social -->
   <meta property="og:title" content="Lentax — Calm, White-Labeled Delivery Systems" />
   <meta property="og:description" content="White-labeled portals, workflows, and dashboards for predictable service delivery." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Fonts (kept from original build) -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-
-  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Tailwind config -->
   <script>
     tailwind.config = {
       theme: {
         extend: {
           maxWidth: {
-            '6-5xl': '77.5rem' /* 1240px */
+            '6-5xl': '77.5rem'
           },
           colors: {
             brand: { 500: "#f97316", 400: "#fb923c" },
@@ -44,13 +34,7 @@
       }
     };
   </script>
-
-
-  <!-- EXISTING DASHBOARD / PREVIEW STYLES (tm-admin, va-agency, va-starter, tabs, etc.) -->
-  <!-- IMPORTANT: filename is plural -->
   <link rel="stylesheet" href="./styles.css" />
-
-  <!-- Site-specific helpers -->
   <style>
     html { scroll-behavior: smooth; }
 
@@ -65,6 +49,7 @@
     .container--wide { max-width: 75rem; }
 
     .dash-preview-wrap { margin-top: 24px; }
+
     .dash-preview-wrap > [data-preview] { width: 100%; }
 
     .preview--hidden { display: none; }
@@ -77,9 +62,7 @@
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
     }
 
-    .lentax-grid-pan {
-      animation: gridPan 22s linear infinite;
-    }
+    .lentax-grid-pan { animation: gridPan 22s linear infinite; }
 
     @keyframes gridPan {
       from { transform: translate3d(0,0,0); }
@@ -92,77 +75,71 @@
   </style>
 </head>
 
-
 <body class="bg-ink-950 text-white antialiased">
   <div class="pointer-events-none fixed inset-0 -z-20 lentax-grid lentax-grid-pan opacity-60"></div>
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
 
-  <!-- FLOATING TOP MENU (sticky, with top breathing space like CleanWorks) -->
   <div class="sticky top-0 z-50 pt-4">
-    <header class="sticky top-0 z-50 border-b border-white/10 bg-ink-950/80 backdrop-blur">
-  <div class="mx-auto flex max-w-6-5xl items-center justify-between px-4 py-4">
-    <a aria-label="Lentax home" class="inline-flex items-center gap-3 text-white" href="./index.html">
-      <span aria-hidden="true" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Lentax logo" class="h-7 w-7">
-          <defs>
-            <clipPath id="clip-sail-orange">
-              <polygon points="86,32 124,78 86,78"/>
-            </clipPath>
+    <header class="mx-auto max-w-6-5xl px-4">
+      <div class="rounded-2xl border border-white/10 bg-ink-950/80 shadow-topbar backdrop-blur">
+        <div class="flex items-center justify-between px-4 py-4 md:px-6">
+          <a class="flex items-center gap-3" href="./index.html" aria-label="Lentax home">
+            <span aria-hidden="true" class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Lentax logo" class="h-7 w-7">
+                <defs>
+                  <clipPath id="clip-sail-orange">
+                    <polygon points="86,32 124,78 86,78"/>
+                  </clipPath>
 
-            <pattern id="pattern-bank" width="22" height="18" patternUnits="userSpaceOnUse">
-              <path d="M3 7 L11 2 L19 7 Z" fill="#E67300" opacity="0.45"/>
-              <rect x="4" y="7" width="14" height="2" rx="1" fill="#E67300" opacity="0.45"/>
-              <rect x="5" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-              <rect x="9" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-              <rect x="13" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-              <rect x="17" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
-              <rect x="4" y="15" width="14" height="2" rx="1" fill="#E67300" opacity="0.45"/>
-            </pattern>
-          </defs>
+                  <pattern id="pattern-bank" width="22" height="18" patternUnits="userSpaceOnUse">
+                    <path d="M3 7 L11 2 L19 7 Z" fill="#E67300" opacity="0.45"/>
+                    <rect x="4" y="7" width="14" height="2" rx="1" fill="#E67300" opacity="0.45"/>
+                    <rect x="5" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
+                    <rect x="9" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
+                    <rect x="13" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
+                    <rect x="17" y="9" width="2" height="6" rx="1" fill="#E67300" opacity="0.45"/>
+                    <rect x="4" y="15" width="14" height="2" rx="1" fill="#E67300" opacity="0.45"/>
+                  </pattern>
+                </defs>
 
-          <circle cx="80" cy="80" r="72" fill="none" stroke="currentColor" stroke-width="8"/>
-          <rect x="78" y="28" width="4" height="70" rx="2" fill="currentColor"/>
-          <polygon points="74,32 36,78 74,78" fill="currentColor"/>
-          <polygon points="86,32 124,78 86,78" fill="#FFA500"/>
+                <circle cx="80" cy="80" r="72" fill="none" stroke="currentColor" stroke-width="8"/>
+                <rect x="78" y="28" width="4" height="70" rx="2" fill="currentColor"/>
+                <polygon points="74,32 36,78 74,78" fill="currentColor"/>
+                <polygon points="86,32 124,78 86,78" fill="#FFA500"/>
 
-          <g clip-path="url(#clip-sail-orange)">
-            <rect x="80" y="28" width="52" height="56" fill="url(#pattern-bank)"/>
-          </g>
+                <g clip-path="url(#clip-sail-orange)">
+                  <rect x="80" y="28" width="52" height="56" fill="url(#pattern-bank)"/>
+                </g>
 
-          <path d="M 38 82 L 122 82 L 96 114 Q 80 126 64 114 Z" fill="currentColor"/>
-        </svg>
-      </span>
-      <span class="text-base font-extrabold tracking-tight">Lentax.co</span>
-    </a>
+                <path d="M 38 82 L 122 82 L 96 114 Q 80 126 64 114 Z" fill="currentColor"/>
+              </svg>
+            </span>
+            <span class="text-sm font-extrabold tracking-wide">Lentax.co</span>
+          </a>
 
-    <div class="hidden items-center gap-6 md:flex">
-      <nav aria-label="Primary" class="flex items-center gap-6">
-        <a class="text-sm font-semibold text-white/70 hover:text-white" href="#features">About</a>
-        <a class="text-sm font-semibold text-white/70 hover:text-white" href="#tools">Pricing</a>
-        <a class="text-sm font-semibold text-white/70 hover:text-white" href="#pricing">Book or Demo</a>
-        <a class="text-sm font-semibold text-white/70 hover:text-white" href="https://secure.lentax.co/i/blog-port" rel="noopener">Blog</a>
-      </nav>
+          <nav class="hidden items-center gap-6 text-sm text-white/80 md:flex">
+            <a class="hover:text-white" href="./about.html">About</a>
+            <a class="hover:text-white" href="./installs.html">Installs</a>
+            <a class="hover:text-white" href="./pricing.html">Pricing</a>
+            <a class="hover:text-white" href="./book.html">Book / Demo</a>
+          </nav>
 
-      <span aria-hidden="true" class="h-6 w-px bg-white/10"></span>
-
-      <a class="text-sm font-semibold text-white/70 hover:text-white" href="https://secure.lentax.co/site/login" rel="noopener">Sign In</a>
-      <a class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-         href="https://secure.lentax.co/memberSignup" rel="noopener">
-        Get Started
-      </a>
-    </div>
-
-    <div class="md:hidden">
-      <a class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-         href="https://secure.lentax.co/memberSignup" rel="noopener">
-        Get Started
-      </a>
-    </div>
+          <div class="flex items-center gap-3">
+            <a class="hidden rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-white/90 hover:border-white/25 md:inline-flex"
+               href="https://secure.lentax.co/site/login" rel="noopener">
+              Login
+            </a>
+            <a class="inline-flex rounded-xl bg-brand-500 px-4 py-2 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
+               href="./book.html" rel="noopener">
+              Schedule Demo Call
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
   </div>
-</header>
 
-  </div>
 
   <main id="top">
     <!-- HERO (bigger like CleanWorks) -->
