@@ -84,38 +84,77 @@
     <header class="mx-auto max-w-6-5xl px-4">
       <div class="rounded-2xl border border-white/10 bg-ink-950/80 shadow-topbar backdrop-blur">
         <div class="flex items-center justify-between px-4 py-4 md:px-6">
-         <a class="flex items-center gap-3" href="./index.html" aria-label="VirtualLaunch.pro home">
-  <!-- VirtualLaunch Rocket Icon -->
-  <span aria-hidden="true" class="inline-flex h-12 w-12 items-center justify-center">
+        <a class="flex items-center" href="./index.html" aria-label="VirtualLaunch.pro home">
+  <span aria-hidden="true" class="inline-flex items-center">
     <svg xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 140 140"
+         viewBox="0 0 600 140"
          role="img"
-         aria-label="VirtualLaunch rocket icon"
-         class="h-11 w-11">
-      <path
-        d="M70 12c26 13 44 41 44 72 0 20-9 37-22 49H48C35 121 26 104 26 84c0-31 18-59 44-72Z"
-        fill="#fff"
-      />
-      <circle cx="70" cy="60" r="12" fill="#FFA500"/>
-      <path
-        d="M44 98 14 124c5-22 18-40 38-48 6-3 10 7 6 22Z"
-        fill="#fff"
-      />
-      <path
-        d="M96 98l30 26c-5-22-18-40-38-48-6-3-10 7-6 22Z"
-        fill="#fff"
-      />
+         aria-label="VirtualLaunch.pro logo"
+         class="h-11">
+
+      <!-- Rocket Icon -->
+      <g transform="translate(0,0)">
+        <!-- Rocket body -->
+        <path
+          d="M70 12c26 13 44 41 44 72 0 20-9 37-22 49H48C35 121 26 104 26 84c0-31 18-59 44-72Z"
+          fill="#ffffff"
+        />
+
+        <!-- Tip separation -->
+        <path
+          d="M40 38
+             C52 34, 88 34, 100 38"
+          stroke="#FFA500"
+          stroke-width="2"
+          stroke-linecap="round"
+          fill="none"
+        />
+
+        <!-- Window -->
+        <circle cx="70" cy="60" r="12" fill="#FFA500"/>
+
+        <!-- Left leg -->
+        <path
+          d="M42 96 10 126
+             c6-25 22-45 44-54
+             c7-4 12 8 7 28Z"
+          fill="#ffffff"
+        />
+
+        <!-- Right leg -->
+        <path
+          d="M98 96 130 126
+             c-6-25-22-45-44-54
+             c-7-4-12 8-7 28Z"
+          fill="#ffffff"
+        />
+
+        <!-- Flame -->
+        <path
+          d="M70 122
+             c-13 13-18 26-13 36
+             c8-5 18-5 26 0
+             c5-10 0-23-13-36Z"
+          fill="#FFA500"
+        />
+      </g>
+
+      <!-- Wordmark -->
+      <text
+        x="140"
+        y="96"
+        fill="#ffffff"
+        font-family="Raleway, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+        font-size="54.7"
+        font-weight="400"
+        letter-spacing="-0.5">
+        VirtualLaunch<tspan fill="#FFA500">.pro</tspan>
+      </text>
+
     </svg>
   </span>
-
-  <!-- Wordmark -->
-<span
-  class="font-medium tracking-tight leading-none text-white"
-  style="font-family:'Raleway', sans-serif; font-size:1.15rem;">
-  VirtualLaunch<span style="color:#FFA500;">.pro</span>
-</span>
-
 </a>
+
 
 
 
