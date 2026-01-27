@@ -1277,10 +1277,11 @@
 
 
 
- <!-- ARTIFACTS / RESULTS (3-offer toggle) -->
+<!-- ARTIFACTS / RESULTS (nested inside left hero like Cleanworks) -->
 <section id="artifacts" class="border-t border-white/10">
   <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
     <div class="grid gap-6 lg:grid-cols-12">
+      <!-- LEFT HERO (header + buttons + CTA) -->
       <div class="lg:col-span-5">
         <div class="lg:sticky lg:top-28">
           <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 to-emerald-300/10 p-8 shadow-soft">
@@ -1332,127 +1333,131 @@
         </div>
       </div>
 
+      <!-- RIGHT COLUMN (cards) -->
       <div class="lg:col-span-7">
-        <!-- TAX MONITOR -->
-        <div data-artifacts-panel="tax-monitor" role="tabpanel" aria-label="Tax Monitor artifacts">
-          <div class="grid gap-4 md:grid-cols-2">
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Most OICs fail without assessment.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: premature resolution promises.</p>
-              <p class="mt-4 text-xs text-white/60">— IRS Data Book snapshot</p>
-            </article>
+        <div class="relative rounded-2xl border border-white/10 bg-white/5 p-4 shadow-soft md:p-5">
+          <!-- TAX MONITOR -->
+          <div data-artifacts-panel="tax-monitor" role="tabpanel" aria-label="Tax Monitor artifacts">
+            <div class="grid gap-4 md:grid-cols-2">
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Stop selling before you know.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: premature promises.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Installment agreements are far more common.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: wrong default strategy.</p>
-              <p class="mt-4 text-xs text-white/60">— IRS Data Book snapshot</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“The waiting period is owned.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: status pings.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Clients stop asking what’s next.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: constant status pings.</p>
-              <p class="mt-4 text-xs text-white/60">— Workflow + automations</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Scope stays protected.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: scope creep.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“We finally protect scope.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: “one more thing” creep.</p>
-              <p class="mt-4 text-xs text-white/60">— Deliverables + gates</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“OIC hype gets replaced with data.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: risky defaults.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Waiting periods become intentional.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: awkward silence gaps.</p>
-              <p class="mt-4 text-xs text-white/60">— EMCT messaging logic</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Capacity is visible before intake piles up.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: overload.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“White-label wins trust.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: tool-stack confusion.</p>
-              <p class="mt-4 text-xs text-white/60">— Branded portal experience</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“White-label wins trust.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: tool confusion.</p>
+              </article>
+
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft md:col-span-2">
+                <div class="text-sm font-extrabold">FY2024 OIC snapshot</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: strategy sold without odds.</p>
+                <div class="mt-4 grid gap-3 sm:grid-cols-3">
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="text-xs font-semibold text-white/60">Proposed</div>
+                    <div class="mt-1 text-xl font-extrabold">33,591</div>
+                  </div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="text-xs font-semibold text-white/60">Accepted</div>
+                    <div class="mt-1 text-xl font-extrabold">7,199</div>
+                  </div>
+                  <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <div class="text-xs font-semibold text-white/60">Rate</div>
+                    <div class="mt-1 text-xl font-extrabold">≈ 21%</div>
+                  </div>
+                </div>
+              </article>
+            </div>
           </div>
-        </div>
 
-        <!-- VIRTUAL ASSISTANT AGENCY -->
-        <div data-artifacts-panel="va-agency" class="hidden" role="tabpanel" aria-label="Virtual Assistant Agency artifacts">
-          <div class="grid gap-4 md:grid-cols-2">
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Leads stop slipping through cracks.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: untracked follow-up.</p>
-              <p class="mt-4 text-xs text-white/60">— Pipeline + reminders</p>
-            </article>
+          <!-- VIRTUAL ASSISTANT AGENCY -->
+          <div data-artifacts-panel="va-agency" class="hidden" role="tabpanel" aria-label="Virtual Assistant Agency artifacts">
+            <div class="grid gap-4 md:grid-cols-2">
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Leads stop slipping.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: missed follow-up.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Clients see your process instantly.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: trust friction.</p>
-              <p class="mt-4 text-xs text-white/60">— Onboarding portal</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Clients see the process.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: trust friction.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Hiring stays consistent.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: messy intake.</p>
-              <p class="mt-4 text-xs text-white/60">— Forms + screening flow</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Hiring stays consistent.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: messy intake.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Delivery stays on rails.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: scattered tasks.</p>
-              <p class="mt-4 text-xs text-white/60">— Checklists + handoffs</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Delivery stays on rails.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: scattered tasks.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Support feels like a system.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: reactive help.</p>
-              <p class="mt-4 text-xs text-white/60">— Tickets + macros</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Support feels organized.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: reactive help.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Scope stays profitable.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: overdelivery.</p>
-              <p class="mt-4 text-xs text-white/60">— Defined deliverables</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Scope stays profitable.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: overdelivery.</p>
+              </article>
+            </div>
           </div>
-        </div>
 
-        <!-- VIRTUAL ASSISTANT SETUP -->
-        <div data-artifacts-panel="va-setup" class="hidden" role="tabpanel" aria-label="Virtual Assistant artifacts">
-          <div class="grid gap-4 md:grid-cols-2">
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Your profile reads premium.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: weak positioning.</p>
-              <p class="mt-4 text-xs text-white/60">— Profile + offer framing</p>
-            </article>
+          <!-- VIRTUAL ASSISTANT SETUP -->
+          <div data-artifacts-panel="va-setup" class="hidden" role="tabpanel" aria-label="Virtual Assistant artifacts">
+            <div class="grid gap-4 md:grid-cols-2">
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Your profile reads premium.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: weak positioning.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Prospects know the next step.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: stalled leads.</p>
-              <p class="mt-4 text-xs text-white/60">— Simple funnel</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Prospects know the next step.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: stalled leads.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Onboarding becomes repeatable.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: reinvention cycles.</p>
-              <p class="mt-4 text-xs text-white/60">— Templates + checklist</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Onboarding becomes repeatable.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: reinvention.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Clients pay cleanly.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: payment chaos.</p>
-              <p class="mt-4 text-xs text-white/60">— Invoices + links</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Clients pay cleanly.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: payment chaos.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Your work stays organized.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: scattered files.</p>
-              <p class="mt-4 text-xs text-white/60">— Portal + folders</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Your work stays organized.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: scattered files.</p>
+              </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-              <div class="text-sm font-extrabold">“Delivery feels calm.”</div>
-              <p class="mt-3 text-sm text-white/70">Problem solved: constant context-switching.</p>
-              <p class="mt-4 text-xs text-white/60">— One workspace</p>
-            </article>
+              <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
+                <div class="text-sm font-extrabold">“Delivery feels calm.”</div>
+                <p class="mt-3 text-sm text-white/70">Problem solved: context switching.</p>
+              </article>
+            </div>
           </div>
         </div>
       </div>
@@ -1495,6 +1500,7 @@
     })();
   </script>
 </section>
+
 
 
 
