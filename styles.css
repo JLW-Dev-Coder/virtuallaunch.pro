@@ -2421,4 +2421,62 @@ a {
   }
 
 }
+/* =========================
+   DASHBOARD PREVIEW — NORMALIZE WIDTHS + ICON HELPERS
+   ========================= */
+.dash-preview-wrap {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 10px;
+  width: 100%;
+}
 
+.dash-preview-wrap > div {
+  width: 100%;
+}
+
+.tm-admin-preview,
+.va-agency-preview,
+.va-starter-preview {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* Ensure TM preview does not render narrower than the others */
+.tm-admin-preview {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* VA Starter: default readable (black) text in content area */
+.va-starter-main,
+.va-starter-content,
+.va-card,
+.va-table,
+.va-welcome-box {
+  color: rgba(0,0,0,0.86);
+}
+
+/* Keep sidebar text light */
+.va-starter-sidebar,
+.va-starter-sidebar * {
+  color: rgba(255,255,255,0.86);
+}
+
+/* Brand subtext used in updated HTML */
+.va-starter-brand__subtext {
+  color: rgba(0,0,0,0.60);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* Font Awesome helpers */
+.fa-lentax {
+  margin-right: 8px;
+}
+
+.fa-lentax--tight {
+  margin-right: 6px;
+}
