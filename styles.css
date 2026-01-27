@@ -39,10 +39,11 @@ a {
   color: inherit; text-decoration: none;
 }
 
-.logo {
-  height: 56px;
-  width: auto;
+.logo svg {
+  height: 56px !important;
+  width: auto !important;
 }
+
 
 .bg__glow {
   filter: blur(80px);
