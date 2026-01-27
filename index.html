@@ -1599,47 +1599,38 @@
   </section>
 
   <!-- FOOTER -->
-  <footer class="border-t border-white/10">
-    <div class="mx-auto flex max-w-6-5xl flex-col gap-4 px-4 py-8 text-sm text-white/70 md:flex-row md:items-center md:justify-between">
-      <div>
-        © <span id="year"></span> Lentax.co. All rights reserved.
-      </div>
-      <div class="flex gap-6">
-        <a class="hover:text-white" href="./privacy.html">Privacy Policy</a>
-        <a class="hover:text-white" href="./terms.html">Terms of Service</a>
-      </div>
-    </div>
-  </footer>
+<div data-include="footer"></div>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+<script>
+  (function () {
+    const panels = Array.from(document.querySelectorAll("[data-preview]"));
+    const tabs = Array.from(document.querySelectorAll("[data-tab]"));
 
-    (function () {
-      const panels = Array.from(document.querySelectorAll("[data-preview]"));
-      const tabs = Array.from(document.querySelectorAll("[data-tab]"));
+    if (!panels.length || !tabs.length) return;
 
-      if (!panels.length || !tabs.length) return;
+    function setActive(key) {
+      tabs.forEach((t) => {
+        const isActive = t.getAttribute("data-tab") === key;
+        t.classList.toggle("tab--active", isActive);
+        t.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
 
-      function setActive(key) {
-        tabs.forEach((t) => {
-          const isActive = t.getAttribute("data-tab") === key;
-          t.classList.toggle("tab--active", isActive);
-          t.setAttribute("aria-selected", isActive ? "true" : "false");
-        });
+      panels.forEach((p) => {
+        const isActive = p.getAttribute("data-preview") === key;
+        p.classList.toggle("preview--hidden", !isActive);
+      });
+    }
 
-        panels.forEach((p) => {
-          const isActive = p.getAttribute("data-preview") === key;
-          p.classList.toggle("preview--hidden", !isActive);
-        });
-      }
+    tabs.forEach((t) =>
+      t.addEventListener("click", () => setActive(t.getAttribute("data-tab")))
+    );
 
-      tabs.forEach((t) => t.addEventListener("click", () => setActive(t.getAttribute("data-tab"))));
+    const defaultKey = (document.querySelector(".tab--active") || tabs[0]).getAttribute("data-tab");
+    setActive(defaultKey);
+  })();
+</script>
 
-      const defaultKey = (document.querySelector(".tab--active") || tabs[0]).getAttribute("data-tab");
-      setActive(defaultKey);
-    })();
-  </script>
-    <script>
+<script>
   (function () {
     function loadIncludes() {
       var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
