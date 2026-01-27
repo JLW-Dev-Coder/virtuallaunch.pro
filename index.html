@@ -1277,25 +1277,49 @@
 
 
 
-    <!-- ARTIFACTS / RESULTS (Tax Monitor: problems solved) -->
+ <!-- ARTIFACTS / RESULTS (3-offer toggle) -->
 <section id="artifacts" class="border-t border-white/10">
   <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
     <div class="grid gap-6 lg:grid-cols-12">
       <div class="lg:col-span-5">
         <div class="lg:sticky lg:top-28">
-          <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/25 to-ink-950/10 p-8 shadow-soft">
-            <p class="text-xs font-semibold tracking-widest text-white/85">TAX MONITOR</p>
-            <h2 class="mt-3 text-3xl font-extrabold">
-              See what problems our setups solve
-            </h2>
+          <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 to-emerald-300/10 p-8 shadow-soft">
+            <p class="text-xs font-semibold tracking-widest text-white/85">ARTIFACTS</p>
+            <h2 class="mt-3 text-3xl font-extrabold">See what problems our setups solve</h2>
             <p class="mt-4 text-sm text-white/75">
-              Resolution tools help execute once a strategy is chosen. Tax Monitor helps you pause, assess, and contain risk
-              before you sell strategy—so delivery stays defensible and calm.
+              Toggle between offers to preview the deliverables and “problem-solved” artifacts each setup ships with.
             </p>
-            <p class="mt-4 text-sm text-white/75">
-              The goal is simple: less guessing, fewer “what’s next” pings, cleaner scope, and a controlled path from monitor
-              to decision to resolution (only when appropriate).
-            </p>
+
+            <!-- Offer toggle buttons -->
+            <div class="mt-6">
+              <div class="inline-flex items-end gap-1 border-b border-white/15" role="tablist" aria-label="Artifacts offer tabs">
+                <button
+                  type="button"
+                  class="artifact-tab artifact-tab--active inline-flex items-center rounded-xl border border-white/10 bg-ink-950 px-4 py-2 text-sm font-extrabold text-white shadow-soft"
+                  data-artifacts-tab="tax-monitor"
+                  aria-selected="true"
+                >
+                  Tax Monitor Setup
+                </button>
+                <button
+                  type="button"
+                  class="artifact-tab inline-flex items-center rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-semibold text-white/75 hover:text-white"
+                  data-artifacts-tab="va-agency"
+                  aria-selected="false"
+                >
+                  Virtual Assistant Agency Setup
+                </button>
+                <button
+                  type="button"
+                  class="artifact-tab inline-flex items-center rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-semibold text-white/75 hover:text-white"
+                  data-artifacts-tab="va-setup"
+                  aria-selected="false"
+                >
+                  Virtual Assistant Setup
+                </button>
+              </div>
+            </div>
+
             <div class="mt-6">
               <a
                 class="inline-flex rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-ink-900 hover:bg-white/90"
@@ -1309,81 +1333,169 @@
       </div>
 
       <div class="lg:col-span-7">
-        <div class="grid gap-4 md:grid-cols-2">
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-sm font-extrabold">“Stop selling before you know.”</div>
-            <p class="mt-3 text-sm text-white/70">
-              Inserts a structured pause so you can review transcripts, compliance, and capacity before pricing or promises.
-            </p>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: premature resolution commitments</p>
-          </article>
+        <!-- TAX MONITOR -->
+        <div data-artifacts-panel="tax-monitor" role="tabpanel" aria-label="Tax Monitor artifacts">
+          <div class="grid gap-4 md:grid-cols-2">
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Most OICs fail without assessment.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: premature resolution promises.</p>
+              <p class="mt-4 text-xs text-white/60">— IRS Data Book snapshot</p>
+            </article>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-sm font-extrabold">“The waiting period is owned.”</div>
-            <p class="mt-3 text-sm text-white/70">
-              System-controlled messaging and updates reduce anxiety and cut down on “checking in” emails and calls.
-            </p>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: reactive client communications</p>
-          </article>
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Installment agreements are far more common.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: wrong default strategy.</p>
+              <p class="mt-4 text-xs text-white/60">— IRS Data Book snapshot</p>
+            </article>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-sm font-extrabold">“Scope stays protected.”</div>
-            <p class="mt-3 text-sm text-white/70">
-              Deliverables + gated transitions keep “one more thing” from turning into a new case inside the same engagement.
-            </p>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: scope creep and silent expansion</p>
-          </article>
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Clients stop asking what’s next.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: constant status pings.</p>
+              <p class="mt-4 text-xs text-white/60">— Workflow + automations</p>
+            </article>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-sm font-extrabold">“OIC hype gets replaced with data.”</div>
-            <p class="mt-3 text-sm text-white/70">
-              Encourages evidence-based strategy selection so you’re not defaulting into volume-based OIC workflows.
-            </p>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: “OIC-mill drift” risk</p>
-          </article>
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“We finally protect scope.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: “one more thing” creep.</p>
+              <p class="mt-4 text-xs text-white/60">— Deliverables + gates</p>
+            </article>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-sm font-extrabold">“Capacity is visible before intake piles up.”</div>
-            <p class="mt-3 text-sm text-white/70">
-              A consistent monitor → decision → resolution path helps your team stay predictable—even when complexity spikes.
-            </p>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: overload and inconsistent handling</p>
-          </article>
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Waiting periods become intentional.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: awkward silence gaps.</p>
+              <p class="mt-4 text-xs text-white/60">— EMCT messaging logic</p>
+            </article>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-sm font-extrabold">“The client experience feels premium.”</div>
-            <p class="mt-3 text-sm text-white/70">
-              White-labeled portal, guided steps, and calm updates make the service feel intentional—not like a tool stack.
-            </p>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: low-trust, messy handoffs</p>
-          </article>
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“White-label wins trust.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: tool-stack confusion.</p>
+              <p class="mt-4 text-xs text-white/60">— Branded portal experience</p>
+            </article>
+          </div>
+        </div>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft md:col-span-2">
-            <div class="text-sm font-extrabold">FY2024 reality check (why assessment matters)</div>
-            <p class="mt-3 text-sm text-white/70">
-              Most offers aren’t accepted. Tax Monitor exists to help you assess readiness and avoid selling strategy before the facts are in.
-            </p>
-            <div class="mt-4 grid gap-3 sm:grid-cols-3">
-              <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                <div class="text-xs font-semibold text-white/60">OIC proposed (FY2024)</div>
-                <div class="mt-1 text-xl font-extrabold">33,591</div>
-              </div>
-              <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                <div class="text-xs font-semibold text-white/60">OIC accepted (FY2024)</div>
-                <div class="mt-1 text-xl font-extrabold">7,199</div>
-              </div>
-              <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                <div class="text-xs font-semibold text-white/60">Acceptance rate</div>
-                <div class="mt-1 text-xl font-extrabold">≈ 21%</div>
-              </div>
-            </div>
-            <p class="mt-4 text-xs text-white/60">— Problem solved: strategy sold without acceptance probability discipline</p>
-          </article>
+        <!-- VIRTUAL ASSISTANT AGENCY -->
+        <div data-artifacts-panel="va-agency" class="hidden" role="tabpanel" aria-label="Virtual Assistant Agency artifacts">
+          <div class="grid gap-4 md:grid-cols-2">
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Leads stop slipping through cracks.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: untracked follow-up.</p>
+              <p class="mt-4 text-xs text-white/60">— Pipeline + reminders</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Clients see your process instantly.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: trust friction.</p>
+              <p class="mt-4 text-xs text-white/60">— Onboarding portal</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Hiring stays consistent.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: messy intake.</p>
+              <p class="mt-4 text-xs text-white/60">— Forms + screening flow</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Delivery stays on rails.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: scattered tasks.</p>
+              <p class="mt-4 text-xs text-white/60">— Checklists + handoffs</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Support feels like a system.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: reactive help.</p>
+              <p class="mt-4 text-xs text-white/60">— Tickets + macros</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Scope stays profitable.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: overdelivery.</p>
+              <p class="mt-4 text-xs text-white/60">— Defined deliverables</p>
+            </article>
+          </div>
+        </div>
+
+        <!-- VIRTUAL ASSISTANT SETUP -->
+        <div data-artifacts-panel="va-setup" class="hidden" role="tabpanel" aria-label="Virtual Assistant artifacts">
+          <div class="grid gap-4 md:grid-cols-2">
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Your profile reads premium.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: weak positioning.</p>
+              <p class="mt-4 text-xs text-white/60">— Profile + offer framing</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Prospects know the next step.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: stalled leads.</p>
+              <p class="mt-4 text-xs text-white/60">— Simple funnel</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Onboarding becomes repeatable.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: reinvention cycles.</p>
+              <p class="mt-4 text-xs text-white/60">— Templates + checklist</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Clients pay cleanly.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: payment chaos.</p>
+              <p class="mt-4 text-xs text-white/60">— Invoices + links</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Your work stays organized.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: scattered files.</p>
+              <p class="mt-4 text-xs text-white/60">— Portal + folders</p>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+              <div class="text-sm font-extrabold">“Delivery feels calm.”</div>
+              <p class="mt-3 text-sm text-white/70">Problem solved: constant context-switching.</p>
+              <p class="mt-4 text-xs text-white/60">— One workspace</p>
+            </article>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    (function () {
+      var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-tab]"));
+      var panels = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-panel]"));
+
+      function setActive(key) {
+        buttons.forEach(function (b) {
+          var on = b.getAttribute("data-artifacts-tab") === key;
+          b.setAttribute("aria-selected", on ? "true" : "false");
+          b.classList.toggle("artifact-tab--active", on);
+          b.classList.toggle("bg-ink-950", on);
+          b.classList.toggle("border-white/10", on);
+          b.classList.toggle("shadow-soft", on);
+          b.classList.toggle("text-white", on);
+
+          b.classList.toggle("bg-transparent", !on);
+          b.classList.toggle("border-transparent", !on);
+          b.classList.toggle("text-white/75", !on);
+        });
+
+        panels.forEach(function (p) {
+          var show = p.getAttribute("data-artifacts-panel") === key;
+          p.classList.toggle("hidden", !show);
+        });
+      }
+
+      buttons.forEach(function (b) {
+        b.addEventListener("click", function () {
+          setActive(b.getAttribute("data-artifacts-tab"));
+        });
+      });
+
+      setActive("tax-monitor");
+    })();
+  </script>
 </section>
+
 
 
     <!-- FAQ -->
