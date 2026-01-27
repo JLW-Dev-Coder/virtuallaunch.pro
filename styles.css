@@ -39,6 +39,11 @@ a {
   color: inherit; text-decoration: none;
 }
 
+.logo {
+  height: 56px;
+  width: auto;
+}
+
 .bg__glow {
   filter: blur(80px);
   height: 520px;
