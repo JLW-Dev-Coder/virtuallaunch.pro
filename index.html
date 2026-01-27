@@ -3,19 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Lentax — Calm, White-Labeled Delivery Systems</title>
   <meta name="description" content="White-labeled systems for calm, repeatable delivery. Install once. Stack later." />
+
   <meta property="og:title" content="Lentax — Calm, White-Labeled Delivery Systems" />
   <meta property="og:description" content="White-labeled portals, workflows, and dashboards for predictable service delivery." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Favicons -->
+  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#070a10" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
 
-  <!-- PRELOAD LOCAL SVG LOGO (faster than remote) -->
+  <!-- Preload local SVG logo -->
   <link
     rel="preload"
     as="image"
@@ -23,6 +33,7 @@
     type="image/svg+xml"
   />
 
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -43,7 +54,11 @@
       }
     };
   </script>
+
+  <!-- Site CSS -->
   <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Page utilities -->
   <style>
     html { scroll-behavior: smooth; }
 
@@ -83,6 +98,7 @@
     }
   </style>
 </head>
+
 
 <body class="bg-ink-950 text-white antialiased">
   <div class="pointer-events-none fixed inset-0 -z-20 lentax-grid lentax-grid-pan opacity-60"></div>
