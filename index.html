@@ -19,7 +19,7 @@
   <link
     rel="preload"
     as="image"
-    href="./assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
+    href="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
     type="image/svg+xml"
   />
 
@@ -85,62 +85,14 @@
 </head>
 
 <body class="bg-ink-950 text-white antialiased">
-  <!-- Background (keep your existing background layers as-is, if you have them) -->
   <div class="pointer-events-none fixed inset-0 -z-20 lentax-grid lentax-grid-pan opacity-60"></div>
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
 
-  <!-- Shared header include -->
+  <!-- Shared header include (ONLY header on page) -->
   <div data-include="header"></div>
 
-  <div class="sticky top-0 z-50 pt-4">
-    <header class="mx-auto max-w-6-5xl px-4">
-      <div class="rounded-2xl border border-white/10 bg-ink-950/80 shadow-topbar backdrop-blur">
-        <div class="flex items-center justify-between px-4 py-4 md:px-6">
-
-          <a class="flex items-center" href="./index.html" aria-label="VirtualLaunch.pro home">
-            <span aria-hidden="true" class="inline-flex items-center">
-              <img
-                src="./assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
-                alt="VirtualLaunch.pro logo"
-                class="h-11 w-auto"
-                decoding="async"
-                fetchpriority="high"
-                height="60"
-                loading="eager"
-                width="200"
-              />
-            </span>
-          </a>
-
-          <div class="hidden items-center gap-4 md:flex">
-            <nav class="flex items-center gap-4 text-sm font-semibold text-white/80">
-              <a class="hover:text-white" href="./about.html">About</a>
-              <a class="hover:text-white" href="./installs.html">Installs</a>
-              <a class="hover:text-white" href="./pricing.html">Pricing</a>
-              <a class="hover:text-white" href="./book.html">Book / Demo</a>
-              <a class="hover:text-white" href="https://secure.lentax.co/site/login" rel="noopener">Login</a>
-            </nav>
-
-            <a class="inline-flex rounded-xl bg-brand-500 px-4 py-2 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-               href="./book.html" rel="noopener">
-              Schedule Demo Call
-            </a>
-          </div>
-
-          <div class="flex items-center gap-3 md:hidden">
-            <a class="inline-flex rounded-xl bg-brand-500 px-4 py-2 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-               href="./book.html" rel="noopener">
-              Schedule Demo Call
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
-  </div>
-
   <main id="top">
-    <!-- HERO (bigger like CleanWorks) -->
     <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
       <p class="mx-auto mb-5 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
         Calm, white-labeled delivery systems
@@ -162,7 +114,8 @@
       </div>
     </section>
 
-<!-- DASHBOARD PREVIEW (replaces the old static preview block) -->
+    <!-- DASHBOARD PREVIEW (replaces the old static preview block) -->
+
 
 <section class="border-t border-white/10" id="dashboard-preview">
   <div class="container container--wide">
