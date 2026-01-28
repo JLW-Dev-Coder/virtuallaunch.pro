@@ -126,8 +126,20 @@
     function setActive(key) {
       tabs.forEach(function (t) {
         var isActive = t.getAttribute("data-tab") === key;
-        t.classList.toggle("tab--active", isActive);
+
         t.setAttribute("aria-selected", isActive ? "true" : "false");
+
+        t.classList.toggle("tab--active", isActive);
+        t.classList.toggle("bg-ink-950", isActive);
+        t.classList.toggle("border-b-0", isActive);
+        t.classList.toggle("border-white/15", isActive);
+        t.classList.toggle("font-extrabold", isActive);
+        t.classList.toggle("shadow-soft", isActive);
+        t.classList.toggle("text-white", isActive);
+
+        t.classList.toggle("border-transparent", !isActive);
+        t.classList.toggle("font-semibold", !isActive);
+        t.classList.toggle("text-white/60", !isActive);
       });
 
       panels.forEach(function (p) {
