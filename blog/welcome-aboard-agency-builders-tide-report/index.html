@@ -451,56 +451,109 @@
   </script>
 
   <!-- FORM BACKGROUND HARD FIX -->
-  <script>
-    (function () {
-      function makeTransparent(el) {
-        if (!el || el.nodeType !== 1) return;
+ <!-- FORM BACKGROUND HARD FIX (merged + improved; keep only this one) -->
+<script>
+  (function () {
+    var ROOT_SELECTOR = ".vl-form-embed";
+    var IFRAME_SELECTOR = ROOT_SELECTOR + " iframe";
+    var STYLE_BG_SELECTOR = ROOT_SELECTOR + " [style*='background']";
 
-        if (el.tagName === "IFRAME") {
-          el.setAttribute("allowtransparency", "true");
-          el.style.background = "transparent";
-          el.style.border = "0";
+    function setTransparentStyles(el) {
+      if (!el || el.nodeType !== 1) return;
 
-          try {
-            var d = el.contentDocument;
-            if (d && d.head) {
-              var s = d.createElement("style");
-              s.textContent = "html,body{background:transparent!important;}";
-              d.head.appendChild(s);
+      var tag = (el.tagName || "").toUpperCase();
+
+      if (tag === "IFRAME") {
+        el.setAttribute("allowtransparency", "true");
+        el.style.background = "transparent";
+        el.style.border = "0";
+        el.style.display = "block";
+        el.style.width = "100%";
+      }
+
+      var styleAttr = (el.getAttribute && el.getAttribute("style")) ? el.getAttribute("style") : "";
+      if (styleAttr && styleAttr.toLowerCase().indexOf("background") !== -1) {
+        el.style.background = "transparent";
+        el.style.backgroundColor = "transparent";
+      }
+    }
+
+    function injectIframeCss(iframe) {
+      try {
+        var d = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (!d || !d.head) return;
+
+        if (d.getElementById("vlp-transparent-iframe-css")) return;
+
+        var s = d.createElement("style");
+        s.id = "vlp-transparent-iframe-css";
+        s.textContent = "html,body{background:transparent!important;}";
+        d.head.appendChild(s);
+      } catch (e) {
+        /* cross-origin safety */
+      }
+    }
+
+    function scan() {
+      var root = document.querySelector(ROOT_SELECTOR);
+      if (!root) return;
+
+      root.querySelectorAll(IFRAME_SELECTOR).forEach(function (iframe) {
+        setTransparentStyles(iframe);
+        injectIframeCss(iframe);
+      });
+
+      root.querySelectorAll(STYLE_BG_SELECTOR).forEach(setTransparentStyles);
+      setTransparentStyles(root);
+    }
+
+    function observe() {
+      var root = document.querySelector(ROOT_SELECTOR);
+      if (!root || root.__vlpObserverAttached) return;
+
+      root.__vlpObserverAttached = true;
+
+      new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          Array.prototype.slice.call(m.addedNodes || []).forEach(function (n) {
+            setTransparentStyles(n);
+
+            if (n.querySelectorAll) {
+              n.querySelectorAll("iframe").forEach(function (iframe) {
+                setTransparentStyles(iframe);
+                injectIframeCss(iframe);
+              });
+
+              n.querySelectorAll("[style*='background']").forEach(setTransparentStyles);
             }
-          } catch (e) {}
-        }
-
-        if (el.getAttribute && el.getAttribute("style") && el.getAttribute("style").toLowerCase().includes("background")) {
-          el.style.background = "transparent";
-          el.style.backgroundColor = "transparent";
-        }
-      }
-
-      function scan() {
-        var root = document.querySelector(".vl-form-embed");
-        if (!root) return;
-
-        root.querySelectorAll("[style*='background'], iframe").forEach(makeTransparent);
-        makeTransparent(root);
-      }
-
-      var root = document.querySelector(".vl-form-embed");
-      if (root) {
-        new MutationObserver(function (mutations) {
-          mutations.forEach(function (m) {
-            m.addedNodes && m.addedNodes.forEach(function (n) {
-              makeTransparent(n);
-              if (n.querySelectorAll) n.querySelectorAll("[style*='background'], iframe").forEach(makeTransparent);
-            });
           });
-        }).observe(root, { childList: true, subtree: true });
-      }
+        });
 
-      window.addEventListener("load", scan);
+        scan();
+      }).observe(root, { childList: true, subtree: true });
+    }
+
+    function boot() {
+      scan();
+      observe();
       setTimeout(scan, 200);
       setTimeout(scan, 800);
-    })();
-  </script>
+      setTimeout(scan, 1600);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot);
+    } else {
+      boot();
+    }
+
+    window.addEventListener("load", function () {
+      scan();
+      setTimeout(scan, 300);
+      setTimeout(scan, 1000);
+    });
+  })();
+</script>
+
 </body>
 </html>
