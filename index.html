@@ -1,3 +1,4 @@
+<!-- /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -70,6 +71,12 @@
     .dash-preview-wrap > [data-preview] { width: 100%; }
     .preview--hidden { display: none; }
 
+    .tab--active {
+      background: rgba(7,10,16,1);
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,1);
+    }
+
     .vlp-grid {
       background-image:
         linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
@@ -120,91 +127,8 @@
       </div>
     </section>
 
-    <!-- DASHBOARD PREVIEWS (SHORT VERSION: iframes) -->
-    <section class="border-t border-white/10" id="dashboard-preview">
-      <div class="container container--wide">
-        <div class="pt-12">
-          <div class="flex justify-center" role="tablist" aria-label="Dashboard preview tabs">
-            <div class="relative inline-flex items-end gap-1 border-b border-white/15">
-              <button
-                aria-selected="true"
-                class="tab tab--active relative z-10 -mb-px inline-flex items-center gap-2 rounded-t-xl border border-b-0 border-white/15 bg-ink-950 px-5 py-2.5 text-sm font-extrabold text-white shadow-soft"
-                data-tab="tax-monitor"
-                type="button"
-              >
-                <span aria-hidden="true" class="h-2 w-2 rounded-full bg-emerald-300"></span>
-                <span>Tax Monitor Setup</span>
-              </button>
-
-              <button
-                aria-selected="false"
-                class="tab relative -mb-px inline-flex items-center gap-2 rounded-t-xl border border-transparent px-5 py-2.5 text-sm font-semibold text-white/60 hover:bg-white/5 hover:text-white"
-                data-tab="va-agency"
-                type="button"
-              >
-                <span aria-hidden="true" class="h-2 w-2 rounded-full bg-white/35"></span>
-                <span>Virtual Assistant Agency Setup</span>
-              </button>
-
-              <button
-                aria-selected="false"
-                class="tab relative -mb-px inline-flex items-center gap-2 rounded-t-xl border border-transparent px-5 py-2.5 text-sm font-semibold text-white/60 hover:bg-white/5 hover:text-white"
-                data-tab="va-setup"
-                type="button"
-              >
-                <span aria-hidden="true" class="h-2 w-2 rounded-full bg-white/35"></span>
-                <span>Virtual Assistant Setup</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="dash-preview-wrap">
-            <div data-preview="tax-monitor">
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-soft md:p-4">
-                <iframe
-                  title="Tax Monitor Setup Preview"
-                  src="./previews/tax-monitor.html"
-                  class="h-[820px] w-full rounded-xl bg-white"
-                  loading="lazy"
-                ></iframe>
-              </div>
-            </div>
-
-            <div class="preview--hidden" data-preview="va-agency">
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-soft md:p-4">
-                <iframe
-                  title="Virtual Assistant Agency Setup Preview"
-                  src="./previews/va-agency.html"
-                  class="h-[820px] w-full rounded-xl bg-white"
-                  loading="lazy"
-                ></iframe>
-              </div>
-            </div>
-
-            <div class="preview--hidden" data-preview="va-setup">
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-soft md:p-4">
-                <iframe
-                  title="Virtual Assistant Setup Preview"
-                  src="./previews/va-setup.html"
-                  class="h-[820px] w-full rounded-xl bg-white"
-                  loading="lazy"
-                ></iframe>
-              </div>
-            </div>
-
-            <div class="mt-10 flex justify-center pb-12">
-              <a
-                class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-                href="https://secure.virtuallaunch.pro/memberSignup"
-                rel="noopener"
-              >
-                Sign Up for a 30-Day Free Trial Today
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- DASHBOARD PREVIEWS (loaded from /partials/dashboard-preview.html) -->
+    <div data-include="dashboard-preview"></div>
 
     <!-- WHY IT WORKS -->
     <section class="border-t border-white/10">
@@ -368,30 +292,36 @@
 
   <script>
     (function () {
-      const panels = Array.from(document.querySelectorAll("[data-preview]"));
-      const tabs = Array.from(document.querySelectorAll("[data-tab]"));
-      if (!panels.length || !tabs.length) return;
+      function initDashboardPreview(root) {
+        var host = root || document.getElementById("dashboard-preview");
+        if (!host) return;
 
-      function setActive(key) {
-        tabs.forEach((t) => {
-          const isActive = t.getAttribute("data-tab") === key;
-          t.classList.toggle("tab--active", isActive);
-          t.setAttribute("aria-selected", isActive ? "true" : "false");
+        var panels = Array.prototype.slice.call(host.querySelectorAll("[data-preview]"));
+        var tabs = Array.prototype.slice.call(host.querySelectorAll("[data-tab]"));
+        if (!panels.length || !tabs.length) return;
+
+        function setActive(key) {
+          tabs.forEach(function (t) {
+            var isActive = t.getAttribute("data-tab") === key;
+            t.classList.toggle("tab--active", isActive);
+            t.setAttribute("aria-selected", isActive ? "true" : "false");
+          });
+
+          panels.forEach(function (p) {
+            var isActive = p.getAttribute("data-preview") === key;
+            p.classList.toggle("preview--hidden", !isActive);
+          });
+        }
+
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function () {
+            setActive(t.getAttribute("data-tab"));
+          });
         });
 
-        panels.forEach((p) => {
-          const isActive = p.getAttribute("data-preview") === key;
-          p.classList.toggle("preview--hidden", !isActive);
-        });
+        setActive((host.querySelector(".tab--active") || tabs[0]).getAttribute("data-tab"));
       }
 
-      tabs.forEach((t) => t.addEventListener("click", () => setActive(t.getAttribute("data-tab"))));
-      setActive((document.querySelector(".tab--active") || tabs[0]).getAttribute("data-tab"));
-    })();
-  </script>
-
-  <script>
-    (function () {
       function loadIncludes() {
         var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
         if (!nodes.length) return;
@@ -407,6 +337,11 @@
             })
             .then(function (html) {
               node.innerHTML = html;
+
+              if (key === "dashboard-preview") {
+                var section = node.querySelector("#dashboard-preview") || node;
+                initDashboardPreview(section);
+              }
             })
             .catch(function (err) {
               console.error(err);
