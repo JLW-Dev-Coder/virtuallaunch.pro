@@ -8,9 +8,9 @@
   <title>Tax Monitor — Transcript-Backed Clarity Before Risk Escalates</title>
   <meta name="description" content="Transcript-backed IRS visibility for tax attorneys, EAs, and CPAs. Start with verified facts before escalation." />
 
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Tax Monitor — Transcript-Backed Clarity" />
   <meta property="og:description" content="Early IRS visibility for disciplined case evaluation before advice or escalation." />
+  <meta property="og:title" content="Tax Monitor — Transcript-Backed Clarity" />
+  <meta property="og:type" content="website" />
 
   <link rel="canonical" href="https://virtuallaunch.pro/lp/tax-monitor/" />
 
@@ -80,6 +80,10 @@
     @media (prefers-reduced-motion: reduce) {
       .vlp-grid-pan { animation: none; }
     }
+
+    /* LP-only: make room if header partial is fixed-position */
+    .vlp-header-spacer { height: 88px; }
+    @media (min-width: 768px) { .vlp-header-spacer { height: 104px; } }
   </style>
 </head>
 
@@ -88,31 +92,9 @@
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
 
-  <header class="sticky top-0 z-50 border-b border-white/10 bg-ink-950/70 backdrop-blur">
-    <div class="mx-auto flex max-w-6-5xl items-center justify-between px-4 py-3">
-      <a class="flex items-center" href="/index.html" aria-label="Virtual Launch Pro home">
-        <span aria-hidden="true" class="inline-flex items-center h-10">
-          <img
-            src="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
-            alt="Virtual Launch Pro logo"
-            class="h-10 w-auto"
-            decoding="async"
-            fetchpriority="high"
-            loading="eager"
-            style="filter: invert(1);"
-          />
-        </span>
-      </a>
-
-      <a
-        class="rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-        href="/login"
-        rel="noopener"
-      >
-        Go to Login
-      </a>
-    </div>
-  </header>
+  <!-- SHARED HEADER -->
+  <div data-include="header"></div>
+  <div class="vlp-header-spacer" aria-hidden="true"></div>
 
   <main id="top">
     <!-- HERO -->
@@ -313,12 +295,8 @@
     <section class="border-t border-white/10 bg-ink-950">
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-3xl text-center">
-          <p class="text-xs font-semibold tracking-widest text-brand-400">
-            WHO TAX MONITOR IS FOR
-          </p>
-          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">
-            Built for disciplined case evaluation
-          </h2>
+          <p class="text-xs font-semibold tracking-widest text-brand-400">WHO TAX MONITOR IS FOR</p>
+          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">Built for disciplined case evaluation</h2>
           <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
             This is for tax attorneys and tax professionals who want verified facts on the table before advice is given,
             risk escalates, or resolution paths are discussed.
@@ -327,82 +305,18 @@
 
         <div class="mt-14 grid gap-8 md:grid-cols-3">
           <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
-            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="#FFA500" stroke-width="2"/>
-                <path d="M3 21a9 9 0 0 1 18 0" stroke="#FFA500" stroke-width="2"/>
-              </svg>
-            </div>
             <h3 class="text-lg font-extrabold text-white">Verified IRS facts first</h3>
-            <p class="mt-3 text-sm text-white/70">
-              “I want verified IRS facts before advising clients on next steps or legal exposure.”
-            </p>
+            <p class="mt-3 text-sm text-white/70">“I want verified IRS facts before advising clients on next steps or legal exposure.”</p>
           </div>
 
           <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
-            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M3 17l6-6 4 4 7-7" stroke="#FFA500" stroke-width="2"/>
-                <path d="M14 8h6v6" stroke="#FFA500" stroke-width="2"/>
-              </svg>
-            </div>
             <h3 class="text-lg font-extrabold text-white">Discipline before escalation</h3>
-            <p class="mt-3 text-sm text-white/70">
-              “I prefer disciplined visibility before escalation, not reactive investigation.”
-            </p>
+            <p class="mt-3 text-sm text-white/70">“I prefer disciplined visibility before escalation, not reactive investigation.”</p>
           </div>
 
           <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
-            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M12 2l3 7h7l-5.5 4 2.5 7-7-4.5L5 20l2.5-7L2 9h7l3-7z" stroke="#FFA500" stroke-width="2"/>
-              </svg>
-            </div>
             <h3 class="text-lg font-extrabold text-white">Neutral monitoring boundary</h3>
-            <p class="mt-3 text-sm text-white/70">
-              “I want a neutral monitoring layer that supports judgment without pushing resolution.”
-            </p>
-          </div>
-        </div>
-
-        <div class="mt-14 grid gap-8 md:grid-cols-3">
-          <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
-            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="#FFA500" stroke-width="2"/>
-                <path d="M16 2v4M8 2v4M3 10h18" stroke="#FFA500" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-extrabold text-white">Clean authorization workflow</h3>
-            <p class="mt-3 text-sm text-white/70">
-              “I want a clean authorization workflow and faster access to IRS records without extra admin load.”
-            </p>
-          </div>
-
-          <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
-            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M7 7h10M7 12h10M7 17h6" stroke="#FFA500" stroke-width="2" stroke-linecap="round"/>
-                <path d="M5 4h14a2 2 0 0 1 2 2v12a4 4 0 0 1-4 4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="#FFA500" stroke-width="2"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-extrabold text-white">Fewer missed forms</h3>
-            <p class="mt-3 text-sm text-white/70">
-              “I want fewer missed forms (1099s, W-2s, and other income sources) before filings or strategy decisions are made.”
-            </p>
-          </div>
-
-          <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
-            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#FFA500" stroke-width="2"/>
-                <path d="M12 7v5l3 3" stroke="#FFA500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <h3 class="text-lg font-extrabold text-white">Guided post-filing visibility</h3>
-            <p class="mt-3 text-sm text-white/70">
-              “I want clients to feel guided after filing, with visibility that reduces panic and follow-up noise.”
-            </p>
+            <p class="mt-3 text-sm text-white/70">“I want a neutral monitoring layer that supports judgment without pushing resolution.”</p>
           </div>
         </div>
       </div>
@@ -464,7 +378,7 @@
       </div>
     </section>
 
-    <!-- CONVERSION (orange panel) -->
+    <!-- CONVERSION -->
     <section class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
         <div class="rounded-2xl bg-brand-500 px-6 py-10 shadow-soft md:px-10 md:py-14">
@@ -507,5 +421,59 @@
       </div>
     </section>
   </main>
+
+  <!-- SHARED FOOTER -->
+  <div data-include="footer"></div>
+
+  <script>
+    (function () {
+      function runScripts(container) {
+        var scripts = container.querySelectorAll("script");
+        scripts.forEach(function (oldScript) {
+          var newScript = document.createElement("script");
+
+          for (var i = 0; i < oldScript.attributes.length; i++) {
+            var attr = oldScript.attributes[i];
+            newScript.setAttribute(attr.name, attr.value);
+          }
+
+          if (!oldScript.src) {
+            newScript.text = oldScript.textContent || "";
+          }
+
+          oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+      }
+
+      function loadIncludes() {
+        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
+        if (!nodes.length) return;
+
+        nodes.forEach(function (node) {
+          var key = node.getAttribute("data-include");
+          var url = "/partials/" + key + ".html";
+
+          fetch(url, { cache: "no-store" })
+            .then(function (res) {
+              if (!res.ok) throw new Error("Include failed: " + url);
+              return res.text();
+            })
+            .then(function (html) {
+              node.innerHTML = html;
+              runScripts(node);
+            })
+            .catch(function (err) {
+              console.error(err);
+            });
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", loadIncludes);
+      } else {
+        loadIncludes();
+      }
+    })();
+  </script>
 </body>
 </html>
