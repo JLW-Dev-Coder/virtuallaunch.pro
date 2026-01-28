@@ -196,11 +196,8 @@
   }
 
   function run() {
-    var loader;
-
-    if (!prefersReducedMotion()) {
-      loader = createLoader();
-    }
+    // Loader intentionally disabled (no DOM injected, no overlay).
+    var loader = null;
 
     function finish() {
       initArtifactsTabs();
