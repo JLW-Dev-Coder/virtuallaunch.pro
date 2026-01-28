@@ -82,7 +82,6 @@
     </div>
 
     <article class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft md:p-10">
-
       <!-- HERO IMAGE (LARGE) -->
       <div class="mb-8 mt-6 overflow-hidden rounded-2xl border border-white/10">
         <img
@@ -257,9 +256,7 @@
             </p>
           </div>
 
-          <!-- Row 1 (3 cards) -->
           <div class="mt-10 grid gap-8 md:grid-cols-3">
-            <!-- Card 1 (active) -->
             <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-6 shadow-soft backdrop-blur-sm">
               <div class="flex items-center gap-4">
                 <div class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-[#FFA500]/40 bg-[#FFA500]/15">
@@ -273,7 +270,6 @@
               </div>
             </div>
 
-            <!-- Card 2 -->
             <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-6 shadow-soft backdrop-blur-sm">
               <div class="flex items-center gap-4">
                 <div class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-[#FFA500]/40 bg-[#FFA500]/15">
@@ -287,7 +283,6 @@
               </div>
             </div>
 
-            <!-- Card 3 -->
             <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-6 shadow-soft backdrop-blur-sm">
               <div class="flex items-center gap-4">
                 <div class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-[#FFA500]/40 bg-[#FFA500]/15">
@@ -302,9 +297,7 @@
             </div>
           </div>
 
-          <!-- Row 2 (2 cards; full width) -->
           <div class="mt-8 grid gap-8 md:grid-cols-2">
-            <!-- Card 4 -->
             <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-6 shadow-soft backdrop-blur-sm">
               <div class="flex items-center gap-4">
                 <div class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-[#FFA500]/40 bg-[#FFA500]/15">
@@ -318,7 +311,6 @@
               </div>
             </div>
 
-            <!-- Card 5 -->
             <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-6 shadow-soft backdrop-blur-sm">
               <div class="flex items-center gap-4">
                 <div class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg border border-[#FFA500]/40 bg-[#FFA500]/15">
@@ -334,54 +326,104 @@
           </div>
         </section>
 
-        <!-- SUBSCRIBE CTA -->
         <p class="text-lg font-semibold">
           <b class="item-instructions-cta">Subscribe now</b> and get the visual map of all 5 models — your sneak peek at the systems, pillars, and pipelines you’re learning to master.
         </p>
       </div>
-
-      <!-- SUBSCRIBE FORM -->
-      <div class="mt-10 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-        <div class="text-lg font-extrabold">Subscribe</div>
-        <div class="mt-2 text-white/70">Get Model B next (and the full visual map).</div>
-        <div class="mt-4">
-          <script src="https://secure.virtuallaunch.pro/frm/2uxzgUhaTids8Ujq6.js"></script>
-        </div>
-      </div>
     </article>
   </main>
 
+  <!-- Blog-specific subscribe footer -->
+  <div data-include="blog/footer"></div>
+
+  <!-- Global site footer -->
   <div data-include="footer"></div>
 
+  <!-- FORM BACKGROUND + HEIGHT HARD FIX (darkened iframe) -->
   <script>
     (function () {
-      function loadIncludes() {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
-        if (!nodes.length) return;
+      var ROOT_SELECTOR = ".vl-form-embed";
+      var IFRAME_SELECTOR = ROOT_SELECTOR + " iframe";
 
-        nodes.forEach(function (node) {
-          var key = node.getAttribute("data-include");
-          var url = "/partials/" + key + ".html";
+      var DARK_BG = "#070a10";
+      var DARK_BG_SOFT = "#0b1220";
 
-          fetch(url, { cache: "no-store" })
-            .then(function (res) {
-              if (!res.ok) throw new Error("Include failed: " + url);
-              return res.text();
-            })
-            .then(function (html) {
-              node.innerHTML = html;
-            })
-            .catch(function (err) {
-              console.error(err);
-            });
+      function styleIframe(iframe) {
+        if (!iframe) return;
+
+        iframe.setAttribute("allowtransparency", "true");
+        iframe.style.background = DARK_BG;
+        iframe.style.border = "0";
+        iframe.style.display = "block";
+        iframe.style.width = "100%";
+
+        iframe.style.minHeight = "360px";
+        iframe.style.height = "360px";
+
+        try {
+          var d = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+          if (!d || !d.head) return;
+
+          if (d.getElementById("vlp-dark-iframe-css")) return;
+
+          var s = d.createElement("style");
+          s.id = "vlp-dark-iframe-css";
+          s.textContent = `
+            html, body {
+              background: ${DARK_BG} !important;
+              color-scheme: dark;
+            }
+          `;
+          d.head.appendChild(s);
+
+          setTimeout(function () {
+            var bodyH = d.body ? d.body.scrollHeight : 0;
+            var docH = d.documentElement ? d.documentElement.scrollHeight : 0;
+            var maxH = Math.max(bodyH, docH);
+            if (maxH > 0) {
+              iframe.style.height = Math.min(Math.max(maxH, 520), 900) + "px";
+            }
+          }, 150);
+        } catch (e) {
+          iframe.style.background = DARK_BG_SOFT;
+        }
+      }
+
+      function scan() {
+        var root = document.querySelector(ROOT_SELECTOR);
+        if (!root) return;
+
+        root.querySelectorAll(IFRAME_SELECTOR).forEach(styleIframe);
+      }
+
+      function observe() {
+        var root = document.querySelector(ROOT_SELECTOR);
+        if (!root || root.__vlpObserverAttached) return;
+
+        root.__vlpObserverAttached = true;
+
+        new MutationObserver(scan).observe(root, {
+          childList: true,
+          subtree: true
         });
       }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadIncludes);
-      } else {
-        loadIncludes();
+      function boot() {
+        scan();
+        observe();
+        setTimeout(scan, 300);
+        setTimeout(scan, 800);
+        setTimeout(scan, 1500);
       }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+      } else {
+        boot();
+      }
+
+      window.addEventListener("load", boot);
+      window.addEventListener("resize", scan);
     })();
   </script>
 </body>
