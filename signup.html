@@ -47,7 +47,6 @@
 
   <link rel="stylesheet" href="/styles.css?v=20260127-1" />
 
-
   <style>
     html { scroll-behavior: smooth; }
 
@@ -79,6 +78,28 @@
       .lentax-glow-drift { animation: none; }
       .lentax-grid-pan { animation: none; }
     }
+
+    .vlp-signup-embed {
+      min-height: 740px;
+      overflow: hidden;
+    }
+
+    .vlp-signup-embed iframe {
+      border: 0 !important;
+      display: block !important;
+      height: 740px !important;
+      width: 100% !important;
+    }
+
+    @media (min-width: 768px) {
+      .vlp-signup-embed {
+        min-height: 820px;
+      }
+
+      .vlp-signup-embed iframe {
+        height: 820px !important;
+      }
+    }
   </style>
 </head>
 
@@ -102,7 +123,7 @@
     </div>
 
     <div class="grid gap-4 md:grid-cols-3">
-      <article class="md:col-span-2 rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+      <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft md:col-span-2">
         <div class="flex items-start justify-between gap-4">
           <div class="text-sm font-extrabold">Sign up</div>
           <div class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">Account</div>
@@ -113,7 +134,9 @@
         </p>
 
         <div class="mt-5 rounded-xl border border-white/10 bg-ink-900/60 p-4">
-          <script src="https://secure.virtuallaunch.pro/frm/vqZB3BPQpFQUbadA.js"></script>
+          <div class="vlp-signup-embed">
+            <script src="https://secure.virtuallaunch.pro/frm/vqZB3BPQpFQUbadA.js"></script>
+          </div>
         </div>
       </article>
 
@@ -180,11 +203,36 @@
         });
       }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadIncludes);
-      } else {
-        loadIncludes();
+      function styleSignupIframe() {
+        var wrapper = document.querySelector(".vlp-signup-embed");
+        if (!wrapper) return;
+
+        var iframe = wrapper.querySelector("iframe");
+        if (!iframe) return;
+
+        iframe.setAttribute("scrolling", "no");
+        iframe.style.border = "0";
+        iframe.style.display = "block";
+        iframe.style.width = "100%";
       }
+
+      function boot() {
+        loadIncludes();
+
+        styleSignupIframe();
+        setTimeout(styleSignupIframe, 250);
+        setTimeout(styleSignupIframe, 750);
+        setTimeout(styleSignupIframe, 1500);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+      } else {
+        boot();
+      }
+
+      window.addEventListener("load", boot);
+      window.addEventListener("resize", styleSignupIframe);
     })();
   </script>
 </body>
