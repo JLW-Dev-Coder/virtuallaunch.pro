@@ -84,6 +84,129 @@
   width: 100%;
 }
 
+.tm-client-main {
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tm-client-shell {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  min-height: 640px;
+  overflow: hidden;
+}
+
+.tm-client-stagebar {
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 14px 16px;
+}
+
+.tm-client-stagebar__dot {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  height: 10px;
+  width: 10px;
+}
+
+.tm-client-stagebar__dot--active {
+  background: rgba(249, 115, 22, 0.85);
+}
+
+.tm-client-stagebar__line {
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 999px;
+  height: 4px;
+  width: 140px;
+}
+
+.tm-client-wrap {
+  padding: 22px 22px;
+}
+
+.tm-client-title {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.tm-client-subtitle {
+  color: rgba(255, 255, 255, 0.70);
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 10px auto 0 auto;
+  max-width: 760px;
+  text-align: center;
+}
+
+.tm-client-card {
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  margin: 18px auto 0 auto;
+  max-width: 860px;
+  padding: 16px 16px;
+}
+
+.tm-client-card__head {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tm-client-fieldrow {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 12px;
+}
+
+.tm-client-input {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px 12px;
+  width: 100%;
+}
+
+.tm-client-label {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin: 12px 0 6px 0;
+  text-transform: uppercase;
+}
+
+@media (max-width: 980px) {
+  .tm-client-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .va-agency-sidebar {
+    display: none;
+  }
+
+  .tm-client-fieldrow {
+    grid-template-columns: 1fr;
+  }
+}
+
 .va-agency-content {
   display: flex;
   flex-direction: column;
@@ -1207,10 +1330,15 @@
                   <div class="tm-admin-topbar__left">
                     <button class="tm-admin-topbar__iconbtn" type="button" aria-label="Collapse sidebar">≪</button>
 
-                    <button class="tm-admin-topbar__clientbtn" type="button" aria-label="Client experience">
-                      <span aria-hidden="true" class="tm-admin-topbar__clientdot"></span>
-                      <span>Client Experience</span>
-                    </button>
+                      <button
+                        aria-label="Client experience"
+                        class="tm-admin-topbar__clientbtn"
+                        data-open="client-experience"
+                        type="button"
+                      >
+                        <span aria-hidden="true" class="tm-admin-topbar__clientdot"></span>
+                        <span>Client Experience</span>
+                      </button>
 
                     <button class="tm-admin-topbar__iconbtn tm-admin-topbar__iconbtn--plus" type="button" aria-label="Create">+</button>
                   </div>
@@ -1391,7 +1519,106 @@
             </div>
           </div>
         </div>
+        
+<!-- =========================
+     CLIENT EXPERIENCE — DASHBOARD PREVIEW (STATIC MOCK)
+     ========================= -->
+<div class="preview--hidden" data-preview="client-experience">
+  <div class="va-agency-preview" role="region" aria-label="Client Experience dashboard preview">
+    <div class="tm-client-shell">
 
+      <!-- LEFT SIDEBAR (copy VA Starter / VA Agency sidebar) -->
+      <aside class="va-agency-sidebar" aria-label="Sidebar">
+        <div class="va-agency-brand">
+          <div class="va-agency-brand__mark" aria-hidden="true"></div>
+          <div class="va-agency-brand__text">
+            <div class="va-agency-brand__title">Tax Monitor</div>
+            <div class="va-agency-brand__sub">Client Portal</div>
+          </div>
+        </div>
+
+        <div class="va-agency-profile">
+          <div class="va-agency-profile__avatar" aria-hidden="true"></div>
+          <div class="va-agency-profile__meta">
+            <div class="va-agency-profile__name">CLIENT NAME</div>
+            <a class="va-agency-profile__link" href="#" aria-label="Edit Profile">Edit Profile</a>
+          </div>
+        </div>
+
+        <nav class="va-agency-nav" aria-label="Primary navigation">
+          <a class="va-agency-nav__item va-agency-nav__item--active" href="#start-here">
+            <span class="va-agency-nav__icon" aria-hidden="true"></span>
+            <span class="va-agency-nav__label">Start Here</span>
+          </a>
+          <a class="va-agency-nav__item" href="#calendar">
+            <span class="va-agency-nav__icon" aria-hidden="true"></span>
+            <span class="va-agency-nav__label">Calendar</span>
+          </a>
+          <a class="va-agency-nav__item" href="#files">
+            <span class="va-agency-nav__icon" aria-hidden="true"></span>
+            <span class="va-agency-nav__label">Files</span>
+          </a>
+          <a class="va-agency-nav__item" href="#messaging">
+            <span class="va-agency-nav__icon" aria-hidden="true"></span>
+            <span class="va-agency-nav__label">Messaging</span>
+          </a>
+          <a class="va-agency-nav__item" href="#support">
+            <span class="va-agency-nav__icon" aria-hidden="true"></span>
+            <span class="va-agency-nav__label">Support</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="tm-client-main">
+        <div class="tm-client-stagebar" aria-label="Progress bar">
+          <span class="tm-client-stagebar__dot tm-client-stagebar__dot--active" aria-hidden="true"></span>
+          <span class="tm-client-stagebar__line" aria-hidden="true"></span>
+          <span class="tm-client-stagebar__dot" aria-hidden="true"></span>
+          <span class="tm-client-stagebar__line" aria-hidden="true"></span>
+          <span class="tm-client-stagebar__dot" aria-hidden="true"></span>
+          <span class="tm-client-stagebar__line" aria-hidden="true"></span>
+          <span class="tm-client-stagebar__dot" aria-hidden="true"></span>
+        </div>
+
+        <div class="tm-client-wrap">
+          <div class="tm-client-title">Tax Monitoring — Getting Started</div>
+          <div class="tm-client-subtitle">
+            We start with your current facts first. By the end of Step 4, you’ll know whether Tax Monitoring is a fit
+            for where things stand today and what the next best option is.
+          </div>
+
+          <div class="tm-client-card" aria-label="Situation snapshot form preview">
+            <div class="tm-client-card__head">Situation Snapshot</div>
+
+            <div class="tm-client-label">Company Name</div>
+            <input class="tm-client-input" type="text" value="Peppermint Paddy’s Precision VA Co." aria-label="Company Name" />
+
+            <div class="tm-client-fieldrow">
+              <div>
+                <div class="tm-client-label">First Name</div>
+                <input class="tm-client-input" type="text" value="Peppermint" aria-label="First Name" />
+              </div>
+              <div>
+                <div class="tm-client-label">Last Name</div>
+                <input class="tm-client-input" type="text" value="Paddy" aria-label="Last Name" />
+              </div>
+            </div>
+
+            <div class="tm-client-label">Primary Email</div>
+            <input class="tm-client-input" type="text" value="client@email.com" aria-label="Primary Email" />
+
+            <div class="tm-client-label">Estimated IRS balance due range (if known)</div>
+            <input class="tm-client-input" type="text" value="$25,001–$50,000" aria-label="Estimated IRS balance due range" />
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+        
         <!-- =========================
              VA AGENCY — PROJECT DASHBOARD PREVIEW (STATIC MOCK)
              ========================= -->
@@ -1917,14 +2144,8 @@
 
     panels.forEach(function (panel) {
       var isActivePanel = panel.getAttribute("data-preview") === tabName;
-
       panel.classList.toggle("is-active", isActivePanel);
-
-      if (panel.classList.contains("preview--hidden")) {
-        panel.classList.toggle("preview--hidden", !isActivePanel);
-      } else {
-        panel.classList.toggle("preview--hidden", !isActivePanel);
-      }
+      panel.classList.toggle("preview--hidden", !isActivePanel);
     });
   }
 
@@ -1932,14 +2153,21 @@
     var root = document.getElementById("dashboard-preview");
     if (!root) return;
 
-    var tabs = root.querySelectorAll(".tab[data-tab]");
-    if (!tabs.length) return;
+    root.addEventListener("click", function (e) {
+      var btn = e.target.closest("button");
+      if (!btn || !root.contains(btn)) return;
 
-    tabs.forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
+      var openTarget = btn.getAttribute("data-open");
+      if (openTarget) {
+        e.preventDefault();
+        setActiveTab(root, openTarget);
+        return;
+      }
+
+      if (btn.classList.contains("tab") && btn.hasAttribute("data-tab")) {
         e.preventDefault();
         setActiveTab(root, btn.getAttribute("data-tab"));
-      });
+      }
     });
 
     setActiveTab(root, "tax-monitor");
@@ -1951,5 +2179,6 @@
     initDashboardPreview();
   }
 })();
-  </script>
+</script>
+
 </section>
