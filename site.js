@@ -207,3 +207,82 @@
     run();
   }
 })();
+
+/* global window, document, for all SuiteDash embedded-forms */
+
+(function () {
+  "use strict";
+
+  function looksLikeFullDocument(html) {
+    var s = String(html || "").toLowerCase();
+    return (
+      s.indexOf("<!doctype") !== -1 ||
+      s.indexOf("<html") !== -1 ||
+      s.indexOf("<head") !== -1 ||
+      s.indexOf("<body") !== -1
+    );
+  }
+
+  function runScripts(container) {
+    var scripts = container.querySelectorAll("script");
+    if (!scripts.length) return;
+
+    scripts.forEach(function (oldScript) {
+      var s = document.createElement("script");
+
+      for (var i = 0; i < oldScript.attributes.length; i += 1) {
+        var attr = oldScript.attributes[i];
+        s.setAttribute(attr.name, attr.value);
+      }
+
+      if (!oldScript.src) {
+        s.text = oldScript.textContent || "";
+      }
+
+      oldScript.parentNode.replaceChild(s, oldScript);
+    });
+  }
+
+  function loadInclude(node) {
+    var key = node.getAttribute("data-include");
+    var url = "/partials/" + key + ".html";
+
+    return fetch(url, { cache: "no-store" })
+      .then(function (res) {
+        return res.text().then(function (text) {
+          return { ok: res.ok, text: text, url: url };
+        });
+      })
+      .then(function (payload) {
+        if (!payload.ok) throw new Error("Include failed: " + payload.url);
+        if (looksLikeFullDocument(payload.text)) throw new Error("Include blocked (got full document): " + payload.url);
+
+        node.innerHTML = payload.text;
+        runScripts(node);
+      });
+  }
+
+  function loadIncludes() {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
+    if (!nodes.length) return;
+
+    nodes.forEach(function (node) {
+      loadInclude(node).catch(function (err) {
+        console.error(err);
+      });
+    });
+  }
+
+  function boot() {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", loadIncludes);
+    } else {
+      loadIncludes();
+    }
+  }
+
+  // expose optional manual trigger
+  window.vlLoadIncludes = loadIncludes;
+
+  boot();
+})();
