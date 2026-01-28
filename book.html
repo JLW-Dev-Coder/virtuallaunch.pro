@@ -49,19 +49,14 @@
 
   <style>
     html { scroll-behavior: smooth; }
-
+  
     .booking-embed iframe {
-      height: clamp(760px, 72vh, 980px) !important;
-      min-height: 760px !important;
+      display: block;
+      height: clamp(520px, 56vh, 740px) !important;
+      min-height: 520px !important;
       width: 100% !important;
     }
-
-    .booking-embed > iframe {
-      height: clamp(760px, 72vh, 980px) !important;
-      min-height: 760px !important;
-      width: 100% !important;
-    }
-
+  
     .lentax-grid {
       background-image:
         linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
@@ -69,28 +64,29 @@
       background-size: 56px 56px;
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
     }
-
+  
     .lentax-grid-pan { animation: lentaxGridPan 22s linear infinite; will-change: transform; }
-
+  
     @keyframes lentaxGridPan {
       0% { transform: translate3d(0,0,0); }
       100% { transform: translate3d(-56px,-56px,0); }
     }
-
+  
     .lentax-glow-drift { animation: lentaxGlowDrift 14s ease-in-out infinite; will-change: transform; }
-
+  
     @keyframes lentaxGlowDrift {
       0% { transform: translate3d(0,0,0); }
       33% { transform: translate3d(16px,-10px,0); }
       66% { transform: translate3d(-12px,14px,0); }
       100% { transform: translate3d(0,0,0); }
     }
-
+  
     @media (prefers-reduced-motion: reduce) {
       .lentax-glow-drift { animation: none; }
       .lentax-grid-pan { animation: none; }
     }
   </style>
+
 </head>
 
 <body class="bg-ink-950 text-white antialiased">
