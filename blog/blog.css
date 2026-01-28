@@ -128,3 +128,33 @@
 .vl-form-embed span {
   color: rgba(255, 255, 255, 0.85) !important;
 }
+/* /blog/blog.css */
+
+/* vl-form-embed */
+.vl-form-embed {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.vl-form-embed iframe {
+  background: transparent !important;
+  border: 0 !important;
+  display: block;
+  height: 100%;
+  min-height: 240px;
+  width: 100%;
+}
+
+/* vl-form-embed (fix common inline wrappers) */
+.vl-form-embed * {
+  background: transparent !important;
+}
+
+.vl-form-embed [style*="background"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.vl-form-embed [style*="border"] {
+  border-color: transparent !important;
+}
