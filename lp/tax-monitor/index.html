@@ -61,7 +61,7 @@
 
   <style>
     html { scroll-behavior: smooth; }
-
+  
     .vlp-grid {
       background-image:
         linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
@@ -69,22 +69,22 @@
       background-size: 56px 56px;
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
     }
-
+  
     .vlp-grid-pan { animation: gridPan 22s linear infinite; }
-
+  
     @keyframes gridPan {
       from { transform: translate3d(0,0,0); }
       to { transform: translate3d(-56px,-56px,0); }
     }
-
+  
     @media (prefers-reduced-motion: reduce) {
       .vlp-grid-pan { animation: none; }
     }
-
-    /* LP-only: make room if header partial is fixed-position */
-    .vlp-header-spacer { height: 88px; }
-    @media (min-width: 768px) { .vlp-header-spacer { height: 104px; } }
+  
+    .vlp-header-spacer { height: 64px; }
+    @media (min-width: 768px) { .vlp-header-spacer { height: 72px; } }
   </style>
+
 </head>
 
 <body class="bg-ink-950 text-white antialiased">
