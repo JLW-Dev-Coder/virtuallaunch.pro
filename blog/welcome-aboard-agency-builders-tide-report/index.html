@@ -380,70 +380,69 @@
 
           </div>
 
-          <!-- RIGHT: FORM -->
-          <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 shadow-soft">
-            <div class="text-sm font-extrabold text-white">
-              Subscribe
-            </div>
-            <p class="mt-2 text-xs text-white/60">
-              Get the next Tide Report drop.
-            </p>
+     <!-- RIGHT: FORM -->
+<div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 shadow-soft">
+  <div class="text-sm font-extrabold text-white">
+    Subscribe
+  </div>
+  <p class="mt-2 text-xs text-white/60">
+    Get the next Tide Report drop.
+  </p>
 
-            <div class="mt-4 vl-form-embed">
-              <script src="https://secure.virtuallaunch.pro/frm/2uxzgUhaTids8Ujq6.js"></script>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div class="mt-4 vl-form-embed w-full overflow-visible">
+    <script src="https://secure.virtuallaunch.pro/frm/2uxzgUhaTids8Ujq6.js"></script>
+  </div>
+</div>
+</div>
+</section>
 
-      <div class="mt-6 flex justify-center">
-        <a
-          class="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-extrabold text-white hover:bg-white/10"
-          href="/blog/"
-        >
-          Click to view all blog articles
-        </a>
-      </div>
+<div class="mt-6 flex justify-center">
+  <a
+    class="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-sm font-extrabold text-white hover:bg-white/10"
+    href="/blog/"
+  >
+    Click to view all blog articles
+  </a>
+</div>
 
-    </article>
-  </main>
+</article>
+</main>
 
-  <div data-include="footer"></div>
+<div data-include="footer"></div>
 
-  <script>
-    (function () {
-      function loadIncludes() {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
-        if (!nodes.length) return;
+<script>
+  (function () {
+    function loadIncludes() {
+      var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
+      if (!nodes.length) return;
 
-        nodes.forEach(function (node) {
-          var key = node.getAttribute("data-include");
-          var url = "/partials/" + key + ".html";
+      nodes.forEach(function (node) {
+        var key = node.getAttribute("data-include");
+        var url = "/partials/" + key + ".html";
 
-          fetch(url, { cache: "no-store" })
-            .then(function (res) {
-              if (!res.ok) throw new Error("Include failed: " + url);
-              return res.text();
-            })
-            .then(function (html) {
-              node.innerHTML = html;
-            })
-            .catch(function (err) {
-              console.error(err);
-            });
-        });
-      }
+        fetch(url, { cache: "no-store" })
+          .then(function (res) {
+            if (!res.ok) throw new Error("Include failed: " + url);
+            return res.text();
+          })
+          .then(function (html) {
+            node.innerHTML = html;
+          })
+          .catch(function (err) {
+            console.error(err);
+          });
+      });
+    }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadIncludes);
-      } else {
-        loadIncludes();
-      }
-    })();
-  </script>
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", loadIncludes);
+    } else {
+      loadIncludes();
+    }
+  })();
+</script>
 
-  <!-- FORM BACKGROUND HARD FIX -->
- <!-- FORM BACKGROUND HARD FIX (merged + improved; keep only this one) -->
+<!-- FORM BACKGROUND + HEIGHT HARD FIX (merged + improved; keep only this one) -->
 <script>
   (function () {
     var ROOT_SELECTOR = ".vl-form-embed";
@@ -486,6 +485,26 @@
       }
     }
 
+    function setIframeHeight(iframe) {
+      if (!iframe) return;
+
+      var h = 560;
+
+      try {
+        var d = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+        if (d && d.body) {
+          var bodyH = d.body.scrollHeight || 0;
+          var docH = d.documentElement ? (d.documentElement.scrollHeight || 0) : 0;
+          var maxH = Math.max(bodyH, docH);
+          if (maxH > 0) h = Math.min(Math.max(maxH, 420), 900);
+        }
+      } catch (e) {
+        /* cross-origin safety */
+      }
+
+      iframe.style.height = h + "px";
+    }
+
     function scan() {
       var root = document.querySelector(ROOT_SELECTOR);
       if (!root) return;
@@ -493,6 +512,7 @@
       root.querySelectorAll(IFRAME_SELECTOR).forEach(function (iframe) {
         setTransparentStyles(iframe);
         injectIframeCss(iframe);
+        setIframeHeight(iframe);
       });
 
       root.querySelectorAll(STYLE_BG_SELECTOR).forEach(setTransparentStyles);
@@ -514,6 +534,7 @@
               n.querySelectorAll("iframe").forEach(function (iframe) {
                 setTransparentStyles(iframe);
                 injectIframeCss(iframe);
+                setIframeHeight(iframe);
               });
 
               n.querySelectorAll("[style*='background']").forEach(setTransparentStyles);
@@ -543,6 +564,10 @@
       scan();
       setTimeout(scan, 300);
       setTimeout(scan, 1000);
+    });
+
+    window.addEventListener("resize", function () {
+      scan();
     });
   })();
 </script>
