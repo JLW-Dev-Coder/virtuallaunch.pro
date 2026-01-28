@@ -61,7 +61,7 @@
 
   <style>
     html { scroll-behavior: smooth; }
-  
+
     .vlp-grid {
       background-image:
         linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
@@ -69,22 +69,21 @@
       background-size: 56px 56px;
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
     }
-  
+
     .vlp-grid-pan { animation: gridPan 22s linear infinite; }
-  
+
     @keyframes gridPan {
       from { transform: translate3d(0,0,0); }
       to { transform: translate3d(-56px,-56px,0); }
     }
-  
+
     @media (prefers-reduced-motion: reduce) {
       .vlp-grid-pan { animation: none; }
     }
-  
+
     .vlp-header-spacer { height: 64px; }
     @media (min-width: 768px) { .vlp-header-spacer { height: 72px; } }
   </style>
-
 </head>
 
 <body class="bg-ink-950 text-white antialiased">
@@ -100,7 +99,6 @@
     <!-- HERO -->
     <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-3 md:pb-14 md:pt-6">
       <p class="mx-auto mb-3 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
-
         Tax Monitor Setup
       </p>
 
@@ -291,80 +289,134 @@
         </div>
       </div>
     </section>
-<!-- ARTIFACTS -->
-<section class="border-t border-white/10 bg-ink-950" id="artifacts">
-  <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
-    <div class="mx-auto max-w-3xl text-center">
-      <p class="text-xs font-semibold tracking-widest text-brand-400">ARTIFACTS</p>
-      <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">Proof, not pitch</h2>
-      <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-        Use these artifacts as a landing-page section, a PDF handout, or a one-page leave-behind to explain
-        why “monitor → decide → resolve” prevents early escalation based on incomplete data.
-      </p>
-    </div>
 
-    <div class="mx-auto mt-12 max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
-      <div class="flex flex-col gap-8">
-        <div>
-          <h3 class="text-xl font-extrabold text-white">
-            Comparison Artifact — Tax Monitor vs. Resolution Software
-          </h3>
-          <p class="mt-3 text-sm text-white/70">
-            A side-by-side capability comparison plus an IRS Offer in Compromise (OIC) acceptance snapshot,
-            designed to show what resolution tools do well—and what they do not control during the waiting period.
+    <!-- ARTIFACTS -->
+    <section
+      id="artifacts"
+      class="relative border-t border-white/10 overflow-hidden"
+    >
+      <!-- AURORA BACKGROUND -->
+      <div class="pointer-events-none absolute inset-0 -z-10">
+        <div class="absolute -top-32 -left-32 h-[520px] w-[520px] rounded-full bg-brand-500/30 blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-32 h-[520px] w-[520px] rounded-full bg-emerald-300/25 blur-[120px]"></div>
+        <div class="absolute bottom-0 left-1/4 h-[420px] w-[420px] rounded-full bg-fuchsia-400/15 blur-[140px]"></div>
+      </div>
+
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">ARTIFACTS</p>
+          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">Proof, not pitch</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
+            Use these artifacts as a landing-page section, a PDF handout, or a one-page leave-behind to explain
+            why “monitor → decide → resolve” prevents early escalation based on incomplete data.
           </p>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
-          <h4 class="text-sm font-extrabold text-white">Interpretation</h4>
-          <ul class="mt-3 space-y-2 text-sm text-white/75">
-            <li>• Resolution tools cover execution once a strategy is chosen (portal, forms, tasks, transcripts).</li>
-            <li>• They do not system-control pre-resolution client messaging to “own the wait.”</li>
-            <li>• Tax Monitor adds reassurance logic, intentional pause, and gated transitions before escalation.</li>
-          </ul>
-        </div>
+        <div class="mx-auto mt-12 max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
+          <div class="flex flex-col gap-8">
+            <div>
+              <h3 class="text-xl font-extrabold text-white">
+                Comparison Artifact — Tax Monitor vs. Resolution Software
+              </h3>
+              <p class="mt-3 text-sm text-white/70">
+                A side-by-side capability comparison plus an IRS Offer in Compromise (OIC) acceptance snapshot,
+                designed to show what resolution tools do well—and what they do not control during the waiting period.
+              </p>
+            </div>
 
-        <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
-          <h4 class="text-sm font-extrabold text-white">Why resolution software can drift into “OIC-mill” patterns</h4>
-          <p class="mt-3 text-sm text-white/75">
-            Without assessment-before-sale discipline, teams can roll into resolution workflows before readiness,
-            creating reactive comms and strategy decisions built on incomplete data.
-          </p>
-          <ul class="mt-4 space-y-2 text-sm text-white/75">
-            <li>• Early escalation before readiness is verified</li>
-            <li>• OIC positioning based on incomplete records</li>
-            <li>• Volume-driven engagement over diagnosis</li>
-            <li>• Reactive client communications during long waits</li>
-          </ul>
-          <p class="mt-4 text-sm text-white/75">
-            Tax Monitor inserts a defensible pause: “We know more before we sell.”
-          </p>
-        </div>
+            <!-- COMPARISON CHART (GRID, NOT TABLE) -->
+            <div class="rounded-2xl border border-white/10 bg-ink-950/60 shadow-soft overflow-hidden">
+              <div class="grid grid-cols-5 border-b border-white/10 bg-ink-900/80 text-xs font-extrabold uppercase tracking-widest text-white/80">
+                <div class="p-4">Capability</div>
+                <div class="p-4">IRSLogics</div>
+                <div class="p-4">IRS Solutions</div>
+                <div class="p-4">PitBull</div>
+                <div class="p-4">Tax Monitor</div>
+              </div>
 
-        <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
-          <h4 class="text-sm font-extrabold text-white">IRS Offer in Compromise snapshot</h4>
-          <ul class="mt-3 space-y-2 text-sm text-white/75">
-            <li>• FY 2024 offers received: 33,591</li>
-            <li>• FY 2024 offers accepted: 7,199</li>
-            <li>• Approximate acceptance rate: ~21%</li>
-          </ul>
-          <p class="mt-4 text-xs text-white/60">
-            Note: Include your formal citations (IRS Data Book table reference) in the PDF/handout version.
-          </p>
-        </div>
+              <div class="grid grid-cols-5 border-b border-white/10 text-sm">
+                <div class="p-4 font-semibold">Client portal</div>
+                <div class="p-4">✓ Docs + workflow</div>
+                <div class="p-4">✓ Branded portal</div>
+                <div class="p-4">✓ File exchange</div>
+                <div class="p-4 font-semibold text-emerald-300">✓ Dashboards + states</div>
+              </div>
 
-        <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
-          <h4 class="text-sm font-extrabold text-white">How to read this artifact</h4>
-          <ul class="mt-3 space-y-2 text-sm text-white/75">
-            <li>• Resolution software = execution after strategy selection</li>
-            <li>• Tax Monitor = assessment + reassurance + containment before selection</li>
-            <li>• Tools automate tasks; TM disciplines readiness</li>
-          </ul>
+              <div class="grid grid-cols-5 border-b border-white/10 text-sm bg-white/[0.03]">
+                <div class="p-4 font-semibold">Transcript alerts</div>
+                <div class="p-4">✓ Integrated</div>
+                <div class="p-4">✓ Automated</div>
+                <div class="p-4">✓ Reporting</div>
+                <div class="p-4 font-semibold text-emerald-300">✓ + EMCT loop</div>
+              </div>
+
+              <div class="grid grid-cols-5 border-b border-white/10 text-sm">
+                <div class="p-4 font-semibold">Waiting period owned</div>
+                <div class="p-4 text-white/50">×</div>
+                <div class="p-4 text-white/50">×</div>
+                <div class="p-4 text-white/50">×</div>
+                <div class="p-4 font-semibold text-emerald-300">✓ System-controlled</div>
+              </div>
+
+              <div class="grid grid-cols-5 text-sm bg-white/[0.03]">
+                <div class="p-4 font-semibold">Pre-resolution pause</div>
+                <div class="p-4 text-white/50">×</div>
+                <div class="p-4 text-white/50">×</div>
+                <div class="p-4 text-white/50">×</div>
+                <div class="p-4 font-semibold text-emerald-300">✓ Built-in</div>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+              <h4 class="text-sm font-extrabold text-white">Interpretation</h4>
+              <ul class="mt-3 space-y-2 text-sm text-white/75">
+                <li>• Resolution tools cover execution once a strategy is chosen (portal, forms, tasks, transcripts).</li>
+                <li>• They do not system-control pre-resolution client messaging to “own the wait.”</li>
+                <li>• Tax Monitor adds reassurance logic, intentional pause, and gated transitions before escalation.</li>
+              </ul>
+            </div>
+
+            <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+              <h4 class="text-sm font-extrabold text-white">Why resolution software can drift into “OIC-mill” patterns</h4>
+              <p class="mt-3 text-sm text-white/75">
+                Without assessment-before-sale discipline, teams can roll into resolution workflows before readiness,
+                creating reactive comms and strategy decisions built on incomplete data.
+              </p>
+              <ul class="mt-4 space-y-2 text-sm text-white/75">
+                <li>• Early escalation before readiness is verified</li>
+                <li>• OIC positioning based on incomplete records</li>
+                <li>• Reactive client communications during long waits</li>
+                <li>• Volume-driven engagement over diagnosis</li>
+              </ul>
+              <p class="mt-4 text-sm text-white/75">
+                Tax Monitor inserts a defensible pause: “We know more before we sell.”
+              </p>
+            </div>
+
+            <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+              <h4 class="text-sm font-extrabold text-white">IRS Offer in Compromise snapshot</h4>
+              <ul class="mt-3 space-y-2 text-sm text-white/75">
+                <li>• FY 2024 offers received: 33,591</li>
+                <li>• FY 2024 offers accepted: 7,199</li>
+                <li>• Approximate acceptance rate: ~21%</li>
+              </ul>
+              <p class="mt-4 text-xs text-white/60">
+                Note: Include your formal citations (IRS Data Book table reference) in the PDF/handout version.
+              </p>
+            </div>
+
+            <div class="rounded-2xl border border-white/10 bg-ink-900/60 p-6">
+              <h4 class="text-sm font-extrabold text-white">How to read this artifact</h4>
+              <ul class="mt-3 space-y-2 text-sm text-white/75">
+                <li>• Resolution software = execution after strategy selection</li>
+                <li>• Tax Monitor = assessment + reassurance + containment before selection</li>
+                <li>• Tools automate tasks; TM disciplines readiness</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <!-- WHO THIS IS FOR -->
     <section class="border-t border-white/10 bg-ink-950">
@@ -498,7 +550,7 @@
   </main>
 
   <!-- SHARED FOOTER -->
-<div data-include="footer-lp"></div>
+  <div data-include="footer-lp"></div>
 
   <script>
     (function () {
