@@ -292,7 +292,6 @@
     </section>
 
 <!-- ARTIFACTS -->
-<!-- ARTIFACTS -->
 <section
   id="artifacts"
   class="relative border-t border-white/10 overflow-hidden"
@@ -309,90 +308,272 @@
       <p class="text-xs font-semibold tracking-widest text-brand-400">ARTIFACTS</p>
       <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">Proof, not pitch</h2>
       <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-        A side-by-side capability comparison showing what resolution software handles well—and
-        what remains unmanaged before escalation.
+        A side-by-side capability comparison plus an IRS Offer in Compromise (OIC) acceptance snapshot,
+        designed to show what resolution tools do well—and what they do not control during the waiting period.
       </p>
     </div>
 
-    <!-- COMPARISON CHART ONLY -->
-    <div class="mx-auto mt-12 max-w-4xl rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 to-emerald-300/10 p-6 shadow-soft md:p-8">
-      <div class="rounded-2xl border border-white/10 bg-ink-950/60 shadow-soft overflow-hidden">
-        <div class="grid grid-cols-5 bg-ink-900/80 text-[10px] font-extrabold uppercase tracking-widest text-white/80 border-b border-white/10">
-          <div class="p-3 border-r border-white/10">Capability</div>
-          <div class="p-3 text-center">IRS Logics</div>
-          <div class="p-3 text-center">IRS Solutions</div>
-          <div class="p-3 text-center">PitBull</div>
-          <div class="p-3 text-center">Tax Monitor</div>
-        </div>
+    <!-- FEATURED ARTIFACT PANEL -->
+    <div class="mx-auto mt-12 max-w-4xl rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 to-emerald-300/10 p-8 shadow-soft md:p-10">
+      <div class="flex flex-col gap-8">
 
-        <!-- ROW TEMPLATE -->
-        <!-- Use flex + items-center + justify-center to center checkmarks -->
-        <div class="grid grid-cols-5 text-[12px] border-b border-white/10">
-          <div class="p-3 font-semibold border-r border-white/10">Client Portal</div>
+        <!-- COMPARISON CHART ONLY (NO H-SCROLL, CHECKMARK CENTERED, CHECKMARK ON ITS OWN LINE) -->
+        <div class="rounded-2xl border border-white/10 bg-ink-950/60 shadow-soft overflow-hidden">
+          <div class="w-full">
+            <!-- HEADER -->
+            <div class="grid grid-cols-5 border-b border-white/10 bg-ink-900/80 text-[10px] font-extrabold uppercase tracking-widest text-white/80">
+              <div class="p-3 border-r border-white/10">Capability</div>
+              <div class="p-3 text-center">IRS Logics</div>
+              <div class="p-3 text-center">IRS Solutions</div>
+              <div class="p-3 text-center">PitBull Tax Software</div>
+              <div class="p-3 text-center">Tax Monitor (TM)</div>
+            </div>
 
-          <div class="p-3 flex flex-col items-center justify-center text-center">
-            <div>✓</div>
-            <div class="mt-1 text-white/80">Secure portal, docs, workflow</div>
+            <!-- ROWS -->
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px]">
+              <div class="p-3 font-semibold border-r border-white/10">Client Portal</div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Secure portal for docs &amp; workflow, communications, case sharing.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Custom branded portal with client access &amp; docs.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Client portal with file exchange &amp; chat.</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Portal w/ dashboards, visible progress, reassurance views.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px] bg-white/[0.03]">
+              <div class="p-3 font-semibold border-r border-white/10">Transcript Delivery &amp; Alerts</div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Integrated IRS transcript access &amp; alerts.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Automatic transcript downloads &amp; email alerts.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Automatic transcript retrieval &amp; reporting (add-on).</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Integrated with EMCT messaging &amp; state logic.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px]">
+              <div class="p-3 font-semibold border-r border-white/10">Form Auto-Fill (IRS Forms)</div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Standard IRS forms &amp; auto-populate.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">IRS forms included (POA, etc.).</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Auto-select, recalculation &amp; form support.</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Pre-built &amp; sequenced forms inside bucketed workflows.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px] bg-white/[0.03]">
+              <div class="p-3 font-semibold border-r border-white/10">Workflow / Task Management</div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Case &amp; task workflows.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Integrated resolution case management.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Workflow per case; calendar &amp; tracking.</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Full gated workflows + state transitions (monitor → decision → handoff).</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px]">
+              <div class="p-3 font-semibold border-r border-white/10">Client Messaging / Inbox</div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Basic communications via portal/logs.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Portal messages to clients.</div>
+              </div>
+
+              <div class="p-3 text-center">
+                <div class="leading-none">✓</div>
+                <div class="mt-1 text-white/80">Portal chat &amp; email history.</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Purpose-built EMCT inbox + gated reassurance + continuity.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px] bg-white/[0.03]">
+              <div class="p-3 font-semibold border-r border-white/10">Automated Client Reassurance (EMCT)</div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px]">
+              <div class="p-3 font-semibold border-r border-white/10">System-Owned Waiting State Logic</div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px] bg-white/[0.03]">
+              <div class="p-3 font-semibold border-r border-white/10">Staff Load Protection During Non-Actionable Periods</div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px]">
+              <div class="p-3 font-semibold border-r border-white/10">Architected Pause / Pre-Resolution Containment</div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center text-white/50">
+                <div class="leading-none">✗</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 border-b border-white/10 text-[12px] bg-white/[0.03]">
+              <div class="p-3 font-semibold border-r border-white/10">Segregated Internal vs. Client Views</div>
+
+              <div class="p-3 text-center">Partial</div>
+              <div class="p-3 text-center">Partial</div>
+              <div class="p-3 text-center">Partial</div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Clear separation</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-5 text-[12px]">
+              <div class="p-3 font-semibold border-r border-white/10">Launch-Ready Client Experience (360°)</div>
+
+              <div class="p-3 text-center text-white/60">
+                <div class="leading-none">✗</div>
+                <div class="mt-1">Resolution-centric</div>
+              </div>
+
+              <div class="p-3 text-center text-white/60">
+                <div class="leading-none">✗</div>
+                <div class="mt-1">Resolution-centric</div>
+              </div>
+
+              <div class="p-3 text-center text-white/60">
+                <div class="leading-none">✗</div>
+                <div class="mt-1">Resolution-centric</div>
+              </div>
+
+              <div class="p-3 text-center font-semibold">
+                <div class="leading-none text-brand-400">✓</div>
+                <div class="mt-1 text-white/90">Assurance-centric</div>
+              </div>
+            </div>
+
           </div>
-
-          <div class="p-3 flex flex-col items-center justify-center text-center">
-            <div>✓</div>
-            <div class="mt-1 text-white/80">Branded portal & docs</div>
-          </div>
-
-          <div class="p-3 flex flex-col items-center justify-center text-center">
-            <div>✓</div>
-            <div class="mt-1 text-white/80">File exchange & chat</div>
-          </div>
-
-          <div class="p-3 flex flex-col items-center justify-center text-center font-semibold">
-            <div class="text-brand-400">✓</div>
-            <div class="mt-1 text-white/90">Dashboards, progress, reassurance</div>
-          </div>
         </div>
 
-        <div class="grid grid-cols-5 text-[12px] bg-white/[0.03] border-b border-white/10">
-          <div class="p-3 font-semibold border-r border-white/10">Transcript Alerts</div>
-
-          <div class="p-3 flex items-center justify-center">✓</div>
-          <div class="p-3 flex items-center justify-center">✓</div>
-          <div class="p-3 flex items-center justify-center">✓</div>
-          <div class="p-3 flex items-center justify-center font-semibold text-brand-400">✓</div>
-        </div>
-
-        <div class="grid grid-cols-5 text-[12px] border-b border-white/10">
-          <div class="p-3 font-semibold border-r border-white/10">Automated Client Reassurance</div>
-
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center font-semibold text-brand-400">✓</div>
-        </div>
-
-        <div class="grid grid-cols-5 text-[12px] bg-white/[0.03] border-b border-white/10">
-          <div class="p-3 font-semibold border-r border-white/10">System-Owned Waiting State</div>
-
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center font-semibold text-brand-400">✓</div>
-        </div>
-
-        <div class="grid grid-cols-5 text-[12px]">
-          <div class="p-3 font-semibold border-r border-white/10">Pre-Resolution Containment</div>
-
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center text-white/50">✗</div>
-          <div class="p-3 flex items-center justify-center font-semibold text-brand-400">✓</div>
-        </div>
       </div>
     </div>
   </div>
 </section>
-
-
-
 
     <!-- WHO THIS IS FOR -->
     <section class="border-t border-white/10 bg-ink-950">
