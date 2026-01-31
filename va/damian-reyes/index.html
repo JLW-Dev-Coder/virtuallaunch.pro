@@ -36,6 +36,14 @@
     type="image/svg+xml"
   />
 
+  <!-- PRELOAD HERO (WEBP) -->
+  <link
+    rel="preload"
+    as="image"
+    href="/assets/va/va-profile-damian-reyes-hero.webp"
+    type="image/webp"
+  />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -258,12 +266,18 @@
 
             <!-- RIGHT IMAGE (INTEGRATED) -->
             <div class="lg:col-span-4">
-              <div class="relative min-h-[520px] lg:min-h-[720px]">
-                <img
-                  alt="Damian Reyes portrait"
-                  class="vlp-hero-img"
-                  src="/assets/va/va-profile-damian-reyes-hero.png"
-                />
+              <div class="relative min-h-[520px] lg:min-h-[720px] overflow-visible">
+                <picture>
+                  <source srcset="/assets/va/va-profile-damian-reyes-hero.webp" type="image/webp" />
+                  <img
+                    alt="Damian Reyes portrait"
+                    class="vlp-hero-img"
+                    decoding="async"
+                    fetchpriority="high"
+                    loading="eager"
+                    src="/assets/va/va-profile-damian-reyes-hero.png"
+                  />
+                </picture>
               </div>
             </div>
           </div>
