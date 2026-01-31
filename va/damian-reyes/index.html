@@ -42,8 +42,8 @@
       theme: {
         extend: {
           boxShadow: {
-            soft: "0 10px 30px rgba(0,0,0,0.12)",
-            topbar: "0 18px 50px rgba(0,0,0,0.18)"
+            soft: "0 10px 30px rgba(0,0,0,0.18)",
+            topbar: "0 18px 50px rgba(0,0,0,0.22)"
           },
           colors: {
             brand: { 500: "#f97316", 400: "#fb923c" },
@@ -64,10 +64,10 @@
 
     .vlp-space {
       background:
-        radial-gradient(1200px 700px at 18% 12%, rgba(249,115,22,0.18), transparent 55%),
-        radial-gradient(900px 600px at 88% 72%, rgba(16,185,129,0.12), transparent 60%),
-        radial-gradient(800px 520px at 60% 20%, rgba(255,255,255,0.06), transparent 55%),
-        radial-gradient(1200px 900px at 50% 110%, rgba(255,255,255,0.04), transparent 60%),
+        radial-gradient(1100px 760px at 14% 12%, rgba(249,115,22,0.22), transparent 58%),
+        radial-gradient(900px 640px at 82% 76%, rgba(16,185,129,0.14), transparent 60%),
+        radial-gradient(900px 600px at 55% 18%, rgba(255,255,255,0.06), transparent 55%),
+        radial-gradient(1200px 820px at 50% 110%, rgba(255,255,255,0.05), transparent 62%),
         linear-gradient(180deg, #070a10 0%, #05070d 100%);
       position: relative;
     }
@@ -75,26 +75,29 @@
     .vlp-stars::before {
       background: transparent;
       box-shadow:
-        10vw 12vh rgba(255,255,255,0.26),
-        14vw 38vh rgba(255,255,255,0.18),
-        18vw 70vh rgba(255,255,255,0.22),
-        22vw 22vh rgba(255,255,255,0.18),
-        28vw 52vh rgba(255,255,255,0.22),
-        32vw 16vh rgba(255,255,255,0.18),
-        36vw 84vh rgba(255,255,255,0.22),
-        42vw 30vh rgba(255,255,255,0.18),
-        46vw 62vh rgba(255,255,255,0.22),
-        52vw 18vh rgba(255,255,255,0.18),
-        56vw 44vh rgba(255,255,255,0.22),
-        60vw 76vh rgba(255,255,255,0.20),
-        66vw 26vh rgba(255,255,255,0.18),
-        70vw 58vh rgba(255,255,255,0.22),
-        74vw 14vh rgba(255,255,255,0.18),
-        78vw 40vh rgba(255,255,255,0.22),
-        82vw 72vh rgba(255,255,255,0.20),
-        86vw 28vh rgba(255,255,255,0.18),
-        90vw 54vh rgba(255,255,255,0.22),
-        94vw 20vh rgba(255,255,255,0.18);
+        6vw 10vh rgba(255,255,255,0.26),
+        10vw 26vh rgba(255,255,255,0.18),
+        14vw 52vh rgba(255,255,255,0.22),
+        18vw 72vh rgba(255,255,255,0.18),
+        22vw 16vh rgba(255,255,255,0.22),
+        26vw 40vh rgba(255,255,255,0.18),
+        30vw 64vh rgba(255,255,255,0.22),
+        34vw 22vh rgba(255,255,255,0.18),
+        38vw 46vh rgba(255,255,255,0.22),
+        42vw 78vh rgba(255,255,255,0.20),
+        46vw 14vh rgba(255,255,255,0.18),
+        50vw 34vh rgba(255,255,255,0.22),
+        54vw 58vh rgba(255,255,255,0.20),
+        58vw 84vh rgba(255,255,255,0.22),
+        62vw 20vh rgba(255,255,255,0.18),
+        66vw 44vh rgba(255,255,255,0.22),
+        70vw 68vh rgba(255,255,255,0.20),
+        74vw 26vh rgba(255,255,255,0.18),
+        78vw 50vh rgba(255,255,255,0.22),
+        82vw 74vh rgba(255,255,255,0.20),
+        86vw 18vh rgba(255,255,255,0.18),
+        90vw 42vh rgba(255,255,255,0.22),
+        94vw 66vh rgba(255,255,255,0.20);
       content: "";
       height: 2px;
       left: 0;
@@ -104,14 +107,14 @@
       width: 2px;
     }
 
-    .vlp-card-glass {
+    .vlp-card {
       backdrop-filter: blur(10px);
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.10);
     }
 
     .vlp-hairline {
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
       height: 1px;
       width: 100%;
     }
@@ -124,22 +127,18 @@
 
 <body class="vlp-space vlp-stars text-white antialiased">
   <main id="top">
-    <!-- HERO -->
-    <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-8 md:pb-14 md:pt-10">
+    <section class="mx-auto max-w-6-5xl px-4 pb-12 pt-10 md:pb-16">
       <div class="mx-auto max-w-6xl">
         <div class="mb-6 flex flex-wrap items-center gap-3">
           <span class="w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
             VA Starter Track • Profile Preview
           </span>
-          <a class="text-xs font-extrabold text-white/70 underline decoration-white/20 underline-offset-4 hover:text-white" href="/lp/va-starter-track/">
-            Join the Starter Track
-          </a>
         </div>
 
-        <div class="grid items-start gap-8 lg:grid-cols-12">
-          <!-- LEFT: HERO COPY -->
+        <div class="grid gap-8 lg:grid-cols-12">
+          <!-- LEFT -->
           <div class="lg:col-span-7">
-            <div class="vlp-card-glass rounded-2xl p-8 shadow-soft md:p-10">
+            <div class="vlp-card rounded-2xl p-8 shadow-soft md:p-10">
               <h1 class="text-4xl font-extrabold leading-tight md:text-6xl">
                 Damian Reyes
               </h1>
@@ -155,6 +154,7 @@
                 >
                   Book an intro
                 </a>
+
                 <a
                   class="rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-xs font-extrabold text-white hover:bg-white/10"
                   href="#cv"
@@ -185,232 +185,189 @@
                 </div>
               </div>
 
-              <div class="mt-8">
-                <div class="vlp-hairline"></div>
-              </div>
+              <div class="mt-8 vlp-hairline"></div>
 
               <section id="about" class="mt-8">
                 <div class="flex items-center justify-between gap-4">
-                  <h2 class="text-xl font-extrabold">About Damian</h2>
+                  <h2 class="text-2xl font-extrabold">About Damian</h2>
                   <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-extrabold tracking-widest text-white/70">
                     VERIFIED WORK STYLE
                   </span>
                 </div>
 
-                <p class="mt-4 text-sm text-white/75 md:text-base">
-                  Damian is a structured Virtual Assistant built for calm execution. He operates best with clear inputs, defined outcomes, and clean workflows.
-                  If your team is overloaded, behind on follow-up, or stuck in inbox chaos, Damian restores order and delivers client-ready output without creating rework.
-                </p>
-
-                <p class="mt-4 text-sm text-white/75 md:text-base">
-                  He is trained inside Virtual Launch Pro systems, including SuiteDash portals and ClickUp delivery lanes,
-                  so tasks get tracked, clarified, completed, and closed out with visible progress and clean handoff.
-                </p>
-              </section>
-            </div>
-          </div>
-
-          <!-- RIGHT: PORTRAIT PANEL -->
-          <aside class="lg:col-span-5">
-            <div class="vlp-card-glass overflow-hidden rounded-2xl shadow-soft">
-              <div class="relative">
-                <!-- Replace src with your actual portrait asset used for this avatar -->
-                <img
-                  alt="Damian Reyes portrait"
-                  class="h-[520px] w-full object-cover object-center md:h-[620px]"
-                  src="/assets/va/damian-reyes.png"
-                />
-                <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/65 via-ink-950/10 to-transparent"></div>
-              </div>
-
-              <div class="p-6 md:p-8">
-                <div class="text-xs font-semibold tracking-widest text-brand-400">OPERATOR NOTES</div>
-                <h2 class="mt-2 text-lg font-extrabold">Clean execution, no chaos</h2>
-                <p class="mt-3 text-sm text-white/70">
-                  Built for admin lanes that need clarity: follow-up, inbox order, scheduling, and SOP-based delivery.
-                </p>
-
-                <div class="mt-6 grid gap-4 md:grid-cols-2">
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5">
-                    <div class="text-sm font-extrabold">Response style</div>
-                    <p class="mt-2 text-sm text-white/70">Clear updates and closure notes.</p>
-                  </div>
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5">
-                    <div class="text-sm font-extrabold">Delivery style</div>
-                    <p class="mt-2 text-sm text-white/70">Formatted for client-facing use.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-
-        <!-- SERVICES + WORKFLOW -->
-        <section class="mt-8 grid gap-8 lg:grid-cols-12">
-          <div class="lg:col-span-8">
-            <div class="vlp-card-glass rounded-2xl p-8 shadow-soft md:p-10">
-              <section id="services">
-                <h2 class="text-xl font-extrabold">Services</h2>
-
-                <div class="mt-4 grid gap-4 md:grid-cols-2">
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">Calendar operations</div>
-                    <ul class="mt-3 space-y-2 text-sm text-white/75">
-                      <li>Booking confirmations</li>
-                      <li>Calendar cleanup</li>
-                      <li>Reminder sequences</li>
-                    </ul>
-                  </div>
-
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">Client follow-up</div>
-                    <ul class="mt-3 space-y-2 text-sm text-white/75">
-                      <li>Client status updates</li>
-                      <li>Document reminders</li>
-                      <li>Next-step routing</li>
-                    </ul>
-                  </div>
-
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">Inbox triage</div>
-                    <ul class="mt-3 space-y-2 text-sm text-white/75">
-                      <li>Labeling and sorting</li>
-                      <li>Priority queues</li>
-                      <li>Response drafting</li>
-                    </ul>
-                  </div>
-
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">SOP execution</div>
-                    <ul class="mt-3 space-y-2 text-sm text-white/75">
-                      <li>Checklist-based delivery</li>
-                      <li>Standardized outputs</li>
-                      <li>Task closure notes</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <p class="mt-6 text-sm text-white/70">
-                  If you need a different task type, book an intro to confirm scope and routing.
-                </p>
-              </section>
-
-              <div class="mt-8">
-                <div class="vlp-hairline"></div>
-              </div>
-
-              <section id="workflow" class="mt-8">
-                <h2 class="text-xl font-extrabold">Workflow</h2>
-                <div class="mt-4 rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                  <ol class="list-decimal space-y-2 pl-5 text-sm text-white/75">
-                    <li>Scope confirmation and deliverable definition</li>
-                    <li>Checklist assignment and timeline alignment</li>
-                    <li>Execution inside ClickUp with status visibility</li>
-                    <li>QA review and client-ready formatting</li>
-                    <li>Delivery, closure notes, and next-step prompt</li>
-                  </ol>
-                </div>
-              </section>
-
-              <div class="mt-8">
-                <div class="vlp-hairline"></div>
-              </div>
-
-              <section id="trust" class="mt-8">
-                <h2 class="text-xl font-extrabold">What you can expect</h2>
-                <div class="mt-4 grid gap-4 md:grid-cols-3">
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">Clear updates</div>
-                    <p class="mt-2 text-sm text-white/70">No guessing. You see status changes and closure notes.</p>
-                  </div>
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">Clean output</div>
-                    <p class="mt-2 text-sm text-white/70">Deliverables are formatted for client-facing use.</p>
-                  </div>
-                  <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                    <div class="text-sm font-extrabold">Low rework</div>
-                    <p class="mt-2 text-sm text-white/70">Scope is confirmed before execution to prevent drift.</p>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </div>
-
-          <div class="lg:col-span-4">
-            <!-- CV PREVIEW -->
-            <section id="cv" class="vlp-card-glass rounded-2xl p-8 shadow-soft md:p-10">
-              <div class="text-xs font-semibold tracking-widest text-brand-400">CV</div>
-              <h2 class="mt-2 text-2xl font-extrabold">Curriculum Vitae</h2>
-
-              <!-- Replace this block with your provided CV content -->
-              <div class="mt-6 space-y-6">
-                <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                  <div class="text-sm font-extrabold">Core strengths</div>
-                  <ul class="mt-3 space-y-2 text-sm text-white/75">
-                    <li>Calendar operations</li>
-                    <li>Client follow-up</li>
-                    <li>Inbox triage</li>
-                    <li>SOP execution</li>
-                  </ul>
-                </div>
-
-                <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                  <div class="text-sm font-extrabold">Tools</div>
-                  <ul class="mt-3 space-y-2 text-sm text-white/75">
-                    <li>ClickUp</li>
-                    <li>Google Workspace</li>
-                    <li>SuiteDash</li>
-                  </ul>
-                </div>
-
-                <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                  <div class="text-sm font-extrabold">Notes</div>
-                  <p class="mt-2 text-sm text-white/70">
-                    Provide the CV content and this section will be replaced with your finalized layout.
+                <div class="mt-5 rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                  <p class="text-sm text-white/75 md:text-base">
+                    Damian is a structured Virtual Assistant built for calm execution. He performs best with clear inputs,
+                    defined outcomes, and clean workflows. If your team is overloaded, behind on follow-up, or stuck in inbox chaos,
+                    Damian restores order and delivers client-ready output without creating rework.
                   </p>
                 </div>
+
+                <div class="mt-4 rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                  <p class="text-sm text-white/75 md:text-base">
+                    He is trained inside Virtual Launch Pro systems, including SuiteDash portals and ClickUp delivery lanes,
+                    so tasks get tracked, clarified, completed, and closed out with visible progress and clean handoff.
+                  </p>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- RIGHT (PORTRAIT LIKE PIC 1) -->
+          <div class="lg:col-span-5">
+            <div class="relative">
+              <div class="vlp-card overflow-hidden rounded-2xl shadow-soft">
+                <div class="relative">
+                  <!-- Use your actual avatar path here -->
+                  <!-- Suggested: /assets/va/damian-reyes.png -->
+                  <img
+                    alt="Damian Reyes portrait"
+                    class="h-[560px] w-full object-cover object-center md:h-[660px]"
+                    src="/assets/va/damian-reyes.png"
+                  />
+                  <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-950/65 via-ink-950/10 to-transparent"></div>
+                </div>
+              </div>
+
+              <div class="pointer-events-none absolute -left-10 -top-10 h-[260px] w-[260px] rounded-full bg-brand-500/20 blur-[70px]"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICES (MATCH PIC 1 GRID FEEL) -->
+        <section id="services" class="mt-10">
+          <div class="vlp-card rounded-2xl p-8 shadow-soft md:p-10">
+            <h2 class="text-2xl font-extrabold">Services</h2>
+
+            <div class="mt-6 grid gap-4 md:grid-cols-2">
+              <div class="rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <div class="text-sm font-extrabold">Calendar operations</div>
+                <ul class="mt-3 space-y-2 text-sm text-white/75">
+                  <li>Booking confirmations</li>
+                  <li>Calendar cleanup</li>
+                  <li>Reminder sequences</li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <div class="text-sm font-extrabold">Client follow-up</div>
+                <ul class="mt-3 space-y-2 text-sm text-white/75">
+                  <li>Client status updates</li>
+                  <li>Document reminders</li>
+                  <li>Next-step routing</li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <div class="text-sm font-extrabold">Inbox triage</div>
+                <ul class="mt-3 space-y-2 text-sm text-white/75">
+                  <li>Labeling and sorting</li>
+                  <li>Priority queues</li>
+                  <li>Response drafting</li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <div class="text-sm font-extrabold">SOP execution</div>
+                <ul class="mt-3 space-y-2 text-sm text-white/75">
+                  <li>Checklist-based delivery</li>
+                  <li>Standardized outputs</li>
+                  <li>Task closure notes</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mt-8 vlp-hairline"></div>
+
+            <section id="workflow" class="mt-8">
+              <h3 class="text-xl font-extrabold">Workflow</h3>
+              <div class="mt-4 rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <ol class="list-decimal space-y-2 pl-5 text-sm text-white/75">
+                  <li>Scope confirmation and deliverable definition</li>
+                  <li>Checklist assignment and timeline alignment</li>
+                  <li>Execution inside ClickUp with status visibility</li>
+                  <li>QA review and client-ready formatting</li>
+                  <li>Delivery, closure notes, and next-step prompt</li>
+                </ol>
               </div>
             </section>
           </div>
         </section>
 
-        <!-- HOW BOOKING WORKS (KEEP) -->
-        <section id="booking-video" class="mt-8 vlp-card-glass rounded-2xl p-8 shadow-soft md:p-10">
-          <div class="mx-auto max-w-3xl text-center">
-            <p class="text-xs font-semibold tracking-widest text-brand-400">HOW BOOKING WORKS</p>
-            <h2 class="mt-4 text-3xl font-extrabold md:text-4xl">Visitors book you through an embedded appointment generator</h2>
-            <p class="mx-auto mt-5 max-w-2xl text-sm text-white/70 md:text-base">
-              This is the same appointment generator that can be embedded on your own landing page once you join the Starter Track.
-              It allows visitors to book without back-and-forth messages.
-            </p>
-          </div>
+        <!-- CV (BUTTON TARGET) -->
+        <section id="cv" class="mt-10">
+          <div class="vlp-card rounded-2xl p-8 shadow-soft md:p-10">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p class="text-xs font-semibold tracking-widest text-brand-400">CV</p>
+                <h2 class="mt-2 text-2xl font-extrabold">Curriculum Vitae</h2>
+              </div>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-extrabold tracking-widest text-white/70">
+                PLACEHOLDER
+              </span>
+            </div>
 
-          <div class="mx-auto mt-10 max-w-4xl rounded-2xl border border-white/10 bg-ink-950/60 p-4">
-            <video
-              class="w-full rounded-xl border border-white/10 bg-ink-900/60"
-              controls
-              preload="metadata"
-              playsinline
-            >
-              <source src="/assets/vlp-va-starter-track-artifacts.webm" type="video/webm" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
+            <!-- Replace this entire block with your CV content when you send it -->
+            <div class="mt-6 grid gap-4 md:grid-cols-2">
+              <div class="rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <div class="text-sm font-extrabold">Highlights</div>
+                <ul class="mt-3 space-y-2 text-sm text-white/75">
+                  <li>Operations-first delivery</li>
+                  <li>Client-ready formatting</li>
+                  <li>Scope confirmation to prevent drift</li>
+                </ul>
+              </div>
 
-          <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-            <div class="text-sm font-extrabold">What this means for Starter Track VAs</div>
-            <ul class="mt-3 space-y-2 text-sm text-white/75">
-              <li>Appointments are captured through embedded forms</li>
-              <li>Bookings route into a clean portal workflow</li>
-              <li>Clients see a structured process, not a freelance scramble</li>
-            </ul>
+              <div class="rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+                <div class="text-sm font-extrabold">Tools</div>
+                <ul class="mt-3 space-y-2 text-sm text-white/75">
+                  <li>ClickUp</li>
+                  <li>Google Workspace</li>
+                  <li>SuiteDash</li>
+                </ul>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- BOTTOM DOCK: BOOK + CHECKOUTS + STARTER TRACK CTA (KEEP, MOVED TO BOTTOM) -->
+        <!-- HOW BOOKING WORKS -->
+        <section id="booking-video" class="mt-10">
+          <div class="vlp-card rounded-2xl p-8 shadow-soft md:p-10">
+            <div class="mx-auto max-w-3xl text-center">
+              <p class="text-xs font-semibold tracking-widest text-brand-400">HOW BOOKING WORKS</p>
+              <h2 class="mt-4 text-3xl font-extrabold md:text-4xl">Visitors book you through an embedded appointment generator</h2>
+              <p class="mx-auto mt-5 max-w-2xl text-sm text-white/70 md:text-base">
+                This is the same appointment generator that can be embedded on your own landing page once you join the Starter Track.
+                It allows visitors to book without back-and-forth messages.
+              </p>
+            </div>
+
+            <div class="mx-auto mt-10 max-w-4xl rounded-2xl border border-white/10 bg-ink-950/60 p-4">
+              <video
+                class="w-full rounded-xl border border-white/10 bg-ink-900/60"
+                controls
+                preload="metadata"
+                playsinline
+              >
+                <source src="/assets/vlp-va-starter-track-artifacts.webm" type="video/webm" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            <div class="mx-auto mt-6 max-w-3xl rounded-2xl border border-white/10 bg-ink-950/35 p-6">
+              <div class="text-sm font-extrabold">What this means for Starter Track VAs</div>
+              <ul class="mt-3 space-y-2 text-sm text-white/75">
+                <li>Appointments are captured through embedded forms</li>
+                <li>Bookings route into a clean portal workflow</li>
+                <li>Clients see a structured process, not a freelance scramble</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- BOTTOM: BOOK + 2 CHECKOUTS (MOVED TO BOTTOM) -->
         <section class="mt-10 grid gap-6 lg:grid-cols-12">
-          <!-- BOOK -->
-          <section id="book" class="vlp-card-glass rounded-2xl p-6 shadow-soft lg:col-span-4">
+          <section id="book" class="vlp-card rounded-2xl p-6 shadow-soft lg:col-span-4">
             <div class="text-xs font-semibold tracking-widest text-brand-400">BOOK</div>
             <h2 class="mt-2 text-lg font-extrabold">Book an intro</h2>
             <p class="mt-3 text-sm text-white/70">
@@ -424,8 +381,7 @@
             </div>
           </section>
 
-          <!-- CHECKOUT A -->
-          <section id="checkout" class="vlp-card-glass rounded-2xl p-6 shadow-soft lg:col-span-4">
+          <section id="checkout-a" class="vlp-card rounded-2xl p-6 shadow-soft lg:col-span-4">
             <div class="text-xs font-semibold tracking-widest text-brand-400">CHECKOUT</div>
             <h2 class="mt-2 text-lg font-extrabold">Activate access</h2>
             <p class="mt-3 text-sm text-white/70">
@@ -434,14 +390,13 @@
 
             <div class="mt-5 rounded-xl border border-white/10 bg-ink-900/60 p-4">
               <div class="vlp-signup-embed">
-                <!-- If you have a separate “Activate access” checkout embed, replace this script src -->
+                <!-- Replace with your “Activate access” checkout embed if different -->
                 <script src="https://secure.virtuallaunch.pro/frm/23davdkPhgJH9Tvih.js"></script>
               </div>
             </div>
           </section>
 
-          <!-- CHECKOUT B -->
-          <section id="referral-checkout" class="vlp-card-glass rounded-2xl p-6 shadow-soft lg:col-span-4">
+          <section id="checkout-b" class="vlp-card rounded-2xl p-6 shadow-soft lg:col-span-4">
             <div class="text-xs font-semibold tracking-widest text-brand-400">CHECKOUT</div>
             <h2 class="mt-2 text-lg font-extrabold">Use a referral checkout link</h2>
             <p class="mt-3 text-sm text-white/70">
@@ -456,30 +411,88 @@
           </section>
         </section>
 
-        <!-- WANT YOUR OWN PAGE (KEEP, MOVED TO BOTTOM) -->
-        <section class="mt-6 vlp-card-glass rounded-2xl p-8 shadow-soft md:p-10">
-          <div class="text-xs font-semibold tracking-widest text-brand-400">STARTER TRACK</div>
-          <h2 class="mt-2 text-2xl font-extrabold">Want your own page like this one?</h2>
-          <p class="mt-3 max-w-3xl text-sm text-white/70 md:text-base">
-            Join the VA Starter Track to get verified opportunities, a clean portal workflow, and embedded booking that converts visitors into appointments.
-          </p>
+        <!-- WANT YOUR OWN PAGE (BOTTOM) -->
+        <section class="mt-6">
+          <div class="vlp-card rounded-2xl p-8 shadow-soft md:p-10">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">STARTER TRACK</div>
+            <h2 class="mt-2 text-2xl font-extrabold">Want your own page like this one?</h2>
+            <p class="mt-3 max-w-3xl text-sm text-white/70 md:text-base">
+              Join the VA Starter Track to get verified opportunities, a clean portal workflow, and embedded booking that converts visitors into appointments.
+            </p>
 
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a
-              class="rounded-xl bg-brand-500 px-5 py-3 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
-              href="/lp/va-starter-track/#invite"
-            >
-              Request invite
-            </a>
-            <a
-              class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-xs font-extrabold text-white hover:bg-white/10"
-              href="/lp/va-starter-track/#checkout"
-            >
-              Activate access
-            </a>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a
+                class="rounded-xl bg-brand-500 px-5 py-3 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
+                href="/lp/va-starter-track/#invite"
+              >
+                Request invite
+              </a>
+              <a
+                class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-xs font-extrabold text-white hover:bg-white/10"
+                href="/lp/va-starter-track/#checkout"
+              >
+                Activate access
+              </a>
+            </div>
+
+            <p class="mt-6 text-xs text-white/60">
+              This is a sample VA profile preview inside Virtual Launch Pro. Availability, timelines, and scope are confirmed before work begins.
+            </p>
           </div>
+        </section>
+      </div>
+    </section>
+  </main>
 
-          <p class="mt-6 text-xs text-white/60">
-            This is a sample VA profile preview inside Virtual Launch Pro. Availability, timelines, and scope are confirmed before work begins.
-          </p>
-        </
+  <script>
+    (function () {
+      function runScripts(container) {
+        var scripts = container.querySelectorAll("script");
+        scripts.forEach(function (oldScript) {
+          var newScript = document.createElement("script");
+
+          for (var i = 0; i < oldScript.attributes.length; i++) {
+            var attr = oldScript.attributes[i];
+            newScript.setAttribute(attr.name, attr.value);
+          }
+
+          if (!oldScript.src) {
+            newScript.text = oldScript.textContent || "";
+          }
+
+          oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+      }
+
+      function loadIncludes() {
+        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
+        if (!nodes.length) return;
+
+        nodes.forEach(function (node) {
+          var key = node.getAttribute("data-include");
+          var url = "/partials/" + key + ".html";
+
+          fetch(url, { cache: "no-store" })
+            .then(function (res) {
+              if (!res.ok) throw new Error("Include failed: " + url);
+              return res.text();
+            })
+            .then(function (html) {
+              node.innerHTML = html;
+              runScripts(node);
+            })
+            .catch(function (err) {
+              console.error(err);
+            });
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", loadIncludes);
+      } else {
+        loadIncludes();
+      }
+    })();
+  </script>
+</body>
+</html>
