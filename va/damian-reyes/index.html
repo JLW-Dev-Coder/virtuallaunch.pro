@@ -505,68 +505,67 @@
 
                 <hr class="my-[18px] opacity-[0.22]" />
 
-                <!-- SKILL DEPTH (FIXED) -->
-                <div class="lx-cascade mt-[26px]" data-in="false">
-                  <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
-                    Skill Depth (1–5)
-                    <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
-                  </h2>
-
-                  <!-- Row 1 -->
-                  <div class="mt-[18px] grid gap-[10px] md:grid-cols-3">
-                    <div class="lx-cascade flex min-h-[52px] items-center justify-between rounded-[12px] border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-[12px] text-[rgba(255,255,255,0.75)]" data-in="false">
-                      <span class="font-extrabold text-[rgba(255,255,255,0.92)]">Client communication (written):</span>
-                      <span class="flex items-center gap-2">
-                        <span class="inline-flex h-6 min-w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">5</span>
-                        <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
-                      </span>
+                <!-- SKILL DEPTH (FIXED: 3-UP TOP, 2-UP BOTTOM, CENTERED SCORES) -->
+                  <div class="lx-cascade mt-[26px]" data-in="false">
+                    <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+                      Skill Depth (1–5)
+                      <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+                    </h2>
+                  
+                    <div class="mt-[18px] grid gap-[10px] md:grid-cols-6">
+                      <!-- TOP ROW (3 equal cards) -->
+                      <div class="lx-cascade md:col-span-2 flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[16px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+                        <strong class="text-[rgba(255,255,255,0.92)]">Client communication (written):</strong>
+                        <span class="flex items-center gap-2">
+                          <span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">5</span>
+                          <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
+                        </span>
+                      </div>
+                  
+                      <div class="lx-cascade md:col-span-2 flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[16px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+                        <strong class="text-[rgba(255,255,255,0.92)]">Email and inbox management:</strong>
+                        <span class="flex items-center gap-2">
+                          <span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">5</span>
+                          <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
+                        </span>
+                      </div>
+                  
+                      <div class="lx-cascade md:col-span-2 flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[16px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+                        <strong class="text-[rgba(255,255,255,0.92)]">Google Workspace:</strong>
+                        <span class="flex items-center gap-2">
+                          <span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">4</span>
+                          <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
+                        </span>
+                      </div>
+                  
+                      <!-- BOTTOM ROW (2 equal 1/2-width cards) -->
+                      <div class="lx-cascade md:col-span-3 flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[16px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+                        <strong class="text-[rgba(255,255,255,0.92)]">Project tracking (multi-client):</strong>
+                        <span class="flex items-center gap-2">
+                          <span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">4</span>
+                          <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
+                        </span>
+                      </div>
+                  
+                      <div class="lx-cascade md:col-span-3 flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[16px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+                        <strong class="text-[rgba(255,255,255,0.92)]">Systems/process follow-through:</strong>
+                        <span class="flex items-center gap-2">
+                          <span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">5</span>
+                          <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
+                        </span>
+                      </div>
                     </div>
-
-                    <div class="lx-cascade flex min-h-[52px] items-center justify-between rounded-[12px] border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-[12px] text-[rgba(255,255,255,0.75)]" data-in="false">
-                      <span class="font-extrabold text-[rgba(255,255,255,0.92)]">Email and inbox management:</span>
-                      <span class="flex items-center gap-2">
-                        <span class="inline-flex h-6 min-w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">5</span>
-                        <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
-                      </span>
-                    </div>
-
-                    <div class="lx-cascade flex min-h-[52px] items-center justify-between rounded-[12px] border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-[12px] text-[rgba(255,255,255,0.75)]" data-in="false">
-                      <span class="font-extrabold text-[rgba(255,255,255,0.92)]">Google Workspace:</span>
-                      <span class="flex items-center gap-2">
-                        <span class="inline-flex h-6 min-w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">4</span>
-                        <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
-                      </span>
+                  
+                    <div class="lx-cascade mt-4 rounded-xl border border-[rgba(255,165,0,0.18)] border-l-[5px] border-l-[#ffa500] bg-[rgba(255,255,255,0.06)] px-[18px] py-4 leading-[1.85] text-[rgba(255,255,255,0.75)]" data-in="false">
+                      <strong class="text-[rgba(255,255,255,0.92)]" style="font-weight: 900;">Examples for any 4–5 ratings:</strong>
+                      <div class="mt-2 whitespace-pre-line">
+                  Inbox: Created triage rules (VIP, urgent, vendor, client) and reduced response backlog from 3 days to same-day.
+                  Projects: Maintained weekly priorities board in ClickUp with owner + due date + next action for every active item.
+                  Ops: Built a “Friday wrap” template so clients always saw status, blockers, and next steps in 5 minutes.
+                      </div>
                     </div>
                   </div>
 
-                  <!-- Row 2 (2-up centered; equal width/height; fills row nicely) -->
-                  <div class="mt-[10px] grid gap-[10px] md:grid-cols-12 md:justify-center">
-                    <div class="lx-cascade md:col-span-6 md:col-start-2 flex min-h-[52px] items-center justify-between rounded-[12px] border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-[12px] text-[rgba(255,255,255,0.75)]" data-in="false">
-                      <span class="font-extrabold text-[rgba(255,255,255,0.92)]">Project tracking (multi-client):</span>
-                      <span class="flex items-center gap-2">
-                        <span class="inline-flex h-6 min-w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">4</span>
-                        <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
-                      </span>
-                    </div>
-
-                    <div class="lx-cascade md:col-span-6 flex min-h-[52px] items-center justify-between rounded-[12px] border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-[12px] text-[rgba(255,255,255,0.75)]" data-in="false">
-                      <span class="font-extrabold text-[rgba(255,255,255,0.92)]">Systems/process follow-through:</span>
-                      <span class="flex items-center gap-2">
-                        <span class="inline-flex h-6 min-w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">5</span>
-                        <span class="leading-none text-[rgba(255,255,255,0.65)]">/ 5</span>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="lx-cascade mt-4 rounded-xl border border-[rgba(255,165,0,0.18)] border-l-[5px] border-l-[#ffa500] bg-[rgba(255,255,255,0.06)] px-[18px] py-4 leading-[1.85] text-[rgba(255,255,255,0.75)]" data-in="false">
-                    <strong class="font-black text-[rgba(255,255,255,0.92)]" style="font-size: 1.15em;">Examples for any 4–5 ratings:</strong>
-                    <div class="mt-2 whitespace-pre-line">
-Inbox: Created triage rules (VIP, urgent, vendor, client) and reduced response backlog from 3 days to same-day.
-Projects: Maintained weekly priorities board in ClickUp with owner + due date + next action for every active item.
-Ops: Built a “Friday wrap” template so clients always saw status, blockers, and next steps in 5 minutes.
-                    </div>
-                  </div>
-                </div>
 
                 <hr class="my-[18px] opacity-[0.22]" />
 
