@@ -150,6 +150,29 @@
       border-radius: 16px;
     }
 
+    /* Sticky hero image (desktop only) */
+.vlp-hero-sticky {
+  position: sticky;
+  top: 84px; /* adjust to your header height */
+}
+
+@media (max-width: 1023px) {
+  .vlp-hero-sticky {
+    position: static;
+    top: auto;
+  }
+}
+
+/* Override the absolute-position image so sticky can work */
+@media (min-width: 1024px) {
+  .vlp-hero-img {
+    height: auto;
+    max-width: 520px;
+    position: static;
+    width: 100%;
+  }
+}
+    
     .vlp-hero-wrap { position: relative; }
 
     .vlp-hero-img {
@@ -285,21 +308,22 @@
               </div>
             </div>
 
-            <div class="lg:col-span-4">
-              <div class="relative min-h-[520px] lg:min-h-[720px] overflow-visible">
-                <picture>
-                  <source srcset="/assets/va/va-profile-damian-reyes-hero.webp" type="image/webp" />
-                  <img
-                    alt="Damian Reyes portrait"
-                    class="vlp-hero-img"
-                    decoding="async"
-                    fetchpriority="high"
-                    loading="eager"
-                    src="/assets/va/va-profile-damian-reyes-hero.png"
-                  />
-                </picture>
-              </div>
-            </div>
+<div class="lg:col-span-4">
+  <div class="vlp-hero-sticky">
+    <picture>
+      <source srcset="/assets/va/va-profile-damian-reyes-hero.webp" type="image/webp" />
+      <img
+        alt="Damian Reyes portrait"
+        class="vlp-hero-img"
+        decoding="async"
+        fetchpriority="high"
+        loading="eager"
+        src="/assets/va/va-profile-damian-reyes-hero.png"
+      />
+    </picture>
+  </div>
+</div>
+
           </div>
         </div>
 
