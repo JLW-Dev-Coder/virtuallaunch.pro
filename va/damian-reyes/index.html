@@ -386,249 +386,284 @@
     </button>
   </div>
 
-  <!-- Start: Section Styles -->
-  <style>
+<!-- Start: Section Styles -->
+<style>
+  .commui__body {
+    padding: 10px !important;
+  }
+
+  .commui__msg {
+    margin: 0 0 10px 0 !important;
+    padding: 10px !important;
+  }
+
+  .driveui__body {
+    padding: 10px !important;
+  }
+
+  .driveui__row {
+    padding: 8px 2px !important;
+  }
+
+  .gridui__card {
+    height: 92px !important;
+  }
+
+  .gridui__wrap {
+    padding: 10px !important;
+  }
+
+  .lxov {
+    margin: 0;
+  }
+
+  .lxov + .lxov {
+    margin-top: 10px;
+  }
+
+  .mailui__body {
+    padding: 10px !important;
+  }
+
+  .mailui__item {
+    margin: 0 0 10px 0 !important;
+    padding: 10px !important;
+  }
+
+  .sheetui__row {
+    padding: 8px 0 !important;
+  }
+
+  .sheetui__table {
+    padding: 10px !important;
+  }
+
+  .vlp-proof-back {
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    transform: rotateY(180deg);
+  }
+
+  .vlp-proof-back-body {
+    flex: 1;
+    overflow: auto;
+    padding: 10px 10px 12px 10px;
+  }
+
+  .vlp-proof-back-body::-webkit-scrollbar {
+    height: 10px;
+    width: 10px;
+  }
+
+  .vlp-proof-back-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.14);
+    border-radius: 999px;
+  }
+
+  .vlp-proof-back-body::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+  }
+
+  .vlp-proof-back-title {
+    color: rgba(255,255,255,0.92);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  .vlp-proof-back-top {
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 10px 12px;
+  }
+
+  .vlp-proof-card {
+    height: 280px;
+    perspective: 1200px;
+    position: relative;
+    width: 100%;
+  }
+
+  .vlp-proof-card--full {
+    grid-column: auto;
+  }
+
+  .vlp-proof-cta {
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 12px;
+    cursor: default;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 900;
+    gap: 8px;
+    justify-content: center;
+    padding: 10px 12px;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .vlp-proof-cta:focus {
+    outline: none;
+  }
+
+  .vlp-proof-cta--ghost {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.88);
+  }
+
+  .vlp-proof-cta--primary {
+    background: rgba(249,115,22,0.92);
+    border-color: rgba(249,115,22,0.35);
+    color: #070a10;
+  }
+
+  .vlp-proof-face {
+    backface-visibility: hidden;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 16px;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .vlp-proof-front {
+    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+  }
+
+  .vlp-proof-front-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 0;
+  }
+
+  .vlp-proof-front-desc {
+    color: rgba(255,255,255,0.78);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+
+  .vlp-proof-front-desc p {
+    margin: 0;
+    padding-bottom: 10px;
+  }
+
+  .vlp-proof-front-desc p:last-child {
+    padding-bottom: 0;
+  }
+
+  .vlp-proof-front-title {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .vlp-proof-front-title h2 {
+    font-size: 18px;
+    font-weight: 900;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .vlp-proof-front-title h3 {
+    margin: 0;
+  }
+
+  .vlp-proof-front-top {
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding-bottom: 10px;
+  }
+
+  .vlp-proof-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr;
+    margin-top: 14px;
+  }
+
+  .vlp-proof-inner {
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 520ms cubic-bezier(0.2, 0.0, 0.2, 1);
+    width: 100%;
+  }
+
+  .vlp-proof-toggle {
+    height: 1px;
+    left: -9999px;
+    position: absolute;
+    top: -9999px;
+    width: 1px;
+  }
+
+  .wkcal__body {
+    height: 260px !important;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .vlp-proof-card:hover .vlp-proof-inner {
+      transform: rotateY(180deg);
+    }
+
+    .vlp-proof-cta--ghost:hover {
+      background: rgba(255,255,255,0.10);
+    }
+
+    .vlp-proof-cta--primary:hover {
+      background: rgba(251,146,60,0.92);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .vlp-proof-card {
+      height: 320px;
+    }
+
+    .wkcal__body {
+      height: 280px !important;
+    }
+  }
+
+  @media (min-width: 768px) {
     .vlp-proof-card--full {
-      grid-column: auto;
-    }
-
-    .vlp-proof-cta {
-      align-items: center;
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 12px;
-      cursor: default;
-      display: inline-flex;
-      font-size: 12px;
-      font-weight: 900;
-      gap: 8px;
-      justify-content: center;
-      padding: 10px 12px;
-      user-select: none;
-      white-space: nowrap;
-    }
-
-    .vlp-proof-cta:focus {
-      outline: none;
-    }
-
-    .vlp-proof-cta--ghost {
-      background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.88);
-    }
-
-    .vlp-proof-cta--primary {
-      background: rgba(249,115,22,0.92);
-      border-color: rgba(249,115,22,0.35);
-      color: #070a10;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .vlp-proof-cta--ghost:hover {
-        background: rgba(255,255,255,0.10);
-      }
-
-      .vlp-proof-cta--primary:hover {
-        background: rgba(251,146,60,0.92);
-      }
+      grid-column: 1 / -1;
     }
 
     .vlp-proof-grid {
-      display: grid;
-      gap: 14px;
-      grid-template-columns: 1fr;
-      margin-top: 14px;
+      grid-template-columns: repeat(3, 1fr);
     }
+  }
 
-    @media (min-width: 768px) {
-      .vlp-proof-card--full {
-        grid-column: 1 / -1;
-      }
+  .vlp-proof-toggle:checked + .vlp-proof-inner {
+    transform: rotateY(180deg);
+  }
+</style>
 
-      .vlp-proof-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .vlp-proof-card {
-      height: 280px;
-      perspective: 1200px;
-      position: relative;
-      width: 100%;
-    }
-
-    @media (max-width: 767px) {
-      .vlp-proof-card { height: 320px; }
-    }
-
-    .vlp-proof-toggle {
-      height: 1px;
-      left: -9999px;
-      position: absolute;
-      top: -9999px;
-      width: 1px;
-    }
-
-    .vlp-proof-inner {
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 520ms cubic-bezier(0.2, 0.0, 0.2, 1);
-      width: 100%;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .vlp-proof-card:hover .vlp-proof-inner {
-        transform: rotateY(180deg);
-      }
-    }
-
-    .vlp-proof-toggle:checked + .vlp-proof-inner {
-      transform: rotateY(180deg);
-    }
-
-    .vlp-proof-face {
-      backface-visibility: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 16px;
-      height: 100%;
-      overflow: hidden;
-      position: absolute;
-      top: 0;
-      width: 100%;
-    }
-
-    .vlp-proof-front,
-    .vlp-proof-back {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .vlp-proof-front {
-      backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.05);
-      padding: 14px;
-    }
-
-    .vlp-proof-back {
-      backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.05);
-      padding: 0;
-      transform: rotateY(180deg);
-    }
-
-    .vlp-proof-front-top {
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      padding-bottom: 10px;
-    }
-
-    .vlp-proof-front-title {
-      align-items: center;
-      display: flex;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .vlp-proof-front-title h3 {
-      margin: 0;
-    }
-
-    .vlp-proof-front-title h2 {
-      font-size: 18px;
-      font-weight: 900;
-      margin: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .vlp-proof-front-desc {
-      color: rgba(255,255,255,0.78);
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.5;
-      margin-top: 10px;
-    }
-    
-    .vlp-proof-front-desc p {
-      margin: 0;
-      padding-bottom: 10px;
-    }
-    
-    .vlp-proof-front-desc p:last-child {
-      padding-bottom: 0;
-    }
-
-
-    .vlp-proof-front-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 10px;
-    }
-
-    .vlp-proof-back-top {
-      align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      padding: 10px 12px;
-    }
-
-    .vlp-proof-back-title {
-      color: rgba(255,255,255,0.92);
-      font-size: 13px;
-      font-weight: 900;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }
-
-    .vlp-proof-back-body {
-      flex: 1;
-      overflow: auto;
-      padding: 10px 10px 12px 10px;
-    }
-
-    .vlp-proof-back-body::-webkit-scrollbar {
-      height: 10px;
-      width: 10px;
-    }
-
-    .vlp-proof-back-body::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.14);
-      border-radius: 999px;
-    }
-
-    .vlp-proof-back-body::-webkit-scrollbar-track {
-      background: rgba(255,255,255,0.06);
-      border-radius: 999px;
-    }
-
-    .commui__body { padding: 10px !important; }
-    .commui__msg { margin: 0 0 10px 0 !important; padding: 10px !important; }
-
-    .driveui__body { padding: 10px !important; }
-    .driveui__row { padding: 8px 2px !important; }
-
-    .gridui__wrap { padding: 10px !important; }
-    .gridui__card { height: 92px !important; }
-
-    .lxov { margin: 0; }
-    .lxov + .lxov { margin-top: 10px; }
-
-    .mailui__body { padding: 10px !important; }
-    .mailui__item { margin: 0 0 10px 0 !important; padding: 10px !important; }
-
-    .sheetui__table { padding: 10px !important; }
-    .sheetui__row { padding: 8px 0 !important; }
-
-    .wkcal__body { height: 260px !important; }
-    @media (max-width: 767px) { .wkcal__body { height: 280px !important; } }
-  </style>
 
   <!-- Start: PROOFS GRID -->
   <div class="vlp-proof-grid">
