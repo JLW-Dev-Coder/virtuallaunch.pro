@@ -370,7 +370,7 @@
           </div>
         </section>
 
-       <!-- WORK PROOFS (COMPACT: LESS EMPTY SPACE + SAME HEIGHT + FLIP-ALL BUTTON) -->
+       <!-- WORK PROOFS (TIGHTER: ~2/3 LESS DEAD SPACE + SAME HEIGHT + FLIP-ALL + PROOFS RESTORED) -->
 <section id="work-proofs" class="mt-14">
   <div class="flex flex-wrap items-center justify-between gap-3">
     <h2 class="text-3xl font-extrabold text-brand-500">Work Proofs</h2>
@@ -399,16 +399,16 @@
       }
     }
 
-    /* smaller fixed height to remove dead space */
+    /* ~2/3 less dead space */
     .vlp-proof-card {
-      height: 420px;
+      height: 280px;
       perspective: 1200px;
       position: relative;
       width: 100%;
     }
 
     @media (max-width: 767px) {
-      .vlp-proof-card { height: 460px; }
+      .vlp-proof-card { height: 320px; }
     }
 
     .vlp-proof-toggle {
@@ -457,7 +457,7 @@
     .vlp-proof-front {
       backdrop-filter: blur(10px);
       background: rgba(255,255,255,0.05);
-      padding: 16px;
+      padding: 14px;
     }
 
     .vlp-proof-back {
@@ -471,7 +471,7 @@
       align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.10);
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: space-between;
       padding-bottom: 10px;
     }
@@ -500,23 +500,24 @@
       color: rgba(255,255,255,0.78);
       font-size: 13px;
       font-weight: 700;
-      line-height: 1.55;
+      line-height: 1.5;
       margin-top: 10px;
     }
 
     .vlp-proof-front-desc p {
-      margin: 0 0 8px 0;
+      margin: 0 0 6px 0;
     }
 
     .vlp-proof-front-desc p:last-child {
       margin-bottom: 0;
     }
 
-    /* button sits under content, not pinned to the bottom */
+    /* anchor controls so there is no empty bottom region */
     .vlp-proof-front-actions {
       display: flex;
       gap: 10px;
-      margin-top: 12px;
+      margin-top: auto;
+      padding-top: 10px;
     }
 
     .vlp-proof-cta {
@@ -551,7 +552,7 @@
       display: flex;
       gap: 10px;
       justify-content: space-between;
-      padding: 12px 14px;
+      padding: 10px 12px;
     }
 
     .vlp-proof-back-title {
@@ -565,7 +566,7 @@
     .vlp-proof-back-body {
       flex: 1;
       overflow: auto;
-      padding: 12px 12px 14px 12px;
+      padding: 10px 10px 12px 10px;
     }
 
     .vlp-proof-back-body::-webkit-scrollbar {
@@ -583,9 +584,23 @@
       border-radius: 999px;
     }
 
-    /* keep the calendar mockup from forcing extra vertical space */
-    .wkcal__body { height: 360px !important; }
-    @media (max-width: 767px) { .wkcal__body { height: 380px !important; } }
+    /* tighter proof mockups so they fit the shorter card */
+    .sheetui__table { padding: 10px !important; }
+    .sheetui__row { padding: 8px 0 !important; }
+    .wkcal__body { height: 260px !important; }
+    @media (max-width: 767px) { .wkcal__body { height: 280px !important; } }
+
+    .gridui__wrap { padding: 10px !important; }
+    .gridui__card { height: 92px !important; }
+
+    .commui__body { padding: 10px !important; }
+    .commui__msg { margin: 0 0 10px 0 !important; padding: 10px !important; }
+
+    .driveui__body { padding: 10px !important; }
+    .driveui__row { padding: 8px 2px !important; }
+
+    .mailui__body { padding: 10px !important; }
+    .mailui__item { margin: 0 0 10px 0 !important; padding: 10px !important; }
 
     .lxov { margin: 0; }
     .lxov + .lxov { margin-top: 10px; }
@@ -640,7 +655,163 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <!-- keep your existing SheetUI + WKCAL embeds here (unchanged) -->
+            <!-- SHEETUI (Content Plan) -->
+            <div class="lxov" role="region" aria-label="Mockup A — Content plan">
+              <div class="sheetui" role="region" aria-label="60-day content plan mockup">
+                <style>
+                  .sheetui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                  .sheetui__brand{font-weight:800}
+                  .sheetui__cell{font-size:13px;font-weight:800}
+                  .sheetui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+                  .sheetui__row{border-bottom:1px solid rgba(255,255,255,.06);display:grid;gap:10px;grid-template-columns:120px 1fr 1fr 120px;padding:10px 0}
+                  .sheetui__sub{color:rgba(232,234,237,.70);font-size:12px;margin-top:4px}
+                  .sheetui__table{padding:14px}
+                  .sheetui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;padding:6px 10px}
+                  .sheetui__tag--a{background:#00e5ff;color:#0b0d10}
+                  .sheetui__tag--b{background:#b388ff;color:#0b0d10}
+                  .sheetui__tag--c{background:#ff5c8a;color:#0b0d10}
+                  .sheetui__tag--d{background:#00e676;color:#0b0d10}
+                  .sheetui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                  @media (max-width:980px){
+                    .sheetui__hdr:nth-child(3),.sheetui__hdr:nth-child(4){display:none}
+                    .sheetui__row{grid-template-columns:120px 1fr}
+                  }
+                </style>
+                <div class="sheetui__top">
+                  <div class="sheetui__brand">Content Plan</div>
+                  <div style="color:rgba(232,234,237,.72);font-weight:800">60 Days</div>
+                </div>
+                <div class="sheetui__table">
+                  <div class="sheetui__row">
+                    <div class="sheetui__hdr">Week</div>
+                    <div class="sheetui__hdr">Theme</div>
+                    <div class="sheetui__hdr">Goal</div>
+                    <div class="sheetui__hdr">Type</div>
+                  </div>
+                  <div class="sheetui__row">
+                    <div class="sheetui__cell">Week 1</div>
+                    <div class="sheetui__cell">Brand Awareness<div class="sheetui__sub">Introduce brand + story</div></div>
+                    <div class="sheetui__cell">Visibility + trust<div class="sheetui__sub">Consistent posting</div></div>
+                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--a">Education</span></div>
+                  </div>
+                  <div class="sheetui__row">
+                    <div class="sheetui__cell">Week 2</div>
+                    <div class="sheetui__cell">Education<div class="sheetui__sub">Teach and explain</div></div>
+                    <div class="sheetui__cell">Authority<div class="sheetui__sub">Helpful content</div></div>
+                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--b">Engagement</span></div>
+                  </div>
+                  <div class="sheetui__row">
+                    <div class="sheetui__cell">Week 3</div>
+                    <div class="sheetui__cell">Engagement<div class="sheetui__sub">Prompts + polls</div></div>
+                    <div class="sheetui__cell">Community<div class="sheetui__sub">More replies</div></div>
+                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--d">Community</span></div>
+                  </div>
+                  <div class="sheetui__row" style="border-bottom:0;">
+                    <div class="sheetui__cell">Week 4</div>
+                    <div class="sheetui__cell">Retention<div class="sheetui__sub">Repeat buyers</div></div>
+                    <div class="sheetui__cell">Consistency<div class="sheetui__sub">Habits + routines</div></div>
+                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--c">Promotion</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WKCAL (Weekly Calendar) -->
+            <div class="lxov" role="region" aria-label="Mockup B — Weekly calendar">
+              <div class="wkcal" role="region" aria-label="Weekly calendar mockup">
+                <style>
+                  .wkcal{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                  .wkcal__body{background:#0f1113;height:560px;position:relative}
+                  .wkcal__dayCol{border-right:1px solid rgba(255,255,255,.06);position:relative}
+                  .wkcal__dayCol:last-child{border-right:0}
+                  .wkcal__dom{font-size:22px;font-weight:800;margin-top:6px}
+                  .wkcal__dom--today{background:rgba(160,196,255,.20);border-radius:999px;display:inline-block;padding:2px 10px}
+                  .wkcal__dow{color:rgba(232,234,237,.70);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+                  .wkcal__event{border-radius:10px;color:#0b0d10;font-size:12px;font-weight:800;left:8px;line-height:1.15;overflow:hidden;padding:8px 10px;position:absolute;right:8px;text-overflow:ellipsis;white-space:nowrap}
+                  .wkcal__event small{display:block;font-size:11px;font-weight:700;margin-top:4px;opacity:.85}
+                  .wkcal__event--a{background:#00e5ff}
+                  .wkcal__event--b{background:#b388ff}
+                  .wkcal__event--c{background:#ff5c8a}
+                  .wkcal__event--d{background:#00e676}
+                  .wkcal__grid{display:grid;grid-template-columns:86px repeat(7,1fr);width:100%}
+                  .wkcal__head{background:#111315;border-bottom:1px solid rgba(255,255,255,.10)}
+                  .wkcal__headCell{border-right:1px solid rgba(255,255,255,.06);padding:12px 10px 10px;text-align:center}
+                  .wkcal__headCell:last-child{border-right:0}
+                  .wkcal__line{background:rgba(255,255,255,.06);height:1px;left:0;position:absolute;right:0}
+                  .wkcal__line--10a{top:384px}
+                  .wkcal__line--11a{top:480px}
+                  .wkcal__line--6a{top:0px}
+                  .wkcal__line--7a{top:96px}
+                  .wkcal__line--8a{top:192px}
+                  .wkcal__line--9a{top:288px}
+                  .wkcal__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:700;height:48px;padding:6px 10px 0 0;text-align:right}
+                  .wkcal__time--half{height:48px;opacity:0;padding-top:0}
+                  .wkcal__timeCol{border-right:1px solid rgba(255,255,255,.10);padding-top:6px}
+                  .wkcal__title{font-size:22px;font-weight:700;margin-left:10px;opacity:.95}
+                  .wkcal__t-9a{height:40px;top:288px}
+                  .wkcal__top{align-items:center;background:#121416;display:flex;gap:14px;padding:12px 14px}
+                  .wkcal__tz{align-items:center;border-right:1px solid rgba(255,255,255,.10);color:rgba(232,234,237,.70);display:flex;font-size:12px;font-weight:700;justify-content:center;letter-spacing:.04em;padding:12px 8px;text-transform:uppercase}
+                  @media (max-width:980px){
+                    .wkcal__dow{font-size:11px}
+                    .wkcal__grid{grid-template-columns:70px repeat(7,1fr)}
+                    .wkcal__time{font-size:11px}
+                    .wkcal__title{font-size:18px}
+                  }
+                </style>
+                <div class="wkcal__top">
+                  <div style="font-weight:700;">Calendar</div>
+                  <div class="wkcal__title">December 2025</div>
+                </div>
+                <div class="wkcal__grid wkcal__head">
+                  <div class="wkcal__tz">GMT-08</div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">SUN</div><div class="wkcal__dom"><span class="wkcal__dom--today">14</span></div></div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">MON</div><div class="wkcal__dom">15</div></div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">TUE</div><div class="wkcal__dom">16</div></div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">WED</div><div class="wkcal__dom">17</div></div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">THU</div><div class="wkcal__dom">18</div></div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">FRI</div><div class="wkcal__dom">19</div></div>
+                  <div class="wkcal__headCell"><div class="wkcal__dow">SAT</div><div class="wkcal__dom">20</div></div>
+                </div>
+                <div class="wkcal__grid wkcal__body">
+                  <div class="wkcal__timeCol">
+                    <div class="wkcal__time">6 AM</div><div class="wkcal__time wkcal__time--half">.</div>
+                    <div class="wkcal__time">7 AM</div><div class="wkcal__time wkcal__time--half">.</div>
+                    <div class="wkcal__time">8 AM</div><div class="wkcal__time wkcal__time--half">.</div>
+                    <div class="wkcal__time">9 AM</div><div class="wkcal__time wkcal__time--half">.</div>
+                    <div class="wkcal__time">10 AM</div><div class="wkcal__time wkcal__time--half">.</div>
+                    <div class="wkcal__time">11 AM</div><div class="wkcal__time wkcal__time--half">.</div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--a wkcal__t-9a">Education: Content Tip<small>9:00 AM</small></div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--b wkcal__t-9a">Engagement: Q&amp;A<small>9:00 AM</small></div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--c wkcal__t-9a">Promotion: Offer Post<small>9:00 AM</small></div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--d wkcal__t-9a">Community: Replies<small>9:00 AM</small></div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--a wkcal__t-9a">Education: Tutorial<small>9:00 AM</small></div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--b wkcal__t-9a">Engagement: Poll<small>9:00 AM</small></div>
+                  </div>
+                  <div class="wkcal__dayCol">
+                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
+                    <div class="wkcal__event wkcal__event--c wkcal__t-9a">Promotion: Booking CTA<small>9:00 AM</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -694,7 +865,69 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <!-- keep your existing GRIDUI + COMMUI embeds here (unchanged) -->
+            <!-- GRIDUI (Asset Grid) -->
+            <div class="lxov" role="region" aria-label="Creatives mockup A — Asset grid">
+              <div class="gridui" role="region" aria-label="Design grid mockup">
+                <style>
+                  .gridui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                  .gridui__brand{font-weight:800}
+                  .gridui__card{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;height:110px;position:relative}
+                  .gridui__chip{background:rgba(255,255,255,.10);border-radius:999px;font-size:12px;font-weight:900;left:10px;padding:6px 10px;position:absolute;top:10px}
+                  .gridui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                  .gridui__wrap{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);padding:14px}
+                  @media (max-width:980px){ .gridui__wrap{grid-template-columns:repeat(2,1fr)} }
+                </style>
+                <div class="gridui__top">
+                  <div class="gridui__brand">Asset Grid</div>
+                  <div style="color:rgba(232,234,237,.72);font-weight:800">Client Library</div>
+                </div>
+                <div class="gridui__wrap">
+                  <div class="gridui__card"><div class="gridui__chip">Brand</div></div>
+                  <div class="gridui__card"><div class="gridui__chip">Drafts</div></div>
+                  <div class="gridui__card"><div class="gridui__chip">Print</div></div>
+                  <div class="gridui__card"><div class="gridui__chip">Social</div></div>
+                  <div class="gridui__card"><div class="gridui__chip">Video</div></div>
+                  <div class="gridui__card"><div class="gridui__chip">Web</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- COMMUI (Client Messages) -->
+            <div class="lxov" role="region" aria-label="Creatives mockup B — Client messages">
+              <div class="commui" role="region" aria-label="Client communication mockup">
+                <style>
+                  .commui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                  .commui__body{padding:14px}
+                  .commui__brand{font-weight:800}
+                  .commui__hdr{display:flex;justify-content:space-between;margin-bottom:8px}
+                  .commui__msg{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px 12px}
+                  .commui__name{font-size:13px;font-weight:900}
+                  .commui__text{color:rgba(232,234,237,.92);font-size:13px;font-weight:800;line-height:1.45}
+                  .commui__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:800}
+                  .commui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                </style>
+                <div class="commui__top">
+                  <div class="commui__brand">Client Messages</div>
+                  <div style="color:rgba(232,234,237,.72);font-weight:800">Drafted Replies</div>
+                </div>
+                <div class="commui__body">
+                  <div class="commui__msg">
+                    <div class="commui__hdr">
+                      <div class="commui__name">Client</div>
+                      <div class="commui__time">Today</div>
+                    </div>
+                    <div class="commui__text">Can we share the updated files by Friday?</div>
+                  </div>
+                  <div class="commui__msg" style="border-color:rgba(0,229,255,.22);margin-bottom:0;">
+                    <div class="commui__hdr">
+                      <div class="commui__name">Draft Reply</div>
+                      <div class="commui__time">Ready</div>
+                    </div>
+                    <div class="commui__text">Yes. I’ll package the updated set and send it with a quick summary + next steps.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -748,7 +981,86 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <!-- keep your existing DRIVEUI + MAILUI embeds here (unchanged) -->
+            <!-- DRIVEUI (Folder Organization) -->
+            <div class="driveui" role="region" aria-label="Folder organization mockup">
+              <style>
+                .driveui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .driveui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .driveui__brand{font-weight:800}
+                .driveui__body{padding:14px}
+                .driveui__row{align-items:center;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:10px;padding:10px 2px}
+                .driveui__row:last-child{border-bottom:0}
+                .driveui__ico{font-size:16px}
+                .driveui__name{font-size:13px;font-weight:900}
+                .driveui__meta{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-left:auto}
+              </style>
+              <div class="driveui__top">
+                <div class="driveui__brand">Folders</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Product Ops</div>
+              </div>
+              <div class="driveui__body">
+                <div class="driveui__row">
+                  <div class="driveui__ico">📁</div>
+                  <div class="driveui__name">01 Products</div>
+                  <div class="driveui__meta">Updated</div>
+                </div>
+                <div class="driveui__row">
+                  <div class="driveui__ico">📁</div>
+                  <div class="driveui__name">02 Photos</div>
+                  <div class="driveui__meta">Sorted</div>
+                </div>
+                <div class="driveui__row">
+                  <div class="driveui__ico">📁</div>
+                  <div class="driveui__name">03 Listings</div>
+                  <div class="driveui__meta">Clean</div>
+                </div>
+                <div class="driveui__row">
+                  <div class="driveui__ico">📁</div>
+                  <div class="driveui__name">04 Vendors</div>
+                  <div class="driveui__meta">Tracked</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MAILUI (Inbox Workflow) -->
+            <div class="lxov" role="region" aria-label="Inbox workflow mockup">
+              <div class="mailui" role="region" aria-label="Inbox workflow mockup">
+                <style>
+                  .mailui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                  .mailui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                  .mailui__brand{font-weight:800}
+                  .mailui__body{padding:14px}
+                  .mailui__item{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                  .mailui__subj{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                  .mailui__snip{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+                  .mailui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;margin-top:10px;padding:6px 10px}
+                  .mailui__tag--a{background:#00e5ff;color:#0b0d10}
+                  .mailui__tag--b{background:#b388ff;color:#0b0d10}
+                  .mailui__tag--c{background:#ff5c8a;color:#0b0d10}
+                </style>
+                <div class="mailui__top">
+                  <div class="mailui__brand">Inbox</div>
+                  <div style="color:rgba(232,234,237,.72);font-weight:800">Triage</div>
+                </div>
+                <div class="mailui__body">
+                  <div class="mailui__item">
+                    <div class="mailui__subj">Return request</div>
+                    <p class="mailui__snip">Customer asked for an exchange. Photos attached. Needs response.</p>
+                    <span class="mailui__tag mailui__tag--a">Reply Drafted</span>
+                  </div>
+                  <div class="mailui__item">
+                    <div class="mailui__subj">Vendor invoice</div>
+                    <p class="mailui__snip">Invoice received for November shipment. Needs approval and upload.</p>
+                    <span class="mailui__tag mailui__tag--b">Filed</span>
+                  </div>
+                  <div class="mailui__item" style="margin-bottom:0;">
+                    <div class="mailui__subj">Listing update</div>
+                    <p class="mailui__snip">Price change and new bullet points requested for top seller.</p>
+                    <span class="mailui__tag mailui__tag--c">Queued</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
