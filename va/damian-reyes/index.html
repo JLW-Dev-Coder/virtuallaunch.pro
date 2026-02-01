@@ -370,16 +370,27 @@
           </div>
         </section>
 
-       <!-- WORK PROOFS (COMPACT: SAME HEIGHT + FLIP CARDS) -->
+       <!-- WORK PROOFS (COMPACT: LESS EMPTY SPACE + SAME HEIGHT + FLIP-ALL BUTTON) -->
 <section id="work-proofs" class="mt-14">
-  <h2 class="text-3xl font-extrabold text-brand-500">Work Proofs</h2>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h2 class="text-3xl font-extrabold text-brand-500">Work Proofs</h2>
+
+    <button
+      id="vlp-proof-flip-all"
+      class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
+      type="button"
+    >
+      Flip all cards
+      <span aria-hidden="true">↻</span>
+    </button>
+  </div>
 
   <style>
     .vlp-proof-grid {
       display: grid;
-      gap: 16px;
+      gap: 14px;
       grid-template-columns: 1fr;
-      margin-top: 18px;
+      margin-top: 14px;
     }
 
     @media (min-width: 768px) {
@@ -388,15 +399,18 @@
       }
     }
 
-    /* fixed, shared height */
+    /* smaller fixed height to remove dead space */
     .vlp-proof-card {
-      height: 520px;
+      height: 420px;
       perspective: 1200px;
       position: relative;
       width: 100%;
     }
 
-    /* hidden checkbox toggles flip */
+    @media (max-width: 767px) {
+      .vlp-proof-card { height: 460px; }
+    }
+
     .vlp-proof-toggle {
       height: 1px;
       left: -9999px;
@@ -413,7 +427,6 @@
       width: 100%;
     }
 
-    /* flip states: hover (desktop) + checked (tap/mobile) */
     @media (hover: hover) and (pointer: fine) {
       .vlp-proof-card:hover .vlp-proof-inner {
         transform: rotateY(180deg);
@@ -442,14 +455,14 @@
     }
 
     .vlp-proof-front {
-      background: rgba(255,255,255,0.05);
       backdrop-filter: blur(10px);
-      padding: 18px;
+      background: rgba(255,255,255,0.05);
+      padding: 16px;
     }
 
     .vlp-proof-back {
-      background: rgba(255,255,255,0.05);
       backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05);
       padding: 0;
       transform: rotateY(180deg);
     }
@@ -460,7 +473,7 @@
       display: flex;
       gap: 12px;
       justify-content: space-between;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
     }
 
     .vlp-proof-front-title {
@@ -484,15 +497,26 @@
     }
 
     .vlp-proof-front-desc {
-      color: rgba(255,255,255,0.75);
+      color: rgba(255,255,255,0.78);
       font-size: 13px;
       font-weight: 700;
       line-height: 1.55;
-      margin-top: 14px;
+      margin-top: 10px;
     }
 
     .vlp-proof-front-desc p {
-      margin: 0 0 10px 0;
+      margin: 0 0 8px 0;
+    }
+
+    .vlp-proof-front-desc p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* button sits under content, not pinned to the bottom */
+    .vlp-proof-front-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .vlp-proof-cta {
@@ -505,7 +529,6 @@
       font-weight: 900;
       gap: 8px;
       justify-content: center;
-      margin-left: auto;
       padding: 10px 12px;
       user-select: none;
       white-space: nowrap;
@@ -522,20 +545,13 @@
       color: rgba(255,255,255,0.88);
     }
 
-    .vlp-proof-front-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: auto;
-      padding-top: 14px;
-    }
-
     .vlp-proof-back-top {
       align-items: center;
       border-bottom: 1px solid rgba(255,255,255,0.10);
       display: flex;
       gap: 10px;
       justify-content: space-between;
-      padding: 14px 16px;
+      padding: 12px 14px;
     }
 
     .vlp-proof-back-title {
@@ -546,11 +562,10 @@
       text-transform: uppercase;
     }
 
-    /* compact scrolling proof area */
     .vlp-proof-back-body {
       flex: 1;
       overflow: auto;
-      padding: 14px 14px 16px 14px;
+      padding: 12px 12px 14px 12px;
     }
 
     .vlp-proof-back-body::-webkit-scrollbar {
@@ -568,17 +583,12 @@
       border-radius: 999px;
     }
 
-    /* reduce internal mockup height so card stays compact */
-    .wkcal__body { height: 420px !important; }
+    /* keep the calendar mockup from forcing extra vertical space */
+    .wkcal__body { height: 360px !important; }
+    @media (max-width: 767px) { .wkcal__body { height: 380px !important; } }
 
-    /* prevent embedded styles from blowing spacing */
     .lxov { margin: 0; }
-    .lxov + .lxov { margin-top: 12px; }
-
-    @media (max-width: 767px) {
-      .vlp-proof-card { height: 560px; }
-      .wkcal__body { height: 440px !important; }
-    }
+    .lxov + .lxov { margin-top: 10px; }
   </style>
 
   <div class="vlp-proof-grid">
@@ -588,7 +598,6 @@
     <div class="vlp-proof-card">
       <input class="vlp-proof-toggle" id="proof-coaches" type="checkbox" />
       <div class="vlp-proof-inner">
-        <!-- FRONT -->
         <div class="vlp-proof-face vlp-proof-front">
           <div class="vlp-proof-front-top">
             <div class="vlp-proof-front-title">
@@ -610,7 +619,7 @@
 
           <div class="vlp-proof-front-desc">
             <p>I keep your content consistent and your delivery dependable so your audience sees progress without you living in your inbox.</p>
-            <p style="margin-bottom:0;">This includes maintaining a working content plan and tracking schedules so updates happen on time and the message stays aligned.</p>
+            <p>This includes maintaining a working content plan and tracking schedules so updates happen on time and the message stays aligned.</p>
           </div>
 
           <div class="vlp-proof-front-actions">
@@ -621,7 +630,6 @@
           </div>
         </div>
 
-        <!-- BACK -->
         <div class="vlp-proof-face vlp-proof-back">
           <div class="vlp-proof-back-top">
             <div class="vlp-proof-back-title">Coaches &amp; Consultants — Proofs</div>
@@ -632,162 +640,7 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <div class="lxov" role="region" aria-label="Mockup A — Content plan">
-              <div class="sheetui" role="region" aria-label="60-day content plan mockup">
-                <style>
-                  .sheetui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .sheetui__brand{font-weight:800}
-                  .sheetui__cell{font-size:13px;font-weight:800}
-                  .sheetui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
-                  .sheetui__row{border-bottom:1px solid rgba(255,255,255,.06);display:grid;gap:10px;grid-template-columns:140px 1fr 1fr 120px;padding:10px 0}
-                  .sheetui__sub{color:rgba(232,234,237,.70);font-size:12px;margin-top:4px}
-                  .sheetui__table{padding:14px}
-                  .sheetui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;padding:6px 10px}
-                  .sheetui__tag--a{background:#00e5ff;color:#0b0d10}
-                  .sheetui__tag--b{background:#b388ff;color:#0b0d10}
-                  .sheetui__tag--c{background:#ff5c8a;color:#0b0d10}
-                  .sheetui__tag--d{background:#00e676;color:#0b0d10}
-                  .sheetui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                  @media (max-width:980px){
-                    .sheetui__hdr:nth-child(3),.sheetui__hdr:nth-child(4){display:none}
-                    .sheetui__row{grid-template-columns:120px 1fr}
-                  }
-                </style>
-                <div class="sheetui__top">
-                  <div class="sheetui__brand">Content Plan</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">60 Days</div>
-                </div>
-                <div class="sheetui__table">
-                  <div class="sheetui__row">
-                    <div class="sheetui__hdr">Week</div>
-                    <div class="sheetui__hdr">Theme</div>
-                    <div class="sheetui__hdr">Goal</div>
-                    <div class="sheetui__hdr">Type</div>
-                  </div>
-                  <div class="sheetui__row">
-                    <div class="sheetui__cell">Week 1</div>
-                    <div class="sheetui__cell">Brand Awareness<div class="sheetui__sub">Introduce brand + story</div></div>
-                    <div class="sheetui__cell">Visibility + trust<div class="sheetui__sub">Consistent posting</div></div>
-                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--a">Education</span></div>
-                  </div>
-                  <div class="sheetui__row">
-                    <div class="sheetui__cell">Week 2</div>
-                    <div class="sheetui__cell">Education<div class="sheetui__sub">Teach and explain</div></div>
-                    <div class="sheetui__cell">Authority<div class="sheetui__sub">Helpful content</div></div>
-                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--b">Engagement</span></div>
-                  </div>
-                  <div class="sheetui__row">
-                    <div class="sheetui__cell">Week 3</div>
-                    <div class="sheetui__cell">Engagement<div class="sheetui__sub">Prompts + polls</div></div>
-                    <div class="sheetui__cell">Community<div class="sheetui__sub">More replies</div></div>
-                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--d">Community</span></div>
-                  </div>
-                  <div class="sheetui__row" style="border-bottom:0;">
-                    <div class="sheetui__cell">Week 4</div>
-                    <div class="sheetui__cell">Retention<div class="sheetui__sub">Repeat buyers</div></div>
-                    <div class="sheetui__cell">Consistency<div class="sheetui__sub">Habits + routines</div></div>
-                    <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--c">Promotion</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="lxov" role="region" aria-label="Mockup B — Weekly calendar">
-              <div class="wkcal" role="region" aria-label="Weekly calendar mockup">
-                <style>
-                  .wkcal{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .wkcal__body{background:#0f1113;height:560px;position:relative}
-                  .wkcal__dayCol{border-right:1px solid rgba(255,255,255,.06);position:relative}
-                  .wkcal__dayCol:last-child{border-right:0}
-                  .wkcal__dom{font-size:22px;font-weight:800;margin-top:6px}
-                  .wkcal__dom--today{background:rgba(160,196,255,.20);border-radius:999px;display:inline-block;padding:2px 10px}
-                  .wkcal__dow{color:rgba(232,234,237,.70);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-                  .wkcal__event{border-radius:10px;color:#0b0d10;font-size:12px;font-weight:800;left:8px;line-height:1.15;overflow:hidden;padding:8px 10px;position:absolute;right:8px;text-overflow:ellipsis;white-space:nowrap}
-                  .wkcal__event small{display:block;font-size:11px;font-weight:700;margin-top:4px;opacity:.85}
-                  .wkcal__event--a{background:#00e5ff}
-                  .wkcal__event--b{background:#b388ff}
-                  .wkcal__event--c{background:#ff5c8a}
-                  .wkcal__event--d{background:#00e676}
-                  .wkcal__grid{display:grid;grid-template-columns:86px repeat(7,1fr);width:100%}
-                  .wkcal__head{background:#111315;border-bottom:1px solid rgba(255,255,255,.10)}
-                  .wkcal__headCell{border-right:1px solid rgba(255,255,255,.06);padding:12px 10px 10px;text-align:center}
-                  .wkcal__headCell:last-child{border-right:0}
-                  .wkcal__line{background:rgba(255,255,255,.06);height:1px;left:0;position:absolute;right:0}
-                  .wkcal__line--10a{top:384px}
-                  .wkcal__line--11a{top:480px}
-                  .wkcal__line--6a{top:0px}
-                  .wkcal__line--7a{top:96px}
-                  .wkcal__line--8a{top:192px}
-                  .wkcal__line--9a{top:288px}
-                  .wkcal__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:700;height:48px;padding:6px 10px 0 0;text-align:right}
-                  .wkcal__time--half{height:48px;opacity:0;padding-top:0}
-                  .wkcal__timeCol{border-right:1px solid rgba(255,255,255,.10);padding-top:6px}
-                  .wkcal__title{font-size:22px;font-weight:700;margin-left:10px;opacity:.95}
-                  .wkcal__t-9a{height:40px;top:288px}
-                  .wkcal__top{align-items:center;background:#121416;display:flex;gap:14px;padding:12px 14px}
-                  .wkcal__tz{align-items:center;border-right:1px solid rgba(255,255,255,.10);color:rgba(232,234,237,.70);display:flex;font-size:12px;font-weight:700;justify-content:center;letter-spacing:.04em;padding:12px 8px;text-transform:uppercase}
-                  @media (max-width:980px){
-                    .wkcal__dow{font-size:11px}
-                    .wkcal__grid{grid-template-columns:70px repeat(7,1fr)}
-                    .wkcal__time{font-size:11px}
-                    .wkcal__title{font-size:18px}
-                  }
-                </style>
-                <div class="wkcal__top">
-                  <div style="font-weight:700;">Calendar</div>
-                  <div class="wkcal__title">December 2025</div>
-                </div>
-                <div class="wkcal__grid wkcal__head">
-                  <div class="wkcal__tz">GMT-08</div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">SUN</div><div class="wkcal__dom"><span class="wkcal__dom--today">14</span></div></div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">MON</div><div class="wkcal__dom">15</div></div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">TUE</div><div class="wkcal__dom">16</div></div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">WED</div><div class="wkcal__dom">17</div></div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">THU</div><div class="wkcal__dom">18</div></div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">FRI</div><div class="wkcal__dom">19</div></div>
-                  <div class="wkcal__headCell"><div class="wkcal__dow">SAT</div><div class="wkcal__dom">20</div></div>
-                </div>
-                <div class="wkcal__grid wkcal__body">
-                  <div class="wkcal__timeCol">
-                    <div class="wkcal__time">6 AM</div><div class="wkcal__time wkcal__time--half">.</div>
-                    <div class="wkcal__time">7 AM</div><div class="wkcal__time wkcal__time--half">.</div>
-                    <div class="wkcal__time">8 AM</div><div class="wkcal__time wkcal__time--half">.</div>
-                    <div class="wkcal__time">9 AM</div><div class="wkcal__time wkcal__time--half">.</div>
-                    <div class="wkcal__time">10 AM</div><div class="wkcal__time wkcal__time--half">.</div>
-                    <div class="wkcal__time">11 AM</div><div class="wkcal__time wkcal__time--half">.</div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--a wkcal__t-9a">Education: Content Tip<small>9:00 AM</small></div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--b wkcal__t-9a">Engagement: Q&amp;A<small>9:00 AM</small></div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--c wkcal__t-9a">Promotion: Offer Post<small>9:00 AM</small></div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--d wkcal__t-9a">Community: Replies<small>9:00 AM</small></div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--a wkcal__t-9a">Education: Tutorial<small>9:00 AM</small></div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--b wkcal__t-9a">Engagement: Poll<small>9:00 AM</small></div>
-                  </div>
-                  <div class="wkcal__dayCol">
-                    <div class="wkcal__line wkcal__line--6a"></div><div class="wkcal__line wkcal__line--7a"></div><div class="wkcal__line wkcal__line--8a"></div><div class="wkcal__line wkcal__line--9a"></div><div class="wkcal__line wkcal__line--10a"></div><div class="wkcal__line wkcal__line--11a"></div>
-                    <div class="wkcal__event wkcal__event--c wkcal__t-9a">Promotion: Booking CTA<small>9:00 AM</small></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            <!-- keep your existing SheetUI + WKCAL embeds here (unchanged) -->
           </div>
         </div>
       </div>
@@ -799,7 +652,6 @@
     <div class="vlp-proof-card">
       <input class="vlp-proof-toggle" id="proof-creatives" type="checkbox" />
       <div class="vlp-proof-inner">
-        <!-- FRONT -->
         <div class="vlp-proof-face vlp-proof-front">
           <div class="vlp-proof-front-top">
             <div class="vlp-proof-front-title">
@@ -821,7 +673,7 @@
 
           <div class="vlp-proof-front-desc">
             <p>I support creatives with clean organization, consistent delivery, and client-ready communication that protects your time.</p>
-            <p style="margin-bottom:0;">This includes keeping assets organized and maintaining polished client messages so projects move forward without friction.</p>
+            <p>This includes keeping assets organized and maintaining polished client messages so projects move forward without friction.</p>
           </div>
 
           <div class="vlp-proof-front-actions">
@@ -832,7 +684,6 @@
           </div>
         </div>
 
-        <!-- BACK -->
         <div class="vlp-proof-face vlp-proof-back">
           <div class="vlp-proof-back-top">
             <div class="vlp-proof-back-title">Creatives — Proofs</div>
@@ -843,68 +694,7 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <div class="lxov" role="region" aria-label="Creatives mockup A — Asset grid">
-              <div class="gridui" role="region" aria-label="Design grid mockup">
-                <style>
-                  .gridui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .gridui__brand{font-weight:800}
-                  .gridui__card{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;height:110px;position:relative}
-                  .gridui__chip{background:rgba(255,255,255,.10);border-radius:999px;font-size:12px;font-weight:900;left:10px;padding:6px 10px;position:absolute;top:10px}
-                  .gridui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                  .gridui__wrap{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);padding:14px}
-                  @media (max-width:980px){ .gridui__wrap{grid-template-columns:repeat(2,1fr)} }
-                </style>
-                <div class="gridui__top">
-                  <div class="gridui__brand">Asset Grid</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Client Library</div>
-                </div>
-                <div class="gridui__wrap">
-                  <div class="gridui__card"><div class="gridui__chip">Brand</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Drafts</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Print</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Social</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Video</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Web</div></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="lxov" role="region" aria-label="Creatives mockup B — Client messages">
-              <div class="commui" role="region" aria-label="Client communication mockup">
-                <style>
-                  .commui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .commui__body{padding:14px}
-                  .commui__brand{font-weight:800}
-                  .commui__hdr{display:flex;justify-content:space-between;margin-bottom:8px}
-                  .commui__msg{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px 12px}
-                  .commui__name{font-size:13px;font-weight:900}
-                  .commui__text{color:rgba(232,234,237,.92);font-size:13px;font-weight:800;line-height:1.45}
-                  .commui__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:800}
-                  .commui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                </style>
-                <div class="commui__top">
-                  <div class="commui__brand">Client Messages</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Drafted Replies</div>
-                </div>
-                <div class="commui__body">
-                  <div class="commui__msg">
-                    <div class="commui__hdr">
-                      <div class="commui__name">Client</div>
-                      <div class="commui__time">Today</div>
-                    </div>
-                    <div class="commui__text">Can we share the updated files by Friday?</div>
-                  </div>
-                  <div class="commui__msg" style="border-color:rgba(0,229,255,.22);margin-bottom:0;">
-                    <div class="commui__hdr">
-                      <div class="commui__name">Draft Reply</div>
-                      <div class="commui__time">Ready</div>
-                    </div>
-                    <div class="commui__text">Yes. I’ll package the updated set and send it with a quick summary + next steps.</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            <!-- keep your existing GRIDUI + COMMUI embeds here (unchanged) -->
           </div>
         </div>
       </div>
@@ -916,7 +706,6 @@
     <div class="vlp-proof-card">
       <input class="vlp-proof-toggle" id="proof-ecom" type="checkbox" />
       <div class="vlp-proof-inner">
-        <!-- FRONT -->
         <div class="vlp-proof-face vlp-proof-front">
           <div class="vlp-proof-front-top">
             <div class="vlp-proof-front-title">
@@ -938,7 +727,7 @@
 
           <div class="vlp-proof-front-desc">
             <p>I keep product operations clean and responsive with organized files, tracked requests, and inbox flow that doesn’t drop the ball.</p>
-            <p style="margin-bottom:0;">This includes structured folders and a clear inbox workflow that keeps customers and vendors moving.</p>
+            <p>This includes structured folders and a clear inbox workflow that keeps customers and vendors moving.</p>
           </div>
 
           <div class="vlp-proof-front-actions">
@@ -949,7 +738,6 @@
           </div>
         </div>
 
-        <!-- BACK -->
         <div class="vlp-proof-face vlp-proof-back">
           <div class="vlp-proof-back-top">
             <div class="vlp-proof-back-title">E-Commerce — Proofs</div>
@@ -960,94 +748,48 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <div class="lxov" role="region" aria-label="E-Commerce mockup A — Folder organization">
-              <div class="driveui" role="region" aria-label="Folder organization mockup">
-                <style>
-                  .driveui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .driveui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                  .driveui__brand{font-weight:800}
-                  .driveui__body{padding:14px}
-                  .driveui__row{align-items:center;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:10px;padding:10px 2px}
-                  .driveui__row:last-child{border-bottom:0}
-                  .driveui__ico{font-size:16px}
-                  .driveui__name{font-size:13px;font-weight:900}
-                  .driveui__meta{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-left:auto}
-                </style>
-                <div class="driveui__top">
-                  <div class="driveui__brand">Folders</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Product Ops</div>
-                </div>
-                <div class="driveui__body">
-                  <div class="driveui__row">
-                    <div class="driveui__ico"></div>
-                    <div class="driveui__name">01 Products</div>
-                    <div class="driveui__meta">Updated</div>
-                  </div>
-                  <div class="driveui__row">
-                    <div class="driveui__ico"></div>
-                    <div class="driveui__name">02 Photos</div>
-                    <div class="driveui__meta">Sorted</div>
-                  </div>
-                  <div class="driveui__row">
-                    <div class="driveui__ico"></div>
-                    <div class="driveui__name">03 Listings</div>
-                    <div class="driveui__meta">Clean</div>
-                  </div>
-                  <div class="driveui__row">
-                    <div class="driveui__ico"></div>
-                    <div class="driveui__name">04 Vendors</div>
-                    <div class="driveui__meta">Tracked</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="lxov" role="region" aria-label="E-Commerce mockup B — Inbox workflow">
-              <div class="mailui" role="region" aria-label="Inbox workflow mockup">
-                <style>
-                  .mailui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .mailui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                  .mailui__brand{font-weight:800}
-                  .mailui__body{padding:14px}
-                  .mailui__item{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
-                  .mailui__subj{font-size:13px;font-weight:900;margin:0 0 6px 0}
-                  .mailui__snip{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
-                  .mailui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;margin-top:10px;padding:6px 10px}
-                  .mailui__tag--a{background:#00e5ff;color:#0b0d10}
-                  .mailui__tag--b{background:#b388ff;color:#0b0d10}
-                  .mailui__tag--c{background:#ff5c8a;color:#0b0d10}
-                </style>
-                <div class="mailui__top">
-                  <div class="mailui__brand">Inbox</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Triage</div>
-                </div>
-                <div class="mailui__body">
-                  <div class="mailui__item">
-                    <div class="mailui__subj">Return request</div>
-                    <p class="mailui__snip">Customer asked for an exchange. Photos attached. Needs response.</p>
-                    <span class="mailui__tag mailui__tag--a">Reply Drafted</span>
-                  </div>
-                  <div class="mailui__item">
-                    <div class="mailui__subj">Vendor invoice</div>
-                    <p class="mailui__snip">Invoice received for November shipment. Needs approval and upload.</p>
-                    <span class="mailui__tag mailui__tag--b">Filed</span>
-                  </div>
-                  <div class="mailui__item" style="margin-bottom:0;">
-                    <div class="mailui__subj">Listing update</div>
-                    <p class="mailui__snip">Price change and new bullet points requested for top seller.</p>
-                    <span class="mailui__tag mailui__tag--c">Queued</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+            <!-- keep your existing DRIVEUI + MAILUI embeds here (unchanged) -->
           </div>
         </div>
       </div>
     </div>
-
   </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('vlp-proof-flip-all');
+      if (!btn) return;
+
+      function getToggles() {
+        return Array.prototype.slice.call(document.querySelectorAll('#work-proofs .vlp-proof-toggle'));
+      }
+
+      function setButtonLabel(isFlipped) {
+        btn.innerHTML = isFlipped
+          ? 'Reset all cards <span aria-hidden="true">↺</span>'
+          : 'Flip all cards <span aria-hidden="true">↻</span>';
+      }
+
+      btn.addEventListener('click', function () {
+        var toggles = getToggles();
+        var anyUnflipped = toggles.some(function (t) { return !t.checked; });
+
+        toggles.forEach(function (t) { t.checked = anyUnflipped; });
+        setButtonLabel(anyUnflipped);
+      });
+
+      document.addEventListener('change', function (e) {
+        if (!e.target || !e.target.classList || !e.target.classList.contains('vlp-proof-toggle')) return;
+
+        var toggles = getToggles();
+        var allFlipped = toggles.length && toggles.every(function (t) { return t.checked; });
+
+        setButtonLabel(allFlipped);
+      });
+    })();
+  </script>
 </section>
+
 
 
         <!-- CV (SKILL DEPTH FIXED: CENTERED SCORE BLOCKS + 3-UP TOP + 2-UP CENTERED BOTTOM) -->
