@@ -2555,6 +2555,60 @@
     <!-- SHARED FOOTER -->
     <div data-include="footer-lp"></div>
   </main>
+<!-- START: Scroll To Top -->
+<button
+  id="lx-scroll-top"
+  aria-label="Scroll to top"
+  style="
+    position:fixed;
+    bottom:18px;
+    right:18px;
+    z-index:999;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 180ms ease, transform 180ms ease;
+    transform:translateY(8px);
+  "
+  class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-3 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
+>
+  ↑ Top
+</button>
+
+<script>
+(function () {
+  var btn = document.getElementById('lx-scroll-top');
+  if (!btn) return;
+
+  var prefersReduced = false;
+  try {
+    prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+
+  function onScroll() {
+    if (window.scrollY > 420) {
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+      btn.style.transform = 'translateY(0)';
+    } else {
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+      btn.style.transform = 'translateY(8px)';
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    if (prefersReduced) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+<!-- END: Scroll To Top -->
 
   <script>
     (function () {
@@ -2606,120 +2660,5 @@
       }
     })();
   </script>
-  <!-- START: Freelancer Review -->
-<div class="freelancer-review-wrap">
-
-  <!-- Profile ID (visible reference) -->
-  <div class="text-default">
-    <h6 style="text-align:center;">
-      <b>Profile No. [{{staffCustomUID}} {{targetCustomUID}}]</b>
-    </h6>
-  </div>
-
-  <!-- Trigger Button -->
-  <div id="freelancer-review-trigger-wrap" style="text-align:center;margin-top:30px;">
-    <button
-      type="button"
-      class="item-column-three-btn"
-      id="freelancer-review-trigger"
-      style="padding:10px 32px !important;"
-    >
-      Leave A Review ⭐⭐⭐⭐⭐
-    </button>
-  </div>
-
-  <!-- Rating Form -->
-  <form
-    method="post"
-    action="https://request.lentax.co/freelancer-score"
-    class="freelancer-score-form rendered-form formbuilder-embedded-bootstrap"
-    id="freelancer-review-form"
-    style="display:none;margin-top:1.5rem;"
-  >
-    <h3 class="freelancer-score-form-title">Rate this Freelancer</h3>
-
-    <!-- First Name -->
-    <div class="freelancer-score-form-field form-group">
-      <label>
-        First Name<span class="formbuilder-required">*</span>
-      </label>
-      <input type="text" name="first-name" required class="form-control">
-    </div>
-
-    <!-- Last Name -->
-    <div class="freelancer-score-form-field form-group">
-      <label>
-        Last Name<span class="formbuilder-required">*</span>
-      </label>
-      <input type="text" name="last-name" required class="form-control">
-    </div>
-
-    <!-- REQUIRED: Client / Member ID -->
-    <div class="freelancer-score-form-field form-group">
-      <label>
-        Client / Member ID<span class="formbuilder-required">*</span>
-      </label>
-      <input
-        type="text"
-        name="member-id"
-        id="member-id"
-        required
-        placeholder="Example: {{staffCustomUID}}"
-        class="form-control"
-      >
-      <small style="opacity:.7;">
-        Your review cannot be submitted without a valid ID.
-      </small>
-    </div>
-
-    <!-- Overall Score -->
-    <div class="form-group">
-      <span>Overall score (1–5):</span>
-      <div>
-        <label><input type="radio" name="overall-score" value="5" required> 5</label>
-        <label><input type="radio" name="overall-score" value="4"> 4</label>
-        <label><input type="radio" name="overall-score" value="3"> 3</label>
-        <label><input type="radio" name="overall-score" value="2"> 2</label>
-        <label><input type="radio" name="overall-score" value="1"> 1</label>
-      </div>
-    </div>
-
-    <!-- Comment -->
-    <div class="form-group">
-      <label>Comment</label>
-      <textarea name="freelancer-comment" rows="4" class="form-control"></textarea>
-    </div>
-
-    <!-- Submit -->
-    <div class="form-group" style="text-align:right;">
-      <button
-        type="submit"
-        id="submit-freelancer-score"
-        class="btn btn-primary item-cta-btn"
-      >
-        Submit review
-      </button>
-    </div>
-  </form>
-
-  <!-- Success -->
-  <div
-    id="freelancer-review-success"
-    style="display:none;margin-top:1.5rem;text-align:center;"
-  >
-    <dotlottie-wc
-      src="https://lottie.host/b5e85e29-8d34-45ae-ad80-7fa7028c2754/zcueIyHIMD.lottie"
-      style="width:50%;height:50%;display:inline-block;"
-      autoplay
-      loop
-    ></dotlottie-wc>
-
-    <h4 style="margin:10px 0 15px 0;">
-      All set. Your review is logged.
-    </h4>
-  </div>
-</div>
-<!-- END: Freelancer Review -->
-
 </body>
 </html>
