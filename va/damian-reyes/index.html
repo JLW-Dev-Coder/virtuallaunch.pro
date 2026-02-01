@@ -173,6 +173,38 @@
     @media (prefers-reduced-motion: reduce) {
       .vlp-stars::before { opacity: 0.45; }
     }
+
+    .vlp-hero-sticky {
+  height: 100%;
+  min-height: 520px;
+  position: relative;
+}
+
+.vlp-hero-sticky-bg {
+  background-image: url("/assets/va/va-profile-damian-reyes-hero.webp");
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 720px;
+  position: sticky;
+  top: 96px;
+  width: 100%;
+}
+
+@media (max-width: 1023px) {
+  .vlp-hero-sticky {
+    min-height: 0;
+  }
+
+  .vlp-hero-sticky-bg {
+    background-position: center bottom;
+    height: 420px;
+    position: static;
+    top: auto;
+  }
+}
+
+    
   </style>
 </head>
 
@@ -286,20 +318,11 @@
             </div>
 
             <div class="lg:col-span-4">
-              <div class="relative min-h-[520px] lg:min-h-[720px] overflow-visible">
-                <picture>
-                  <source srcset="/assets/va/va-profile-damian-reyes-hero.webp" type="image/webp" />
-                  <img
-                    alt="Damian Reyes portrait"
-                    class="vlp-hero-img"
-                    decoding="async"
-                    fetchpriority="high"
-                    loading="eager"
-                    src="/assets/va/va-profile-damian-reyes-hero.png"
-                  />
-                </picture>
+              <div class="vlp-hero-sticky">
+                <div class="vlp-hero-sticky-bg" aria-hidden="true"></div>
               </div>
             </div>
+
           </div>
         </div>
 
