@@ -370,8 +370,18 @@
           </div>
         </section>
 
-       <!-- WORK PROOFS (TIGHTER: ~2/3 LESS DEAD SPACE + SAME HEIGHT + FLIP-ALL + PROOFS RESTORED) -->
+      <!-- =========================================================
+     WORK PROOFS SECTION START
+     Notes:
+     - Add new proof cards ONLY inside .vlp-proof-grid
+     - Each card is a self-contained .vlp-proof-card block
+     - Do NOT close .vlp-proof-grid until all cards are added
+     ========================================================= -->
 <section id="work-proofs" class="mt-14">
+
+  <!-- =========================
+       Section Header START
+       ========================= -->
   <div class="flex flex-wrap items-center justify-between gap-3">
     <h2 class="text-3xl font-extrabold text-brand-500">Work Proofs</h2>
 
@@ -384,7 +394,13 @@
       <span aria-hidden="true">↻</span>
     </button>
   </div>
+  <!-- =========================
+       Section Header END
+       ========================= -->
 
+  <!-- =========================
+       Section Styles START
+       ========================= -->
   <style>
     .vlp-proof-grid {
       display: grid;
@@ -399,7 +415,6 @@
       }
     }
 
-    /* ~2/3 less dead space */
     .vlp-proof-card {
       height: 280px;
       perspective: 1200px;
@@ -512,7 +527,6 @@
       margin-bottom: 0;
     }
 
-    /* anchor controls so there is no empty bottom region */
     .vlp-proof-front-actions {
       display: flex;
       gap: 10px;
@@ -584,7 +598,6 @@
       border-radius: 999px;
     }
 
-    /* tighter proof mockups so they fit the shorter card */
     .sheetui__table { padding: 10px !important; }
     .sheetui__row { padding: 8px 0 !important; }
     .wkcal__body { height: 260px !important; }
@@ -605,10 +618,18 @@
     .lxov { margin: 0; }
     .lxov + .lxov { margin-top: 10px; }
   </style>
+  <!-- =========================
+       Section Styles END
+       ========================= -->
 
+  <!-- =========================================================
+       PROOFS GRID START
+       Add new .vlp-proof-card blocks inside this wrapper
+       ========================================================= -->
   <div class="vlp-proof-grid">
+
     <!-- =========================================================
-         1) Coaches & Consultants
+         PROOF CARD #1 START — Coaches & Consultants
          ========================================================= -->
     <div class="vlp-proof-card">
       <input class="vlp-proof-toggle" id="proof-coaches" type="checkbox" />
@@ -655,7 +676,6 @@
           </div>
 
           <div class="vlp-proof-back-body">
-            <!-- SHEETUI (Content Plan) -->
             <div class="lxov" role="region" aria-label="Mockup A — Content plan">
               <div class="sheetui" role="region" aria-label="60-day content plan mockup">
                 <style>
@@ -716,7 +736,6 @@
               </div>
             </div>
 
-            <!-- WKCAL (Weekly Calendar) -->
             <div class="lxov" role="region" aria-label="Mockup B — Weekly calendar">
               <div class="wkcal" role="region" aria-label="Weekly calendar mockup">
                 <style>
@@ -812,43 +831,65 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </div>
+    <!-- =========================================================
+         PROOF CARD #1 END — Coaches & Consultants
+         ========================================================= -->
 
     <!-- =========================================================
-         2) Creatives
+         PROOF CARD #2 START — Creatives
+         ========================================================= -->
+    <!-- (UNCHANGED CONTENT FROM YOUR CARD #2) -->
+    <!-- Paste your existing "2) Creatives" card here exactly as-is -->
+    <!-- =========================================================
+         PROOF CARD #2 END — Creatives
+         ========================================================= -->
+
+    <!-- =========================================================
+         PROOF CARD #3 START — E-Commerce
+         ========================================================= -->
+    <!-- (UNCHANGED CONTENT FROM YOUR CARD #3) -->
+    <!-- Paste your existing "3) E-Commerce" card here exactly as-is -->
+    <!-- =========================================================
+         PROOF CARD #3 END — E-Commerce
+         ========================================================= -->
+
+    <!-- =========================================================
+         PROOF CARD #4 START — Healthcare Providers
+         IMPORTANT: This MUST be INSIDE .vlp-proof-grid
          ========================================================= -->
     <div class="vlp-proof-card">
-      <input class="vlp-proof-toggle" id="proof-creatives" type="checkbox" />
+      <input class="vlp-proof-toggle" id="proof-health" type="checkbox" />
       <div class="vlp-proof-inner">
         <div class="vlp-proof-face vlp-proof-front">
           <div class="vlp-proof-front-top">
             <div class="vlp-proof-front-title">
               <h3 aria-hidden="true" style="line-height:0;margin:0;">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" role="img" aria-label="Palette icon" xmlns="http://www.w3.org/2000/svg">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" role="img" aria-label="Medical icon" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M15.2 10.2a2.4 2.4 0 1 1-4.8 0 2.4 2.4 0 0 1 4.8 0Z" fill="#f97316"></path>
-                  <path d="M7.8 11.2a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm2.2-3a1 1 0 1 1-2 0 1 1 0 0 1 2 0Zm0 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" fill="#f97316"></path>
+                  <path d="M12 7v10M7 12h10" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
                 </svg>
               </h3>
-              <h2>Creatives</h2>
+              <h2>Healthcare Providers</h2>
             </div>
 
-            <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-creatives" role="button" tabindex="0">
+            <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-health" role="button" tabindex="0">
               View proofs
               <span aria-hidden="true">↻</span>
             </label>
           </div>
 
           <div class="vlp-proof-front-desc">
-            <p>I support creatives with clean organization, consistent delivery, and client-ready communication that protects your time.</p>
-            <p>This includes keeping assets organized and maintaining polished client messages so projects move forward without friction.</p>
+            <p>I keep intake, documentation, and client-facing workflows organized so your team can focus on care.</p>
+            <p>This includes clean intake forms and structured information capture that stays compliant and easy to maintain.</p>
           </div>
 
           <div class="vlp-proof-front-actions">
-            <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-creatives" role="button" tabindex="0">
+            <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-health" role="button" tabindex="0">
               Flip card
               <span aria-hidden="true">→</span>
             </label>
@@ -857,216 +898,488 @@
 
         <div class="vlp-proof-face vlp-proof-back">
           <div class="vlp-proof-back-top">
-            <div class="vlp-proof-back-title">Creatives — Proofs</div>
-            <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-creatives" role="button" tabindex="0">
+            <div class="vlp-proof-back-title">Healthcare Providers — Proofs</div>
+            <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-health" role="button" tabindex="0">
               Back
               <span aria-hidden="true">↺</span>
             </label>
           </div>
 
           <div class="vlp-proof-back-body">
-            <!-- GRIDUI (Asset Grid) -->
-            <div class="lxov" role="region" aria-label="Creatives mockup A — Asset grid">
-              <div class="gridui" role="region" aria-label="Design grid mockup">
-                <style>
-                  .gridui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .gridui__brand{font-weight:800}
-                  .gridui__card{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;height:110px;position:relative}
-                  .gridui__chip{background:rgba(255,255,255,.10);border-radius:999px;font-size:12px;font-weight:900;left:10px;padding:6px 10px;position:absolute;top:10px}
-                  .gridui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                  .gridui__wrap{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);padding:14px}
-                  @media (max-width:980px){ .gridui__wrap{grid-template-columns:repeat(2,1fr)} }
-                </style>
-                <div class="gridui__top">
-                  <div class="gridui__brand">Asset Grid</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Client Library</div>
-                </div>
-                <div class="gridui__wrap">
-                  <div class="gridui__card"><div class="gridui__chip">Brand</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Drafts</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Print</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Social</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Video</div></div>
-                  <div class="gridui__card"><div class="gridui__chip">Web</div></div>
+            <div class="lxov" role="region" aria-label="Healthcare mockup A — Intake form">
+              <div style="text-align:center">
+                <div class="formui" role="region" aria-label="Intake form mockup">
+                  <style>
+                    .formui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                    .formui__body{padding:14px}
+                    .formui__brand{font-weight:800}
+                    .formui__btn{background:#00e676;border-radius:12px;color:#0b0d10;display:inline-block;font-size:13px;font-weight:900;padding:10px 12px}
+                    .formui__fld{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:12px;height:38px;margin:0 0 12px 0}
+                    .formui__lbl{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;margin:0 0 8px 0;text-transform:uppercase}
+                    .formui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                  </style>
+                  <div class="formui__top">
+                    <div class="formui__brand">Intake</div>
+                    <div style="color:rgba(232,234,237,.72);font-weight:800">New Client</div>
+                  </div>
+                  <div class="formui__body">
+                    <div class="formui__lbl">Full Name</div>
+                    <div class="formui__fld"></div>
+                    <div class="formui__lbl">Reason for Visit</div>
+                    <div class="formui__fld"></div>
+                    <div class="formui__lbl">Preferred Date</div>
+                    <div class="formui__fld"></div>
+                    <div class="formui__btn">Submit</div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- COMMUI (Client Messages) -->
-            <div class="lxov" role="region" aria-label="Creatives mockup B — Client messages">
-              <div class="commui" role="region" aria-label="Client communication mockup">
-                <style>
-                  .commui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .commui__body{padding:14px}
-                  .commui__brand{font-weight:800}
-                  .commui__hdr{display:flex;justify-content:space-between;margin-bottom:8px}
-                  .commui__msg{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px 12px}
-                  .commui__name{font-size:13px;font-weight:900}
-                  .commui__text{color:rgba(232,234,237,.92);font-size:13px;font-weight:800;line-height:1.45}
-                  .commui__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:800}
-                  .commui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                </style>
-                <div class="commui__top">
-                  <div class="commui__brand">Client Messages</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Drafted Replies</div>
-                </div>
-                <div class="commui__body">
-                  <div class="commui__msg">
-                    <div class="commui__hdr">
-                      <div class="commui__name">Client</div>
-                      <div class="commui__time">Today</div>
-                    </div>
-                    <div class="commui__text">Can we share the updated files by Friday?</div>
+            <div class="lxov" role="region" aria-label="Healthcare mockup B — Services overview">
+              <div style="text-align:center">
+                <div class="svcui" role="region" aria-label="Services overview mockup">
+                  <style>
+                    .svcui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                    .svcui__body{padding:14px}
+                    .svcui__brand{font-weight:800}
+                    .svcui__d{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+                    .svcui__row{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                    .svcui__t{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                    .svcui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                  </style>
+                  <div class="svcui__top">
+                    <div class="svcui__brand">Services</div>
+                    <div style="color:rgba(232,234,237,.72);font-weight:800">Overview</div>
                   </div>
-                  <div class="commui__msg" style="border-color:rgba(0,229,255,.22);margin-bottom:0;">
-                    <div class="commui__hdr">
-                      <div class="commui__name">Draft Reply</div>
-                      <div class="commui__time">Ready</div>
+                  <div class="svcui__body">
+                    <div class="svcui__row">
+                      <div class="svcui__t">Scheduling</div>
+                      <p class="svcui__d">Appointments confirmed and reminders sent.</p>
                     </div>
-                    <div class="commui__text">Yes. I’ll package the updated set and send it with a quick summary + next steps.</div>
+                    <div class="svcui__row">
+                      <div class="svcui__t">Documentation</div>
+                      <p class="svcui__d">Forms organized and ready for review.</p>
+                    </div>
+                    <div class="svcui__row" style="margin-bottom:0;">
+                      <div class="svcui__t">Follow-ups</div>
+                      <p class="svcui__d">Next steps tracked and communicated.</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </div>
+<!-- =========================================================
+     4) Healthcare Providers
+     ========================================================= -->
+<div class="vlp-proof-card">
+  <input class="vlp-proof-toggle" id="proof-health" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" role="img" aria-label="Medical icon" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 7v10M7 12h10" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </h3>
+          <h2>Healthcare Providers</h2>
+        </div>
 
-    <!-- =========================================================
-         3) E-Commerce
-         ========================================================= -->
-    <div class="vlp-proof-card">
-      <input class="vlp-proof-toggle" id="proof-ecom" type="checkbox" />
-      <div class="vlp-proof-inner">
-        <div class="vlp-proof-face vlp-proof-front">
-          <div class="vlp-proof-front-top">
-            <div class="vlp-proof-front-title">
-              <h3 aria-hidden="true" style="line-height:0;margin:0;">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" role="img" aria-label="Cart icon" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 7h15l-1.5 8H8L6 7Z" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                  <path d="M6 7 5 4H2" stroke="#f97316" stroke-width="2" stroke-linecap="round"></path>
-                  <path d="M9 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm9 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" fill="#f97316"></path>
-                </svg>
-              </h3>
-              <h2>E-Commerce</h2>
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-health" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I keep intake, documentation, and client-facing workflows organized so your team can focus on care.</p>
+        <p>This includes clean intake forms and structured information capture that stays compliant and easy to maintain.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-health" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">Healthcare Providers — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-health" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 4A) Intake Form -->
+        <div class="lxov" role="region" aria-label="Healthcare mockup A — Intake form">
+          <div style="text-align:center">
+            <div class="formui" role="region" aria-label="Intake form mockup">
+              <style>
+                .formui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .formui__body{padding:14px}
+                .formui__brand{font-weight:800}
+                .formui__btn{background:#00e676;border-radius:12px;color:#0b0d10;display:inline-block;font-size:13px;font-weight:900;padding:10px 12px}
+                .formui__fld{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:12px;height:38px;margin:0 0 12px 0}
+                .formui__lbl{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;margin:0 0 8px 0;text-transform:uppercase}
+                .formui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+              </style>
+              <div class="formui__top">
+                <div class="formui__brand">Intake</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">New Client</div>
+              </div>
+              <div class="formui__body">
+                <div class="formui__lbl">Full Name</div>
+                <div class="formui__fld"></div>
+                <div class="formui__lbl">Reason for Visit</div>
+                <div class="formui__fld"></div>
+                <div class="formui__lbl">Preferred Date</div>
+                <div class="formui__fld"></div>
+                <div class="formui__btn">Submit</div>
+              </div>
             </div>
-
-            <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-ecom" role="button" tabindex="0">
-              View proofs
-              <span aria-hidden="true">↻</span>
-            </label>
-          </div>
-
-          <div class="vlp-proof-front-desc">
-            <p>I keep product operations clean and responsive with organized files, tracked requests, and inbox flow that doesn’t drop the ball.</p>
-            <p>This includes structured folders and a clear inbox workflow that keeps customers and vendors moving.</p>
-          </div>
-
-          <div class="vlp-proof-front-actions">
-            <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-ecom" role="button" tabindex="0">
-              Flip card
-              <span aria-hidden="true">→</span>
-            </label>
           </div>
         </div>
 
-        <div class="vlp-proof-face vlp-proof-back">
-          <div class="vlp-proof-back-top">
-            <div class="vlp-proof-back-title">E-Commerce — Proofs</div>
-            <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-ecom" role="button" tabindex="0">
-              Back
-              <span aria-hidden="true">↺</span>
-            </label>
+        <!-- 4B) Services Overview -->
+        <div class="lxov" role="region" aria-label="Healthcare mockup B — Services overview">
+          <div style="text-align:center">
+            <div class="svcui" role="region" aria-label="Services overview mockup">
+              <style>
+                .svcui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .svcui__body{padding:14px}
+                .svcui__brand{font-weight:800}
+                .svcui__d{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+                .svcui__row{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                .svcui__t{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                .svcui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+              </style>
+              <div class="svcui__top">
+                <div class="svcui__brand">Services</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Overview</div>
+              </div>
+              <div class="svcui__body">
+                <div class="svcui__row">
+                  <div class="svcui__t">Scheduling</div>
+                  <p class="svcui__d">Appointments confirmed and reminders sent.</p>
+                </div>
+                <div class="svcui__row">
+                  <div class="svcui__t">Documentation</div>
+                  <p class="svcui__d">Forms organized and ready for review.</p>
+                </div>
+                <div class="svcui__row" style="margin-bottom:0;">
+                  <div class="svcui__t">Follow-ups</div>
+                  <p class="svcui__d">Next steps tracked and communicated.</p>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div class="vlp-proof-back-body">
-            <!-- DRIVEUI (Folder Organization) -->
-            <div class="driveui" role="region" aria-label="Folder organization mockup">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     5) Legal & Immigration
+     ========================================================= -->
+<div class="vlp-proof-card">
+  <input class="vlp-proof-toggle" id="proof-legal" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" role="img" aria-label="Scales icon" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M7 7h10M9 7l-2 5h4l-2-5Zm6 0l-2 5h4l-2-5ZM12 7v10" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </h3>
+          <h2>Legal &amp; Immigration</h2>
+        </div>
+
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-legal" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I keep client files and documentation structured so your process stays consistent and audit-ready.</p>
+        <p>This includes clean folder systems and documented process summaries your team can rely on.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-legal" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">Legal &amp; Immigration — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-legal" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 5A) Case Folders -->
+        <div class="lxov" role="region" aria-label="Legal mockup A — Case folders">
+          <div style="text-align:center">
+            <div class="driveui" role="region" aria-label="Case folders mockup">
               <style>
                 .driveui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                .driveui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                .driveui__brand{font-weight:800}
                 .driveui__body{padding:14px}
+                .driveui__brand{font-weight:800}
+                .driveui__ico{font-size:16px}
+                .driveui__meta{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-left:auto}
+                .driveui__name{font-size:13px;font-weight:900}
                 .driveui__row{align-items:center;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:10px;padding:10px 2px}
                 .driveui__row:last-child{border-bottom:0}
-                .driveui__ico{font-size:16px}
-                .driveui__name{font-size:13px;font-weight:900}
-                .driveui__meta{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-left:auto}
+                .driveui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
               </style>
               <div class="driveui__top">
-                <div class="driveui__brand">Folders</div>
-                <div style="color:rgba(232,234,237,.72);font-weight:800">Product Ops</div>
+                <div class="driveui__brand">Case Files</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Organized</div>
               </div>
               <div class="driveui__body">
                 <div class="driveui__row">
                   <div class="driveui__ico">📁</div>
-                  <div class="driveui__name">01 Products</div>
-                  <div class="driveui__meta">Updated</div>
+                  <div class="driveui__name">01 Intake</div>
+                  <div class="driveui__meta">Complete</div>
                 </div>
                 <div class="driveui__row">
                   <div class="driveui__ico">📁</div>
-                  <div class="driveui__name">02 Photos</div>
-                  <div class="driveui__meta">Sorted</div>
+                  <div class="driveui__name">02 Documents</div>
+                  <div class="driveui__meta">Filed</div>
                 </div>
                 <div class="driveui__row">
                   <div class="driveui__ico">📁</div>
-                  <div class="driveui__name">03 Listings</div>
-                  <div class="driveui__meta">Clean</div>
-                </div>
-                <div class="driveui__row">
-                  <div class="driveui__ico">📁</div>
-                  <div class="driveui__name">04 Vendors</div>
+                  <div class="driveui__name">03 Deadlines</div>
                   <div class="driveui__meta">Tracked</div>
                 </div>
-              </div>
-            </div>
-
-            <!-- MAILUI (Inbox Workflow) -->
-            <div class="lxov" role="region" aria-label="Inbox workflow mockup">
-              <div class="mailui" role="region" aria-label="Inbox workflow mockup">
-                <style>
-                  .mailui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
-                  .mailui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
-                  .mailui__brand{font-weight:800}
-                  .mailui__body{padding:14px}
-                  .mailui__item{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
-                  .mailui__subj{font-size:13px;font-weight:900;margin:0 0 6px 0}
-                  .mailui__snip{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
-                  .mailui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;margin-top:10px;padding:6px 10px}
-                  .mailui__tag--a{background:#00e5ff;color:#0b0d10}
-                  .mailui__tag--b{background:#b388ff;color:#0b0d10}
-                  .mailui__tag--c{background:#ff5c8a;color:#0b0d10}
-                </style>
-                <div class="mailui__top">
-                  <div class="mailui__brand">Inbox</div>
-                  <div style="color:rgba(232,234,237,.72);font-weight:800">Triage</div>
-                </div>
-                <div class="mailui__body">
-                  <div class="mailui__item">
-                    <div class="mailui__subj">Return request</div>
-                    <p class="mailui__snip">Customer asked for an exchange. Photos attached. Needs response.</p>
-                    <span class="mailui__tag mailui__tag--a">Reply Drafted</span>
-                  </div>
-                  <div class="mailui__item">
-                    <div class="mailui__subj">Vendor invoice</div>
-                    <p class="mailui__snip">Invoice received for November shipment. Needs approval and upload.</p>
-                    <span class="mailui__tag mailui__tag--b">Filed</span>
-                  </div>
-                  <div class="mailui__item" style="margin-bottom:0;">
-                    <div class="mailui__subj">Listing update</div>
-                    <p class="mailui__snip">Price change and new bullet points requested for top seller.</p>
-                    <span class="mailui__tag mailui__tag--c">Queued</span>
-                  </div>
+                <div class="driveui__row">
+                  <div class="driveui__ico">📁</div>
+                  <div class="driveui__name">04 Submissions</div>
+                  <div class="driveui__meta">Logged</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- 5B) Process Summary -->
+        <div class="lxov" role="region" aria-label="Legal mockup B — Process summary">
+          <div style="text-align:center">
+            <div class="docui" role="region" aria-label="Process summary mockup">
+              <style>
+                .docui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .docui__body{padding:14px}
+                .docui__brand{font-weight:800}
+                .docui__d{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+                .docui__p{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                .docui__t{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                .docui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+              </style>
+              <div class="docui__top">
+                <div class="docui__brand">Process</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Summary</div>
+              </div>
+              <div class="docui__body">
+                <div class="docui__p">
+                  <div class="docui__t">Step 1: Intake</div>
+                  <p class="docui__d">Collect required forms and verify identifiers.</p>
+                </div>
+                <div class="docui__p">
+                  <div class="docui__t">Step 2: Review</div>
+                  <p class="docui__d">Confirm completeness and flag missing items.</p>
+                </div>
+                <div class="docui__p" style="margin-bottom:0;">
+                  <div class="docui__t">Step 3: Submit</div>
+                  <p class="docui__d">File and track timelines for follow-ups.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
+</div>
 
+<!-- =========================================================
+     6) Marketing Agencies
+     ========================================================= -->
+<div class="vlp-proof-card">
+  <input class="vlp-proof-toggle" id="proof-marketing" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" role="img" aria-label="Megaphone icon" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Z" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M8 12l10-4v8L8 12Zm0 0v5a2 2 0 0 0 2 2h1" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </h3>
+          <h2>Marketing Agencies</h2>
+        </div>
+
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-marketing" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I support agency delivery with research, execution, and scheduling that keeps campaigns on track.</p>
+        <p>This includes research trackers, asset coordination, and calendar-driven follow-through.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-marketing" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">Marketing Agencies — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-marketing" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 6A) Research Tracker -->
+        <div class="lxov" role="region" aria-label="Marketing mockup A — Research tracker">
+          <div style="text-align:center">
+            <div class="sheetui" role="region" aria-label="Research tracker mockup">
+              <style>
+                .sheetui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .sheetui__brand{font-weight:800}
+                .sheetui__cell{font-size:13px;font-weight:900}
+                .sheetui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+                .sheetui__row{display:grid;gap:10px;grid-template-columns:1.1fr .9fr 1.2fr .8fr;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0}
+                .sheetui__sub{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-top:4px}
+                .sheetui__table{padding:14px}
+                .sheetui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;padding:6px 10px}
+                .sheetui__tag--a{background:#00e676;color:#0b0d10}
+                .sheetui__tag--b{background:#b388ff;color:#0b0d10}
+                .sheetui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+              </style>
+              <div class="sheetui__top">
+                <div class="sheetui__brand">Research</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Tracker</div>
+              </div>
+              <div class="sheetui__table">
+                <div class="sheetui__row">
+                  <div class="sheetui__hdr">Creator</div>
+                  <div class="sheetui__hdr">Platform</div>
+                  <div class="sheetui__hdr">Notes</div>
+                  <div class="sheetui__hdr">Status</div>
+                </div>
+                <div class="sheetui__row">
+                  <div class="sheetui__cell">Creator A</div>
+                  <div class="sheetui__cell">IG<div class="sheetui__sub">Short-form</div></div>
+                  <div class="sheetui__cell">Strong fit<div class="sheetui__sub">Audience match</div></div>
+                  <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--a">Shortlist</span></div>
+                </div>
+                <div class="sheetui__row" style="border-bottom:0;">
+                  <div class="sheetui__cell">Creator B</div>
+                  <div class="sheetui__cell">YT<div class="sheetui__sub">Tutorials</div></div>
+                  <div class="sheetui__cell">Good reach<div class="sheetui__sub">Needs pricing</div></div>
+                  <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--b">Review</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6B) Campaign Calendar -->
+        <div class="lxov" role="region" aria-label="Marketing mockup B — Campaign calendar">
+          <div style="text-align:center">
+            <div class="wkcal" role="region" aria-label="Campaign calendar mockup">
+              <style>
+                .wkcal{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .wkcal__dayCol{border-right:1px solid rgba(255,255,255,.06);position:relative}
+                .wkcal__event{border-radius:10px;color:#0b0d10;font-size:12px;font-weight:900;left:8px;padding:8px 10px;position:absolute;right:8px}
+                .wkcal__event--a{background:#00e5ff}
+                .wkcal__event--b{background:#b388ff}
+                .wkcal__event--c{background:#ff5c8a}
+                .wkcal__dom{font-size:20px;font-weight:900;margin-top:6px}
+                .wkcal__dow{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+                .wkcal__grid{display:grid;grid-template-columns:70px repeat(5,1fr);width:100%}
+                .wkcal__headCell{border-right:1px solid rgba(255,255,255,.06);padding:10px;text-align:center}
+                .wkcal__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;height:40px;padding:6px 8px 0 0;text-align:right}
+                .wkcal__timeCol{border-right:1px solid rgba(255,255,255,.10)}
+                .wkcal__title{font-size:18px;font-weight:800}
+                .wkcal__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:14px;padding:12px 14px}
+              </style>
+              <div class="wkcal__top">
+                <div style="font-weight:800;">Calendar</div>
+                <div class="wkcal__title">Campaign Week</div>
+              </div>
+              <div class="wkcal__grid">
+                <div class="wkcal__timeCol">
+                  <div class="wkcal__time">9 AM</div>
+                  <div class="wkcal__time">10 AM</div>
+                </div>
+                <div class="wkcal__dayCol">
+                  <div class="wkcal__event wkcal__event--a" style="top:0;">Brief Posted</div>
+                </div>
+                <div class="wkcal__dayCol">
+                  <div class="wkcal__event wkcal__event--b" style="top:40px;">Assets Due</div>
+                </div>
+                <div class="wkcal__dayCol">
+                  <div class="wkcal__event wkcal__event--c" style="top:0;">Copy Review</div>
+                </div>
+                <div class="wkcal__dayCol"></div>
+                <div class="wkcal__dayCol"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- =========================================================
+         PROOF CARD #6 END — Marketing Agencies
+         ========================================================= -->
+
+    <!-- =========================================================
+         Add more proof cards here (inside .vlp-proof-grid)
+         ========================================================= -->
+
+  </div>
+  <!-- =========================================================
+       PROOFS GRID END
+       ========================================================= -->
+
+  <!-- =========================
+       Flip-All Script START
+       ========================= -->
   <script>
     (function () {
       var btn = document.getElementById('vlp-proof-flip-all');
@@ -1100,7 +1413,15 @@
       });
     })();
   </script>
+  <!-- =========================
+       Flip-All Script END
+       ========================= -->
+
 </section>
+<!-- =========================================================
+     WORK PROOFS SECTION END
+     ========================================================= -->
+
 
 
 
