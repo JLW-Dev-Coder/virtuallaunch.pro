@@ -370,289 +370,385 @@
           </div>
         </section>
 
-        <!-- CV (MOVED ABOVE HOW BOOKING WORKS + CENTERED/ALIGNED) -->
-        <section id="cv" class="mt-14">
-          <div class="vlp-glass rounded-2xl border border-white/10 p-8 shadow-soft md:p-10">
-            <div class="mx-auto max-w-4xl text-center">
-              <p class="text-xs font-semibold tracking-widest text-brand-400">CV</p>
-              <h2 class="mt-4 text-3xl font-extrabold md:text-4xl">Curriculum Vitae</h2>
+      <!-- CV (TITLE MATCHES SERVICES + CV LAYOUT MATCHES LENTAX SAMPLE, TAILWIND-ONLY) -->
+<section id="cv" class="mt-14">
+  <!-- Title matches Services title -->
+  <h2 class="text-3xl font-extrabold text-brand-500">CV</h2>
+
+  <div class="mt-6">
+    <div class="mx-auto max-w-6xl px-0">
+      <div class="mx-auto max-w-[1100px] px-4 pb-[90px] pt-2 md:px-[18px] md:pt-0">
+        <div id="va-cv"></div>
+
+        <!-- HERO -->
+        <div
+          class="lx-cascade relative overflow-hidden rounded-2xl border border-[rgba(255,165,0,0.18)] bg-[radial-gradient(900px_380px_at_20%_0%,rgba(255,165,0,0.22)_0%,rgba(255,165,0,0)_60%),linear-gradient(135deg,rgba(2,8,24,0.92),rgba(7,18,46,0.92))] px-[18px] py-7 text-center shadow-[0_18px_40px_rgba(0,0,0,0.35)]"
+          data-in="false"
+        >
+          <div class="pointer-events-none absolute inset-0 opacity-[0.18]">
+            <div
+              class="h-full w-full bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22%3E%3Cdefs%3E%3Cpattern%20id=%22grain%22%20width=%22100%22%20height=%22100%22%20patternUnits=%22userSpaceOnUse%22%3E%3Ccircle%20cx=%2225%22%20cy=%2225%22%20r=%221%22%20fill=%22rgba(255,255,255,0.05)%22/%3E%3Ccircle%20cx=%2275%22%20cy=%2275%22%20r=%221%22%20fill=%22rgba(255,255,255,0.05)%22/%3E%3Ccircle%20cx=%2250%22%20cy=%2210%22%20r=%220.5%22%20fill=%22rgba(255,255,255,0.03)%22/%3E%3C/pattern%3E%3C/defs%3E%3Crect%20width=%22100%22%20height=%22100%22%20fill=%22url(%23grain)%22/%3E%3C/svg%3E')]"
+            ></div>
+          </div>
+
+          <div class="relative z-[1]">
+            <div class="bg-[linear-gradient(90deg,#ffffff_0%,#ffd08a_45%,#ffa500_100%)] bg-clip-text text-[2.4rem] font-extrabold leading-[1.1] tracking-[0.2px] text-transparent md:text-[2.4rem]">
+              Damian Reyes
             </div>
 
-            <div class="mx-auto mt-8 max-w-5xl rounded-2xl border border-white/10 bg-white/5 p-4 md:p-7 overflow-hidden">
-              <div class="text-center">
-                <div class="bg-gradient-to-r from-white via-brand-400 to-brand-500 bg-clip-text text-3xl font-extrabold text-transparent md:text-4xl">
-                  Damian Reyes
-                </div>
-                <p class="mx-auto mt-3 max-w-3xl text-sm text-white/80 md:text-base">
-                  Structured Support | Clear Communication | Reliable Execution
-                </p>
+            <div class="mx-auto mt-2 max-w-[860px] text-[1.12rem] font-medium leading-[1.45] text-[rgba(255,255,255,0.65)]">
+              <span class="text-[rgba(255,255,255,0.85)]">
+                Structured Support | Clear Communication | Reliable Execution
+              </span>
+            </div>
 
-                <div class="mx-auto mt-5 flex max-w-4xl flex-wrap justify-center gap-3">
-                  <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/75">
-                    <span class="text-white/90">Availability:</span> Project-based or ongoing
-                  </span>
-                  <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/75">
-                    <span class="text-white/90">Location:</span> Global / Remote
-                  </span>
-                  <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/75">
-                    <span class="text-white/90">Rate:</span> Varies by engagement
-                  </span>
-                  <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/75">
-                    <span class="text-white/90">Time zone:</span> Multi-timezone coverage
-                  </span>
-                </div>
+            <div class="mt-4 flex flex-wrap justify-center gap-x-[14px] gap-y-[10px]">
+              <div class="rounded-full border border-[rgba(255,165,0,0.18)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-[0.95rem] text-[rgba(255,255,255,0.75)]">
+                <strong class="font-extrabold text-[rgba(255,255,255,0.92)]">Availability:</strong> Project-based or ongoing
               </div>
-
-              <div class="mt-8 grid gap-6">
-                <!-- Professional Summary -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Professional Summary
-                  </div>
-                  <p class="mx-auto mt-4 max-w-4xl text-sm text-white/75 md:text-base" style="line-height: 1.85;">
-                    Executive VA with 5+ years supporting founders and small teams across inbox management, calendar coordination, client comms, and light ops.
-                    Known for clean follow-through, proactive reminders, and making “what’s next” obvious.
-                    Comfortable working across multiple clients with clear SOPs, tight deadlines, and a calm, professional tone.
-                  </p>
-                </div>
-
-                <!-- Preferred Client Types -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Preferred Client Types
-                  </div>
-
-                  <div class="mt-5 grid gap-4 md:grid-cols-2">
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Client types</div>
-                      <p class="mt-2 text-sm text-white/70" style="line-height: 1.8;">
-                        Coaches &amp; Consultants, Marketing Agencies, Real Estate &amp; Investors, Tech Founders
-                      </p>
-                    </div>
-
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Notes</div>
-                      <p class="mt-2 text-sm text-white/70" style="line-height: 1.8;">
-                        Best fit with leaders who want weekly planning, reliable follow-up, and a VA who can keep a lightweight system organized
-                        (inbox, calendar, tasks, and client updates) without constant direction.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Core Services & Tools -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Core Services &amp; Tools
-                  </div>
-
-                  <div class="mt-5 grid gap-4 md:grid-cols-2">
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Primary services offered</div>
-                      <p class="mt-2 text-sm text-white/65"><em>Selected:</em> Admin Support, Scheduling/Tracking/Reporting, Support &amp; Coordination</p>
-                      <ul class="mt-4 space-y-2 text-sm text-white/75">
-                        <li>Admin support</li>
-                        <li>Client communications</li>
-                        <li>Content support</li>
-                        <li>Data entry and formatting</li>
-                        <li>Inbox and calendar management</li>
-                        <li>Operations and systems</li>
-                        <li>Project coordination</li>
-                      </ul>
-                    </div>
-
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Tools and platforms</div>
-                      <p class="mt-2 text-sm text-white/65"><em>Selected:</em> Google Workspace, ClickUp, SuiteDash, Canva, Slack, Zoom</p>
-                      <ul class="mt-4 space-y-2 text-sm text-white/75">
-                        <li>ClickUp</li>
-                        <li>CRM systems</li>
-                        <li>Email marketing tools</li>
-                        <li>Google Workspace</li>
-                        <li>Spreadsheets</li>
-                        <li>SuiteDash</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Skill Depth -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Skill Depth (1–5)
-                  </div>
-
-                  <div class="mt-5 grid gap-3">
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 text-sm text-white/75">
-                      <span class="font-extrabold text-white/90">Client communication (written):</span>
-                      <span class="font-extrabold text-brand-400"> 5</span> / 5
-                    </div>
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 text-sm text-white/75">
-                      <span class="font-extrabold text-white/90">Email and inbox management:</span>
-                      <span class="font-extrabold text-brand-400"> 5</span> / 5
-                    </div>
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 text-sm text-white/75">
-                      <span class="font-extrabold text-white/90">Google Workspace:</span>
-                      <span class="font-extrabold text-brand-400"> 4</span> / 5
-                    </div>
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 text-sm text-white/75">
-                      <span class="font-extrabold text-white/90">Project tracking (multi-client):</span>
-                      <span class="font-extrabold text-brand-400"> 4</span> / 5
-                    </div>
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-5 text-sm text-white/75">
-                      <span class="font-extrabold text-white/90">Systems/process follow-through:</span>
-                      <span class="font-extrabold text-brand-400"> 5</span> / 5
-                    </div>
-
-                    <div class="mt-2 rounded-2xl border border-brand-500/25 bg-white/5 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Examples for any 4–5 ratings</div>
-                      <p class="mt-3 text-sm text-white/70" style="line-height: 1.85; white-space: pre-line;">
-Inbox: Created triage rules (VIP, urgent, vendor, client) and reduced response backlog from 3 days to same-day.
-Ops: Built a “Friday wrap” template so clients always saw status, blockers, and next steps in 5 minutes.
-Projects: Maintained weekly priorities board in ClickUp with owner + due date + next action for every active item.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Execution Judgment -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Execution Judgment
-                  </div>
-
-                  <div class="mt-5 grid gap-4 md:grid-cols-3">
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Inbox triage scenario</div>
-                      <p class="mt-3 text-sm text-white/70" style="line-height: 1.85;">
-                        A client marks 18 emails as “urgent” overnight. I would: (1) group by sender + topic, (2) identify true deadlines (today vs this week),
-                        (3) draft short recommended replies for the top 5, (4) flag anything needing a decision, and (5) send a “priority map” summary so the client can approve quickly.
-                      </p>
-                    </div>
-
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Client protection scenario</div>
-                      <p class="mt-3 text-sm text-white/70" style="line-height: 1.85;">
-                        A new lead asks for access to a shared drive and sensitive docs before signing. I would: provide a sanitized sample, confirm scope + timeline,
-                        and route them into the standard onboarding step (agreement + access checklist). No access until approval and minimum intake requirements are met.
-                      </p>
-                    </div>
-
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Task sequencing scenario</div>
-                      <p class="mt-3 text-sm text-white/70" style="line-height: 1.85;">
-                        A client wants: newsletter, invoices, calendar cleanup, and vendor follow-ups—due this week. I’d sequence by: (1) hard deadlines (invoices),
-                        (2) time-sensitive follow-ups, (3) calendar cleanup, then (4) newsletter drafting + approvals. I’d confirm priorities in writing and update a single task board.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Trust & Proof -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Trust &amp; Proof
-                  </div>
-
-                  <div class="mt-5 grid gap-4 md:grid-cols-3">
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Confidential work experience</div>
-                      <p class="mt-3 text-sm text-white/70" style="line-height: 1.85;">
-                        Supported a financial services founder handling client PII. Followed strict access rules, used least-privilege file sharing,
-                        kept a change log for documents, and never shared client details outside approved tools.
-                      </p>
-                    </div>
-
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Work history highlights</div>
-                      <p class="mt-3 text-sm text-white/70" style="line-height: 1.85;">
-                        Executive VA (2021–2025): Calendar + inbox ownership, weekly planning, light ops, client updates.<br />
-                        Ops Assistant (2019–2021): CRM hygiene, reporting, scheduling, vendor coordination, documentation/SOPs.
-                      </p>
-                    </div>
-
-                    <div class="rounded-2xl border border-white/10 bg-ink-950/40 p-6">
-                      <div class="text-sm font-extrabold text-white/90">Portfolio links</div>
-
-                      <div class="mt-4 flex items-center justify-center gap-3 text-white/80">
-                        <a class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10" href="https://facebook.com/ariana.fields.va" target="_blank" aria-label="Facebook">
-                          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.3l-.4 3h-1.9v7A10 10 0 0 0 22 12"></path>
-                          </svg>
-                        </a>
-
-                        <a class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10" href="https://instagram.com/ariana.fields.va" target="_blank" aria-label="Instagram">
-                          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.7A3 3 0 1 1 15 12a3 3 0 0 1-3 3zm4.8-8.9a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z"></path>
-                          </svg>
-                        </a>
-
-                        <a class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10" href="https://linkedin.com/in/ariana-fields-va" target="_blank" aria-label="LinkedIn">
-                          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8h4.1v14H.4V8zm7.2 0h3.9v1.9h.1c.5-.9 1.8-1.9 3.7-1.9 3.9 0 4.6 2.6 4.6 6V22H15V14.1c0-1.9 0-4.3-2.6-4.3-2.6 0-3 2-3 4.1V22H7.6V8z"></path>
-                          </svg>
-                        </a>
-
-                        <a class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:bg-white/10" href="https://threads.net/@ariana.fields.va" target="_blank" aria-label="Threads">
-                          <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.3 13.9c-.8 1.2-2.2 2.1-4.3 2.1-2.7 0-4.9-1.6-4.9-4.6 0-2.7 1.9-4.6 4.5-4.6 2.4 0 4.1 1.3 4.4 3.5h-2c-.2-1-.9-1.7-2.4-1.7-1.5 0-2.5 1-2.5 2.7 0 1.8 1 2.7 2.6 2.7 1.3 0 2.1-.5 2.4-1.4H12v-1.7h4.6c.1.5.1 1 .1 1.5 0 .8-.1 1.5-.4 2.1z"></path>
-                          </svg>
-                        </a>
-                      </div>
-
-                      <div class="mt-5 grid gap-3">
-                        <a class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-xs font-extrabold text-white hover:bg-white/10" href="#cv">
-                          View CV / Resume
-                          <div class="mt-1 text-[11px] font-semibold text-white/60">Download the latest file.</div>
-                        </a>
-                        <a class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-center text-xs font-extrabold text-white hover:bg-white/10" href="#top">
-                          View Profile Photo
-                          <div class="mt-1 text-[11px] font-semibold text-white/60">Open image file.</div>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Fit & Consent -->
-                <div class="vlp-glass rounded-2xl border border-white/10 p-6">
-                  <div class="flex items-center justify-center gap-2 text-sm font-extrabold text-white/90">
-                    <span class="h-2 w-2 rounded-full bg-brand-500"></span>
-                    Fit &amp; Consent
-                  </div>
-
-                  <div class="mt-5 rounded-2xl border border-brand-500/25 bg-white/5 p-6">
-                    <div class="text-sm font-extrabold text-white/90">Why this work fits</div>
-                    <p class="mt-3 text-sm text-white/70" style="line-height: 1.85;">
-                      I’m strongest in support roles where responsiveness and follow-through matter: inbox management, client updates, scheduling,
-                      and keeping tasks clean. I work well with clear priorities, weekly planning, and a single home base for requests so the business stays light and organized.
-                    </p>
-                  </div>
-
-                  <div class="mt-5 text-center text-sm text-white/70">
-                    <span class="font-extrabold text-white/90">Consent to display public profile information:</span> Yes — approved for public display.
-                  </div>
-
-                  <div class="mt-7 flex justify-center">
-                    <a
-                      class="inline-flex w-full max-w-xl items-center justify-center rounded-2xl bg-brand-500 px-6 py-4 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
-                      href="#booking-video"
-                    >
-                      Request an Intro
-                      <span class="ml-2 text-ink-900/80 font-semibold">Message this VA or schedule a quick fit check.</span>
-                    </a>
-                  </div>
-                </div>
+              <div class="rounded-full border border-[rgba(255,165,0,0.18)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-[0.95rem] text-[rgba(255,255,255,0.75)]">
+                <strong class="font-extrabold text-[rgba(255,255,255,0.92)]">Location:</strong> Global / Remote
+              </div>
+              <div class="rounded-full border border-[rgba(255,165,0,0.18)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-[0.95rem] text-[rgba(255,255,255,0.75)]">
+                <strong class="font-extrabold text-[rgba(255,255,255,0.92)]">Rate:</strong> Varies by engagement
+              </div>
+              <div class="rounded-full border border-[rgba(255,165,0,0.18)] bg-[rgba(255,255,255,0.05)] px-3 py-2 text-[0.95rem] text-[rgba(255,255,255,0.75)]">
+                <strong class="font-extrabold text-[rgba(255,255,255,0.92)]">Time zone:</strong> Multi-timezone coverage
               </div>
             </div>
           </div>
-        </section>
+        </div>
+
+        <!-- PROFESSIONAL SUMMARY -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Professional Summary
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="mx-auto max-w-[980px] rounded-[15px] border border-[rgba(255,255,255,0.14)] border-l-[5px] border-l-[rgba(255,255,255,0.65)] bg-[rgba(255,255,255,0.05)] px-[18px] py-[18px] text-[1.05rem] leading-[1.85] text-[rgba(255,255,255,0.75)]">
+            Executive VA with 5+ years supporting founders and small teams across inbox management, calendar coordination, client comms, and light ops. Known for clean follow-through, proactive reminders, and making “what’s next” obvious. Comfortable working across multiple clients with clear SOPs, tight deadlines, and a calm, professional tone.
+          </div>
+        </div>
+
+        <hr class="my-[18px] opacity-[0.22]" />
+
+        <!-- PREFERRED CLIENT TYPES -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Preferred Client Types
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="mt-[18px] grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Client types (selected)
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.8;">
+                Coaches &amp; Consultants, Marketing Agencies, Real Estate &amp; Investors, Tech Founders
+              </div>
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Notes
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.8;">
+                Best fit with leaders who want weekly planning, reliable follow-up, and a VA who can keep a lightweight system organized (inbox, calendar, tasks, and client updates) without constant direction.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-[18px] opacity-[0.22]" />
+
+        <!-- CORE SERVICES & TOOLS -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Core Services &amp; Tools
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="mt-[18px] grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Primary services offered
+              </h3>
+              <div class="mb-[10px] text-[rgba(255,255,255,0.65)]"><em>Selected:</em> Admin Support, Scheduling/Tracking/Reporting, Support &amp; Coordination</div>
+              <ul class="m-0 list-none p-0">
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Admin support</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Client communications</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Content support</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Data entry and formatting</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Inbox and calendar management</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Operations and systems</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Project coordination</li>
+              </ul>
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Tools and platforms
+              </h3>
+              <div class="mb-[10px] text-[rgba(255,255,255,0.65)]"><em>Selected:</em> Google Workspace, ClickUp, SuiteDash, Canva, Slack, Zoom</div>
+              <ul class="m-0 list-none p-0">
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">ClickUp</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">CRM systems</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Email marketing tools</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Google Workspace</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">Spreadsheets</li>
+                <li class="relative mb-[6px] pl-[18px] leading-[1.8] text-[rgba(255,255,255,0.75)] before:absolute before:left-0 before:top-0 before:font-extrabold before:text-[#ffa500] before:content-['▸']">SuiteDash</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-[18px] opacity-[0.22]" />
+
+        <!-- SKILL DEPTH -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Skill Depth (1–5)
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="mt-[18px] grid gap-[10px]">
+            <div class="lx-cascade rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+              <strong class="text-[rgba(255,255,255,0.92)]">Client communication (written):</strong>
+              <span class="font-black text-[#ffa500]"> 5</span> / 5
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+              <strong class="text-[rgba(255,255,255,0.92)]">Email and inbox management:</strong>
+              <span class="font-black text-[#ffa500]"> 5</span> / 5
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+              <strong class="text-[rgba(255,255,255,0.92)]">Google Workspace:</strong>
+              <span class="font-black text-[#ffa500]"> 4</span> / 5
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+              <strong class="text-[rgba(255,255,255,0.92)]">Project tracking (multi-client):</strong>
+              <span class="font-black text-[#ffa500]"> 4</span> / 5
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,165,0,0.12)] bg-[rgba(255,255,255,0.04)] px-[14px] py-3 text-[rgba(255,255,255,0.75)]" data-in="false">
+              <strong class="text-[rgba(255,255,255,0.92)]">Systems/process follow-through:</strong>
+              <span class="font-black text-[#ffa500]"> 5</span> / 5
+            </div>
+          </div>
+
+          <div class="lx-cascade mt-4 rounded-xl border border-[rgba(255,165,0,0.18)] border-l-[5px] border-l-[#ffa500] bg-[rgba(255,255,255,0.06)] px-[18px] py-4 leading-[1.85] text-[rgba(255,255,255,0.75)]" data-in="false">
+            <strong class="text-[rgba(255,255,255,0.92)]" style="font-weight: 900;">Examples for any 4–5 ratings:</strong>
+            <div class="mt-2 whitespace-pre-line">
+Inbox: Created triage rules (VIP, urgent, vendor, client) and reduced response backlog from 3 days to same-day.
+Projects: Maintained weekly priorities board in ClickUp with owner + due date + next action for every active item.
+Ops: Built a “Friday wrap” template so clients always saw status, blockers, and next steps in 5 minutes.
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-[18px] opacity-[0.22]" />
+
+        <!-- EXECUTION JUDGMENT -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Execution Judgment
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="mt-[18px] grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Inbox triage scenario
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.85;">
+                A client marks 18 emails as “urgent” overnight. I would: (1) group by sender + topic, (2) identify true deadlines (today vs this week), (3) draft short recommended replies for the top 5, (4) flag anything needing a decision, and (5) send a “priority map” summary so the client can approve quickly instead of reading every thread.
+              </div>
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Client protection scenario
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.85;">
+                A new lead asks for access to a shared drive and sensitive docs before signing. I would politely redirect: provide a sanitized sample, confirm scope + timeline, and route them into the standard onboarding step (agreement + access checklist). No access until approval and minimum intake requirements are met.
+              </div>
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Task sequencing scenario
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.85;">
+                A client wants: newsletter, invoices, calendar cleanup, and vendor follow-ups—due this week. I’d sequence by: (1) hard deadlines (invoices), (2) time-sensitive follow-ups, (3) calendar cleanup, then (4) newsletter drafting + approvals. I’d confirm priorities in writing and update a single task board so nothing gets “lost in chat.”
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-[18px] opacity-[0.22]" />
+
+        <!-- TRUST & PROOF -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Trust &amp; Proof
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="mt-[18px] grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Confidential work experience
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.85;">
+                Supported a financial services founder handling client PII. Followed strict access rules, used least-privilege file sharing, kept a change log for documents, and never shared client details outside approved tools.
+              </div>
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[10px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Work history highlights
+              </h3>
+              <div class="text-[rgba(255,255,255,0.65)]" style="line-height: 1.85;">
+                Executive VA (2021–2025): Calendar + inbox ownership, weekly planning, light ops, client updates.<br />
+                Ops Assistant (2019–2021): CRM hygiene, reporting, scheduling, vendor coordination, documentation/SOPs.
+              </div>
+            </div>
+
+            <div class="lx-cascade rounded-xl border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.06)] p-[18px] shadow-[0_10px_24px_rgba(0,0,0,0.2)]" data-in="false">
+              <h3 class="mb-[2px] mt-0 text-[1.1rem] font-extrabold text-[rgba(255,255,255,0.98)] [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
+                Portfolio links
+              </h3>
+
+              <div class="mt-[10px] flex justify-center gap-3">
+                <a class="inline-flex h-[22px] w-[22px] opacity-90 transition-opacity duration-200 hover:opacity-100" href="https://facebook.com/ariana.fields.va" target="_blank" aria-label="Facebook">
+                  <svg class="h-full w-full fill-current" viewBox="0 0 24 24">
+                    <path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.3l-.4 3h-1.9v7A10 10 0 0 0 22 12"></path>
+                  </svg>
+                </a>
+
+                <a class="inline-flex h-[22px] w-[22px] opacity-90 transition-opacity duration-200 hover:opacity-100" href="https://instagram.com/ariana.fields.va" target="_blank" aria-label="Instagram">
+                  <svg class="h-full w-full fill-current" viewBox="0 0 24 24">
+                    <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.7A3 3 0 1 1 15 12a3 3 0 0 1-3 3zm4.8-8.9a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z"></path>
+                  </svg>
+                </a>
+
+                <a class="inline-flex h-[22px] w-[22px] opacity-90 transition-opacity duration-200 hover:opacity-100" href="https://linkedin.com/in/ariana-fields-va" target="_blank" aria-label="LinkedIn">
+                  <svg class="h-full w-full fill-current" viewBox="0 0 24 24">
+                    <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8h4.1v14H.4V8zm7.2 0h3.9v1.9h.1c.5-.9 1.8-1.9 3.7-1.9 3.9 0 4.6 2.6 4.6 6V22H15V14.1c0-1.9 0-4.3-2.6-4.3-2.6 0-3 2-3 4.1V22H7.6V8z"></path>
+                  </svg>
+                </a>
+
+                <a class="inline-flex h-[22px] w-[22px] opacity-90 transition-opacity duration-200 hover:opacity-100" href="https://threads.net/@ariana.fields.va" target="_blank" aria-label="Threads">
+                  <svg class="h-full w-full fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.3 13.9c-.8 1.2-2.2 2.1-4.3 2.1-2.7 0-4.9-1.6-4.9-4.6 0-2.7 1.9-4.6 4.5-4.6 2.4 0 4.1 1.3 4.4 3.5h-2c-.2-1-.9-1.7-2.4-1.7-1.5 0-2.5 1-2.5 2.7 0 1.8 1 2.7 2.6 2.7 1.3 0 2.1-.5 2.4-1.4H12v-1.7h4.6c.1.5.1 1 .1 1.5 0 .8-.1 1.5-.4 2.1z"></path>
+                  </svg>
+                </a>
+              </div>
+
+              <div class="mt-[18px] grid gap-3">
+                <a class="inline-block min-w-[240px] rounded-[10px] border border-[rgba(255,165,0,0.28)] bg-[rgba(255,255,255,0.04)] px-4 py-[14px] text-center no-underline" href="#my-resume">
+                  <strong class="inline-block bg-[linear-gradient(90deg,#ffffff_0%,#ffd08a_45%,#ffa500_100%)] bg-clip-text text-[1.15rem] font-black text-transparent">View CV / Resume</strong><br />
+                  <span class="inline-block text-[0.98rem] text-[rgba(255,255,255,0.65)]">Download the latest file.</span>
+                </a>
+
+                <a class="inline-block min-w-[240px] rounded-[10px] border border-[rgba(255,165,0,0.28)] bg-[rgba(255,255,255,0.04)] px-4 py-[14px] text-center no-underline" href="#my-profile-pic">
+                  <strong class="inline-block bg-[linear-gradient(90deg,#ffffff_0%,#ffd08a_45%,#ffa500_100%)] bg-clip-text text-[1.15rem] font-black text-transparent">View Profile Photo</strong><br />
+                  <span class="inline-block text-[0.98rem] text-[rgba(255,255,255,0.65)]">Open image file.</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-[18px] opacity-[0.22]" />
+
+        <!-- FIT & CONSENT -->
+        <div class="lx-cascade mt-[26px]" data-in="false">
+          <h2 class="relative mx-0 mb-3 mt-0 pb-2 text-center text-[1.6rem] font-extrabold text-[rgba(255,255,255,0.92)]">
+            Fit &amp; Consent
+            <span class="absolute bottom-0 left-1/2 h-[3px] w-[110px] -translate-x-1/2 rounded-[2px] bg-[linear-gradient(90deg,rgba(255,165,0,0)_0%,rgba(255,165,0,1)_50%,rgba(255,165,0,0)_100%)]"></span>
+          </h2>
+
+          <div class="lx-cascade mt-4 rounded-xl border border-[rgba(255,165,0,0.18)] border-l-[5px] border-l-[#ffa500] bg-[rgba(255,255,255,0.06)] px-[18px] py-4 leading-[1.85] text-[rgba(255,255,255,0.75)]" data-in="false">
+            <strong class="text-[rgba(255,255,255,0.92)]" style="font-weight: 900;">Why this work fits:</strong><br />
+            <div class="mt-2" style="line-height: 1.85;">
+              I’m strongest in support roles where responsiveness and follow-through matter: inbox management, client updates, scheduling, and keeping tasks clean. I work well with clear priorities, weekly planning, and a single home base for requests so the business stays light and organized.
+            </div>
+          </div>
+
+          <div class="lx-cascade mt-[14px] text-center text-[rgba(255,255,255,0.65)]" data-in="false">
+            <strong class="text-[rgba(255,255,255,0.92)]" style="font-weight: 900;">Consent to display public profile information:</strong> Yes — approved for public display.
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="lx-cascade mt-[30px] text-center" data-in="false">
+          <a
+            class="inline-block w-full max-w-[540px] rounded-[10px] border border-[rgba(255,165,0,0.28)] bg-[radial-gradient(700px_250px_at_20%_0%,rgba(255,165,0,0.22)_0%,rgba(255,165,0,0)_60%),linear-gradient(135deg,rgba(2,8,24,0.88)_0%,rgba(7,18,46,0.88)_100%)] px-4 py-[14px] text-center no-underline shadow-[0_16px_34px_rgba(0,0,0,0.28)]"
+            href="#page-footer"
+          >
+            <strong class="inline-block bg-[linear-gradient(90deg,#ffffff_0%,#ffd08a_45%,#ffa500_100%)] bg-clip-text text-[1.15rem] font-black text-transparent">Request an Intro</strong><br />
+            <span class="inline-block text-[0.98rem] text-[rgba(255,255,255,0.65)]">Message this VA or schedule a quick fit check.</span>
+          </a>
+        </div>
+
+        <script>
+          (function () {
+            var root = document.querySelector('#cv');
+            if (!root) return;
+
+            var nodes = root.querySelectorAll('.lx-cascade');
+
+            function showAll() {
+              nodes.forEach(function (el) {
+                el.dataset.in = 'true';
+                el.classList.add('opacity-100', 'translate-y-0');
+                el.classList.remove('opacity-0', 'translate-y-[14px]');
+              });
+            }
+
+            nodes.forEach(function (el) {
+              el.classList.add(
+                'opacity-0',
+                'translate-y-[14px]',
+                'transition-opacity',
+                'transition-transform',
+                'duration-[620ms]',
+                'ease-[cubic-bezier(0.2,0.0,0.2,1)]',
+                'will-change-[opacity,transform]'
+              );
+            });
+
+            if (!('IntersectionObserver' in window)) {
+              showAll();
+              return;
+            }
+
+            var io = new IntersectionObserver(function (entries) {
+              entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                entry.target.dataset.in = 'true';
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-[14px]');
+                io.unobserve(entry.target);
+              });
+            }, { root: null, rootMargin: '0px 0px -12% 0px', threshold: 0.06 });
+
+            nodes.forEach(function (el, idx) {
+              el.style.transitionDelay = (idx * 70) + 'ms';
+              io.observe(el);
+            });
+          })();
+        </script>
+      </div>
+    </div>
+  </div>
+</section>
+
 
         <!-- HOW BOOKING WORKS (MOVED BELOW CV) -->
         <section id="booking-video" class="mt-14">
