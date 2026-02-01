@@ -1368,9 +1368,567 @@
          PROOF CARD #6 END — Marketing Agencies
          ========================================================= -->
 
-    <!-- =========================================================
-         Add more proof cards here (inside .vlp-proof-grid)
-         ========================================================= -->
+<!-- =========================================================
+     WORK PROOFS (ADD CARDS #7–#10)
+     Paste these INSIDE: <div class="vlp-proof-grid"> ... </div>
+     Place after card #6
+     ========================================================= -->
+
+<!-- =========================
+     CSS ADD-ON START
+     Put this inside the existing <style> for #work-proofs
+     ========================= -->
+<style>
+  @media (min-width: 768px) {
+    .vlp-proof-card--full {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
+<!-- =========================
+     CSS ADD-ON END
+     ========================= -->
+
+<!-- =========================================================
+     PROOF CARD #7 START — Real Estate & Investors
+     ========================================================= -->
+<div class="vlp-proof-card">
+  <input class="vlp-proof-toggle" id="proof-realestate" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <!-- FRONT START -->
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;font-size:20px;">🏡</span>
+          </h3>
+          <h2>Real Estate &amp; Investors</h2>
+        </div>
+
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-realestate" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I keep appointments scheduled, itineraries organized, and expenses tracked so deals move without chaos.</p>
+        <p>This includes clean schedules, visit plans, and trackers your team can maintain without guesswork.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-realestate" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+    <!-- FRONT END -->
+
+    <!-- BACK START -->
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">Real Estate &amp; Investors — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-realestate" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 7A) Itinerary START -->
+        <div class="lxov" role="region" aria-label="Real Estate mockup A — Itinerary">
+          <div style="text-align:center">
+            <div class="tripui" role="region" aria-label="Itinerary mockup">
+              <style>
+                .tripui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .tripui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .tripui__brand{font-weight:800}
+                .tripui__body{padding:14px}
+                .tripui__row{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                .tripui__t{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                .tripui__d{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+              </style>
+              <div class="tripui__top">
+                <div class="tripui__brand">Itinerary</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Site Visits</div>
+              </div>
+              <div class="tripui__body">
+                <div class="tripui__row">
+                  <div class="tripui__t">10:00 AM — Showing</div>
+                  <p class="tripui__d">123 Maple St • Notes captured</p>
+                </div>
+                <div class="tripui__row">
+                  <div class="tripui__t">12:30 PM — Inspection</div>
+                  <p class="tripui__d">456 Cedar Ave • Checklist ready</p>
+                </div>
+                <div class="tripui__row" style="margin-bottom:0;">
+                  <div class="tripui__t">3:00 PM — Offer Review</div>
+                  <p class="tripui__d">Docs packaged • Next steps sent</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 7A) Itinerary END -->
+
+        <!-- 7B) Expense Tracker START -->
+        <div class="lxov" role="region" aria-label="Real Estate mockup B — Expense tracker">
+          <div style="text-align:center">
+            <div class="expui" role="region" aria-label="Expense tracker mockup">
+              <style>
+                .expui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .expui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .expui__brand{font-weight:800}
+                .expui__body{padding:14px}
+                .expui__row{display:grid;gap:10px;grid-template-columns:1.2fr .8fr .8fr;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0}
+                .expui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+                .expui__cell{font-size:13px;font-weight:900}
+                .expui__sub{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-top:4px}
+              </style>
+              <div class="expui__top">
+                <div class="expui__brand">Expenses</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Tracker</div>
+              </div>
+              <div class="expui__body">
+                <div class="expui__row">
+                  <div class="expui__hdr">Item</div>
+                  <div class="expui__hdr">Amount</div>
+                  <div class="expui__hdr">Status</div>
+                </div>
+                <div class="expui__row">
+                  <div class="expui__cell">Gas<div class="expui__sub">Site visits</div></div>
+                  <div class="expui__cell">$42</div>
+                  <div class="expui__cell">Logged</div>
+                </div>
+                <div class="expui__row" style="border-bottom:0;">
+                  <div class="expui__cell">Supplies<div class="expui__sub">Signage</div></div>
+                  <div class="expui__cell">$18</div>
+                  <div class="expui__cell">Filed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 7B) Expense Tracker END -->
+      </div>
+    </div>
+    <!-- BACK END -->
+  </div>
+</div>
+<!-- =========================================================
+     PROOF CARD #7 END — Real Estate & Investors
+     ========================================================= -->
+
+<!-- =========================================================
+     PROOF CARD #8 START — Tax & Accounting
+     ========================================================= -->
+<div class="vlp-proof-card">
+  <input class="vlp-proof-toggle" id="proof-tax" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <!-- FRONT START -->
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;font-size:20px;">📊</span>
+          </h3>
+          <h2>Tax &amp; Accounting</h2>
+        </div>
+
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-tax" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I keep reporting inputs clean and communication tight so deadlines don’t get missed.</p>
+        <p>This includes trackers, structured files, and inbox triage your team can rely on.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-tax" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+    <!-- FRONT END -->
+
+    <!-- BACK START -->
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">Tax &amp; Accounting — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-tax" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 8A) Reporting Inputs START -->
+        <div class="lxov" role="region" aria-label="Tax mockup A — Reporting inputs">
+          <div style="text-align:center">
+            <div class="expui" role="region" aria-label="Reporting inputs mockup">
+              <style>
+                .expui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .expui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .expui__brand{font-weight:800}
+                .expui__body{padding:14px}
+                .expui__row{display:grid;gap:10px;grid-template-columns:1fr .8fr .8fr;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0}
+                .expui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+                .expui__cell{font-size:13px;font-weight:900}
+                .expui__sub{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-top:4px}
+              </style>
+              <div class="expui__top">
+                <div class="expui__brand">Inputs</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Reporting</div>
+              </div>
+              <div class="expui__body">
+                <div class="expui__row">
+                  <div class="expui__hdr">Source</div>
+                  <div class="expui__hdr">Period</div>
+                  <div class="expui__hdr">Status</div>
+                </div>
+                <div class="expui__row">
+                  <div class="expui__cell">Bank<div class="expui__sub">December</div></div>
+                  <div class="expui__cell">Q4</div>
+                  <div class="expui__cell">Clean</div>
+                </div>
+                <div class="expui__row" style="border-bottom:0;">
+                  <div class="expui__cell">Receipts<div class="expui__sub">Uploads</div></div>
+                  <div class="expui__cell">Q4</div>
+                  <div class="expui__cell">Ready</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 8A) Reporting Inputs END -->
+
+        <!-- 8B) Client Inbox Triage START -->
+        <div class="lxov" role="region" aria-label="Tax mockup B — Client inbox triage">
+          <div style="text-align:center">
+            <div class="mailui" role="region" aria-label="Client email triage mockup">
+              <style>
+                .mailui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .mailui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .mailui__brand{font-weight:800}
+                .mailui__body{padding:14px}
+                .mailui__item{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                .mailui__subj{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                .mailui__snip{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+                .mailui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;margin-top:10px;padding:6px 10px}
+                .mailui__tag--a{background:#00e5ff;color:#0b0d10}
+                .mailui__tag--b{background:#b388ff;color:#0b0d10}
+              </style>
+              <div class="mailui__top">
+                <div class="mailui__brand">Inbox</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Client Triage</div>
+              </div>
+              <div class="mailui__body">
+                <div class="mailui__item">
+                  <div class="mailui__subj">Missing document</div>
+                  <p class="mailui__snip">Request sent. Waiting on upload.</p>
+                  <span class="mailui__tag mailui__tag--b">Follow-up</span>
+                </div>
+                <div class="mailui__item" style="margin-bottom:0;">
+                  <div class="mailui__subj">Deadline confirmation</div>
+                  <p class="mailui__snip">Client confirmed meeting. Notes logged.</p>
+                  <span class="mailui__tag mailui__tag--a">Scheduled</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 8B) Client Inbox Triage END -->
+      </div>
+    </div>
+    <!-- BACK END -->
+  </div>
+</div>
+<!-- =========================================================
+     PROOF CARD #8 END — Tax & Accounting
+     ========================================================= -->
+
+<!-- =========================================================
+     PROOF CARD #9 START — Tech Founders
+     ========================================================= -->
+<div class="vlp-proof-card">
+  <input class="vlp-proof-toggle" id="proof-tech" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <!-- FRONT START -->
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;font-size:20px;">💻</span>
+          </h3>
+          <h2>Tech Founders</h2>
+        </div>
+
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-tech" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I support founder operations with clean research and structured execution.</p>
+        <p>This includes comparisons, documentation, and outbound communication that saves time.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-tech" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+    <!-- FRONT END -->
+
+    <!-- BACK START -->
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">Tech Founders — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-tech" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 9A) Vendor Comparison START -->
+        <div class="lxov" role="region" aria-label="Tech mockup A — Vendor comparison">
+          <div style="text-align:center">
+            <div class="cmpui" role="region" aria-label="Vendor comparison mockup">
+              <style>
+                .cmpui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .cmpui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .cmpui__brand{font-weight:800}
+                .cmpui__body{padding:14px}
+                .cmpui__row{display:grid;gap:10px;grid-template-columns:1.1fr .9fr 1fr;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0}
+                .cmpui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+                .cmpui__cell{font-size:13px;font-weight:900}
+                .cmpui__sub{color:rgba(232,234,237,.70);font-size:12px;font-weight:800;margin-top:4px}
+              </style>
+              <div class="cmpui__top">
+                <div class="cmpui__brand">Comparison</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Vendors</div>
+              </div>
+              <div class="cmpui__body">
+                <div class="cmpui__row">
+                  <div class="cmpui__hdr">Tool</div>
+                  <div class="cmpui__hdr">Cost</div>
+                  <div class="cmpui__hdr">Notes</div>
+                </div>
+                <div class="cmpui__row">
+                  <div class="cmpui__cell">Option A<div class="cmpui__sub">Shortlist</div></div>
+                  <div class="cmpui__cell">$99</div>
+                  <div class="cmpui__cell">Best fit<div class="cmpui__sub">Fast onboarding</div></div>
+                </div>
+                <div class="cmpui__row" style="border-bottom:0;">
+                  <div class="cmpui__cell">Option B<div class="cmpui__sub">Backup</div></div>
+                  <div class="cmpui__cell">$79</div>
+                  <div class="cmpui__cell">Lower cost<div class="cmpui__sub">More setup</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 9A) Vendor Comparison END -->
+
+        <!-- 9B) Outbound Communication START -->
+        <div class="lxov" role="region" aria-label="Tech mockup B — Outbound communication">
+          <div style="text-align:center">
+            <div class="commui" role="region" aria-label="Outbound communication mockup">
+              <style>
+                .commui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .commui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .commui__brand{font-weight:800}
+                .commui__body{padding:14px}
+                .commui__msg{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                .commui__hdr{display:flex;justify-content:space-between;margin-bottom:8px}
+                .commui__name{font-size:13px;font-weight:900}
+                .commui__time{color:rgba(232,234,237,.70);font-size:12px;font-weight:800}
+                .commui__text{color:rgba(232,234,237,.92);font-size:13px;font-weight:800;line-height:1.45}
+              </style>
+              <div class="commui__top">
+                <div class="commui__brand">Outreach</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Prepared</div>
+              </div>
+              <div class="commui__body">
+                <div class="commui__msg">
+                  <div class="commui__hdr">
+                    <div class="commui__name">Email Draft</div>
+                    <div class="commui__time">Ready</div>
+                  </div>
+                  <div class="commui__text">
+                    Quick note with pricing and timeline. Clear next step and booking link included.
+                  </div>
+                </div>
+                <div class="commui__msg" style="margin-bottom:0;">
+                  <div class="commui__hdr">
+                    <div class="commui__name">Follow-up</div>
+                    <div class="commui__time">Scheduled</div>
+                  </div>
+                  <div class="commui__text">
+                    If no reply in 48 hours, send a short reminder with the same CTA.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 9B) Outbound Communication END -->
+      </div>
+    </div>
+    <!-- BACK END -->
+  </div>
+</div>
+<!-- =========================================================
+     PROOF CARD #9 END — Tech Founders
+     ========================================================= -->
+
+<!-- =========================================================
+     PROOF CARD #10 START — VA Agencies (FULL ROW ON DESKTOP)
+     Uses: .vlp-proof-card--full
+     ========================================================= -->
+<div class="vlp-proof-card vlp-proof-card--full">
+  <input class="vlp-proof-toggle" id="proof-vaagencies" type="checkbox" />
+  <div class="vlp-proof-inner">
+    <!-- FRONT START -->
+    <div class="vlp-proof-face vlp-proof-front">
+      <div class="vlp-proof-front-top">
+        <div class="vlp-proof-front-title">
+          <h3 aria-hidden="true" style="line-height:0;margin:0;">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;font-size:20px;">🧩</span>
+          </h3>
+          <h2>VA Agencies</h2>
+        </div>
+
+        <label class="vlp-proof-cta vlp-proof-cta--primary" for="proof-vaagencies" role="button" tabindex="0">
+          View proofs
+          <span aria-hidden="true">↻</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-front-desc">
+        <p>I support agency operations with organized delivery systems and inbox workflows that scale.</p>
+        <p>This includes planning, coordination, and communication structures your team can reuse.</p>
+      </div>
+
+      <div class="vlp-proof-front-actions">
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-vaagencies" role="button" tabindex="0">
+          Flip card
+          <span aria-hidden="true">→</span>
+        </label>
+      </div>
+    </div>
+    <!-- FRONT END -->
+
+    <!-- BACK START -->
+    <div class="vlp-proof-face vlp-proof-back">
+      <div class="vlp-proof-back-top">
+        <div class="vlp-proof-back-title">VA Agencies — Proofs</div>
+        <label class="vlp-proof-cta vlp-proof-cta--ghost" for="proof-vaagencies" role="button" tabindex="0">
+          Back
+          <span aria-hidden="true">↺</span>
+        </label>
+      </div>
+
+      <div class="vlp-proof-back-body">
+        <!-- 10A) Delivery Plan START -->
+        <div class="lxov" role="region" aria-label="VA Agencies mockup A — Delivery plan">
+          <div style="text-align:center">
+            <div class="sheetui" role="region" aria-label="Delivery plan mockup">
+              <style>
+                .sheetui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .sheetui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .sheetui__brand{font-weight:800}
+                .sheetui__table{padding:14px}
+                .sheetui__row{display:grid;gap:10px;grid-template-columns:1fr .9fr .9fr .8fr;border-bottom:1px solid rgba(255,255,255,.06);padding:10px 0}
+                .sheetui__hdr{color:rgba(232,234,237,.72);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+                .sheetui__cell{font-size:13px;font-weight:900}
+                .sheetui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;padding:6px 10px}
+                .sheetui__tag--a{background:#00e676;color:#0b0d10}
+                .sheetui__tag--b{background:#b388ff;color:#0b0d10}
+              </style>
+              <div class="sheetui__top">
+                <div class="sheetui__brand">Delivery</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Plan</div>
+              </div>
+              <div class="sheetui__table">
+                <div class="sheetui__row">
+                  <div class="sheetui__hdr">Phase</div>
+                  <div class="sheetui__hdr">Owner</div>
+                  <div class="sheetui__hdr">Next</div>
+                  <div class="sheetui__hdr">Status</div>
+                </div>
+                <div class="sheetui__row">
+                  <div class="sheetui__cell">Onboard</div>
+                  <div class="sheetui__cell">VA Lead</div>
+                  <div class="sheetui__cell">Assets</div>
+                  <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--a">Active</span></div>
+                </div>
+                <div class="sheetui__row" style="border-bottom:0;">
+                  <div class="sheetui__cell">Deliver</div>
+                  <div class="sheetui__cell">Ops</div>
+                  <div class="sheetui__cell">Review</div>
+                  <div class="sheetui__cell"><span class="sheetui__tag sheetui__tag--b">Scheduled</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 10A) Delivery Plan END -->
+
+        <!-- 10B) Agency Inbox START -->
+        <div class="lxov" role="region" aria-label="VA Agencies mockup B — Agency inbox">
+          <div style="text-align:center">
+            <div class="mailui" role="region" aria-label="Agency inbox mockup">
+              <style>
+                .mailui{background:#0f1113;border-radius:16px;color:#e8eaed;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow:hidden;width:100%}
+                .mailui__top{align-items:center;background:#121416;border-bottom:1px solid rgba(255,255,255,.10);display:flex;gap:12px;padding:12px 14px}
+                .mailui__brand{font-weight:800}
+                .mailui__body{padding:14px}
+                .mailui__item{background:#111315;border:1px solid rgba(255,255,255,.08);border-radius:14px;margin:0 0 12px 0;padding:12px}
+                .mailui__subj{font-size:13px;font-weight:900;margin:0 0 6px 0}
+                .mailui__snip{color:rgba(232,234,237,.86);font-size:12px;font-weight:800;line-height:1.45;margin:0}
+                .mailui__tag{border-radius:999px;display:inline-block;font-size:12px;font-weight:900;margin-top:10px;padding:6px 10px}
+                .mailui__tag--a{background:#00e5ff;color:#0b0d10}
+                .mailui__tag--c{background:#ff5c8a;color:#0b0d10}
+              </style>
+              <div class="mailui__top">
+                <div class="mailui__brand">Inbox</div>
+                <div style="color:rgba(232,234,237,.72);font-weight:800">Ops Flow</div>
+              </div>
+              <div class="mailui__body">
+                <div class="mailui__item">
+                  <div class="mailui__subj">Client request</div>
+                  <p class="mailui__snip">New task submitted. Needs assignment and ETA.</p>
+                  <span class="mailui__tag mailui__tag--c">Assigned</span>
+                </div>
+                <div class="mailui__item" style="margin-bottom:0;">
+                  <div class="mailui__subj">QA review</div>
+                  <p class="mailui__snip">Deliverable ready. Needs final check and send.</p>
+                  <span class="mailui__tag mailui__tag--a">Ready</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 10B) Agency Inbox END -->
+      </div>
+    </div>
+    <!-- BACK END -->
+  </div>
+</div>
+<!-- =========================================================
+     PROOF CARD #10 END — VA Agencies
+     ========================================================= -->
+
 
   </div>
   <!-- =========================================================
