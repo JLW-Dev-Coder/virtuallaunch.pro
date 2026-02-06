@@ -89,7 +89,7 @@
   </div>
 </footer>
 
-<!-- START: LenBot Sales Chat Link (Lottie, 50% larger) -->
+<!-- START: LenBot Sales Chat Link (Lottie, 50% larger + aligned Ask badge) -->
 <script
   src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js"
   type="module"
@@ -110,7 +110,7 @@
       style="width:54px;height:54px"
     ></dotlottie-wc>
 
-    <span class="vlp-lenbot-fab__badge" aria-hidden="true">Ask</span>
+    <span class="vlp-lenbot-fab__badge" aria-hidden="true">ASK</span>
   </span>
 
   <span class="vlp-lenbot-fab__text">Get started</span>
@@ -158,17 +158,23 @@
 }
 
 .vlp-lenbot-fab__badge {
-  background: rgba(0,0,0,0.65);
-  border: 1px solid rgba(255,255,255,0.18);
+  align-items: center;
+  background: rgba(0,0,0,0.70);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 9999px;
-  bottom: -6px;
-  color: rgba(255,255,255,0.92);
-  font-size: 10px;
+  bottom: 4px;
+  color: rgba(255,255,255,0.95);
+  display: inline-flex;
+  font-size: 9px;
   font-weight: 900;
-  letter-spacing: 0.02em;
-  padding: 4px 8px;
+  height: 18px;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 0 6px;
   position: absolute;
-  right: -6px;
+  right: 4px;
+  text-transform: uppercase;
 }
 
 .vlp-lenbot-fab__text {
