@@ -89,7 +89,7 @@
   </div>
 </footer>
 
-<!-- START: LenBot Sales Chat Link (Lottie) -->
+<!-- START: LenBot Sales Chat Link (Lottie, 50% larger) -->
 <script
   src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js"
   type="module"
@@ -107,8 +107,10 @@
       src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
       autoplay
       loop
-      style="width:36px;height:36px"
+      style="width:54px;height:54px"
     ></dotlottie-wc>
+
+    <span class="vlp-lenbot-fab__badge" aria-hidden="true">Ask</span>
   </span>
 
   <span class="vlp-lenbot-fab__text">Get started</span>
@@ -125,8 +127,8 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.40);
   color: rgba(255,255,255,0.92);
   display: inline-flex;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: 12px;
+  padding: 12px 16px;
   position: fixed;
   right: 18px;
   text-decoration: none;
@@ -144,14 +146,29 @@
   border: 1px solid rgba(249,115,22,0.35);
   border-radius: 9999px;
   display: inline-flex;
-  height: 36px;
+  height: 54px;
   justify-content: center;
   overflow: hidden;
-  width: 36px;
+  position: relative;
+  width: 54px;
 }
 
 .vlp-lenbot-fab__icon dotlottie-wc {
   display: block;
+}
+
+.vlp-lenbot-fab__badge {
+  background: rgba(0,0,0,0.65);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 9999px;
+  bottom: -6px;
+  color: rgba(255,255,255,0.92);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  padding: 4px 8px;
+  position: absolute;
+  right: -6px;
 }
 
 .vlp-lenbot-fab__text {
@@ -170,4 +187,3 @@
 }
 </style>
 <!-- END: LenBot Sales Chat Link -->
-
