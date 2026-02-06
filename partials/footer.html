@@ -89,7 +89,12 @@
   </div>
 </footer>
 
-<!-- START: LenBot Sales Chat Link -->
+<!-- START: LenBot Sales Chat Link (Lottie) -->
+<script
+  src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js"
+  type="module"
+></script>
+
 <a
   href="https://get-started-virtual-launch-pro.zapier.app/chat"
   target="_blank"
@@ -98,16 +103,14 @@
   class="vlp-lenbot-fab"
 >
   <span aria-hidden="true" class="vlp-lenbot-fab__icon">
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M7 8h10M7 12h6M12 20l-3.5-2H7a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-1.5L12 20Z"
-        stroke="currentColor"
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
+    <dotlottie-wc
+      src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
+      autoplay
+      loop
+      style="width:36px;height:36px"
+    ></dotlottie-wc>
   </span>
+
   <span class="vlp-lenbot-fab__text">Get started</span>
 </a>
 
@@ -140,16 +143,15 @@
   background: rgba(249,115,22,0.18);
   border: 1px solid rgba(249,115,22,0.35);
   border-radius: 9999px;
-  color: rgba(255,255,255,0.95);
   display: inline-flex;
   height: 36px;
   justify-content: center;
+  overflow: hidden;
   width: 36px;
 }
 
-.vlp-lenbot-fab__icon svg {
-  height: 18px;
-  width: 18px;
+.vlp-lenbot-fab__icon dotlottie-wc {
+  display: block;
 }
 
 .vlp-lenbot-fab__text {
@@ -168,3 +170,4 @@
 }
 </style>
 <!-- END: LenBot Sales Chat Link -->
+
