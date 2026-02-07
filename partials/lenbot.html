@@ -1,0 +1,255 @@
+<!-- /partials/lenbot.html -->
+<!-- START: LenBot ChatBot Dock (Canva look + Lottie) -->
+<script type="module">
+  (function () {
+    if (customElements.get("dotlottie-wc")) return;
+    var s = document.createElement("script");
+    s.type = "module";
+    s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js";
+    document.head.appendChild(s);
+  })();
+</script>
+
+<div class="vlp-lenbot-canva vlp-lenbot-canva--right" role="complementary" aria-label="LenBot chat assistant">
+  <button class="vlp-lenbot-canva__close" type="button" aria-label="Close LenBot">×</button>
+
+  <div class="vlp-lenbot-canva__wrap">
+    <div class="vlp-lenbot-canva__avatar">
+      <div class="vlp-lenbot-canva__glow" aria-hidden="true">
+        <div class="vlp-lenbot-canva__float">
+          <dotlottie-wc
+            src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
+            autoplay
+            loop
+            style="display:block;width:160px;height:160px"
+            aria-hidden="true"
+          ></dotlottie-wc>
+        </div>
+      </div>
+    </div>
+
+    <div class="vlp-lenbot-canva__copy">
+      <h3 class="vlp-lenbot-canva__title">LenBot is here</h3>
+
+      <p class="vlp-lenbot-canva__text">
+        I help visitors figure out which Virtual Launch Pro install to start with, how setup works, and whether this is the right fit for their business.
+      </p>
+
+      <p class="vlp-lenbot-canva__note">
+        Click the button below to open me in a new page.
+      </p>
+
+      <a
+        class="vlp-lenbot-canva__btn"
+        href="https://get-started-virtual-launch-pro.zapier.app/chat"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open LenBot
+        <svg class="vlp-lenbot-canva__btn-ico" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+.vlp-lenbot-canva {
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(20,20,22,0.85) 0%, rgba(10,10,11,0.65) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  bottom: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  left: 20px;
+  max-width: 640px;
+  padding: 16px;
+  position: fixed;
+  width: min(640px, calc(100vw - 32px));
+  z-index: 9999;
+}
+
+.vlp-lenbot-canva--right {
+  left: auto;
+  right: 20px;
+}
+
+.vlp-lenbot-canva__avatar {
+  display: flex;
+  justify-content: center;
+}
+
+.vlp-lenbot-canva__btn {
+  align-items: center;
+  background: linear-gradient(135deg, rgba(249,115,22,1) 0%, rgba(234,88,12,1) 100%);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.30);
+  color: rgba(0,0,0,0.92);
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  width: 100%;
+}
+
+.vlp-lenbot-canva__btn:active {
+  transform: translateY(0px);
+}
+
+.vlp-lenbot-canva__btn:focus {
+  outline: 2px solid rgba(249,115,22,0.75);
+  outline-offset: 3px;
+}
+
+.vlp-lenbot-canva__btn:hover {
+  box-shadow: 0 8px 30px rgba(249, 115, 22, 0.40);
+  transform: translateY(-1px);
+}
+
+.vlp-lenbot-canva__btn-ico {
+  height: 16px;
+  width: 16px;
+}
+
+.vlp-lenbot-canva__close {
+  align-items: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  color: rgba(255,255,255,0.9);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 22px;
+  font-weight: 800;
+  height: 44px;
+  justify-content: center;
+  line-height: 1;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  touch-action: manipulation;
+  transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+  user-select: none;
+  width: 44px;
+  z-index: 20;
+}
+
+.vlp-lenbot-canva__close:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.vlp-lenbot-canva__close:focus {
+  outline: 2px solid rgba(249,115,22,0.75);
+  outline-offset: 2px;
+}
+
+.vlp-lenbot-canva__copy {
+  text-align: center;
+}
+
+.vlp-lenbot-canva__float {
+  animation: vlp-lenbot-float 4s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes vlp-lenbot-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.vlp-lenbot-canva__glow {
+  position: relative;
+}
+
+.vlp-lenbot-canva__glow::before {
+  animation: vlp-lenbot-glow 3s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+  content: "";
+  height: 140%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  z-index: 0;
+}
+
+@keyframes vlp-lenbot-glow {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.vlp-lenbot-canva__note {
+  color: rgba(255,255,255,0.70);
+  font-size: 11px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.vlp-lenbot-canva__text {
+  color: rgba(255,255,255,0.70);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.vlp-lenbot-canva__title {
+  color: rgba(245,245,247,0.98);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.vlp-lenbot-canva__wrap {
+  align-items: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .vlp-lenbot-canva__avatar {
+    justify-content: flex-start;
+  }
+
+  .vlp-lenbot-canva__btn {
+    width: auto;
+  }
+
+  .vlp-lenbot-canva__copy {
+    text-align: left;
+  }
+
+  .vlp-lenbot-canva__wrap {
+    gap: 16px;
+    grid-template-columns: 180px 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .vlp-lenbot-canva {
+    bottom: 12px;
+    left: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  .vlp-lenbot-canva--right {
+    left: auto;
+    right: 12px;
+  }
+}
+</style>
+<!-- END: LenBot ChatBot Dock (Canva look + Lottie) -->
