@@ -280,7 +280,6 @@
   }
 
   btnOpen.addEventListener('click', function () { openPanel(); });
-
   if (btnClose) btnClose.addEventListener('click', function () { closePanel(); });
 
   toggle.addEventListener('click', function () {
@@ -448,13 +447,12 @@
   width: 16px;
 }
 
-/* LenBot close button — reliably clickable */
 .vlp-lenbot-canva__close {
   align-items: center;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
   border-radius: 12px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.9);
   cursor: pointer;
   display: inline-flex;
   font-size: 22px;
@@ -462,7 +460,6 @@
   height: 44px;
   justify-content: center;
   line-height: 1;
-  padding: 0;
   position: absolute;
   right: 8px;
   top: 8px;
@@ -474,16 +471,13 @@
 }
 
 .vlp-lenbot-canva__close:hover {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.22);
-  transform: scale(1.03);
+  background: rgba(255,255,255,0.14);
 }
 
 .vlp-lenbot-canva__close:focus {
   outline: 2px solid rgba(249,115,22,0.75);
   outline-offset: 2px;
 }
-
 
 .vlp-lenbot-canva__copy {
   text-align: center;
@@ -590,18 +584,6 @@
   var closeBtn = document.querySelector(".vlp-lenbot-canva__close");
   if (!dock || !closeBtn) return;
 
-  closeBtn.addEventListener("click", function () {
-    dock.style.display = "none";
-  });
-})();
-</script>
-
-<script>
-(function () {
-  var dock = document.querySelector(".vlp-lenbot-canva");
-  var closeBtn = document.querySelector(".vlp-lenbot-canva__close");
-  if (!dock || !closeBtn) return;
-
   function closeDock(e) {
     if (e) {
       e.preventDefault();
@@ -615,4 +597,8 @@
 })();
 </script>
 
+<script>
+  var yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+</script>
 <!-- END: LenBot ChatBot Dock (Canva look + Lottie) -->
