@@ -337,6 +337,8 @@
 </script>
 
 <div class="vlp-lenbot-canva vlp-lenbot-canva--right" role="complementary" aria-label="LenBot chat assistant">
+  <button class="vlp-lenbot-canva__close" type="button" aria-label="Close LenBot">×</button>
+
   <div class="vlp-lenbot-canva__wrap">
     <div class="vlp-lenbot-canva__avatar">
       <div class="vlp-lenbot-canva__glow" aria-hidden="true">
@@ -392,10 +394,10 @@
   bottom: 20px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.55);
   left: 20px;
-  max-width: 900px;
-  padding: 22px;
+  max-width: 640px;
+  padding: 16px;
   position: fixed;
-  width: min(900px, calc(100vw - 40px));
+  width: min(640px, calc(100vw - 32px));
   z-index: 9999;
 }
 
@@ -416,12 +418,12 @@
   box-shadow: 0 4px 20px rgba(249, 115, 22, 0.30);
   color: rgba(0,0,0,0.92);
   display: inline-flex;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   gap: 10px;
   justify-content: center;
-  margin-top: 15px;
-  padding: 12px 16px;
+  margin-top: 12px;
+  padding: 10px 14px;
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease;
   width: 100%;
@@ -444,6 +446,39 @@
 .vlp-lenbot-canva__btn-ico {
   height: 16px;
   width: 16px;
+}
+
+.vlp-lenbot-canva__close {
+  align-items: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 18px;
+  font-weight: 700;
+  height: 32px;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+  width: 32px;
+  z-index: 2;
+}
+
+.vlp-lenbot-canva__close:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.22);
+  transform: scale(1.03);
+}
+
+.vlp-lenbot-canva__close:focus {
+  outline: 2px solid rgba(249,115,22,0.75);
+  outline-offset: 2px;
 }
 
 .vlp-lenbot-canva__copy {
@@ -485,29 +520,30 @@
 
 .vlp-lenbot-canva__note {
   color: rgba(255,255,255,0.70);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .vlp-lenbot-canva__text {
   color: rgba(255,255,255,0.70);
-  font-size: 14px;
-  line-height: 1.55;
-  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 8px;
 }
 
 .vlp-lenbot-canva__title {
   color: rgba(245,245,247,0.98);
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
 .vlp-lenbot-canva__wrap {
   align-items: center;
   display: grid;
-  gap: 18px;
+  gap: 14px;
   grid-template-columns: 1fr;
 }
 
@@ -525,8 +561,8 @@
   }
 
   .vlp-lenbot-canva__wrap {
-    gap: 22px;
-    grid-template-columns: 220px 1fr;
+    gap: 16px;
+    grid-template-columns: 180px 1fr;
   }
 }
 
@@ -545,7 +581,14 @@
 </style>
 
 <script>
-  var yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+(function () {
+  var dock = document.querySelector(".vlp-lenbot-canva");
+  var closeBtn = document.querySelector(".vlp-lenbot-canva__close");
+  if (!dock || !closeBtn) return;
+
+  closeBtn.addEventListener("click", function () {
+    dock.style.display = "none";
+  });
+})();
 </script>
 <!-- END: LenBot ChatBot Dock (Canva look + Lottie) -->
