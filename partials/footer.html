@@ -89,107 +89,276 @@
   </div>
 </footer>
 
-<!-- START: LenBot Sales Chat Link (Lottie, 50% larger + aligned Ask badge) -->
+<!-- /partials/footer.html -->
+
+<!-- GLOBAL CTA (moved from index.html) -->
+<section class="border-t border-white/10">
+  <div class="mx-auto max-w-7xl px-6 py-20 md:py-28">
+    <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-ink-950 p-12 text-center shadow-soft md:p-20">
+      <svg aria-hidden="true" class="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 400">
+        <defs>
+          <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff9a3c" stop-opacity="0.35" />
+            <stop offset="100%" stop-color="#ff6a00" stop-opacity="0.25" />
+          </linearGradient>
+        </defs>
+        <rect width="1200" height="400" fill="url(#orangeGradient)" />
+        <path
+          d="M0,300 C200,260 400,340 600,300 800,260 1000,340 1200,300 L1200,400 L0,400 Z"
+          fill="#ff7a1a"
+          fill-opacity="0.25"
+        />
+      </svg>
+
+      <div class="relative">
+        <h2 class="mx-auto max-w-4xl text-4xl font-extrabold md:text-6xl">
+          Start calm delivery today.
+        </h2>
+        <p class="mx-auto mt-6 max-w-2xl text-base text-white/80 md:text-lg">
+          Sign up and pick the first install you want live. Everything else stacks later.
+        </p>
+        <div class="mt-12 flex justify-center">
+          <a
+            class="rounded-xl bg-white px-10 py-4 text-base font-extrabold text-ink-900 shadow hover:bg-white/90"
+            href="/signup.html"
+            rel="noopener"
+          >
+            Get a Free Account — No Credit Card Required
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER PARTIAL -->
+<section class="border-t border-white/10">
+  <div class="mx-auto max-w-6-5xl px-4 py-12">
+    <div class="flex flex-col items-center gap-6">
+      <a
+        class="flex items-center"
+        href="/index.html"
+        aria-label="Virtual Launch Pro home"
+      >
+        <span aria-hidden="true" class="inline-flex items-center h-10">
+          <img
+            src="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
+            alt="Virtual Launch Pro logo"
+            class="h-25 w-auto"
+            decoding="async"
+            loading="lazy"
+          />
+        </span>
+      </a>
+
+      <nav class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/80">
+        <a class="hover:text-white" href="/about.html">About</a>
+        <a class="hover:text-white" href="/blog/">Blog</a>
+        <a class="hover:text-white" href="/installs.html">Installs</a>
+        <a class="hover:text-white" href="/pricing.html">Pricing</a>
+        <a class="hover:text-white" href="/book.html">Book / Demo</a>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-white/10">
+  <div
+    class="mx-auto max-w-6-5xl px-4 py-8 text-sm text-white/70
+           flex flex-col gap-4
+           md:flex-row md:items-center md:justify-between"
+  >
+    <div>
+      © <span id="year"></span> Virtual Launch Pro.
+      Owned and operated by Lenore, Inc.
+    </div>
+
+    <div class="flex gap-6">
+      <a class="hover:text-white" href="/privacy.html">Privacy Policy</a>
+      <a class="hover:text-white" href="/terms.html">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<!-- START: LenBot Footer Section (replaces floating button) -->
 <script
   src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js"
   type="module"
 ></script>
 
-<a
-  href="https://get-started-virtual-launch-pro.zapier.app/chat"
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="Get started with LenBot (opens in a new tab)"
-  class="vlp-lenbot-fab"
->
-  <span aria-hidden="true" class="vlp-lenbot-fab__icon">
-    <dotlottie-wc
-      src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
-      autoplay
-      loop
-      style="width:54px;height:54px"
-    ></dotlottie-wc>
+<section class="border-t border-white/10">
+  <div class="mx-auto max-w-6-5xl px-4 py-12">
+    <div class="vlp-lenbot-footer">
+      <div class="vlp-lenbot-footer__left">
+        <div class="vlp-lenbot-footer__glow" aria-hidden="true">
+          <div class="vlp-lenbot-footer__float">
+            <dotlottie-wc
+              src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
+              autoplay
+              loop
+              style="width:148px;height:148px"
+              aria-hidden="true"
+            ></dotlottie-wc>
+          </div>
+        </div>
+      </div>
 
-    <span class="vlp-lenbot-fab__badge" aria-hidden="true">ASK</span>
-  </span>
+      <div class="vlp-lenbot-footer__right">
+        <h3 class="vlp-lenbot-footer__title">LenBot is here</h3>
 
-  <span class="vlp-lenbot-fab__text">Get started</span>
-</a>
+        <p class="vlp-lenbot-footer__text">
+          I help visitors figure out which Virtual Launch Pro install to start with, how setup works, and whether this is the right fit for their business.
+        </p>
+
+        <p class="vlp-lenbot-footer__note">
+          Click the button below to open me in a new page.
+        </p>
+
+        <a
+          class="vlp-lenbot-footer__btn"
+          href="https://get-started-virtual-launch-pro.zapier.app/chat"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open LenBot
+          <svg class="vlp-lenbot-footer__btn-ico" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <style>
-.vlp-lenbot-fab {
+.vlp-lenbot-footer {
   align-items: center;
-  backdrop-filter: blur(10px);
-  background: rgba(0,0,0,0.70);
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 9999px;
-  bottom: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.40);
-  color: rgba(255,255,255,0.92);
-  display: inline-flex;
-  gap: 12px;
-  padding: 12px 16px;
-  position: fixed;
-  right: 18px;
-  text-decoration: none;
-  z-index: 9998;
+  display: grid;
+  gap: 22px;
+  grid-template-columns: 1fr;
 }
 
-.vlp-lenbot-fab:hover {
-  border-color: rgba(255,255,255,0.24);
+.vlp-lenbot-footer__btn {
+  align-items: center;
+  background: linear-gradient(135deg, rgba(249,115,22,1) 0%, rgba(234,88,12,1) 100%);
+  border-radius: 14px;
+  box-shadow: 0 8px 26px rgba(249, 115, 22, 0.22);
+  color: rgba(0,0,0,0.92);
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 900;
+  gap: 10px;
+  justify-content: center;
+  letter-spacing: 0.01em;
+  padding: 12px 16px;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  width: 100%;
+}
+
+.vlp-lenbot-footer__btn:active {
+  transform: translateY(0px);
+}
+
+.vlp-lenbot-footer__btn:focus {
+  outline: 2px solid rgba(249,115,22,0.75);
+  outline-offset: 3px;
+}
+
+.vlp-lenbot-footer__btn:hover {
+  box-shadow: 0 12px 34px rgba(249, 115, 22, 0.30);
   transform: translateY(-1px);
 }
 
-.vlp-lenbot-fab__icon {
-  align-items: center;
-  background: rgba(249,115,22,0.18);
-  border: 1px solid rgba(249,115,22,0.35);
-  border-radius: 9999px;
-  display: inline-flex;
-  height: 54px;
-  justify-content: center;
-  overflow: hidden;
+.vlp-lenbot-footer__btn-ico {
+  height: 16px;
+  width: 16px;
+}
+
+.vlp-lenbot-footer__float {
+  animation: vlp-lenbot-float 4s ease-in-out infinite;
   position: relative;
-  width: 54px;
+  z-index: 1;
 }
 
-.vlp-lenbot-fab__icon dotlottie-wc {
-  display: block;
+@keyframes vlp-lenbot-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
 
-.vlp-lenbot-fab__badge {
-  align-items: center;
-  background: rgba(0,0,0,0.70);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 9999px;
-  bottom: 4px;
-  color: rgba(255,255,255,0.95);
-  display: inline-flex;
-  font-size: 9px;
-  font-weight: 900;
-  height: 18px;
-  justify-content: center;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  padding: 0 6px;
+.vlp-lenbot-footer__glow {
+  position: relative;
+}
+
+.vlp-lenbot-footer__glow::before {
+  animation: vlp-lenbot-glow 3s ease-in-out infinite;
+  background: radial-gradient(circle, rgba(249,115,22,0.18) 0%, transparent 70%);
+  content: "";
+  height: 140%;
+  left: 50%;
   position: absolute;
-  right: 4px;
-  text-transform: uppercase;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 140%;
+  z-index: 0;
 }
 
-.vlp-lenbot-fab__text {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  padding-right: 4px;
+@keyframes vlp-lenbot-glow {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
 }
 
-@media (min-width: 768px) {
-  .vlp-lenbot-fab {
-    bottom: 22px;
-    right: 22px;
+.vlp-lenbot-footer__left {
+  display: flex;
+  justify-content: center;
+}
+
+.vlp-lenbot-footer__note {
+  color: rgba(255,255,255,0.66);
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+.vlp-lenbot-footer__right {
+  text-align: center;
+}
+
+.vlp-lenbot-footer__text {
+  color: rgba(255,255,255,0.74);
+  font-size: 14px;
+  line-height: 1.55;
+  margin-top: 10px;
+}
+
+.vlp-lenbot-footer__title {
+  color: rgba(255,255,255,0.95);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 640px) {
+  .vlp-lenbot-footer__btn {
+    width: auto;
+  }
+
+  .vlp-lenbot-footer__right {
+    text-align: left;
+  }
+
+  .vlp-lenbot-footer {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .vlp-lenbot-footer__left {
+    justify-content: flex-start;
   }
 }
 </style>
-<!-- END: LenBot Sales Chat Link -->
+<!-- END: LenBot Footer Section -->
