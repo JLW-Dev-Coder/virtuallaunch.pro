@@ -107,6 +107,35 @@
     });
   }
 
+  function watchIncludes() {
+    var scheduled = false;
+
+    function schedule() {
+      if (scheduled) return;
+      scheduled = true;
+
+      setTimeout(function () {
+        scheduled = false;
+        loadIncludes();
+      }, 50);
+    }
+
+    var observer = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i += 1) {
+        var m = mutations[i];
+        if (m.addedNodes && m.addedNodes.length) {
+          schedule();
+          return;
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    window.addEventListener("load", schedule, { once: true });
+    schedule();
+  }
+
   function initArtifactsTabs() {
     var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-tab]"));
     var panels = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-panel]"));
@@ -260,6 +289,7 @@
   function run() {
     ensureDotLottie();
     initLenBotClose();
+    watchIncludes();
 
     function finish() {
       initArtifactsTabs();
