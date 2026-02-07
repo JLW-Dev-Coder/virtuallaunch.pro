@@ -4,6 +4,16 @@
 (function () {
   "use strict";
 
+  function ensureDotLottie() {
+    if (customElements.get("dotlottie-wc")) return;
+    if (document.querySelector('script[src*="dotlottie-wc"]')) return;
+
+    var s = document.createElement("script");
+    s.type = "module";
+    s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc@0.8.11/dist/dotlottie-wc.js";
+    document.head.appendChild(s);
+  }
+
   function looksLikeFullDocument(html) {
     var s = String(html || "").toLowerCase();
     return (
@@ -68,8 +78,14 @@
   }
 
   function loadIncludes() {
-    var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
+    var nodes = Array.prototype.slice.call(
+      document.querySelectorAll('[data-include]:not([data-include-loaded="1"])')
+    );
     if (!nodes.length) return Promise.resolve([]);
+
+    nodes.forEach(function (n) {
+      n.setAttribute("data-include-loaded", "1");
+    });
 
     return Promise.all(
       nodes.map(function (node) {
@@ -79,7 +95,11 @@
         });
       })
     ).then(function (results) {
-      return results.filter(Boolean);
+      var ok = results.filter(Boolean);
+
+      return loadIncludes().then(function (next) {
+        return ok.concat(next);
+      });
     });
   }
 
@@ -215,7 +235,28 @@
     });
   }
 
+  function initLenBotClose() {
+    function onClose(e) {
+      var btn = e.target && e.target.closest ? e.target.closest(".vlp-lenbot-canva__close") : null;
+      if (!btn) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var dock = btn.closest(".vlp-lenbot-canva");
+      if (!dock) return;
+
+      dock.style.display = "none";
+    }
+
+    document.addEventListener("click", onClose, true);
+    document.addEventListener("pointerup", onClose, true);
+  }
+
   function run() {
+    ensureDotLottie();
+    initLenBotClose();
+
     function finish() {
       initArtifactsTabs();
       initDashboardPreview();
@@ -249,23 +290,4 @@
   } else {
     run();
   }
-})();
-
-
-(function () {
-  function onClose(e) {
-    var btn = e.target && e.target.closest ? e.target.closest(".vlp-lenbot-canva__close") : null;
-    if (!btn) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    var dock = btn.closest(".vlp-lenbot-canva");
-    if (!dock) return;
-
-    dock.style.display = "none";
-  }
-
-  document.addEventListener("click", onClose, true);
-  document.addEventListener("pointerup", onClose, true);
 })();
