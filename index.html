@@ -59,7 +59,6 @@
 
   <link rel="stylesheet" href="/styles.css?v=20260127-1" />
 
-
   <style>
     html { scroll-behavior: smooth; }
 
@@ -700,8 +699,35 @@
 
   <div data-include="footer"></div>
 
+  <!-- NEW: load LenBot partial on index too -->
+  <div data-include="lenbot"></div>
+
   <script>
     (function () {
+      function boot() {
+        initArtifacts();
+        loadIncludes();
+      }
+
+      function executeScripts(root) {
+        var scripts = Array.prototype.slice.call(root.querySelectorAll("script"));
+        if (!scripts.length) return;
+
+        scripts.forEach(function (old) {
+          var s = document.createElement("script");
+
+          Array.prototype.slice.call(old.attributes).forEach(function (attr) {
+            s.setAttribute(attr.name, attr.value);
+          });
+
+          if (old.textContent && old.textContent.trim()) {
+            s.textContent = old.textContent;
+          }
+
+          old.parentNode.replaceChild(s, old);
+        });
+      }
+
       function initArtifacts() {
         var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-tab]"));
         var panels = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-panel]"));
@@ -783,6 +809,8 @@
             .then(function (html) {
               node.innerHTML = html;
 
+              executeScripts(node);
+
               if (key === "dashboard-preview") {
                 var section = node.querySelector("#dashboard-preview") || node;
                 initDashboardPreview(section);
@@ -792,11 +820,6 @@
               console.error(err);
             });
         });
-      }
-
-      function boot() {
-        initArtifacts();
-        loadIncludes();
       }
 
       if (document.readyState === "loading") {
