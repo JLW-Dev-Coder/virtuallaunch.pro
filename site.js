@@ -250,3 +250,22 @@
     run();
   }
 })();
+
+
+(function () {
+  function onClose(e) {
+    var btn = e.target && e.target.closest ? e.target.closest(".vlp-lenbot-canva__close") : null;
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    var dock = btn.closest(".vlp-lenbot-canva");
+    if (!dock) return;
+
+    dock.style.display = "none";
+  }
+
+  document.addEventListener("click", onClose, true);
+  document.addEventListener("pointerup", onClose, true);
+})();
