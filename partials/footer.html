@@ -448,36 +448,31 @@
   width: 16px;
 }
 
-/* LenBot close button — larger hit area, easier to click */
+/* LenBot close button — reliably clickable */
 .vlp-lenbot-canva__close {
   align-items: center;
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 10px;
+  border-radius: 12px;
   color: rgba(255,255,255,0.85);
   cursor: pointer;
   display: inline-flex;
-  font-size: 21px;
-  font-weight: 700;
-  height: 37px;
+  font-size: 22px;
+  font-weight: 800;
+  height: 44px;
   justify-content: center;
   line-height: 1;
   padding: 0;
   position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 37px;
-  z-index: 10;
+  right: 8px;
+  top: 8px;
+  touch-action: manipulation;
+  transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+  user-select: none;
+  width: 44px;
+  z-index: 20;
 }
 
-/* Invisible click buffer */
-.vlp-lenbot-canva__close::before {
-  content: "";
-  position: absolute;
-  inset: -10px; /* increases hit area to ~57×57px */
-}
-
-/* Hover / focus states */
 .vlp-lenbot-canva__close:hover {
   background: rgba(255,255,255,0.12);
   border-color: rgba(255,255,255,0.22);
