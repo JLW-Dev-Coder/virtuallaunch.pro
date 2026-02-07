@@ -60,6 +60,8 @@
     var key = node.getAttribute("data-include");
     var url = "/partials/" + key + ".html";
 
+    node.setAttribute("data-include-loading", "1");
+
     return fetch(url, { cache: "no-store" })
       .then(function (res) {
         return res.text().then(function (text) {
@@ -73,19 +75,22 @@
         payload.node.innerHTML = payload.text;
         runScripts(payload.node);
 
+        payload.node.setAttribute("data-include-loaded", "1");
+        payload.node.removeAttribute("data-include-loading");
+
         return { key: payload.key, node: payload.node };
+      })
+      .catch(function (err) {
+        node.removeAttribute("data-include-loading");
+        throw err;
       });
   }
 
   function loadIncludes() {
     var nodes = Array.prototype.slice.call(
-      document.querySelectorAll('[data-include]:not([data-include-loaded="1"])')
+      document.querySelectorAll('[data-include]:not([data-include-loaded="1"]):not([data-include-loading="1"])')
     );
     if (!nodes.length) return Promise.resolve([]);
-
-    nodes.forEach(function (n) {
-      n.setAttribute("data-include-loaded", "1");
-    });
 
     return Promise.all(
       nodes.map(function (node) {
