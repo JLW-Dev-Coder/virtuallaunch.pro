@@ -10,7 +10,7 @@
 
     var s = document.createElement("script");
     s.type = "module";
-    s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc@0.8.11/dist/dotlottie-wc.js";
+    s.src = "https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js";
     document.head.appendChild(s);
   }
 
@@ -96,7 +96,6 @@
       })
     ).then(function (results) {
       var ok = results.filter(Boolean);
-
       return loadIncludes().then(function (next) {
         return ok.concat(next);
       });
