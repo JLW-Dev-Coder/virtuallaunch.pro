@@ -89,7 +89,7 @@
   </div>
 </footer>
 
-<!-- START: LenBot Footer CTA (Canva look + Lottie) -->
+<!-- START: LenBot ChatBot Dock (Canva look + Lottie) -->
 <script type="module">
   (function () {
     if (customElements.get("dotlottie-wc")) return;
@@ -100,72 +100,67 @@
   })();
 </script>
 
-<section class="border-t border-white/10">
-  <div class="mx-auto max-w-6-5xl px-4 py-12">
-    <div class="vlp-lenbot-canva">
-      <div class="vlp-lenbot-canva__accent"></div>
-
-      <div class="vlp-lenbot-canva__wrap">
-        <div class="vlp-lenbot-canva__avatar">
-          <div class="vlp-lenbot-canva__glow" aria-hidden="true">
-            <div class="vlp-lenbot-canva__float">
-              <dotlottie-wc
-                src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
-                autoplay
-                loop
-                style="display:block;width:160px;height:160px"
-                aria-hidden="true"
-              ></dotlottie-wc>
-            </div>
-          </div>
-        </div>
-
-        <div class="vlp-lenbot-canva__copy">
-          <h3 class="vlp-lenbot-canva__title">LenBot is here</h3>
-
-          <p class="vlp-lenbot-canva__text">
-            I help visitors figure out which Virtual Launch Pro install to start with, how setup works, and whether this is the right fit for their business.
-          </p>
-
-          <p class="vlp-lenbot-canva__note">
-            Click the button below to open me in a new page.
-          </p>
-
-          <a
-            class="vlp-lenbot-canva__btn"
-            href="https://get-started-virtual-launch-pro.zapier.app/chat"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open LenBot
-            <svg class="vlp-lenbot-canva__btn-ico" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
-          </a>
+<div class="vlp-lenbot-canva" role="complementary" aria-label="LenBot chat assistant">
+  <div class="vlp-lenbot-canva__wrap">
+    <div class="vlp-lenbot-canva__avatar">
+      <div class="vlp-lenbot-canva__glow" aria-hidden="true">
+        <div class="vlp-lenbot-canva__float">
+          <dotlottie-wc
+            src="https://lottie.host/9f523067-3718-408e-9786-a5c0592f9dca/VirT6wayHa.lottie"
+            autoplay
+            loop
+            style="display:block;width:160px;height:160px"
+            aria-hidden="true"
+          ></dotlottie-wc>
         </div>
       </div>
     </div>
+
+    <div class="vlp-lenbot-canva__copy">
+      <h3 class="vlp-lenbot-canva__title">LenBot is here</h3>
+
+      <p class="vlp-lenbot-canva__text">
+        I help visitors figure out which Virtual Launch Pro install to start with, how setup works, and whether this is the right fit for their business.
+      </p>
+
+      <p class="vlp-lenbot-canva__note">
+        Click the button below to open me in a new page.
+      </p>
+
+      <a
+        class="vlp-lenbot-canva__btn"
+        href="https://get-started-virtual-launch-pro.zapier.app/chat"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open LenBot
+        <svg class="vlp-lenbot-canva__btn-ico" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 6H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4M14 4h6m0 0v6m0-6L10 14"
+          />
+        </svg>
+      </a>
+    </div>
   </div>
-</section>
+</div>
 
 <style>
 .vlp-lenbot-canva {
+  backdrop-filter: blur(10px);
   background: linear-gradient(180deg, rgba(20,20,22,0.85) 0%, rgba(10,10,11,0.65) 100%);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 18px;
+  bottom: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  left: 20px;
+  max-width: 900px;
   padding: 22px;
-}
-
-.vlp-lenbot-canva__accent {
-  background: linear-gradient(90deg, rgba(249,115,22,1), transparent);
-  border-radius: 9999px;
-  height: 2px;
-  width: 64px;
+  position: fixed;
+  width: min(900px, calc(100vw - 40px));
+  z-index: 9999;
 }
 
 .vlp-lenbot-canva__avatar {
@@ -184,6 +179,7 @@
   font-weight: 800;
   gap: 10px;
   justify-content: center;
+  margin-top: 15px;
   padding: 12px 16px;
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease;
@@ -272,10 +268,13 @@
   display: grid;
   gap: 18px;
   grid-template-columns: 1fr;
-  margin-top: 16px;
 }
 
 @media (min-width: 640px) {
+  .vlp-lenbot-canva__avatar {
+    justify-content: flex-start;
+  }
+
   .vlp-lenbot-canva__btn {
     width: auto;
   }
@@ -284,13 +283,17 @@
     text-align: left;
   }
 
-  .vlp-lenbot-canva__avatar {
-    justify-content: flex-start;
-  }
-
   .vlp-lenbot-canva__wrap {
     gap: 22px;
     grid-template-columns: 220px 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .vlp-lenbot-canva {
+    bottom: 12px;
+    left: 12px;
+    width: calc(100vw - 24px);
   }
 }
 </style>
@@ -299,4 +302,4 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 </script>
-<!-- END: LenBot Footer CTA (Canva look + Lottie) -->
+<!-- END: LenBot ChatBot Dock (Canva look + Lottie) -->
