@@ -92,6 +92,13 @@
     opacity: 0.95;
   }
 
+  .vlp-lenbot-canva__icon {
+    display: block;
+    fill: currentColor;
+    height: 16px;
+    width: 16px;
+  }
+
   .vlp-lenbot-canva__close {
     align-items: center;
     background: rgba(255,255,255,0.08);
@@ -108,7 +115,7 @@
     right: 10px;
     top: 10px;
     width: 36px;
-    z-index: 5; /* FIX: ensure close button renders above card */
+    z-index: 5;
   }
 
   .vlp-lenbot-canva__close:hover {
@@ -171,6 +178,16 @@
         rel="noopener noreferrer"
       >
         Open LenBot
+        <svg
+          class="vlp-lenbot-canva__icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3z"/>
+          <path d="M5 5h6v2H7v10h10v-4h2v6H5z"/>
+        </svg>
       </a>
     </div>
   </div>
