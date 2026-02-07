@@ -595,4 +595,24 @@
   });
 })();
 </script>
+
+<script>
+(function () {
+  var dock = document.querySelector(".vlp-lenbot-canva");
+  var closeBtn = document.querySelector(".vlp-lenbot-canva__close");
+  if (!dock || !closeBtn) return;
+
+  function closeDock(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    dock.style.display = "none";
+  }
+
+  closeBtn.addEventListener("pointerup", closeDock, { passive: false });
+  closeBtn.addEventListener("click", closeDock, { passive: false });
+})();
+</script>
+
 <!-- END: LenBot ChatBot Dock (Canva look + Lottie) -->
