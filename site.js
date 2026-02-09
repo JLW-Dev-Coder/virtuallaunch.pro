@@ -72,6 +72,16 @@
         if (!payload.ok) throw new Error("Include failed: " + payload.url);
         if (looksLikeFullDocument(payload.text)) throw new Error("Include blocked (got full document): " + payload.url);
 
+        if (payload.key === "lenbot") {
+          var existingDock = document.querySelector(".vlp-lenbot-canva");
+          if (existingDock && !payload.node.contains(existingDock)) {
+            payload.node.innerHTML = "";
+            payload.node.setAttribute("data-include-loaded", "1");
+            payload.node.removeAttribute("data-include-loading");
+            return { key: payload.key, node: payload.node };
+          }
+        }
+
         payload.node.innerHTML = payload.text;
         runScripts(payload.node);
 
