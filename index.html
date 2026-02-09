@@ -1,4 +1,4 @@
-<!-- /index.html -->
+<!-- /index.html (v2 — adds Starter / Pro / Advanced + Pricing section) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -121,9 +121,20 @@
         Install once. Sell service. Deliver calmly. Repeat.
       </h1>
 
-      <div class="mt-10 flex justify-center">
+      <div class="mt-6 mx-auto max-w-3xl text-center text-base text-white/70 md:text-lg">
+        A clean client journey, a controlled scope, and an internal system that doesn’t break when you’re trying to scale.
+      </div>
+
+      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
         <a
           class="rounded-xl bg-brand-500 px-7 py-3.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
+          href="#pricing"
+          rel="noopener"
+        >
+          View packages
+        </a>
+        <a
+          class="rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10"
           href="/installs.html"
           rel="noopener"
         >
@@ -233,7 +244,7 @@
             <ul class="mt-4 space-y-3 text-sm text-white/70">
               <li class="flex items-start gap-3">
                 <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Intake, files, messages, and payments live in one clean portal.</span>
+                <span>Intake, files, messages, and payments live in one calm workflow.</span>
               </li>
               <li class="flex items-start gap-3">
                 <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
@@ -267,11 +278,122 @@
         <div class="mt-12 flex justify-center">
           <a
             class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-            href="/signup.html"
+            href="#pricing"
             rel="noopener"
           >
-            Get a Free Account — No Credit Card Required
+            See packages &amp; pricing
           </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING (NEW) -->
+    <section id="pricing" class="border-t border-white/10">
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
+          <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the install that fits your stage</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
+            Every package gives you a predictable client journey and an internal delivery system.
+            You keep control of scope, status, and next steps.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-3">
+          <!-- Starter -->
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-extrabold">Starter</div>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for solo</span>
+            </div>
+
+            <div class="mt-4">
+              <div class="text-4xl font-extrabold">$497</div>
+              <div class="mt-2 text-sm text-white/70">One-time install</div>
+            </div>
+
+            <p class="mt-5 text-sm text-white/70">
+              A clean intake-to-delivery path with links instead of logins. Quick to ship. Easy to operate.
+            </p>
+
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp: lists, statuses, and core custom fields installed</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Intake link: form → creates task</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Payment link: checkout → updates status</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status link: read-only progress view</span></li>
+            </ul>
+
+            <div class="mt-8 flex gap-3">
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html">Get started</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="/installs.html">Details</a>
+            </div>
+          </div>
+
+          <!-- Pro -->
+          <div class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft">
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-extrabold">Pro</div>
+              <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
+            </div>
+
+            <div class="mt-4">
+              <div class="text-4xl font-extrabold">$1,497</div>
+              <div class="mt-2 text-sm text-white/70">One-time install</div>
+            </div>
+
+            <p class="mt-5 text-sm text-white/70">
+              Full lifecycle execution with templates, routing, and the minimum automation kernel that protects revenue.
+            </p>
+
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp: task templates and checklists for your phases</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Delivery confirmation: status → confirmation sent</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Upload link: file request → marks assets received</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Workflow rules: lifecycle states locked and enforced</span></li>
+            </ul>
+
+            <div class="mt-8 flex gap-3">
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html">Start Pro</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="/installs.html">Details</a>
+            </div>
+          </div>
+
+          <!-- Advanced -->
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-extrabold">Advanced</div>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For teams</span>
+            </div>
+
+            <div class="mt-4">
+              <div class="text-4xl font-extrabold">$3,497</div>
+              <div class="mt-2 text-sm text-white/70">One-time install</div>
+            </div>
+
+            <p class="mt-5 text-sm text-white/70">
+              Adds multi-offer routing, templated documents, and deeper automation so delivery stays stable under volume.
+            </p>
+
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Documents: agreement and report templates with PDF output</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Multi-offer routing: intake answers → correct pipeline</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Role mapping: coordinator and assignee logic</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status surface: client-ready progress page with labels</span></li>
+            </ul>
+
+            <div class="mt-8 flex gap-3">
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html">Start Advanced</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="/installs.html">Details</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10 mx-auto max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white/70 shadow-soft">
+          <div class="font-semibold text-white">What you keep</div>
+          <div class="mt-2">
+            Your ClickUp workspace stays yours. Your links stay yours. Your process stays yours.
+            If you stop, you still keep what was installed.
+          </div>
         </div>
       </div>
     </section>
@@ -401,10 +523,10 @@
         <div class="mt-14 flex justify-center">
           <a
             class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-            href="/signup.html"
+            href="#pricing"
             rel="noopener"
           >
-            Get a Free Account — No Credit Card Required
+            Choose a package
           </a>
         </div>
       </div>
@@ -612,11 +734,11 @@
 
           <details class="group rounded-2xl border border-white/10 bg-white/5 p-5 shadow-soft">
             <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">
-              Can I cancel anytime?
+              Do clients need to log in?
               <span class="ml-4 text-white/60 group-open:rotate-180 transition-transform">▾</span>
             </summary>
             <p class="mt-3 text-sm text-white/70">
-              Yes. If you’re on a plan, you can cancel. If you purchased an install, you keep what was delivered.
+              No. Clients use simple links for intake, payment, uploads, and status. Your delivery system stays internal and stable.
             </p>
           </details>
 
@@ -699,7 +821,7 @@
 
   <div data-include="footer"></div>
 
-  <!-- NEW: load LenBot partial on index too -->
+  <!-- load LenBot partial on index too -->
   <div data-include="lenbot"></div>
 
   <script>
