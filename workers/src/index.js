@@ -182,18 +182,15 @@ function json(data, status = 200) {
 async function handleCheckoutSessionCompleted({ env, evt }) {
   const o = evt?.data?.object;
 
-  const customerId = o?.customer;
+  // Contract-mapped fields (README)
   const sessionId = o?.id;
   const paymentIntentId = o?.payment_intent;
   const paymentLink = o?.payment_link;
   const paymentStatus = o?.status;
-  const primaryEmail = o?.customer_details?.email;
   const fullName = o?.customer_details?.name;
+  const primaryEmail = o?.customer_details?.email;
 
-  // Contract (README): payment_intent is the canonical correlation key across all Stripe events.
-  // Canonical accountId rule: acct_pi_{paymentIntentId}
-  // We do NOT use data.object.customer.
-
+  // Canonical identity rule (README): payment_intent is the correlation key.
   const normalizedPaymentIntentId =
     typeof paymentIntentId === "string"
       ? paymentIntentId
@@ -201,8 +198,8 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
       ? paymentIntentId.id
       : null;
 
+  // Receipt was already stored upstream. Never 400 here.
   if (!normalizedPaymentIntentId) {
-    // Receipt already stored upstream. Do not 400 here.
     return json(
       {
         ok: true,
@@ -219,6 +216,7 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   const accountKey = `accounts/${accountId}.json`;
   const now = new Date().toISOString();
 
+  // Load existing (if present)
   const existing = await env.R2_VIRTUAL_LAUNCH.get(accountKey);
   let account = null;
   if (existing) {
@@ -232,15 +230,15 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   const createdAt =
     account?.createdAt && typeof account.createdAt === "string" ? account.createdAt : now;
 
+  // Canonical account object (v1)
   const nextAccount = {
     accountId,
     createdAt,
     fullName: fullName || account?.fullName || null,
     primaryEmail: primaryEmail || account?.primaryEmail || null,
     stripe: {
-      customerId: normalizedCustomerId,
       eventId: evt.id,
-      paymentIntentId: normalizedPaymentIntentId || account?.stripe?.paymentIntentId || null,
+      paymentIntentId: normalizedPaymentIntentId,
       paymentLink: paymentLink || account?.stripe?.paymentLink || null,
       paymentStatus: paymentStatus || account?.stripe?.paymentStatus || null,
       receiptUrl: account?.stripe?.receiptUrl || null,
@@ -250,14 +248,16 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
       active: true,
       activatedAt: account?.subscription?.activatedAt || now,
     },
+    clickup: account?.clickup || null,
   };
 
+  // Write canonical account
   await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
 
+  // Stripe Correlation Index (paymentIntentId → accountId) v1
   const indexKey = `stripe/payment-intents/${normalizedPaymentIntentId}.json`;
-
   const indexObj = {
     accountId,
     createdAt: now,
@@ -274,8 +274,6 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     try {
       await projectAccountToClickUp({ env, accountKey, account: nextAccount });
     } catch (err) {
-      // Never fail the webhook after canonical write.
-      // Stripe expects 2xx; projection is optional.
       return json(
         {
           ok: true,
