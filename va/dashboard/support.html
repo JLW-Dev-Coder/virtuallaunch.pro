@@ -33,6 +33,23 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
+      /* Uniform custom select styling */
+      select.input-field {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23fb923c' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 7 10 13 15 7'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.25rem;
+        padding-right: 3rem;
+        cursor: pointer;
+      }
+
+      select.input-field:focus {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23f97316' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 7 10 13 15 7'/%3E%3C/svg%3E");
+      }
+
       .input-field:focus {
         transform: translateY(-1px);
       }
@@ -126,10 +143,6 @@
         <div class="max-w-7xl mx-auto">
           <!-- Hero -->
           <section class="text-center mb-10">
-            <div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-5 bg-orange-500/10 border border-orange-500/30 text-orange-200">
-              <span class="w-2 h-2 rounded-full bg-orange-400"></span>
-              Support
-            </div>
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">We’re Here to Help</h1>
             <p class="text-slate-400 max-w-2xl mx-auto">
               Choose your preferred way to reach us. Live calls are fastest. Tickets get a Support ID and a response within 24 hours.
