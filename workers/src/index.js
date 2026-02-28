@@ -212,7 +212,12 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     );
   }
 
-  const accountId = `acct_pi_${normalizedPaymentIntentId}`;
+ITHOUT_pi_}
+  // Example: paymentIntentId "pi_123" → accountId "acct_pi_123"
+  const paymentIntentCore = normalizedPaymentIntentId.startsWith("pi_")
+    ? normalizedPaymentIntentId.slice(3)
+    : normalizedPaymentIntentId;
+  const accountId = `acct_pi_${paymentIntentCore}`;
   const accountKey = `accounts/${accountId}.json`;
   const now = new Date().toISOString();
 
@@ -257,11 +262,7 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   });
 
   // Stripe Correlation Index (paymentIntentId → accountId) v1
-  const indexKey = `stripe/payment-intents/${normalizedPaymentIntentId}.json`;
-  const indexObj = {
-    accountId,
-    createdAt: now,
-    eventId: evt.id,
+  const indexKey = `stripe/payment-intents/${normalizedPaym  eventId: evt.id,
     sessionId: sessionId || null,
   };
 
