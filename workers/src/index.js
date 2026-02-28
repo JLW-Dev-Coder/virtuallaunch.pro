@@ -419,53 +419,118 @@ async function handleChargeSucceeded({ env, evt, eventId }) {
   return json({ ok: true, accountId, eventId: evt.id, eventType: evt.type }, 200);
 }
 
-async function projectAccountToClickUp({ env, account, accountKey }) {
-  // Projection is optional and gated.
-  if (env.CLICKUP_PROJECTION_ENABLED !== "true") return;
+async function projectAccountToClickUp({ env, accountKey, account }) {
+  if (!env.CLICKUP_API_KEY) throw new Error("Missing CLICKUP_API_KEY");
+  if (!env.CLICKUP_ACCOUNTS_LIST_ID) throw new Error("Missing CLICKUP_ACCOUNTS_LIST_ID");
 
-  // Hard dependencies (skip quietly if unset to avoid breaking webhooks).
-  if (!env.CLICKUP_ACCOUNTS_LIST_ID) return;
-  if (!env.CLICKUP_API_KEY) return;
+  // README contract: Accounts list statuses include "active".
+  // Task Name: Client Full Name | VA Starter Track
+  const taskName = `${(account?.fullName || "Unknown Client").trim()} | VA Starter Track`;
 
-  const taskName = `${account.fullName || account.primaryEmail || account.accountId} | VA Starter Track`;
-  const description = JSON.stringify(account, null, 2);
+  // Custom Fields (Authoritative Set) — Account fields (Alphabetical)
+  const CF = {
+    accountCompanyName: "059a571b-aa5d-41b4-ae12-3681b451b474",
+    accountEventId: "33ea9fbb-0743-483a-91e4-450ce3bfb0a7",
+    accountFullName: "b65231cc-4a10-4a38-9d90-1f1c167a4060",
+    accountId: "e5f176ba-82c8-47d8-b3b1-0716d075f43f",
+    accountPrimaryEmail: "a105f99e-b33d-4d12-bb24-f7c827ec761a",
+    accountSupportStatus: "bbdf5418-8be0-452d-8bd0-b9f46643375e",
+    accountSupportTaskLink: "9e14a458-96fd-4109-a276-034d8270e15b",
+    stripePaymentIntentId: "6fc65cba-9060-4d70-ab36-02b239dd4718",
+    stripePaymentStatus: "1b9a762e-cf3e-47d7-8ae7-98efe9e11eab",
+    stripeReceiptUrl: "f8cb77f1-26b3-4788-83ed-2914bb608c11",
+    stripeSessionId: "57e6c42b-a471-4316-92dc-23ce0f59d8b4",
+  };
 
-  // Option A: store clickup taskId in canonical after first create.
+  // ClickUp expects null values to be omitted for some field types.
+  // Keep payload minimal and deterministic.
+  const custom_fields = [];
+
+  // Account fields
+  custom_fields.push({ id: CF.accountFullName, value: account?.fullName || "" });
+  custom_fields.push({ id: CF.accountId, value: account?.accountId || "" });
+
+  if (account?.primaryEmail) custom_fields.push({ id: CF.accountPrimaryEmail, value: account.primaryEmail });
+  if (account?.companyName) custom_fields.push({ id: CF.accountCompanyName, value: account.companyName });
+
+  // Stripe fields
+  if (account?.stripe?.eventId) custom_fields.push({ id: CF.accountEventId, value: account.stripe.eventId });
+  if (account?.stripe?.sessionId) custom_fields.push({ id: CF.stripeSessionId, value: account.stripe.sessionId });
+  if (account?.stripe?.paymentIntentId) custom_fields.push({ id: CF.stripePaymentIntentId, value: account.stripe.paymentIntentId });
+  if (account?.stripe?.paymentStatus) custom_fields.push({ id: CF.stripePaymentStatus, value: account.stripe.paymentStatus });
+  if (account?.stripe?.receiptUrl) custom_fields.push({ id: CF.stripeReceiptUrl, value: account.stripe.receiptUrl });
+
+  const clickupPayload = {
+    name: taskName,
+    status: "active",
+    description: JSON.stringify(account, null, 2),
+    custom_fields,
+  };
+
   const existingTaskId = account?.clickup?.taskId;
 
-  if (existingTaskId) {
-    await clickupFetch(env, `/task/${existingTaskId}`, {
+  let taskId = null;
+  if (existingTaskId && typeof existingTaskId === "string") {
+    // Update existing task
+    await clickupFetch({
+      env,
       method: "PUT",
-      body: JSON.stringify({
-        description,
-        name: taskName,
-      }),
+      path: `/task/${existingTaskId}`,
+      body: clickupPayload,
     });
-
-    return;
+    taskId = existingTaskId;
+  } else {
+    // Create new task
+    const created = await clickupFetch({
+      env,
+      method: "POST",
+      path: `/list/${env.CLICKUP_ACCOUNTS_LIST_ID}/task`,
+      body: clickupPayload,
+    });
+    taskId = created?.id || null;
+    if (!taskId) throw new Error("ClickUp create task did not return id");
   }
 
-  const created = await clickupFetch(env, `/list/${env.CLICKUP_ACCOUNTS_LIST_ID}/task`, {
-    method: "POST",
-    body: JSON.stringify({
-      description,
-      name: taskName,
-    }),
-  });
-
-  const taskId = created?.id;
-  if (!taskId) return;
-
-  const updatedCanonical = {
+  // Persist projection pointer back into canonical (R2 is authority)
+  const nextAccount = {
     ...account,
     clickup: {
+      ...(account?.clickup || {}),
       taskId,
+      updatedAt: new Date().toISOString(),
     },
   };
 
-  await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(updatedCanonical, null, 2), {
+  await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
+
+  return { ok: true, taskId };
+}
+
+async function clickupFetch({ env, method, path, body }) {
+  const res = await fetch(`https://api.clickup.com/api/v2${path}`, {
+    method,
+    headers: {
+      Authorization: env.CLICKUP_API_KEY,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+
+  const text = await res.text();
+  let jsonBody = null;
+  try {
+    jsonBody = text ? JSON.parse(text) : null;
+  } catch {
+    jsonBody = { raw: text };
+  }
+
+  if (!res.ok) {
+    throw new Error(`ClickUp ${method} ${path} failed: ${res.status} ${JSON.stringify(jsonBody)}`);
+  }
+
+  return jsonBody;
 }
 
 async function clickupFetch(env, path, options = {}) {
