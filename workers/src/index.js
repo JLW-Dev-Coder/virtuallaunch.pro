@@ -104,3 +104,30 @@ function json(data, status = 200) {
     }
   });
 }
+
+/**
+ * ------------------------------------------------------------
+ * Method Guard (Read-Only Phase)
+ * ------------------------------------------------------------
+ * This Worker is currently in read-only mode.
+ *
+ * - Only GET requests are allowed.
+ * - All non-GET methods (POST, PUT, DELETE, etc.) are rejected.
+ *
+ * Purpose:
+ * - Prevent accidental state mutations.
+ * - Prevent form submissions from hitting unimplemented routes.
+ * - Enforce deny-by-default API design.
+ *
+ * This guard will be relaxed once explicit POST contract endpoints
+ * are implemented (receipt → canonical → projection order).
+ */
+if (request.method !== "GET") {
+  return json(
+    {
+      error: "Method not allowed",
+      method: request.method
+    },
+    405
+  );
+}
