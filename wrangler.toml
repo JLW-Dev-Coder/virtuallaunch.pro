@@ -7,7 +7,7 @@ binding = "R2_VIRTUAL_LAUNCH"
 bucket_name = "virtuallaunch-pro"
 
 [vars]
-CLICKUP_ACCOUNTS_LIST_ID = "901710818340"
+CLICKUP_ACCOUNTS_LIST_ID = "901711473499"
 CLICKUP_PROJECTION_ENABLED = "true"
 
 [observability.logs]
