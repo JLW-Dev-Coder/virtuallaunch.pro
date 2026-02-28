@@ -533,23 +533,6 @@ async function clickupFetch({ env, method, path, body }) {
   return jsonBody;
 }
 
-async function clickupFetch(env, path, options = {}) {
-  const res = await fetch(`https://api.clickup.com/api/v2${path}`, {
-    ...options,
-    headers: {
-      Authorization: env.CLICKUP_API_KEY,
-      "content-type": "application/json",
-      ...(options.headers || {}),
-    },
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`ClickUp API error ${res.status}: ${text}`);
-  }
-
-  return res.json();
-}
 
 async function verifyStripeSignature({ rawBody, secret, signatureHeader, toleranceSeconds }) {
   const parts = parseStripeSignatureHeader(signatureHeader);
