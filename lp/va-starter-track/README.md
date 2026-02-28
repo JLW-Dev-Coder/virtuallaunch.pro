@@ -75,6 +75,13 @@ ClickUp is projection only. R2 is the only authority.
 
 All tasks link to the account via the **Account ID** custom field.
 
+* Task Names: 
+Account List:
+Client Full Name | VA Starter Track
+
+Support List:
+Client Full Name | Support Type | 
+
 Endpoint:
 
 ```
@@ -101,6 +108,194 @@ Canonical → projection mapping:
 * Stripe Payment Status — `1b9a762e-cf3e-47d7-8ae7-98efe9e11eab`
 * Stripe Receipt URL — `f8cb77f1-26b3-4788-83ed-2914bb608c11`
 * Stripe Session ID — `57e6c42b-a471-4316-92dc-23ce0f59d8b4`
+
+      "id": "aac0816d-0e05-4c57-8196-6098929f35ac",
+      "name": "Support Action Required",
+      "type": "drop_down",
+      "type_config": {
+        "sorting": "manual",
+        "new_drop_down": true,
+        "options": [
+          {
+            "id": "165c6aac-bb5a-420c-a64b-bca47b769e21",
+            "name": "Acknowledge",
+            "color": "#E65100",
+            "orderindex": 0
+          },
+          {
+            "id": "a233b302-7779-4136-bb37-eff6cd5e41cc",
+            "name": "Triage",
+            "color": "#1bbc9c",
+            "orderindex": 1
+          },
+          {
+            "id": "8c45bf38-2cc7-45bc-9c48-9dae275938a3",
+            "name": "Resolve",
+            "color": "#b5bcc2",
+            "orderindex": 2
+          },
+          {
+            "id": "dc9e42fb-a1ef-4b3e-a037-cc5b41d33209",
+            "name": "Close",
+            "color": "#EA80FC",
+            "orderindex": 3
+          }
+        ]
+      },
+
+    },
+    {
+      "id": "b96403c7-028a-48eb-b6b1-349f295244b5",
+      "name": "Support Priority",
+      "type": "drop_down",
+      "type_config": {
+        "sorting": "manual",
+        "new_drop_down": true,
+        "options": [
+          {
+            "id": "fe8469b4-0ee1-4fa0-993d-bc9458f1ab6d",
+            "name": "🟦 Low — As Scheduled",
+            "color": "#0091ff",
+            "orderindex": 0
+          },
+          {
+            "id": "ea5fda7f-7c60-4e72-9034-0434836950a2",
+            "name": "🟨 Normal — 3–5 Days",
+            "color": "#ffc53d",
+            "orderindex": 1
+          },
+          {
+            "id": "8f155d97-8512-489f-88c6-77973e76e3c8",
+            "name": "🟧 High — 48 Hours",
+            "color": "#f76808",
+            "orderindex": 2
+          },
+          {
+            "id": "c8862a36-00cd-41b2-94be-22120bfe2f0b",
+            "name": "🟥 Critical — Today",
+            "color": "#e5484d",
+            "orderindex": 3
+          }
+        ]
+
+    {
+      "id": "e09d9f53-4f03-49fe-8c5f-abe3b160b167",
+      "name": "Support Type",
+      "type": "drop_down",
+      "type_config": {
+        "sorting": "manual",
+        "new_drop_down": true,
+        "options": [
+          {
+            "id": "5f847513-d4dd-4e45-af47-b229dbfbbb8f",
+            "name": "Appt - Demo",
+            "color": "#b5bcc2",
+            "orderindex": 0
+          },
+          {
+            "id": "a8d9484d-df52-42fa-a2c8-e4df801e398e",
+            "name": "Appt - Exit / Offboarding",
+            "color": "#04A9F4",
+            "orderindex": 1
+          },
+          {
+            "id": "75f47f09-fa16-40d4-9be3-583102361799",
+            "name": "Appt - Intro",
+            "color": "#3397dd",
+            "orderindex": 2
+          },
+          {
+            "id": "6ac3e8dc-ca14-4c84-b4da-a8fbefa6ad13",
+            "name": "Appt - Onboarding",
+            "color": "#3397dd",
+            "orderindex": 3
+          },
+          {
+            "id": "27d991dd-a5ee-4713-a844-ddc53650756b",
+            "name": "Appt - Support",
+            "color": "#3082B7",
+            "orderindex": 4
+          },
+          {
+            "id": "b3ae14e7-981d-4756-a14f-7d9a901392d0",
+            "name": "Ticket - Intake",
+            "color": "#e50000",
+            "orderindex": 5
+          },
+          {
+            "id": "fcd840f5-2a38-43db-92c9-611403fa90f6",
+            "name": "Ticket - Offer",
+            "color": "#bf55ec",
+            "orderindex": 6
+          },
+          {
+            "id": "f5e26bdf-adb1-4ad4-a9f7-97f63a6d2977",
+            "name": "Ticket - Agreement",
+            "color": "#800000",
+            "orderindex": 7
+          },
+          {
+            "id": "27f0a9ac-ba0f-4d04-bb02-0a90acdadfac",
+            "name": "Ticket - Payment",
+            "color": "#667684",
+            "orderindex": 8
+          },
+          {
+            "id": "349565f0-90d8-4c35-be41-62cd33ef3398",
+            "name": "Ticket - Welcome",
+            "color": "#FF4081",
+            "orderindex": 9
+          },
+          {
+            "id": "75ec9e09-bb75-4f4a-bc24-35c7da294c26",
+            "name": "Ticket - Filing Status",
+            "color": "#bf55ec",
+            "orderindex": 10
+          },
+          {
+            "id": "360e0d08-ae19-4a08-a7bf-08ac4579f7e2",
+            "name": "Ticket - Address Update",
+            "color": "#b5bcc2",
+            "orderindex": 11
+          },
+          {
+            "id": "ee2d7f9f-e102-4d91-9afa-431361d6bdcf",
+            "name": "Ticket - Esign 2848",
+            "color": "#b5bcc2",
+            "orderindex": 12
+          },
+          {
+            "id": "6aa21211-7691-42fc-9feb-b624f634f8a3",
+            "name": "Ticket - Wet Sign 2848",
+            "color": "#7C4DFF",
+            "orderindex": 13
+          },
+          {
+            "id": "789e2a6b-0c5c-4b3c-8b65-851d4eb4d798",
+            "name": "Ticket - Compliance Report",
+            "color": "#b5bcc2",
+            "orderindex": 14
+          },
+          {
+            "id": "231f2d26-3bad-4c35-b8e4-a8b126415751",
+            "name": "Ticket - Client Exit Survey",
+            "color": "#02BCD4",
+            "orderindex": 15
+          },
+          {
+            "id": "84c7bb75-1f12-48b2-82d5-6b4f76db62a7",
+            "name": "Ticket - VA Landing Page Setup",
+            "color": "#b6b6ff",
+            "orderindex": 16
+          }
+        ]
+      },
+      "date_created": "1770919632977",
+      "hide_from_guests": false,
+      "required": false
+    }
+  ]
+}
 
 ### Support fields (Alphabetical)
 
