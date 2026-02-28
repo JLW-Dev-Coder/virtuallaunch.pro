@@ -1,4 +1,4 @@
-<!-- /va/dashboard/support.html -->
+<!-- contact.html -->
 <!doctype html>
 <html lang="en" class="h-full">
   <head>
@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contact Support — Transcript.Tax Monitor Pro</title>
 
-    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
 
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="/_sdk/element_sdk.js"></script>
@@ -115,7 +117,15 @@
     <div id="app" class="min-h-screen flex flex-col w-full">
       <!-- PARTIAL:header -->
 
-      <main class="flex-1 w-full p-6 md:p-8">
+      <div class="flex w-full flex-1">
+        <aside class="hidden md:block w-72 shrink-0">
+          <!-- PARTIAL:sidebar -->
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0">
+          <!-- PARTIAL:topbar -->
+
+          <main class="flex-1 w-full p-6 md:p-8">
         <div class="max-w-7xl mx-auto">
           <!-- Hero -->
           <section class="text-center mb-10">
@@ -485,7 +495,9 @@
             </div>
           </section>
         </div>
-      </main>
+          </main>
+        </div>
+      </div>
 
       <!-- PARTIAL:footer -->
     </div>
