@@ -4,11 +4,16 @@ import path from "node:path";
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
 
-const COPY_DIRS = ["_sdk", "assets", "legal", "magnets", "scripts", "styles"];
+const SKIP_DIRS = new Set([".git", "dist", "node_modules", "partials"]);
 const PARTIALS_DIR = path.join(ROOT, "partials");
 
 async function exists(p) {
-  try { await fs.access(p); return true; } catch { return false; }
+  try {
+    await fs.access(p);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function ensureDir(dir) {
@@ -19,17 +24,49 @@ async function rmDir(dir) {
   if (await exists(dir)) await fs.rm(dir, { recursive: true, force: true });
 }
 
-async function copyDir(src, dest) {
-  if (!(await exists(src))) return;
-  await ensureDir(dest);
+async function readText(p) {
+  return await fs.readFile(p, "utf8");
+}
 
-  const entries = await fs.readdir(src, { withFileTypes: true });
-  for (const e of entries) {
-    const s = path.join(src, e.name);
-    const d = path.join(dest, e.name);
-    if (e.isDirectory()) await copyDir(s, d);
-    else await fs.copyFile(s, d);
+async function writeText(p, content) {
+  await ensureDir(path.dirname(p));
+  await fs.writeFile(p, content, "utf8");
+}
+
+async function copyFile(src, dest) {
+  await ensureDir(path.dirname(dest));
+  await fs.copyFile(src, dest);
+}
+
+async function copyDir(srcDir, destDir) {
+  if (!(await exists(srcDir))) return;
+  await ensureDir(destDir);
+
+  const entries = await fs.readdir(srcDir, { withFileTypes: true });
+  for (const ent of entries) {
+    const src = path.join(srcDir, ent.name);
+    const dest = path.join(destDir, ent.name);
+
+    if (ent.isDirectory()) {
+      await copyDir(src, dest);
+      continue;
+    }
+    await copyFile(src, dest);
   }
+}
+
+async function walk(dir) {
+  const out = [];
+  const entries = await fs.readdir(dir, { withFileTypes: true });
+  for (const ent of entries) {
+    const full = path.join(dir, ent.name);
+    if (ent.isDirectory()) {
+      out.push(...(await walk(full)));
+    } else {
+      out.push(full);
+    }
+  }
+  return out;
 }
 
 function inject(html, header, footer) {
@@ -42,36 +79,50 @@ async function main() {
   await rmDir(DIST);
   await ensureDir(DIST);
 
-  const header = await exists(path.join(PARTIALS_DIR, "header.html"))
-    ? await fs.readFile(path.join(PARTIALS_DIR, "header.html"), "utf8")
-    : "";
+  const headerPath = path.join(PARTIALS_DIR, "header.html");
+  const footerPath = path.join(PARTIALS_DIR, "footer.html");
 
-  const footer = await exists(path.join(PARTIALS_DIR, "footer.html"))
-    ? await fs.readFile(path.join(PARTIALS_DIR, "footer.html"), "utf8")
-    : "";
+  const header = (await exists(headerPath)) ? await readText(headerPath) : "";
+  const footer = (await exists(footerPath)) ? await readText(footerPath) : "";
 
-  const files = await fs.readdir(ROOT, { withFileTypes: true });
+  // Copy root files (everything), injecting partials into html
+  const rootEntries = await fs.readdir(ROOT, { withFileTypes: true });
+  for (const ent of rootEntries) {
+    if (ent.isDirectory()) continue;
+    if (ent.name === "build.mjs") continue;
 
-  for (const f of files) {
-    if (!f.isFile() || !f.name.endsWith(".html")) continue;
+    const src = path.join(ROOT, ent.name);
+    const dest = path.join(DIST, ent.name);
 
-    const src = path.join(ROOT, f.name);
-    const dest = path.join(DIST, f.name);
-
-    let html = await fs.readFile(src, "utf8");
-    html = inject(html, header, footer);
-
-    await fs.writeFile(dest, html);
+    if (ent.name.endsWith(".html")) {
+      const html = inject(await readText(src), header, footer);
+      await writeText(dest, html);
+    } else {
+      await copyFile(src, dest);
+    }
   }
 
-  for (const dir of COPY_DIRS) {
-    await copyDir(path.join(ROOT, dir), path.join(DIST, dir));
+  // Copy all non-skipped top-level directories
+  for (const ent of rootEntries) {
+    if (!ent.isDirectory()) continue;
+    if (SKIP_DIRS.has(ent.name)) continue;
+
+    await copyDir(path.join(ROOT, ent.name), path.join(DIST, ent.name));
+  }
+
+  // Inject partials into any HTML anywhere in dist
+  const files = await walk(DIST);
+  for (const f of files) {
+    if (!f.endsWith(".html")) continue;
+    const html = await readText(f);
+    const next = inject(html, header, footer);
+    if (next !== html) await writeText(f, next);
   }
 
   console.log("build_ok");
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error("build_failed", err);
   process.exit(1);
 });
