@@ -213,7 +213,7 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   }
 
   // Canonical accountId rule: {PAYMENT_INTENT_ID_WITHOUT_pi_}
-  // Example: paymentIntentId "pi_123" → accountId "acct_pi_123"
+  // Example: paymentIntentId "pi_123" → accountId "123"
   const paymentIntentCore = normalizedPaymentIntentId.startsWith("pi_")
     ? normalizedPaymentIntentId.slice(3)
     : normalizedPaymentIntentId;
@@ -276,22 +276,24 @@ const accountId = normalizedPaymentIntentId;
   });
 
   // Optional projection (after canonical update only)
-  if (env.CLICKUP_PROJECTION_ENABLED === "true") {
+  const projectionEnabled = env.CLICKUP_PROJECTION_ENABLED === "true";
+  console.log("CLICKUP_PROJECTION_ENABLED:", env.CLICKUP_PROJECTION_ENABLED);
+
+  let projection = { enabled: projectionEnabled, attempted: false, ok: false, taskId: null, error: null };
+
+  if (projectionEnabled) {
+    projection.attempted = true;
     try {
-      await projectAccountToClickUp({ env, accountKey, account: nextAccount });
+      const r = await projectAccountToClickUp({ env, accountKey, account: nextAccount });
+      projection.ok = true;
+      projection.taskId = r?.taskId || null;
     } catch (err) {
-      return json(
-        {
-          ok: true,
-          accountId,
-          eventId: evt.id,
-          eventType: evt.type,
-          projection: { attempted: true, ok: false, error: String(err?.message || err) },
-          subscription: { active: true },
-        },
-        200
-      );
+      projection.ok = false;
+      projection.error = String(err?.message || err);
+      console.log("ClickUp projection failed:", projection.error);
     }
+  } else {
+    console.log("ClickUp projection skipped (disabled)");
   }
 
   return json(
@@ -300,6 +302,7 @@ const accountId = normalizedPaymentIntentId;
       accountId,
       eventId: evt.id,
       eventType: evt.type,
+      projection,
       subscription: { active: true },
     },
     200
@@ -426,6 +429,10 @@ async function handleChargeSucceeded({ env, evt, eventId }) {
 }
 
 async function projectAccountToClickUp({ env, accountKey, account }) {
+  console.log("Projecting to ClickUp", {
+    accountId: account?.accountId || null,
+    listId: env.CLICKUP_ACCOUNTS_LIST_ID || null,
+  });
   if (!env.CLICKUP_API_KEY) throw new Error("Missing CLICKUP_API_KEY");
   if (!env.CLICKUP_ACCOUNTS_LIST_ID) throw new Error("Missing CLICKUP_ACCOUNTS_LIST_ID");
 
