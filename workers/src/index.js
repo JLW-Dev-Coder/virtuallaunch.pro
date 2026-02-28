@@ -291,6 +291,20 @@ const accountId = normalizedPaymentIntentId;
       projection.ok = false;
       projection.error = String(err?.message || err);
       console.log("ClickUp projection failed:", projection.error);
+
+      // Persist failure details into canonical so you can see it in R2 without chasing logs.
+      const failedAccount = {
+        ...nextAccount,
+        clickup: {
+          ...(nextAccount?.clickup || {}),
+          error: projection.error,
+          updatedAt: new Date().toISOString(),
+        },
+      };
+
+      await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(failedAccount, null, 2), {
+        httpMetadata: { contentType: "application/json; charset=utf-8" },
+      });
     }
   } else {
     console.log("ClickUp projection skipped (disabled)");
