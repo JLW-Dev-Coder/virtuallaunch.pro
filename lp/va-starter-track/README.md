@@ -1068,6 +1068,8 @@ This section documents the inbound payload shapes the Worker must accept.
 
 ### Stripe
 
+*Webhook: 
+
 * charge.succeeded
 * checkout.session.completed
 * payment_intent.succeeded
