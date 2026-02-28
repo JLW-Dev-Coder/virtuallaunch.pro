@@ -1267,4 +1267,118 @@ Move hour if operationally preferred.
 
 ---
 
-Architecture locked.
+Paste this into the README (recommended section)
+Stripe Canonical Mapping v1
+
+Account identity
+
+accountId = acct_stripe_{customerId}
+
+Idempotency
+
+Receipt dedupe key: eventId
+
+Payment dedupe key: stripeSessionId (for checkout.session.completed)
+
+R2 receipt ledger
+
+receipts/stripe/{eventId}.json
+
+Canonical account object
+
+accounts/{accountId}.json
+
+Top-level keys (alphabetical):
+
+accountId
+
+createdAt
+
+primaryEmail
+
+stripe
+
+subscription
+
+stripe keys (alphabetical):
+
+customerId
+
+eventId
+
+paymentIntentId
+
+paymentLink
+
+paymentStatus
+
+receiptUrl
+
+sessionId
+
+subscription keys (alphabetical):
+
+active
+
+activatedAt
+
+Stripe event field mapping
+
+checkout.session.completed (store):
+
+eventId = id
+
+stripeSessionId = data.object.id
+
+fullName = data.object.customer_details.name
+
+primaryEmail = data.object.customer_details.email
+
+paymentStatus = data.object.status
+
+paymentLink = data.object.payment_link
+
+paymentIntentId = data.object.payment_intent
+
+customerId = data.object.customer
+
+payment_intent.succeeded (store):
+
+eventId = id
+
+paymentIntentId = data.object.id
+
+paymentStatus = data.object.status
+
+charge.succeeded (store):
+
+paymentIntentId = data.object.payment_intent
+
+receiptUrl = data.object.receipt_url
+
+paymentStatus = data.object.status
+
+That locks the fields, locks the schema, locks the identity rule, and eliminates the “pretend” problem permanently.
+---
+What to add to the README (drop-in text)
+
+Add a section under your Stripe mapping:
+
+Stripe Correlation Index (paymentIntentId → accountId) v1
+
+Purpose:
+Enable charge.succeeded and payment_intent.succeeded to resolve accountId using paymentIntentId, since those events may not include customerId.
+
+R2 key:
+
+stripe/payment-intents/{paymentIntentId}.json
+
+Created during:
+
+checkout.session.completed
+
+Used during:
+
+charge.succeeded
+
+payment_intent.succeeded
