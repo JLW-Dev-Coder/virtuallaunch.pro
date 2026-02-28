@@ -190,14 +190,32 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   const primaryEmail = o?.customer_details?.email;
   const fullName = o?.customer_details?.name;
 
-  if (!customerId || typeof customerId !== "string") {
-    return json({ error: "Missing customerId (data.object.customer) on checkout.session.completed" }, 400);
-  }
-  if (!paymentIntentId || typeof paymentIntentId !== "string") {
-    return json({ error: "Missing paymentIntentId (data.object.payment_intent) on checkout.session.completed" }, 400);
+  // Contract (README): payment_intent is the canonical correlation key across all Stripe events.
+  // Canonical accountId rule: acct_pi_{paymentIntentId}
+  // We do NOT use data.object.customer.
+
+  const normalizedPaymentIntentId =
+    typeof paymentIntentId === "string"
+      ? paymentIntentId
+      : typeof paymentIntentId?.id === "string"
+      ? paymentIntentId.id
+      : null;
+
+  if (!normalizedPaymentIntentId) {
+    // Receipt already stored upstream. Do not 400 here.
+    return json(
+      {
+        ok: true,
+        eventId: evt.id,
+        eventType: evt.type,
+        storedReceipt: true,
+        note: "checkout.session.completed missing payment_intent; canonical upsert skipped",
+      },
+      200
+    );
   }
 
-  const accountId = `acct_stripe_${customerId}`;
+  const accountId = `acct_pi_${normalizedPaymentIntentId}`;
   const accountKey = `accounts/${accountId}.json`;
   const now = new Date().toISOString();
 
@@ -220,9 +238,9 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     fullName: fullName || account?.fullName || null,
     primaryEmail: primaryEmail || account?.primaryEmail || null,
     stripe: {
-      customerId,
+      customerId: normalizedCustomerId,
       eventId: evt.id,
-      paymentIntentId: paymentIntentId || account?.stripe?.paymentIntentId || null,
+      paymentIntentId: normalizedPaymentIntentId || account?.stripe?.paymentIntentId || null,
       paymentLink: paymentLink || account?.stripe?.paymentLink || null,
       paymentStatus: paymentStatus || account?.stripe?.paymentStatus || null,
       receiptUrl: account?.stripe?.receiptUrl || null,
@@ -238,12 +256,11 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
 
-  const indexKey = `stripe/payment-intents/${paymentIntentId}.json`;
+  const indexKey = `stripe/payment-intents/${normalizedPaymentIntentId}.json`;
 
   const indexObj = {
     accountId,
     createdAt: now,
-    customerId,
     eventId: evt.id,
     sessionId: sessionId || null,
   };
