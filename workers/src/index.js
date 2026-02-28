@@ -212,12 +212,13 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     );
   }
 
-ITHOUT_pi_}
+  // Canonical accountId rule: {PAYMENT_INTENT_ID_WITHOUT_pi_}
   // Example: paymentIntentId "pi_123" → accountId "acct_pi_123"
   const paymentIntentCore = normalizedPaymentIntentId.startsWith("pi_")
     ? normalizedPaymentIntentId.slice(3)
     : normalizedPaymentIntentId;
-  const accountId = `acct_pi_${paymentIntentCore}`;
+  // Canonical accountId rule (README): use Stripe Payment Intent ID as the accountId.
+const accountId = normalizedPaymentIntentId;
   const accountKey = `accounts/${accountId}.json`;
   const now = new Date().toISOString();
 
@@ -262,7 +263,11 @@ ITHOUT_pi_}
   });
 
   // Stripe Correlation Index (paymentIntentId → accountId) v1
-  const indexKey = `stripe/payment-intents/${normalizedPaym  eventId: evt.id,
+  const indexKey = `stripe/payment-intents/${normalizedPaymentIntentId}.json`;
+  const indexObj = {
+    accountId,
+    createdAt: now,
+    eventId: evt.id,
     sessionId: sessionId || null,
   };
 
