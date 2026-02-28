@@ -1,3 +1,5 @@
+main = "workers/src/index.js"
+
 [[r2_buckets]]
 binding = "R2_VIRTUAL_LAUNCH"
 bucket_name = "R2_VIRTUAL_LAUNCH"
