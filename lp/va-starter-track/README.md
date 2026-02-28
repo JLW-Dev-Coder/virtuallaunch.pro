@@ -1390,3 +1390,111 @@ Used during:
 charge.succeeded
 
 payment_intent.succeeded
+---
+Good. You’re finally asking the right question instead of guessing.
+
+Here is the exact **drop-in README insert** that permanently answers the cookie/session question and prevents future confusion.
+
+Paste this under **“Session Model & Tokens”**.
+
+---
+
+# Dashboard Authentication (Cookie-Based Session Contract)
+
+## Canonical Authentication Mechanism (v1)
+
+Authenticated dashboard routes use a **Worker-validated session cookie**.
+
+The dashboard UI sends authenticated requests using:
+
+```
+fetch(..., { credentials: "include" })
+```
+
+This instructs the browser to include cookies for:
+
+```
+https://api.virtuallaunch.pro
+```
+
+### Therefore:
+
+Authentication for dashboard POST and GET routes is:
+
+* Cookie-based
+* Worker-validated
+* Not derived from client payload
+* Not derived from Stripe redirect
+* Not derived from hidden form inputs
+
+---
+
+## Required Cookie Properties
+
+The session cookie MUST:
+
+* Be issued only by the Worker
+* Be cryptographically signed (HMAC or JWT)
+* Map to a canonical `accountId`
+* Be short-lived
+* Be invalidated on logout
+* Be sent with `Secure`
+* Be sent with `HttpOnly`
+* Be sent with `SameSite=Lax` or `SameSite=Strict`
+
+The UI must never store:
+
+* `accountId` in hidden inputs
+* `accountId` in localStorage
+* `accountId` in querystring
+* `sessionToken` in localStorage
+
+---
+
+## Worker Validation Rules
+
+For any authenticated POST route (including `/forms/va/publish`):
+
+1. Read cookie
+2. Verify signature
+3. Resolve `accountId` from session
+4. Reject request if invalid
+5. Append receipt
+6. Mutate canonical state
+
+The Worker MUST ignore any `accountId` submitted by the client.
+
+Client-submitted identity is never trusted.
+
+---
+
+## Identity Resolution Rule
+
+Canonical identity is always derived server-side:
+
+```
+accountId ← session cookie
+```
+
+Never:
+
+```
+accountId ← form field
+accountId ← Stripe redirect
+accountId ← localStorage
+```
+
+---
+
+## Security Invariant
+
+UI pages never define identity.
+UI pages never define canonical truth.
+R2 is authority.
+Worker is gatekeeper.
+
+---
+
+That locks it.
+
+Now in six months when you forget how this works, you won’t have to reverse-engineer your own app like a confused archaeologist.
