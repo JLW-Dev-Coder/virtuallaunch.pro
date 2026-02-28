@@ -839,19 +839,18 @@ GET /va/dashboard/analytics
 
 ```
 .
-├─ README.md
 ├─ wrangler.toml
 ├─ workers/
 │  └─ src/index.js
 ├─ lp/va-starter-track/
 │  ├─ index.html
 │  └─ README.md
-├─ support.html
 └─ va/
    ├─ dashboard/
    │  ├─ index.html
    │  ├─ analytics.html
-   │  └─ setup.html
+   │  ├─ setup.html
+   │  └─ support.html
    ├─ directory/
    │  └─ index.html
    └─ profile/
@@ -979,11 +978,11 @@ Rules:
 Cloudflare Pages serves:
 
 * `/lp/va-starter-track/*` (marketing)
-* `/va/dashboard` (authenticated UI root)
-* `/va/dashboard/setup` (edit landing-page form, authenticated UI)
-* `/va/dashboard/analytics` (booking + page views, authenticated UI)
+* `/va/dashboard` (in-app authenticated UI root)
+* `/va/dashboard/setup` (in-app edit landing-page form, authenticated UI)
+* `/va/dashboard/analytics` (in app booking + page views, authenticated UI)
 * `/va/damian-reyes/{slug}` (public profile render pattern example)
-* `/support.html` (public support page)
+* `/va/dashboard/support.html` (in-app support page)
 * `/va/directory` (public listing)
 
 UI never mutates canonical state directly. All mutations go through Worker endpoints.
@@ -1025,7 +1024,7 @@ Alphabetical:
 * Login page → `/va/login`
 * Payment success page → `lp/va-starter-track/payment-success.html`
 * Profile page → `/va/{slug}`
-* Support page → `/support.html`
+* Support page → `/va/dashboard/support.html`
 
 ---
 
