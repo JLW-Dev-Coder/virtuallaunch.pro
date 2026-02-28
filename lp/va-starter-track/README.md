@@ -1216,7 +1216,7 @@ Events (Alphabetical):
 * checkout.session.completed
 * payment_intent.succeeded
 
----json
+```json
 {
 "object": {
 "id": "ch_3SzncZCMpIgwe61Z0faf2v3f",
@@ -1227,7 +1227,7 @@ Events (Alphabetical):
 }
 }
 
-````
+```
 
 ## Cal.com (BOOKING_CREATED, BOOKING_CANCELLED, BOOKING_RESCHEDULED)
 
