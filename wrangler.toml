@@ -1,4 +1,6 @@
+name = "virtuallaunch-pro-api"
 main = "workers/src/index.js"
+compatibility_date = "2026-02-28"
 
 [[r2_buckets]]
 binding = "R2_VIRTUAL_LAUNCH"
