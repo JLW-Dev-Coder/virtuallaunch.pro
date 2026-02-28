@@ -7,8 +7,24 @@ binding = "R2_VIRTUAL_LAUNCH"
 bucket_name = "virtuallaunch-pro"
 
 [vars]
+BILLING_LINK_VA_STARTER_TRACK = "https://billing.taxmonitor.pro/b/fZu6oGcImaZk3k48z0aR206"
+
 CLICKUP_ACCOUNTS_LIST_ID = "901711473499"
 CLICKUP_PROJECTION_ENABLED = "true"
+CLICKUP_SUPPORT_LIST_ID = "901711478590"
+
+GOOGLE_CLIENT_EMAIL = "virtual-launch-worker@virtual-launch-pro.iam.gserviceaccount.com"
+GOOGLE_WORKSPACE_USER_SUPPORT = "support@virtuallaunch.pro"
+
+MY_ORGANIZATION_ADDRESS = "1175 Avocado Avenue Suite 101 PMB 1010"
+MY_ORGANIZATION_BUSINESS_LOGO = "https://taxmonitor.pro/assets/logo.svg"
+MY_ORGANIZATION_CITY = "El Cajon"
+MY_ORGANIZATION_NAME = "Tax Monitor Pro"
+MY_ORGANIZATION_STATE_PROVINCE = "CA"
+MY_ORGANIZATION_ZIP = "92020"
+
+PRICE_1_99 = "price_1T5Y6VCMpIgwe61ZAf7azK0v"
+PRICE_LINK_VA_Starter_Track_Monthly = "price_1T5Y6VCMpIgwe61ZAf7azK0v"
 
 [observability.logs]
 enabled = true
