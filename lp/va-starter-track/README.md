@@ -75,12 +75,12 @@ ClickUp is projection only. R2 is the only authority.
 
 All tasks link to the account via the **Account ID** custom field.
 
-* Task Names: 
+### Task Names 
 Account List:
 Client Full Name | VA Starter Track
 
 Support List:
-Client Full Name | Support Type | 
+Client Full Name | Support Type | Support Priority
 
 Endpoint:
 
