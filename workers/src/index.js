@@ -62,7 +62,6 @@ export default {
 
       if (!obj) return json({ directory: [] }, 200);
 
-      // Return exactly what’s stored (no “helpful” rewrites).
       return new Response(await obj.text(), {
         status: 200,
         headers: { "content-type": "application/json; charset=utf-8" },
@@ -108,10 +107,8 @@ export default {
       if (!signature) return json({ error: "Missing stripe-signature header" }, 400);
       if (!env.STRIPE_WEBHOOK_SECRET) return json({ error: "Missing STRIPE_WEBHOOK_SECRET" }, 500);
 
-      // Read raw body ONCE (required for signature validation + receipt storage)
       const rawBody = await request.arrayBuffer();
 
-      // 1) Validate signature
       const verified = await verifyStripeSignature({
         rawBody,
         secret: env.STRIPE_WEBHOOK_SECRET,
@@ -123,7 +120,6 @@ export default {
         return json({ error: "Invalid Stripe signature", reason: verified.reason }, 400);
       }
 
-      // Parse JSON (only after signature validation)
       let evt;
       try {
         evt = JSON.parse(new TextDecoder().decode(new Uint8Array(rawBody)));
@@ -137,21 +133,16 @@ export default {
       if (!eventId || typeof eventId !== "string") return json({ error: "Missing event id" }, 400);
       if (!eventType || typeof eventType !== "string") return json({ error: "Missing event type" }, 400);
 
-      // Idempotency: receipt dedupe by eventId
-      // R2 key: receipts/stripe/{eventId}.json
-      // Binding: R2_VIRTUAL_LAUNCH
       const receiptKey = `receipts/stripe/${eventId}.json`;
       const existingReceipt = await env.R2_VIRTUAL_LAUNCH.get(receiptKey);
       if (existingReceipt) {
         return json({ ok: true, deduped: true, eventId, eventType }, 200);
       }
 
-      // 2) Append receipt (raw verified payload)
       await env.R2_VIRTUAL_LAUNCH.put(receiptKey, rawBody, {
         httpMetadata: { contentType: "application/json; charset=utf-8" },
       });
 
-      // Only handle known event types. Unknown types are stored as receipts and ignored.
       const allowedTypes = new Set([
         "charge.succeeded",
         "checkout.session.completed",
@@ -162,7 +153,6 @@ export default {
         return json({ ok: true, storedReceipt: true, ignoredType: eventType, eventId }, 200);
       }
 
-      // Dispatch
       if (eventType === "checkout.session.completed") {
         return await handleCheckoutSessionCompleted({ env, evt });
       }
@@ -175,11 +165,9 @@ export default {
         return await handleChargeSucceeded({ env, evt, eventId });
       }
 
-      // Should never hit due to allowedTypes gate.
       return json({ ok: true, eventId, eventType, storedReceipt: true }, 200);
     }
 
-    // Deny-by-default route
     return json({ error: "Not found", path: url.pathname }, 404);
   },
 };
@@ -191,28 +179,16 @@ function json(data, status = 200) {
   });
 }
 
-/**
- * ------------------------------------------------------------
- * Stripe Handler: checkout.session.completed
- * ------------------------------------------------------------
- * Purpose:
- *   Activate subscription + create/upsert canonical account.
- *
- * Writes:
- * - accounts/{accountId}.json
- * - stripe/payment-intents/{paymentIntentId}.json (correlation index)
- * ------------------------------------------------------------
- */
 async function handleCheckoutSessionCompleted({ env, evt }) {
   const o = evt?.data?.object;
 
-  // Contract-mapped fields
   const customerId = o?.customer;
   const sessionId = o?.id;
   const paymentIntentId = o?.payment_intent;
   const paymentLink = o?.payment_link;
   const paymentStatus = o?.status;
   const primaryEmail = o?.customer_details?.email;
+  const fullName = o?.customer_details?.name;
 
   if (!customerId || typeof customerId !== "string") {
     return json({ error: "Missing customerId (data.object.customer) on checkout.session.completed" }, 400);
@@ -225,7 +201,6 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   const accountKey = `accounts/${accountId}.json`;
   const now = new Date().toISOString();
 
-  // Load existing (if present)
   const existing = await env.R2_VIRTUAL_LAUNCH.get(accountKey);
   let account = null;
   if (existing) {
@@ -239,10 +214,10 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   const createdAt =
     account?.createdAt && typeof account.createdAt === "string" ? account.createdAt : now;
 
-  // Canonical account object (v1)
   const nextAccount = {
     accountId,
     createdAt,
+    fullName: fullName || account?.fullName || null,
     primaryEmail: primaryEmail || account?.primaryEmail || null,
     stripe: {
       customerId,
@@ -259,14 +234,10 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     },
   };
 
-  // Write canonical account
   await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
 
-  // Write correlation index (paymentIntentId → accountId)
-  // R2 key: stripe/payment-intents/{paymentIntentId}.json
-  // Binding: R2_VIRTUAL_LAUNCH
   const indexKey = `stripe/payment-intents/${paymentIntentId}.json`;
 
   const indexObj = {
@@ -281,6 +252,27 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
 
+  // Optional projection (after canonical update only)
+  if (env.CLICKUP_PROJECTION_ENABLED === "true") {
+    try {
+      await projectAccountToClickUp({ env, accountKey, account: nextAccount });
+    } catch (err) {
+      // Never fail the webhook after canonical write.
+      // Stripe expects 2xx; projection is optional.
+      return json(
+        {
+          ok: true,
+          accountId,
+          eventId: evt.id,
+          eventType: evt.type,
+          projection: { attempted: true, ok: false, error: String(err?.message || err) },
+          subscription: { active: true },
+        },
+        200
+      );
+    }
+  }
+
   return json(
     {
       ok: true,
@@ -293,20 +285,6 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   );
 }
 
-/**
- * ------------------------------------------------------------
- * Stripe Handler: payment_intent.succeeded
- * ------------------------------------------------------------
- * Purpose:
- *   Update canonical account paymentStatus using paymentIntentId correlation index.
- *
- * Reads:
- * - stripe/payment-intents/{paymentIntentId}.json
- *
- * Writes:
- * - accounts/{accountId}.json
- * ------------------------------------------------------------
- */
 async function handlePaymentIntentSucceeded({ env, evt, eventId }) {
   const o = evt?.data?.object;
 
@@ -338,7 +316,6 @@ async function handlePaymentIntentSucceeded({ env, evt, eventId }) {
   const accountKey = `accounts/${accountId}.json`;
   const existing = await env.R2_VIRTUAL_LAUNCH.get(accountKey);
 
-  // If account somehow doesn’t exist, do not create it from this event.
   if (!existing) {
     return json({ ok: true, storedReceipt: true, eventId, eventType: evt.type, note: "Account not found for correlated accountId" }, 200);
   }
@@ -367,22 +344,7 @@ async function handlePaymentIntentSucceeded({ env, evt, eventId }) {
   return json({ ok: true, accountId, eventId: evt.id, eventType: evt.type }, 200);
 }
 
-/**
- * ------------------------------------------------------------
- * Stripe Handler: charge.succeeded
- * ------------------------------------------------------------
- * Purpose:
- *   Update canonical account receiptUrl + paymentStatus using paymentIntentId correlation index.
- *
- * Reads:
- * - stripe/payment-intents/{paymentIntentId}.json
- *
- * Writes:
- * - accounts/{accountId}.json
- * ------------------------------------------------------------
- */
 async function handleChargeSucceeded({ env, evt, eventId }) {
-  // Stripe charge event shape usually places the charge object at evt.data.object
   const o = evt?.data?.object || evt?.object || evt?.data || evt;
 
   const paymentIntentId = o?.payment_intent;
@@ -442,12 +404,73 @@ async function handleChargeSucceeded({ env, evt, eventId }) {
   return json({ ok: true, accountId, eventId: evt.id, eventType: evt.type }, 200);
 }
 
-/**
- * Stripe signature verification (v1):
- * - Reads stripe-signature: "t=timestamp,v1=signature,..."
- * - Computes HMAC_SHA256(secret, `${t}.${rawBodyString}`)
- * - Compares against v1 signatures
- */
+async function projectAccountToClickUp({ env, account, accountKey }) {
+  // Projection is optional and gated.
+  if (env.CLICKUP_PROJECTION_ENABLED !== "true") return;
+
+  // Hard dependencies (skip quietly if unset to avoid breaking webhooks).
+  if (!env.CLICKUP_ACCOUNTS_LIST_ID) return;
+  if (!env.CLICKUP_API_KEY) return;
+
+  const taskName = `${account.fullName || account.primaryEmail || account.accountId} | VA Starter Track`;
+  const description = JSON.stringify(account, null, 2);
+
+  // Option A: store clickup taskId in canonical after first create.
+  const existingTaskId = account?.clickup?.taskId;
+
+  if (existingTaskId) {
+    await clickupFetch(env, `/task/${existingTaskId}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        description,
+        name: taskName,
+      }),
+    });
+
+    return;
+  }
+
+  const created = await clickupFetch(env, `/list/${env.CLICKUP_ACCOUNTS_LIST_ID}/task`, {
+    method: "POST",
+    body: JSON.stringify({
+      description,
+      name: taskName,
+    }),
+  });
+
+  const taskId = created?.id;
+  if (!taskId) return;
+
+  const updatedCanonical = {
+    ...account,
+    clickup: {
+      taskId,
+    },
+  };
+
+  await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(updatedCanonical, null, 2), {
+    httpMetadata: { contentType: "application/json; charset=utf-8" },
+  });
+}
+
+async function clickupFetch(env, path, options = {}) {
+  const res = await fetch(`https://api.clickup.com/api/v2${path}`, {
+    ...options,
+    headers: {
+      Authorization: env.CLICKUP_API_KEY,
+      "content-type": "application/json",
+      ...(options.headers || {}),
+    },
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`ClickUp API error ${res.status}: ${text}`);
+  }
+
+  return res.json();
+}
+
 async function verifyStripeSignature({ rawBody, secret, signatureHeader, toleranceSeconds }) {
   const parts = parseStripeSignatureHeader(signatureHeader);
   if (!parts.timestamp) return { ok: false, reason: "Missing timestamp" };
