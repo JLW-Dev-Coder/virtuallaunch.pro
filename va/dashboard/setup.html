@@ -1,1 +1,964 @@
-<!--site/va/dashboard/va-starter-track/setup.html -->
+<!-- va/dashboard/va-starter-track/setup.html -->
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VA Profile Builder</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js"></script>
+    <style>
+      html {
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      .glass-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      .preview-glass {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 41, 59, 0.7) 0%,
+          rgba(30, 41, 59, 0.6) 100%
+        );
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+      .input-field {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .input-field:focus {
+        transform: translateY(-1px);
+      }
+      .skill-tag {
+        animation: fadeIn 0.3s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      .floating {
+        animation: float 6s ease-in-out infinite;
+      }
+      .pattern-bg {
+        background-image: radial-gradient(
+            circle at 20% 80%,
+            rgba(251, 146, 60, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(20, 184, 166, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(251, 146, 60, 0.03) 0%,
+            transparent 30%
+          );
+      }
+    </style>
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+
+  <body class="h-full bg-slate-950 overflow-auto">
+    <div class="min-h-full lg:flex">
+      <!-- PARTIAL:sidebar -->
+
+      <div class="flex-1 min-w-0">
+        <!-- PARTIAL:topbar -->
+
+        <main class="w-full min-h-full p-6 md:p-8">
+      <!-- Header -->
+      <header class="text-center mb-8">
+        <h1 id="page-title" class="text-3xl md:text-4xl font-bold text-white mb-2">
+          Virtual Assistant Profile Builder
+        </h1>
+        <p class="text-slate-400">Create your professional profile in minutes</p>
+      </header>
+
+      <!-- Main Content -->
+      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Left: Form Section -->
+        <div class="space-y-6">
+          <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50">
+            <h2 id="form-heading" class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
+              <span
+                class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-900/50"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                  ></path>
+                </svg>
+              </span>
+              Edit Your Profile
+            </h2>
+
+            <!--
+              NOTE:
+              This form is now wired to the canonical CF names that generate the public VA page.
+              It submits urlencoded data to the Worker endpoint:
+                POST https://api.virtuallaunch.pro/forms/va/publish
+
+              Identity rules (per your instruction):
+              - accountId = paymentIntentId
+              - slug = human-friendly (derived from name) and may change
+            -->
+            <form id="profile-form" class="space-y-5" novalidate>
+              <!-- ===============================
+                   REQUIRED HIDDEN FIELDS
+                   =============================== -->
+              <input type="hidden" id="eventId" name="eventId" value="" />
+              <input type="hidden" id="accountId" name="accountId" value="" />
+              <input type="hidden" id="paymentIntentId" name="paymentIntentId" value="" />
+              <input type="hidden" id="slug" name="slug" value="" />
+
+              <!-- ===============================
+                   MAPPED PROFILE CFs
+                   =============================== -->
+
+              <!-- Full Name → headline select/custom fields are separate, but we also store name on canonical.
+                   We map Full Name into the long-form profile fields:
+                   - vlp_profile__vlp_cv_download_url (display-only)
+                   - vlp_profile__vlp_profile_headline_1_select (optional)
+                   - vlp_profile__vlp_profile_headline_1 (optional)
+                   - vlp_profile__vlp_profile_headline_2_select (optional)
+                   - vlp_profile__vlp_profile_headline_2 (optional)
+                   plus we use it to generate slug.
+              -->
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="full-name">
+                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    ></path>
+                  </svg>
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="full-name"
+                  name="full_name"
+                  placeholder="e.g., Sarah Mitchell"
+                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                  autocomplete="name"
+                />
+              </div>
+
+              <!-- Tagline → maps cleanly to headline line 2 custom (since this UI is simplified)
+                   We store the selected/custom pair:
+                   - vlp_profile__vlp_profile_headline_2_select = "Custom"
+                   - vlp_profile__vlp_profile_headline_2 = tagline
+              -->
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="tagline">
+                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+                    ></path>
+                  </svg>
+                  Tagline
+                </label>
+                <input
+                  type="text"
+                  id="tagline"
+                  name="tagline"
+                  placeholder="e.g., Calm ops. Clean delivery. Verified execution."
+                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                />
+              </div>
+
+              <!-- About → maps to short bio by default -->
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="about">
+                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    ></path>
+                  </svg>
+                  About Me
+                </label>
+                <textarea
+                  id="about"
+                  name="about"
+                  rows="4"
+                  placeholder="Tell clients about your experience and what makes you unique..."
+                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500 resize-none"
+                ></textarea>
+              </div>
+
+              <!-- Services → maps to primary services + service groups (stored as strings/arrays)
+                   This UI collects a single comma list.
+              -->
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="services">
+                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                  Services Offered
+                </label>
+                <input
+                  type="text"
+                  id="services"
+                  name="services"
+                  placeholder="e.g., Email Management, Calendar Scheduling, Data Entry"
+                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                />
+                <p class="text-xs text-slate-500">Separate services with commas</p>
+              </div>
+
+              <!-- Skills & Tools → maps to tools fields -->
+              <div class="space-y-2">
+                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="skills">
+                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    ></path>
+                  </svg>
+                  Skills &amp; Tools
+                </label>
+                <input
+                  type="text"
+                  id="skills"
+                  name="skills"
+                  placeholder="e.g., Google Workspace, ClickUp, Canva, Zoom"
+                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                />
+                <p class="text-xs text-slate-500">Separate skills with commas</p>
+              </div>
+
+              <!-- Availability & Rate Row -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="availability">
+                    <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    Availability
+                  </label>
+                  <select
+                    id="availability"
+                    name="availability"
+                    class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white"
+                  >
+                    <option value="">Select availability</option>
+                    <option value="Full-time">Full-time (40+ hrs/week)</option>
+                    <option value="Part-time">Part-time (20-40 hrs/week)</option>
+                    <option value="Flexible">Flexible hours</option>
+                    <option value="Project-based">Project-based only</option>
+                  </select>
+                </div>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="hourly-rate">
+                    <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                    Hourly Rate
+                  </label>
+                  <input
+                    type="text"
+                    id="hourly-rate"
+                    name="hourly_rate"
+                    placeholder="e.g., $25-40"
+                    class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                  />
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                <button
+                  type="submit"
+                  id="save-btn"
+                  class="flex-1 px-6 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-900/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-900/70 flex items-center justify-center gap-2"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Save Profile
+                </button>
+
+                <button
+                  type="button"
+                  id="reset-btn"
+                  class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl border border-slate-600 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    ></path>
+                  </svg>
+                  Reset
+                </button>
+              </div>
+
+              <!-- ===============================
+                   HIDDEN CF PAYLOAD (CANONICAL)
+                   These are the exact CF names from the old (working) builder.
+                   The JS maps your simplified UI into these canonical keys.
+                   =============================== -->
+
+              <input type="hidden" name="vlp_profile__vlp_availability_rate" id="cf_rate" value="" />
+              <input type="hidden" name="vlp_profile__vlp_availability_rate_custom" id="cf_rate_custom" value="" />
+
+              <input type="hidden" name="vlp_profile__vlp_availability_work_schedule_1" id="cf_work_schedule_1" value="" />
+              <input type="hidden" name="vlp_profile__vlp_availability_work_schedule_2" id="cf_work_schedule_2" value="" />
+              <input type="hidden" name="vlp_profile__vlp_availability_work_schedule_2_custom" id="cf_work_schedule_2_custom" value="" />
+
+              <input type="hidden" name="vlp_profile__vlp_profile_headline_1_select" id="cf_headline_1_select" value="" />
+              <input type="hidden" name="vlp_profile__vlp_profile_headline_1" id="cf_headline_1" value="" />
+              <input type="hidden" name="vlp_profile__vlp_profile_headline_2_select" id="cf_headline_2_select" value="" />
+              <input type="hidden" name="vlp_profile__vlp_profile_headline_2" id="cf_headline_2" value="" />
+
+              <textarea class="hidden" name="vlp_profile__vlp_profile_bio_short" id="cf_bio_short"></textarea>
+              <textarea class="hidden" name="vlp_profile__vlp_profile_bio_long" id="cf_bio_long"></textarea>
+
+              <input type="hidden" name="vlp_profile__vlp_services_primary" id="cf_services_primary" value="" />
+              <textarea class="hidden" name="vlp_profile__vlp_services_sop_execution_other" id="cf_services_other"></textarea>
+
+              <input type="hidden" name="vlp_profile__vlp_tools_primary" id="cf_tools_primary" value="" />
+              <input type="hidden" name="vlp_profile__vlp_tools_secondary[]" id="cf_tools_secondary" value="" />
+
+              <input type="hidden" name="vlp_profile__vlp_profile_public_consent" id="cf_public_consent" value="Yes — approved for public display." />
+            </form>
+          </div>
+
+          <!-- Saved Profiles List (kept, but now read-only to avoid clashing with canonical backend)
+               This panel will only show if dataSdk is enabled, but saves are done via Worker.
+          -->
+          <div id="saved-profiles-section" class="glass-card rounded-3xl p-6 shadow-2xl border border-slate-700/50 hidden">
+            <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                ></path>
+              </svg>
+              Saved Profiles
+            </h3>
+            <div id="profiles-list" class="space-y-3 max-h-64 overflow-y-auto"></div>
+          </div>
+        </div>
+
+        <!-- Right: Live Preview -->
+        <div class="lg:sticky lg:top-8 h-fit">
+          <div class="preview-glass rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 floating">
+            <div class="flex items-center gap-2 mb-6">
+              <span class="w-3 h-3 rounded-full bg-red-500"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500"></span>
+              <span id="preview-heading" class="ml-2 text-sm font-medium text-slate-400">Profile Preview</span>
+            </div>
+
+            <!-- Profile Card Preview -->
+            <div class="bg-slate-800/60 rounded-2xl p-6 border border-slate-700 shadow-inner">
+              <!-- Profile Image -->
+              <div class="flex justify-center mb-5">
+                <div
+                  id="preview-avatar"
+                  class="w-24 h-24 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-3xl font-bold shadow-xl shadow-orange-900/50 ring-4 ring-slate-800"
+                >
+                  ?
+                </div>
+              </div>
+
+              <!-- Name & Tagline -->
+              <div class="text-center mb-5">
+                <h3 id="preview-name" class="text-2xl font-bold text-white mb-1">Your Name Here</h3>
+                <p id="preview-tagline" class="text-orange-400 font-medium">Your professional tagline</p>
+              </div>
+
+              <!-- Availability Badge -->
+              <div class="flex justify-center mb-5">
+                <span
+                  id="preview-availability"
+                  class="px-4 py-1.5 bg-slate-700/60 text-orange-300 rounded-full text-sm font-medium border border-slate-600"
+                >
+                  Availability: Not set
+                </span>
+              </div>
+
+              <!-- About Section -->
+              <div class="mb-5">
+                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  About
+                </h4>
+                <p id="preview-about" class="text-slate-300 text-sm leading-relaxed">
+                  Your bio will appear here. Tell potential clients about your experience, work style, and what makes you unique.
+                </p>
+              </div>
+
+              <!-- Services Section -->
+              <div class="mb-5">
+                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                  Services
+                </h4>
+                <div id="preview-services" class="flex flex-wrap gap-2">
+                  <span class="px-3 py-1 bg-orange-900/30 text-orange-300 rounded-lg text-xs font-medium">Add services above</span>
+                </div>
+              </div>
+
+              <!-- Skills Section -->
+              <div class="mb-5">
+                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    ></path>
+                  </svg>
+                  Skills &amp; Tools
+                </h4>
+                <div id="preview-skills" class="flex flex-wrap gap-2">
+                  <span class="px-3 py-1 bg-orange-900/30 text-orange-300 rounded-lg text-xs font-medium">Add skills above</span>
+                </div>
+              </div>
+
+              <!-- Rate Section -->
+              <div class="pt-4 border-t border-slate-700">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm text-slate-400">Hourly Rate</span>
+                  <span id="preview-rate" class="text-lg font-bold text-white">Not set</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast Notification -->
+      <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-orange-600 text-white px-6 py-3 rounded-xl shadow-xl shadow-orange-900/50 flex items-center gap-3">
+          <svg class="w-5 h-5 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span id="toast-message">Profile saved!</span>
+        </div>
+      </div>
+
+      <!-- Data Limit Warning (kept) -->
+      <div
+        id="limit-warning"
+        class="fixed top-6 left-1/2 -translate-x-1/2 transform -translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
+      >
+        <div class="bg-orange-600 text-white px-6 py-3 rounded-xl shadow-xl shadow-orange-900/50 flex items-center gap-3">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            ></path>
+          </svg>
+          <span>Maximum profiles limit reached (999). Please delete some profiles first.</span>
+        </div>
+      </div>
+    </main>
+      </div>
+    </div>
+
+    <script>
+      // Default configuration
+      const defaultConfig = {
+        page_title: "Virtual Assistant Profile Builder",
+        form_heading: "Edit Your Profile",
+        preview_heading: "Profile Preview",
+        background_color: "#0b1220",
+        surface_color: "#111827",
+        text_color: "#e2e8f0",
+        primary_action_color: "#f97316",
+        secondary_action_color: "#14b8a6",
+      };
+
+      // DOM Elements
+      const form = document.getElementById("profile-form");
+      const fullNameInput = document.getElementById("full-name");
+      const taglineInput = document.getElementById("tagline");
+      const aboutInput = document.getElementById("about");
+      const servicesInput = document.getElementById("services");
+      const skillsInput = document.getElementById("skills");
+      const availabilitySelect = document.getElementById("availability");
+      const hourlyRateInput = document.getElementById("hourly-rate");
+      const saveBtn = document.getElementById("save-btn");
+      const resetBtn = document.getElementById("reset-btn");
+
+      // Hidden canonical fields
+      const accountIdEl = document.getElementById("accountId");
+      const eventIdEl = document.getElementById("eventId");
+      const paymentIntentIdEl = document.getElementById("paymentIntentId");
+      const slugEl = document.getElementById("slug");
+
+      const cfBioShort = document.getElementById("cf_bio_short");
+      const cfBioLong = document.getElementById("cf_bio_long");
+      const cfHeadline1 = document.getElementById("cf_headline_1");
+      const cfHeadline1Select = document.getElementById("cf_headline_1_select");
+      const cfHeadline2 = document.getElementById("cf_headline_2");
+      const cfHeadline2Select = document.getElementById("cf_headline_2_select");
+
+      const cfRate = document.getElementById("cf_rate");
+      const cfRateCustom = document.getElementById("cf_rate_custom");
+
+      const cfWorkSchedule1 = document.getElementById("cf_work_schedule_1");
+      const cfWorkSchedule2 = document.getElementById("cf_work_schedule_2");
+      const cfWorkSchedule2Custom = document.getElementById("cf_work_schedule_2_custom");
+
+      const cfServicesPrimary = document.getElementById("cf_services_primary");
+      const cfServicesOther = document.getElementById("cf_services_other");
+
+      const cfToolsPrimary = document.getElementById("cf_tools_primary");
+      const cfToolsSecondary = document.getElementById("cf_tools_secondary");
+
+      // Preview elements
+      const previewName = document.getElementById("preview-name");
+      const previewTagline = document.getElementById("preview-tagline");
+      const previewAbout = document.getElementById("preview-about");
+      const previewServices = document.getElementById("preview-services");
+      const previewSkills = document.getElementById("preview-skills");
+      const previewAvailability = document.getElementById("preview-availability");
+      const previewRate = document.getElementById("preview-rate");
+      const previewAvatar = document.getElementById("preview-avatar");
+
+      function ensureEventId() {
+        if (eventIdEl.value) return eventIdEl.value;
+        const v = (crypto && crypto.randomUUID) ? crypto.randomUUID() : `evt_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+        eventIdEl.value = v;
+        return v;
+      }
+
+      function getPaymentIntentIdFromQuery() {
+        const url = new URL(window.location.href);
+        // Accept multiple common param names because humans are inconsistent.
+        const candidates = [
+          "payment_intent",
+          "payment_intent_id",
+          "paymentIntentId",
+          "pi",
+        ];
+        for (const k of candidates) {
+          const v = url.searchParams.get(k);
+          if (v && typeof v === "string") return v;
+        }
+        return "";
+      }
+
+      function slugifyHuman(name) {
+        const base = String(name || "")
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+        // Human-friendly but can change. Add short entropy so collisions don’t wreck your day.
+        const suffix = Math.random().toString(36).slice(2, 6);
+        return base ? `${base}-${suffix}` : `profile-${suffix}`;
+      }
+
+      function getInitials(name) {
+        if (!name) return "?";
+        return name
+          .split(" ")
+          .filter(Boolean)
+          .map((n) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+      }
+
+      function createTags(input, bgClass, textClass) {
+        if (!input || !input.trim()) {
+          return `<span class="px-3 py-1 ${bgClass} ${textClass} rounded-lg text-xs font-medium">None added</span>`;
+        }
+        return input
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item)
+          .map((item) => `<span class="skill-tag px-3 py-1 ${bgClass} ${textClass} rounded-lg text-xs font-medium">${escapeHtml(item)}</span>`)
+          .join("");
+      }
+
+      function escapeHtml(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-message").textContent = message;
+        toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
+        toast.classList.add("translate-y-0", "opacity-100");
+        setTimeout(() => {
+          toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
+          toast.classList.remove("translate-y-0", "opacity-100");
+        }, 3000);
+      }
+
+      // Map simplified UI → canonical CFs (from old working builder)
+      function syncCanonicalCfs() {
+        const name = fullNameInput.value || "";
+        const tagline = taglineInput.value || "";
+        const about = aboutInput.value || "";
+        const services = servicesInput.value || "";
+        const skills = skillsInput.value || "";
+        const availability = availabilitySelect.value || "";
+        const hourlyRate = hourlyRateInput.value || "";
+
+        // Headlines
+        cfHeadline1Select.value = "Custom";
+        cfHeadline1.value = name ? `${name}` : "";
+        cfHeadline2Select.value = "Custom";
+        cfHeadline2.value = tagline;
+
+        // Bios (short + long)
+        cfBioShort.value = about;
+        cfBioLong.value = about;
+
+        // Rate: keep numbers out of public display if you want later, but you explicitly collect it here.
+        // We store it as Custom so the renderer can decide whether to show or not.
+        cfRate.value = "Custom";
+        cfRateCustom.value = hourlyRate;
+
+        // Work schedule mapping: keep it simple and stable.
+        cfWorkSchedule1.value = availability ? availability : "";
+        cfWorkSchedule2.value = "Custom";
+        cfWorkSchedule2Custom.value = availability ? `Availability: ${availability}` : "";
+
+        // Services: store comma list into “other” so it displays as list if your renderer supports it.
+        // Primary category is best effort.
+        cfServicesPrimary.value = services ? "Operations and systems" : "";
+        cfServicesOther.value = services
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .join("\n");
+
+        // Tools: infer primary tool from skills if possible.
+        const skillList = skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        const primaryTool = pickPrimaryTool(skillList);
+        cfToolsPrimary.value = primaryTool;
+
+        // Secondary tools is an array CF in the old builder.
+        // Because this is a single hidden input, we store a comma list.
+        // The Worker should split this into multiple values when building canonical.
+        cfToolsSecondary.value = skillList.join(", ");
+      }
+
+      function pickPrimaryTool(skills) {
+        const s = new Set((skills || []).map((x) => String(x || "").toLowerCase()));
+        if (s.has("clickup")) return "ClickUp";
+        if (s.has("google workspace") || s.has("gmail") || s.has("google drive")) return "Google Workspace";
+        if (s.has("suitedash")) return "SuiteDash";
+        return skills && skills.length ? "Other" : "";
+      }
+
+      // Live preview updates
+      function updatePreview() {
+        const name = fullNameInput.value || "Your Name Here";
+        const tagline = taglineInput.value || "Your professional tagline";
+        const about =
+          aboutInput.value ||
+          "Your bio will appear here. Tell potential clients about your experience, work style, and what makes you unique.";
+        const services = servicesInput.value;
+        const skills = skillsInput.value;
+        const availability = availabilitySelect.value;
+        const rate = hourlyRateInput.value;
+
+        previewName.textContent = name;
+        previewTagline.textContent = tagline;
+        previewAbout.textContent = about;
+        previewAvatar.textContent = getInitials(fullNameInput.value);
+
+        previewServices.innerHTML =
+          createTags(services, "bg-orange-900/30", "text-orange-300") ||
+          '<span class="px-3 py-1 bg-orange-900/30 text-orange-300 rounded-lg text-xs font-medium">Add services above</span>';
+
+        previewSkills.innerHTML =
+          createTags(skills, "bg-teal-900/30", "text-teal-300") ||
+          '<span class="px-3 py-1 bg-teal-900/30 text-teal-300 rounded-lg text-xs font-medium">Add skills above</span>';
+
+        previewAvailability.textContent = availability ? `📅 ${availability}` : "Availability: Not set";
+        previewRate.textContent = rate || "Not set";
+
+        syncCanonicalCfs();
+      }
+
+      function resetForm() {
+        form.reset();
+        updatePreview();
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          Save Profile
+        `;
+      }
+
+      async function submitToWorker() {
+        ensureEventId();
+
+        const paymentIntentId = paymentIntentIdEl.value || getPaymentIntentIdFromQuery();
+        paymentIntentIdEl.value = paymentIntentId;
+        accountIdEl.value = paymentIntentId;
+
+        // Human-friendly slug derived from name; can change.
+        if (!slugEl.value) slugEl.value = slugifyHuman(fullNameInput.value);
+
+        // Ensure canonical CFs are synced
+        syncCanonicalCfs();
+
+        const endpoint = "https://api.virtuallaunch.pro/forms/va/publish";
+
+        const fd = new FormData(form);
+
+        // Add the canonical CFs + identity fields into the payload.
+        // (FormData already includes everything in the form, including hidden CF inputs.)
+
+        const res = await fetch(endpoint, {
+          method: "POST",
+          body: new URLSearchParams([...fd.entries()]),
+          headers: {
+            "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+        });
+
+        let out = null;
+        const text = await res.text();
+        try {
+          out = text ? JSON.parse(text) : null;
+        } catch {
+          out = { raw: text };
+        }
+
+        if (!res.ok) {
+          throw new Error(`Publish failed: ${res.status} ${JSON.stringify(out)}`);
+        }
+
+        return out;
+      }
+
+      // Event listeners
+      fullNameInput.addEventListener("input", updatePreview);
+      taglineInput.addEventListener("input", updatePreview);
+      aboutInput.addEventListener("input", updatePreview);
+      servicesInput.addEventListener("input", updatePreview);
+      skillsInput.addEventListener("input", updatePreview);
+      availabilitySelect.addEventListener("change", updatePreview);
+      hourlyRateInput.addEventListener("input", updatePreview);
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = `
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+          Saving...
+        `;
+
+        try {
+          const result = await submitToWorker();
+          // Optional: also mirror into local data store if it exists.
+          // This is not authoritative; it just makes the UI feel alive.
+          if (window.dataSdk && window.dataSdk.create) {
+            const mirror = {
+              __backendId: result?.slug || slugEl.value || null,
+              about: aboutInput.value || "",
+              availability: availabilitySelect.value || "",
+              created_at: new Date().toISOString(),
+              full_name: fullNameInput.value || "",
+              hourly_rate: hourlyRateInput.value || "",
+              services: servicesInput.value || "",
+              skills: skillsInput.value || "",
+              tagline: taglineInput.value || "",
+            };
+            try {
+              await window.dataSdk.create(mirror);
+            } catch {
+              // ignore local mirror failure
+            }
+          }
+
+          showToast("Profile saved!");
+        } catch (err) {
+          console.error(err);
+          showToast("Error saving profile. Check console.");
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            Save Profile
+          `;
+        }
+      });
+
+      resetBtn.addEventListener("click", resetForm);
+
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            document.getElementById("page-title").textContent = config.page_title || defaultConfig.page_title;
+            document.getElementById("form-heading").textContent = config.form_heading || defaultConfig.form_heading;
+            document.getElementById("preview-heading").textContent = config.preview_heading || defaultConfig.preview_heading;
+          },
+          mapToCapabilities: (config) => ({
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined,
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                },
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => {
+                  config.surface_color = value;
+                  window.elementSdk.setConfig({ surface_color: value });
+                },
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                },
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => {
+                  config.primary_action_color = value;
+                  window.elementSdk.setConfig({ primary_action_color: value });
+                },
+              },
+              {
+                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (value) => {
+                  config.secondary_action_color = value;
+                  window.elementSdk.setConfig({ secondary_action_color: value });
+                },
+              },
+            ],
+          }),
+          mapToEditPanelValues: (config) =>
+            new Map([
+              ["page_title", config.page_title || defaultConfig.page_title],
+              ["form_heading", config.form_heading || defaultConfig.form_heading],
+              ["preview_heading", config.preview_heading || defaultConfig.preview_heading],
+            ]),
+        });
+      }
+
+      // Initialize Data SDK (optional UI mirror)
+      (async () => {
+        if (window.dataSdk) {
+          try {
+            await window.dataSdk.init({
+              onDataChanged: () => {},
+            });
+          } catch {
+            // ignore
+          }
+        }
+      })();
+
+      // Boot identity fields
+      (function bootIdentity() {
+        ensureEventId();
+        const pi = getPaymentIntentIdFromQuery();
+        if (pi) {
+          paymentIntentIdEl.value = pi;
+          accountIdEl.value = pi;
+        }
+      })();
+
+      // Initial preview update
+      updatePreview();
+    </script>
+  </body>
+</html>
