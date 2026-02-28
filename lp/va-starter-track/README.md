@@ -116,7 +116,7 @@ Canonical → projection mapping:
   "orderindex": 0,
   "priority": null,
   "assignee": null,
-  "task_count": 0,
+  "task_count": 1,
   "due_date": null,
   "start_date": null,
   "folder": {
@@ -132,63 +132,55 @@ Canonical → projection mapping:
   },
   "inbound_address": "a.t.901711473499.u-10505295.52a1190a-b1ef-4327-ad0d-4575859c3166@tasks.clickup.com",
   "archived": false,
-  "override_statuses": false,
+  "override_statuses": true,
   "statuses": [
     {
-      "id": "p90170896661_tHAvUWrA",
-      "status": "hold",
+      "id": "sc901711473499_ql3JDGwp",
+      "status": "lead",
       "orderindex": 0,
-      "color": "#ffff00",
+      "color": "#87909e",
       "type": "open",
-      "status_group": "proj_90170896661"
+      "status_group": "subcat_901711473499"
     },
     {
-      "id": "p90170896661_d5UnFeBG",
-      "status": "upcoming",
+      "id": "sc901711473499_YGi7USAJ",
+      "status": "active prospect",
       "orderindex": 1,
-      "color": "#0000ff",
-      "type": "unstarted",
-      "status_group": "proj_90170896661"
-    },
-    {
-      "id": "p90170896661_zxEiGS1A",
-      "status": "active",
-      "orderindex": 2,
-      "color": "#00ff00",
+      "color": "#5f55ee",
       "type": "custom",
-      "status_group": "proj_90170896661"
+      "status_group": "subcat_901711473499"
     },
     {
-      "id": "p90170896661_RA3SPE4t",
-      "status": "archive",
+      "id": "sc901711473499_paQXZWfu",
+      "status": "active client",
+      "orderindex": 2,
+      "color": "#30a46c",
+      "type": "custom",
+      "status_group": "subcat_901711473499"
+    },
+    {
+      "id": "sc901711473499_PtMresA8",
+      "status": "inactive prospect",
       "orderindex": 3,
-      "color": "#aa8d80",
+      "color": "#f76808",
       "type": "done",
-      "status_group": "proj_90170896661"
+      "status_group": "subcat_901711473499"
     },
     {
-      "id": "p90170896661_6vlEzULy",
-      "status": "in active",
+      "id": "sc901711473499_P199BDW5",
+      "status": "inactive client",
       "orderindex": 4,
-      "color": "#ff0000",
+      "color": "#e5484d",
       "type": "done",
-      "status_group": "proj_90170896661"
+      "status_group": "subcat_901711473499"
     },
     {
-      "id": "p90170896661_Z4GnndCq",
-      "status": "template",
+      "id": "sc901711473499_2rFUlBQ6",
+      "status": "case closed",
       "orderindex": 5,
-      "color": "#ee5e99",
-      "type": "done",
-      "status_group": "proj_90170896661"
-    },
-    {
-      "id": "p90170896661_HBGuvi9T",
-      "status": "Closed",
-      "orderindex": 6,
       "color": "#008844",
       "type": "closed",
-      "status_group": "proj_90170896661"
+      "status_group": "subcat_901711473499"
     }
   ],
   "permission_level": "create"
