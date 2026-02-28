@@ -108,7 +108,7 @@ Canonical → projection mapping:
 * Stripe Payment Status — `1b9a762e-cf3e-47d7-8ae7-98efe9e11eab`
 * Stripe Receipt URL — `f8cb77f1-26b3-4788-83ed-2914bb608c11`
 * Stripe Session ID — `57e6c42b-a471-4316-92dc-23ce0f59d8b4`
-
+```
 {
   "id": "901711473499",
   "name": "Accounts",
@@ -193,7 +193,8 @@ Canonical → projection mapping:
   ],
   "permission_level": "create"
 }
- 
+ ```
+```
      {
   "fields": [
     {
@@ -346,7 +347,7 @@ Canonical → projection mapping:
     }
   ]
 }
-
+```
 ### Support fields (Alphabetical)
 
 * Support Action Required — `aac0816d-0e05-4c57-8196-6098929f35ac`
@@ -355,6 +356,8 @@ Canonical → projection mapping:
 * Support Latest Update — `03ebc8ba-714e-4f7c-9748-eb1b62e657f7`
 * Support Priority — `b96403c7-028a-48eb-b6b1-349f295244b5`
 * Support Type — `e09d9f53-4f03-49fe-8c5f-abe3b160b167`
+
+```
 {
   "id": "901711478590",
   "name": "Support",
@@ -680,6 +683,7 @@ Canonical → projection mapping:
     }
   ]
 }
+```
 
 ## Projection Rules
 
