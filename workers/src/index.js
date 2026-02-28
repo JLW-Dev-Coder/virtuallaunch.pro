@@ -450,7 +450,7 @@ async function projectAccountToClickUp({ env, accountKey, account }) {
   if (!env.CLICKUP_API_KEY) throw new Error("Missing CLICKUP_API_KEY");
   if (!env.CLICKUP_ACCOUNTS_LIST_ID) throw new Error("Missing CLICKUP_ACCOUNTS_LIST_ID");
 
-  // README contract: Accounts list statuses include "active".
+  // README contract: Accounts list statuses include "active client".
   // Task Name: Client Full Name | VA Starter Track
   const taskName = `${(account?.fullName || "Unknown Client").trim()} | VA Starter Track`;
 
@@ -489,7 +489,7 @@ async function projectAccountToClickUp({ env, accountKey, account }) {
 
   const clickupPayload = {
     name: taskName,
-    status: "active",
+    status: "active client",
     description: JSON.stringify(account, null, 2),
     custom_fields,
   };
