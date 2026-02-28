@@ -109,6 +109,384 @@ Canonical → projection mapping:
 * Stripe Receipt URL — `f8cb77f1-26b3-4788-83ed-2914bb608c11`
 * Stripe Session ID — `57e6c42b-a471-4316-92dc-23ce0f59d8b4`
 
+{
+  "id": "901711473499",
+  "name": "Accounts",
+  "deleted": false,
+  "orderindex": 0,
+  "priority": null,
+  "assignee": null,
+  "task_count": 0,
+  "due_date": null,
+  "start_date": null,
+  "folder": {
+    "id": "90177070460",
+    "name": "VA Starter Track",
+    "hidden": false,
+    "access": true
+  },
+  "space": {
+    "id": "90170896661",
+    "name": "Admin",
+    "access": true
+  },
+  "inbound_address": "a.t.901711473499.u-10505295.52a1190a-b1ef-4327-ad0d-4575859c3166@tasks.clickup.com",
+  "archived": false,
+  "override_statuses": false,
+  "statuses": [
+    {
+      "id": "p90170896661_tHAvUWrA",
+      "status": "hold",
+      "orderindex": 0,
+      "color": "#ffff00",
+      "type": "open",
+      "status_group": "proj_90170896661"
+    },
+    {
+      "id": "p90170896661_d5UnFeBG",
+      "status": "upcoming",
+      "orderindex": 1,
+      "color": "#0000ff",
+      "type": "unstarted",
+      "status_group": "proj_90170896661"
+    },
+    {
+      "id": "p90170896661_zxEiGS1A",
+      "status": "active",
+      "orderindex": 2,
+      "color": "#00ff00",
+      "type": "custom",
+      "status_group": "proj_90170896661"
+    },
+    {
+      "id": "p90170896661_RA3SPE4t",
+      "status": "archive",
+      "orderindex": 3,
+      "color": "#aa8d80",
+      "type": "done",
+      "status_group": "proj_90170896661"
+    },
+    {
+      "id": "p90170896661_6vlEzULy",
+      "status": "in active",
+      "orderindex": 4,
+      "color": "#ff0000",
+      "type": "done",
+      "status_group": "proj_90170896661"
+    },
+    {
+      "id": "p90170896661_Z4GnndCq",
+      "status": "template",
+      "orderindex": 5,
+      "color": "#ee5e99",
+      "type": "done",
+      "status_group": "proj_90170896661"
+    },
+    {
+      "id": "p90170896661_HBGuvi9T",
+      "status": "Closed",
+      "orderindex": 6,
+      "color": "#008844",
+      "type": "closed",
+      "status_group": "proj_90170896661"
+    }
+  ],
+  "permission_level": "create"
+}
+ 
+     {
+  "fields": [
+    {
+      "id": "059a571b-aa5d-41b4-ae12-3681b451b474",
+      "name": "Account Company Name",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1772037874392",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "1b9a762e-cf3e-47d7-8ae7-98efe9e11eab",
+      "name": "Stripe Payment Status",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1770919480157",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "33ea9fbb-0743-483a-91e4-450ce3bfb0a7",
+      "name": "Account Event ID",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1772040729038",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "57e6c42b-a471-4316-92dc-23ce0f59d8b4",
+      "name": "Stripe Session ID",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1770919466454",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "6fc65cba-9060-4d70-ab36-02b239dd4718",
+      "name": "Stripe Payment Intent ID",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1772042380577",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "9e14a458-96fd-4109-a276-034d8270e15b",
+      "name": "Account Support Task Link",
+      "type": "tasks",
+      "type_config": {
+        "fields": []
+      },
+      "date_created": "1770919329551",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "a105f99e-b33d-4d12-bb24-f7c827ec761a",
+      "name": "Account Primary Email",
+      "type": "email",
+      "type_config": {},
+      "date_created": "1770919006808",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "b65231cc-4a10-4a38-9d90-1f1c167a4060",
+      "name": "Account Full Name",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1772037556900",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "bbdf5418-8be0-452d-8bd0-b9f46643375e",
+      "name": "Account Support Status",
+      "type": "drop_down",
+      "type_config": {
+        "sorting": "manual",
+        "new_drop_down": true,
+        "options": [
+          {
+            "id": "32b2e245-fd5c-4a03-bc17-4ebdd8eae089",
+            "name": "New / Open",
+            "color": "#f900ea",
+            "orderindex": 0
+          },
+          {
+            "id": "c05a8aa5-f7f9-4b00-bd8d-079295791afc",
+            "name": "Blocked",
+            "color": "#E65100",
+            "orderindex": 1
+          },
+          {
+            "id": "4fa76dee-a591-4fff-ad19-d71774341d3b",
+            "name": "In Progress",
+            "color": "#e50000",
+            "orderindex": 2
+          },
+          {
+            "id": "1305897c-c718-497d-8120-348e10e6ed30",
+            "name": "Needs Review",
+            "color": "#0231E8",
+            "orderindex": 3
+          },
+          {
+            "id": "228c6ef0-4895-4cdb-8cae-4d1e1bb49fde",
+            "name": "Waiting on Client",
+            "color": "#FF4081",
+            "orderindex": 4
+          },
+          {
+            "id": "741f1d07-8409-4c1b-ad5f-4243793b5710",
+            "name": "Complete",
+            "color": "#EA80FC",
+            "orderindex": 5
+          },
+          {
+            "id": "3c97368c-56b7-472b-98d0-4bd5d1825f3d",
+            "name": "Closed",
+            "color": "#02BCD4",
+            "orderindex": 6
+          }
+        ]
+      },
+      "date_created": "1770919308725",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "e5f176ba-82c8-47d8-b3b1-0716d075f43f",
+      "name": "Account ID",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1770918977961",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "f8cb77f1-26b3-4788-83ed-2914bb608c11",
+      "name": "Stripe Receipt URL",
+      "type": "url",
+      "type_config": {},
+      "date_created": "1772042441485",
+      "hide_from_guests": false,
+      "required": false
+    }
+  ]
+}
+
+### Support fields (Alphabetical)
+
+* Support Action Required — `aac0816d-0e05-4c57-8196-6098929f35ac`
+* Support Email — `7f547901-690d-4f39-8851-d19e19f87bf8`
+* Support Event ID — `8e8b453e-01f3-40fe-8156-2e9d9633ebd6`
+* Support Latest Update — `03ebc8ba-714e-4f7c-9748-eb1b62e657f7`
+* Support Priority — `b96403c7-028a-48eb-b6b1-349f295244b5`
+* Support Type — `e09d9f53-4f03-49fe-8c5f-abe3b160b167`
+{
+  "id": "901711478590",
+  "name": "Support",
+  "deleted": false,
+  "orderindex": 1,
+  "content": "",
+  "priority": null,
+  "assignee": null,
+  "task_count": 0,
+  "due_date": null,
+  "start_date": null,
+  "folder": {
+    "id": "90177070460",
+    "name": "VA Starter Track",
+    "hidden": false,
+    "access": true
+  },
+  "space": {
+    "id": "90170896661",
+    "name": "Admin",
+    "access": true
+  },
+  "inbound_address": "a.t.901711478590.u-10505295.0efe4f13-5134-457f-8106-3bb6cacfe01a@tasks.clickup.com",
+  "archived": false,
+  "override_statuses": true,
+  "statuses": [
+    {
+      "id": "sc901711478590_dn2dRFVb",
+      "status": "open / new",
+      "orderindex": 0,
+      "color": "#87909e",
+      "type": "open",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_OKMm7y2k",
+      "status": "in progress",
+      "orderindex": 1,
+      "color": "#5f55ee",
+      "type": "custom",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_gpKVHSl7",
+      "status": "waiting on client",
+      "orderindex": 2,
+      "color": "#4466ff",
+      "type": "custom",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_HlAcH0UR",
+      "status": "blocked",
+      "orderindex": 3,
+      "color": "#1090e0",
+      "type": "custom",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_fdQqQDwm",
+      "status": "in review",
+      "orderindex": 4,
+      "color": "#b660e0",
+      "type": "custom",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_cExcoTWL",
+      "status": "resolved",
+      "orderindex": 5,
+      "color": "#f8ae00",
+      "type": "custom",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_B9XfYTKa",
+      "status": "client feedback",
+      "orderindex": 6,
+      "color": "#aa8d80",
+      "type": "custom",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_eLZNX2kO",
+      "status": "complete",
+      "orderindex": 7,
+      "color": "#656f7d",
+      "type": "done",
+      "status_group": "subcat_901711478590"
+    },
+    {
+      "id": "sc901711478590_jEEaBdaL",
+      "status": "Closed",
+      "orderindex": 8,
+      "color": "#008844",
+      "type": "closed",
+      "status_group": "subcat_901711478590"
+    }
+  ],
+  "permission_level": "create"
+}
+
+{
+  "fields": [
+    {
+      "id": "03ebc8ba-714e-4f7c-9748-eb1b62e657f7",
+      "name": "Support Latest Update",
+      "type": "text",
+      "type_config": {},
+      "date_created": "1772135243246",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "7f547901-690d-4f39-8851-d19e19f87bf8",
+      "name": "Support Email",
+      "type": "email",
+      "type_config": {},
+      "date_created": "1770919584021",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
+      "id": "8e8b453e-01f3-40fe-8156-2e9d9633ebd6",
+      "name": "Support Event ID",
+      "type": "short_text",
+      "type_config": {},
+      "date_created": "1771382872871",
+      "hide_from_guests": false,
+      "required": false
+    },
+    {
       "id": "aac0816d-0e05-4c57-8196-6098929f35ac",
       "name": "Support Action Required",
       "type": "drop_down",
@@ -142,7 +520,9 @@ Canonical → projection mapping:
           }
         ]
       },
-
+      "date_created": "1770919566506",
+      "hide_from_guests": false,
+      "required": false
     },
     {
       "id": "b96403c7-028a-48eb-b6b1-349f295244b5",
@@ -177,7 +557,11 @@ Canonical → projection mapping:
             "orderindex": 3
           }
         ]
-
+      },
+      "date_created": "1770919693498",
+      "hide_from_guests": false,
+      "required": false
+    },
     {
       "id": "e09d9f53-4f03-49fe-8c5f-abe3b160b167",
       "name": "Support Type",
@@ -296,15 +680,6 @@ Canonical → projection mapping:
     }
   ]
 }
-
-### Support fields (Alphabetical)
-
-* Support Action Required — `aac0816d-0e05-4c57-8196-6098929f35ac`
-* Support Email — `7f547901-690d-4f39-8851-d19e19f87bf8`
-* Support Event ID — `8e8b453e-01f3-40fe-8156-2e9d9633ebd6`
-* Support Latest Update — `03ebc8ba-714e-4f7c-9748-eb1b62e657f7`
-* Support Priority — `b96403c7-028a-48eb-b6b1-349f295244b5`
-* Support Type — `e09d9f53-4f03-49fe-8c5f-abe3b160b167`
 
 ## Projection Rules
 
