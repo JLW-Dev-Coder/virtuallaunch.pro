@@ -1,1 +1,882 @@
 <!-- /va/dashboard/support.html -->
+<!-- contact.html -->
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Support — Transcript.Tax Monitor Pro</title>
+
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+
+    <style>
+      html {
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        box-sizing: border-box;
+      }
+
+      .glass-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .input-field {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .input-field:focus {
+        transform: translateY(-1px);
+      }
+
+      .pattern-bg {
+        background-image: radial-gradient(
+            circle at 20% 80%,
+            rgba(251, 146, 60, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(20, 184, 166, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(251, 146, 60, 0.03) 0%,
+            transparent 30%
+          );
+      }
+
+      .status-box {
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .status-success {
+        border: 1px solid rgba(34, 197, 94, 0.3);
+        background: rgba(34, 197, 94, 0.1);
+        color: rgb(134, 239, 172);
+      }
+
+      .status-error {
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.1);
+        color: rgb(252, 165, 165);
+      }
+
+      .status-info {
+        border: 1px solid rgba(251, 146, 60, 0.25);
+        background: rgba(251, 146, 60, 0.08);
+        color: rgba(226, 232, 240, 0.92);
+      }
+
+      /* FAQ (styled details/summary) */
+      .faq-card[open] {
+        box-shadow: 0 10px 40px rgba(249, 115, 22, 0.12);
+      }
+
+      .faq-summary {
+        list-style: none;
+      }
+
+      .faq-summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .faq-chevron {
+        transition: transform 0.2s ease;
+      }
+
+      details[open] .faq-chevron {
+        transform: rotate(180deg);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .input-field {
+          transition: none;
+        }
+
+        .input-field:focus {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen h-full bg-slate-950 overflow-auto pattern-bg text-slate-300">
+    <div id="app" class="min-h-screen flex flex-col w-full">
+      <!-- PARTIAL:header -->
+
+      <main class="flex-1 w-full p-6 md:p-8">
+        <div class="max-w-7xl mx-auto">
+          <!-- Hero -->
+          <section class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-5 bg-orange-500/10 border border-orange-500/30 text-orange-200">
+              <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+              Support
+            </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">We’re Here to Help</h1>
+            <p class="text-slate-400 max-w-2xl mx-auto">
+              Choose your preferred way to reach us. Live calls are fastest. Tickets get a Support ID and a response within 24 hours.
+            </p>
+          </section>
+
+          <!-- Support Options -->
+          <section class="grid gap-6 lg:grid-cols-3 mb-10">
+            <!-- Schedule Call -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-900/50 mb-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="text-lg font-semibold text-white mb-2">Schedule a Call</h2>
+              <p class="text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                Pick a time that works for you. Live support typically resolves issues in minutes, not days.
+              </p>
+              <button
+                class="w-full px-6 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-900/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-900/70 flex items-center justify-center gap-2"
+                data-cal-link="tax-monitor-pro/tax-monitor-transcript-support"
+                data-cal-namespace="tax-monitor-transcript-support"
+                data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+                type="button"
+              >
+                Book a Time
+              </button>
+            </div>
+
+            <!-- Ticket Form -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-teal-900/40 mb-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h2 class="text-lg font-semibold text-white mb-2">Create a Ticket</h2>
+              <p class="text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                For detailed questions or non-urgent issues. We’ll respond within 24 hours with a tracking ID.
+              </p>
+              <a
+                href="#support-form-section"
+                class="w-full px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl border border-slate-600 transition-all duration-300 flex items-center justify-center"
+                data-scroll
+              >
+                Go to Form
+              </a>
+            </div>
+
+            <!-- FAQ -->
+            <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 flex flex-col">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-900/50 mb-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="text-lg font-semibold text-white mb-2">Browse FAQ</h2>
+              <p class="text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                Answers to common questions about parsing, billing, reports, and your account.
+              </p>
+              <a
+                href="#faq"
+                class="w-full px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl border border-slate-600 transition-all duration-300 flex items-center justify-center"
+                data-scroll
+              >
+                View FAQ
+              </a>
+            </div>
+          </section>
+
+          <!-- Support Form Section -->
+          <section id="support-form-section" class="scroll-mt-[220px]">
+            <div class="max-w-3xl mx-auto">
+              <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-2">Create a Support Ticket</h2>
+                <p class="text-slate-400">We’ll respond within 24 hours with your Support ID and next steps.</p>
+              </div>
+
+              <!-- Quick Lookup -->
+              <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 mb-6">
+                <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-4">Already have a support ID?</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                  <input
+                    id="support-id-lookup"
+                    type="text"
+                    placeholder="Enter your Support ID"
+                    class="input-field flex-1 px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                    autocomplete="off"
+                  />
+                  <button
+                    id="support-id-lookup-btn"
+                    type="button"
+                    class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl border border-slate-600 transition-all duration-300 flex items-center justify-center whitespace-nowrap"
+                  >
+                    Check Status
+                  </button>
+                </div>
+                <div id="support-lookup-status" class="hidden status-box status-info mt-4" aria-live="polite"></div>
+              </div>
+
+              <!-- Main Form -->
+              <form id="support-form" class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 space-y-5" novalidate>
+                <input type="hidden" id="eventId" name="eventId" />
+                <input type="hidden" id="sessionToken" name="sessionToken" />
+                <input type="hidden" id="utm_source" name="utm_source" />
+                <input type="hidden" id="utm_medium" name="utm_medium" />
+                <input type="hidden" id="utm_campaign" name="utm_campaign" />
+                <input type="hidden" id="utm_term" name="utm_term" />
+                <input type="hidden" id="utm_content" name="utm_content" />
+
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="name">Name *</label>
+                    <input
+                      id="name"
+                      name="name"
+                      required
+                      placeholder="Your name"
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                      autocomplete="name"
+                    />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="email">Email *</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="your@email.com"
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                      autocomplete="email"
+                    />
+                  </div>
+                </div>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="category">Category *</label>
+                    <select
+                      id="category"
+                      name="category"
+                      required
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white"
+                    >
+                      <option value="">Select a category</option>
+                      <option value="Access / Portal">Access / Portal</option>
+                      <option value="Account / Reports / Monitoring">Account / Reports / Monitoring</option>
+                      <option value="Billing / Credits">Billing / Credits</option>
+                      <option value="General">General</option>
+                      <option value="Other">Other</option>
+                      <option value="Parsing">Parsing</option>
+                    </select>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="issueType">Issue Type *</label>
+                    <select
+                      id="issueType"
+                      name="issueType"
+                      required
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white"
+                    >
+                      <option value="">Select an issue type</option>
+                      <option value="Account">Account</option>
+                      <option value="Billing">Billing</option>
+                      <option value="Credits">Credits</option>
+                      <option value="Other">Other</option>
+                      <option value="Parsing">Parsing</option>
+                      <option value="Report">Report</option>
+                      <option value="Token">Token</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="urgency">Urgency Level *</label>
+                    <select
+                      id="urgency"
+                      name="urgency"
+                      required
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white"
+                    >
+                      <option value="">Select urgency</option>
+                      <option value="Normal">Normal</option>
+                      <option value="Time-sensitive (deadline)">Time-sensitive (deadline)</option>
+                      <option value="Urgent (service blocked)">Urgent (service blocked)</option>
+                    </select>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="priority">Priority *</label>
+                    <select
+                      id="priority"
+                      name="priority"
+                      required
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white"
+                    >
+                      <option value="">Select priority</option>
+                      <option value="Critical">Critical</option>
+                      <option value="High">High</option>
+                      <option value="Low">Low</option>
+                      <option value="Normal">Normal</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-sm font-medium text-slate-200" for="subject">Subject *</label>
+                  <input
+                    id="subject"
+                    name="subject"
+                    required
+                    placeholder="e.g., I can’t download my report"
+                    class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-sm font-medium text-slate-200" for="message">Message *</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows="5"
+                    placeholder="Tell us what happened, what you expected, and any error messages you saw"
+                    class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500 resize-none"
+                  ></textarea>
+                  <p class="text-xs text-slate-500">Include exact errors, steps to reproduce, and expected vs actual. No passwords, SSNs, or card details.</p>
+                </div>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="tokenId">Token ID</label>
+                    <input
+                      id="tokenId"
+                      name="tokenId"
+                      placeholder="Your account token"
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                    />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-200" for="relatedOrderId">Related ID</label>
+                    <input
+                      id="relatedOrderId"
+                      name="relatedOrderId"
+                      placeholder="Stripe ID, reference number, etc."
+                      class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  id="submit-btn"
+                  type="submit"
+                  class="w-full px-6 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-900/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-900/70 flex items-center justify-center"
+                >
+                  Submit Support Ticket
+                </button>
+
+                <p class="text-xs text-slate-500 text-center">
+                  By submitting, you agree to our
+                  <a class="text-orange-300 hover:text-orange-200 transition" href="/legal/terms.html">Terms</a>
+                  and
+                  <a class="text-orange-300 hover:text-orange-200 transition" href="/legal/privacy.html">Privacy Policy</a>.
+                </p>
+
+                <div id="form-status" class="hidden status-box mt-2" aria-live="polite"></div>
+
+                <div id="support-id-display" class="hidden mt-2 p-6 rounded-2xl bg-green-500/10 border border-green-500/30">
+                  <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">Your Support ID</p>
+                  <div class="text-3xl font-bold text-white font-mono mb-2" id="support-id"></div>
+                  <p class="text-sm text-slate-400">We’ve sent a confirmation email with next steps. Keep this ID handy for reference.</p>
+                </div>
+              </form>
+
+              <!-- FAQ -->
+              <div id="faq" class="mt-10 scroll-mt-[220px]">
+                <div class="mb-4">
+                  <h2 class="text-2xl font-semibold text-white mb-2">FAQ</h2>
+                  <p class="text-slate-400">Quick answers to the most common questions.</p>
+                </div>
+
+                <div class="space-y-4">
+                  <details class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <summary class="faq-summary flex items-center justify-between gap-4 cursor-pointer">
+                      <span class="text-sm font-semibold text-white">Do I need to upload my transcript to get help?</span>
+                      <svg class="faq-chevron w-5 h-5 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400">No. For support, describe what happened and include any error messages. If you choose to use the parser, it runs locally in your browser.</p>
+                  </details>
+
+                  <details class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <summary class="faq-summary flex items-center justify-between gap-4 cursor-pointer">
+                      <span class="text-sm font-semibold text-white">Where do I find my Support ID?</span>
+                      <svg class="faq-chevron w-5 h-5 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400">After you submit a ticket, we show your Support ID on this page and email it to you. Use the lookup box above to check status later.</p>
+                  </details>
+
+                  <details class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <summary class="faq-summary flex items-center justify-between gap-4 cursor-pointer">
+                      <span class="text-sm font-semibold text-white">What is your response time?</span>
+                      <svg class="faq-chevron w-5 h-5 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400">For standard tickets, you’ll hear back within 24 hours. For time-sensitive issues, booking a call is the fastest option.</p>
+                  </details>
+
+                  <details class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <summary class="faq-summary flex items-center justify-between gap-4 cursor-pointer">
+                      <span class="text-sm font-semibold text-white">What information should I include in my ticket?</span>
+                      <svg class="faq-chevron w-5 h-5 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9" />
+                      </svg>
+                    </summary>
+                    <p class="mt-3 text-sm text-slate-400">Exact error message, steps to reproduce, and your Token ID (if you have one). No passwords, full SSNs, or payment card details.</p>
+                  </details>
+                </div>
+
+                <div class="mt-8 grid gap-5 md:grid-cols-3">
+                  <div class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <div class="text-xs font-semibold text-white mb-3 uppercase tracking-wide">Do Include</div>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                      <li>Browser/device info</li>
+                      <li>Exact error message</li>
+                      <li>Steps to reproduce</li>
+                      <li>Your Token ID</li>
+                    </ul>
+                  </div>
+
+                  <div class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <div class="text-xs font-semibold text-white mb-3 uppercase tracking-wide">Don’t Include</div>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                      <li>Credit card info</li>
+                      <li>Full bank numbers</li>
+                      <li>Full SSNs</li>
+                      <li>Passwords</li>
+                    </ul>
+                  </div>
+
+                  <div class="glass-card rounded-3xl p-5 border border-slate-700/50">
+                    <div class="text-xs font-semibold text-white mb-3 uppercase tracking-wide">Direct Email</div>
+                    <p class="text-xs text-slate-400 mb-2">
+                      <a class="text-orange-300 hover:text-orange-200 transition font-semibold" href="mailto:support@taxmonitor.pro">support@taxmonitor.pro</a>
+                    </p>
+                    <p class="text-xs text-slate-500">For general support inquiries, we respond within 24 hours.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- PARTIAL:footer -->
+    </div>
+
+    <script>
+      (function () {
+        // NOTE: Endpoint left as-is from your last version.
+        // If this page is for Tax Monitor Pro instead of Virtual Launch Pro, swap it back.
+        const API_ENDPOINT = "https://api.taxmonitor.pro/forms/support/message";
+
+        // ===== tiny tests (run with ?runTests=1) =====
+        function assert(name, condition) {
+          if (!condition) {
+            console.error("test_failed", name);
+            throw new Error("test_failed:" + name);
+          }
+        }
+
+        function runTests() {
+          assert("faq_exists", !!document.getElementById("faq"));
+          assert("support_form_section_exists", !!document.getElementById("support-form-section"));
+          assert("lookup_btn_exists", !!document.getElementById("support-id-lookup-btn"));
+          assert("submit_btn_exists", !!document.getElementById("submit-btn"));
+          assert("cal_fn_exists", typeof window.Cal === "function");
+          assert("support_form_exists", !!document.getElementById("support-form"));
+        }
+
+        // ===== UTILITY FUNCTIONS =====
+        function getParam(name) {
+          try {
+            return new URLSearchParams(window.location.search).get(name) || "";
+          } catch (_) {
+            return "";
+          }
+        }
+
+        function newEventId() {
+          if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+          return "evt_" + String(Date.now()) + "_" + Math.random().toString(16).slice(2);
+        }
+
+        function setStatus(kind, text) {
+          var el = document.getElementById("form-status");
+          if (!el) return;
+          el.classList.remove("hidden");
+          el.classList.remove("status-success", "status-error", "status-info");
+          el.classList.add(kind);
+          el.textContent = String(text || "");
+        }
+
+        function disable(btn) {
+          if (!btn) return;
+          btn.disabled = true;
+          btn.classList.add("opacity-50", "cursor-not-allowed");
+        }
+
+        function enable(btn) {
+          if (!btn) return;
+          btn.disabled = false;
+          btn.classList.remove("opacity-50", "cursor-not-allowed");
+        }
+
+        function clearScrollLocks() {
+          try {
+            document.body.style.overflow = "";
+            document.documentElement.style.overflow = "";
+            document.body.classList.remove("overflow-hidden");
+          } catch (_) {}
+        }
+
+        function scrollToId(id) {
+          if (!id) return;
+          var el = document.getElementById(id);
+          if (!el) return;
+
+          clearScrollLocks();
+
+          var offset = 200;
+          var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
+
+        // ===== LOOKUP FUNCTIONS =====
+        async function lookupSupportId() {
+          var input = document.getElementById("support-id-lookup");
+          var btn = document.getElementById("support-id-lookup-btn");
+          var box = document.getElementById("support-lookup-status");
+
+          function show(kind, text) {
+            if (!box) return;
+            box.classList.remove("hidden");
+            box.classList.remove("status-success", "status-error", "status-info");
+            box.classList.add(kind);
+            box.textContent = String(text || "");
+          }
+
+          var supportId = input && input.value ? String(input.value).trim() : "";
+          if (!supportId) {
+            show("status-error", "Enter a Support ID to check status.");
+            return;
+          }
+
+          disable(btn);
+          show("status-info", "Checking status...");
+
+          var url = "https://api.taxmonitor.pro/support/status?supportId=" + encodeURIComponent(supportId);
+
+          try {
+            var sessionToken = (document.getElementById("sessionToken") || {}).value || "";
+
+            var res = await fetch(url, {
+              method: "GET",
+              credentials: "include",
+              headers: sessionToken ? { "X-Session-Token": sessionToken } : {},
+            });
+
+            var json = null;
+            try {
+              json = await res.json();
+            } catch (_) {
+              json = null;
+            }
+
+            if (!res.ok) {
+              var msg = json && (json.error || json.message) ? String(json.error || json.message) : "Request failed (" + res.status + ")";
+              show("status-error", msg);
+              enable(btn);
+              return;
+            }
+
+            var status = json && json.status ? String(json.status) : "";
+            var updatedAt = json && (json.updatedAt || json.updated_at) ? String(json.updatedAt || json.updated_at) : "";
+            var latestUpdate = json && (json.latestUpdate || json.latest_update) ? String(json.latestUpdate || json.latest_update) : "";
+
+            var parts = [];
+            if (latestUpdate) parts.push(latestUpdate);
+            if (status) parts.push("Status: " + status);
+            if (updatedAt) parts.push("Updated: " + updatedAt);
+
+            if (parts.length) {
+              show("status-success", parts.join(" • "));
+            } else {
+              show("status-info", "Your request is being processed. Please check back later for more details.");
+            }
+
+            enable(btn);
+          } catch (_) {
+            show("status-error", "Network error. Please try again.");
+            enable(btn);
+          }
+        }
+
+        function initLookupHandler() {
+          var input = document.getElementById("support-id-lookup");
+          var btn = document.getElementById("support-id-lookup-btn");
+          if (btn) btn.addEventListener("click", lookupSupportId);
+
+          if (input) {
+            input.addEventListener("keydown", function (e) {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                lookupSupportId();
+              }
+            });
+          }
+        }
+
+        // ===== ANCHOR NAV =====
+        function initAnchorNav() {
+          document.addEventListener(
+            "click",
+            function (e) {
+              var a = e.target && e.target.closest ? e.target.closest("a") : null;
+              if (!a) return;
+
+              var href = String(a.getAttribute("href") || "");
+              if (!href) return;
+              if (href[0] !== "#") return;
+              if (!a.hasAttribute("data-scroll")) return;
+
+              e.preventDefault();
+
+              var id = href.slice(1);
+              if (!id) return;
+
+              try {
+                history.replaceState(null, "", href);
+              } catch (_) {}
+
+              scrollToId(id);
+            },
+            false
+          );
+
+          if (window.location.hash) {
+            var id = window.location.hash.replace(/^#/, "");
+            if (id) setTimeout(function () { scrollToId(id); }, 0);
+          }
+
+          window.addEventListener("hashchange", function () {
+            var id = window.location.hash.replace(/^#/, "");
+            if (id) scrollToId(id);
+          });
+        }
+
+        // ===== FORM FUNCTIONS =====
+        function seedFormFields() {
+          var eventIdEl = document.getElementById("eventId");
+          if (eventIdEl) eventIdEl.value = newEventId();
+
+          var sessionTokenEl = document.getElementById("sessionToken");
+          if (sessionTokenEl) sessionTokenEl.value = getParam("sessionToken");
+
+          ["utm_campaign", "utm_content", "utm_medium", "utm_source", "utm_term"].forEach(function (k) {
+            var el = document.getElementById(k);
+            if (el) el.value = getParam(k);
+          });
+
+          var tokenParam = getParam("tokenId") || "";
+          var tokenInput = document.getElementById("tokenId");
+          if (tokenInput && tokenParam) tokenInput.value = tokenParam;
+        }
+
+        function initFormHandler() {
+          var form = document.getElementById("support-form");
+          var btn = document.getElementById("submit-btn");
+
+          if (!form) return;
+
+          form.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            var payload = {
+              category: (document.getElementById("category") || {}).value || "",
+              email: (document.getElementById("email") || {}).value || "",
+              eventId: (document.getElementById("eventId") || {}).value || "",
+              issueType: (document.getElementById("issueType") || {}).value || "",
+              message: (document.getElementById("message") || {}).value || "",
+              name: (document.getElementById("name") || {}).value || "",
+              priority: (document.getElementById("priority") || {}).value || "",
+              subject: (document.getElementById("subject") || {}).value || "",
+              urgency: (document.getElementById("urgency") || {}).value || "",
+            };
+
+            var sessionToken = (document.getElementById("sessionToken") || {}).value || "";
+            if (sessionToken) payload.sessionToken = sessionToken;
+
+            var tokenId = (document.getElementById("tokenId") || {}).value || "";
+            if (tokenId) payload.tokenId = tokenId;
+
+            var relatedOrderId = (document.getElementById("relatedOrderId") || {}).value || "";
+            if (relatedOrderId) payload.relatedOrderId = relatedOrderId;
+
+            ["utm_campaign", "utm_content", "utm_medium", "utm_source", "utm_term"].forEach(function (k) {
+              var v = (document.getElementById(k) || {}).value || "";
+              if (v) payload[k] = v;
+            });
+
+            var missing = [];
+            if (!payload.category) missing.push("category");
+            if (!payload.email) missing.push("email");
+            if (!payload.eventId) missing.push("eventId");
+            if (!payload.issueType) missing.push("issueType");
+            if (!payload.message) missing.push("message");
+            if (!payload.name) missing.push("name");
+            if (!payload.priority) missing.push("priority");
+            if (!payload.subject) missing.push("subject");
+            if (!payload.urgency) missing.push("urgency");
+
+            if (missing.length) {
+              setStatus("status-error", "Please fill in all required fields.");
+              return;
+            }
+
+            disable(btn);
+            setStatus("status-info", "Submitting your ticket...");
+
+            try {
+              var headers = { "Content-Type": "application/json" };
+              if (sessionToken) headers["X-Session-Token"] = sessionToken;
+
+              var res = await fetch(API_ENDPOINT, {
+                method: "POST",
+                credentials: "include",
+                headers: headers,
+                body: JSON.stringify(payload),
+              });
+
+              var json = null;
+              try {
+                json = await res.json();
+              } catch (_) {
+                json = null;
+              }
+
+              if (!res.ok) {
+                var msg = json && (json.error || json.message) ? String(json.error || json.message) : "Request failed (" + res.status + ")";
+                setStatus("status-error", msg);
+                enable(btn);
+                return;
+              }
+
+              var supportId = json && (json.supportId || json.support_id) ? String(json.supportId || json.support_id) : "";
+
+              if (supportId) {
+                var sid = document.getElementById("support-id");
+                var display = document.getElementById("support-id-display");
+                var statusEl = document.getElementById("form-status");
+                if (sid) sid.textContent = supportId;
+                if (display) display.classList.remove("hidden");
+                if (statusEl) statusEl.classList.add("hidden");
+              }
+
+              form.style.display = "none";
+              enable(btn);
+
+              var eventIdEl = document.getElementById("eventId");
+              if (eventIdEl) eventIdEl.value = newEventId();
+            } catch (_) {
+              setStatus("status-error", "Network error. Please try again.");
+              enable(btn);
+            }
+          });
+        }
+
+        function initAll() {
+          var url = new URL(window.location.href);
+          var run = String(url.searchParams.get("runTests") || "").trim().toLowerCase();
+          if (run === "1" || run === "true") runTests();
+
+          seedFormFields();
+          initAnchorNav();
+          initFormHandler();
+          initLookupHandler();
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", initAll);
+        } else {
+          initAll();
+        }
+      })();
+    </script>
+
+    <!-- Cal element-click embed code begins -->
+    <script type="text/javascript">
+      (function (C, A, L) {
+        let p = function (a, ar) {
+          a.q.push(ar);
+        };
+        let d = C.document;
+        C.Cal =
+          C.Cal ||
+          function () {
+            let cal = C.Cal;
+            let ar = arguments;
+            if (!cal.loaded) {
+              cal.ns = {};
+              cal.q = cal.q || [];
+              d.head.appendChild(d.createElement("script")).src = A;
+              cal.loaded = true;
+            }
+            if (ar[0] === L) {
+              const api = function () {
+                p(api, arguments);
+              };
+              const namespace = ar[1];
+              api.q = api.q || [];
+              if (typeof namespace === "string") {
+                cal.ns[namespace] = cal.ns[namespace] || api;
+                p(cal.ns[namespace], ar);
+                p(cal, ["initNamespace", namespace]);
+              } else p(cal, ar);
+              return;
+            }
+            p(cal, ar);
+          };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      Cal("init", "tax-monitor-transcript-support", { origin: "https://app.cal.com" });
+
+      Cal.ns["tax-monitor-transcript-support"]("ui", {
+        cssVarsPerTheme: {
+          light: { "cal-brand": "#292929" },
+          dark: { "cal-brand": "#f97316" },
+        },
+        hideEventTypeDetails: false,
+        layout: "month_view",
+      });
+    </script>
+    <!-- Cal element-click embed code ends -->
+  </body>
+</html>
