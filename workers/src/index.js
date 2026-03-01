@@ -13,11 +13,15 @@
  * Supported Routes (Alphabetical):
  * - GET /auth/confirm
  * - GET /auth/session
+ * - GET /cal/oauth/status
+ * - GET /cal/oauth/start
  * - GET /directory
  * - GET /health
+ * - GET /r2/object
  * - GET /support/status
  * - POST /auth/login
  * - POST /auth/logout
+ * - POST /cal/webhook
  * - POST /forms/support/message
  * - POST /forms/va/publish
  * - POST /stripe/webhook
@@ -26,15 +30,31 @@
  * - R2 binding: R2_VIRTUAL_LAUNCH
  * - Secret: AUTH_SIGNING_KEY
  *
+ * Optional env:
+ * - Plaintext: CAL_OAUTH_CLIENT_ID
+ * - Plaintext: CAL_OAUTH_REDIRECT_URI
+ * - Secret: CAL_OAUTH_CLIENT_SECRET
+ * - Secret: CAL_WEBHOOK_SECRET
+ * - Secret: CLICKUP_API_KEY
+ * - Plaintext: CLICKUP_ACCOUNTS_LIST_ID
+ * - Plaintext: CLICKUP_PROJECTION_ENABLED ("true" enables)
+ * - Plaintext: CLICKUP_SUPPORT_LIST_ID
+ * - Secret: STRIPE_WEBHOOK_SECRET
+ *
  * Compatibility Date: set in wrangler.toml (required)
  * ============================================================
  */
 
-const ALLOWED_ORIGINS = new Set([
-  "https://virtuallaunch.pro",
-]);
+const ALLOWED_ORIGINS = new Set(["https://virtuallaunch.pro"]);
 
 const COOKIE_NAME = "vlp_session";
+
+const CAL_AUTH_URL_BASE = "https://app.cal.com/auth/oauth2/authorize";
+const CAL_TOKEN_URL = "https://api.cal.com/v2/auth/oauth2/token";
+const CAL_OAUTH_STATE_PREFIX = "auth/cal-oauth-state/";
+
+// NOTE: This is an authenticated read-only helper URL used inside ClickUp comments.
+const R2_OBJECT_URL_BASE = "https://api.virtuallaunch.pro/r2/object?key=";
 
 export default {
   async fetch(request, env) {
@@ -65,6 +85,45 @@ export default {
     }
 
     // ------------------------------------------------------------
+    // GET /r2/object (read-only, public)
+    // - Used as a stable link target from ClickUp comments.
+    // - No auth (by design, per project requirements). Kept safe via prefix allowlist.
+    // ------------------------------------------------------------
+    if (request.method === "GET" && url.pathname === "/r2/object") {
+      const key = safeString(url.searchParams.get("key"));
+      if (!key) return withCors(request, json({ error: "Missing key" }, 400));
+
+      // Prefix allowlist to avoid turning this into an R2 browser.
+      const allowedPrefixes = [
+        "accounts/",
+        "auth/",
+        "receipts/",
+        "stripe/",
+        "support/",
+        "va/",
+      ];
+
+      const okPrefix = allowedPrefixes.some((p) => key.startsWith(p));
+      if (!okPrefix) return withCors(request, json({ error: "Key prefix not allowed" }, 403));
+
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(key);
+      if (!obj) return withCors(request, json({ error: "Not found", key }, 404));
+
+      const contentType = obj.httpMetadata?.contentType || "application/octet-stream";
+
+      return withCors(
+        request,
+        new Response(obj.body, {
+          status: 200,
+          headers: {
+            "content-type": contentType,
+            "cache-control": "no-store",
+          },
+        })
+      );
+    }
+
+    // ------------------------------------------------------------
     // GET /support/status (read model)
     // ------------------------------------------------------------
     if (request.method === "GET" && url.pathname === "/support/status") {
@@ -90,6 +149,145 @@ export default {
             status: s?.status || "",
             supportId,
             updatedAt: s?.updatedAt || "",
+          },
+          200
+        )
+      );
+    }
+
+    // ------------------------------------------------------------
+    // GET /cal/oauth/start
+    // - Requires session
+    // - Redirects to Cal OAuth authorize URL
+    // ------------------------------------------------------------
+    if (request.method === "GET" && url.pathname === "/cal/oauth/start") {
+      const session = await requireSession({ request, env, allowAnonymous: false });
+      if (!session.authenticated) return withCors(request, json({ error: "Unauthorized" }, 401));
+
+      if (!env.CAL_OAUTH_CLIENT_ID) return withCors(request, json({ error: "Missing CAL_OAUTH_CLIENT_ID" }, 500));
+      if (!env.CAL_OAUTH_CLIENT_SECRET) return withCors(request, json({ error: "Missing CAL_OAUTH_CLIENT_SECRET" }, 500));
+      if (!env.CAL_OAUTH_REDIRECT_URI) return withCors(request, json({ error: "Missing CAL_OAUTH_REDIRECT_URI" }, 500));
+
+      const slug = safeString(url.searchParams.get("slug"));
+      if (!slug) return withCors(request, json({ error: "Missing slug" }, 400));
+
+      const nonce = base64url(randomBytes(24));
+      const now = new Date().toISOString();
+
+      const stateObj = {
+        accountId: session.accountId,
+        createdAt: now,
+        nonce,
+        slug,
+      };
+
+      await env.R2_VIRTUAL_LAUNCH.put(`${CAL_OAUTH_STATE_PREFIX}${nonce}.json`, JSON.stringify(stateObj, null, 2), {
+        httpMetadata: { contentType: "application/json; charset=utf-8" },
+      });
+
+      const authUrl = new URL(CAL_AUTH_URL_BASE);
+      authUrl.searchParams.set("client_id", String(env.CAL_OAUTH_CLIENT_ID));
+      authUrl.searchParams.set("redirect_uri", String(env.CAL_OAUTH_REDIRECT_URI));
+      authUrl.searchParams.set("state", nonce);
+      authUrl.searchParams.set("response_type", "code");
+
+      return redirect(authUrl.toString(), 302);
+    }
+
+    // ------------------------------------------------------------
+    // GET /cal/oauth/callback
+    // - Public callback URL configured in Cal OAuth client
+    // - Exchanges code for tokens and stores on the canonical account
+    // ------------------------------------------------------------
+    if (request.method === "GET" && url.pathname === "/cal/oauth/callback") {
+      if (!env.CAL_OAUTH_CLIENT_ID) return withCors(request, json({ error: "Missing CAL_OAUTH_CLIENT_ID" }, 500));
+      if (!env.CAL_OAUTH_CLIENT_SECRET) return withCors(request, json({ error: "Missing CAL_OAUTH_CLIENT_SECRET" }, 500));
+      if (!env.CAL_OAUTH_REDIRECT_URI) return withCors(request, json({ error: "Missing CAL_OAUTH_REDIRECT_URI" }, 500));
+
+      const code = safeString(url.searchParams.get("code"));
+      const nonce = safeString(url.searchParams.get("state"));
+
+      if (!code) return redirect("https://virtuallaunch.pro/va/dashboard?cal=error&reason=missing_code", 302);
+      if (!nonce) return redirect("https://virtuallaunch.pro/va/dashboard?cal=error&reason=missing_state", 302);
+
+      const stateKey = `${CAL_OAUTH_STATE_PREFIX}${nonce}.json`;
+      const stateObjRaw = await env.R2_VIRTUAL_LAUNCH.get(stateKey);
+      if (!stateObjRaw) return redirect("https://virtuallaunch.pro/va/dashboard?cal=error&reason=invalid_state", 302);
+
+      let stateObj;
+      try {
+        stateObj = JSON.parse(await stateObjRaw.text());
+      } catch {
+        return redirect("https://virtuallaunch.pro/va/dashboard?cal=error&reason=invalid_state", 302);
+      }
+
+      const accountId = safeString(stateObj?.accountId);
+      const slug = safeString(stateObj?.slug);
+      if (!accountId) return redirect("https://virtuallaunch.pro/va/dashboard?cal=error&reason=invalid_state", 302);
+
+      // One-time use state
+      await env.R2_VIRTUAL_LAUNCH.delete(stateKey);
+
+      const tokenRes = await exchangeCalAuthorizationCode({
+        code,
+        env,
+        redirectUri: String(env.CAL_OAUTH_REDIRECT_URI),
+      });
+
+      if (!tokenRes.ok) {
+        return redirect("https://virtuallaunch.pro/va/dashboard?cal=error&reason=token_exchange_failed", 302);
+      }
+
+      const now = Date.now();
+      const expiresAt = new Date(now + Number(tokenRes.expiresIn || 0) * 1000).toISOString();
+
+      await upsertAccountCalOAuth({
+        accountId,
+        env,
+        next: {
+          accessToken: tokenRes.accessToken,
+          expiresAt,
+          refreshToken: tokenRes.refreshToken,
+          updatedAt: new Date().toISOString(),
+        },
+      });
+
+      if (slug) {
+        await upsertVaProfileCalConnected({ accountId, env, slug });
+      }
+
+      return redirect("https://virtuallaunch.pro/va/dashboard?cal=connected", 302);
+    }
+
+    // ------------------------------------------------------------
+    // GET /cal/oauth/status
+    // - Authenticated read model for UI
+    // ------------------------------------------------------------
+    if (request.method === "GET" && url.pathname === "/cal/oauth/status") {
+      const session = await requireSession({ request, env, allowAnonymous: false });
+      if (!session.authenticated) return withCors(request, json({ error: "Unauthorized" }, 401));
+
+      const accountKey = `accounts/${session.accountId}.json`;
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(accountKey);
+      if (!obj) return withCors(request, json({ connected: false }, 200));
+
+      let account;
+      try {
+        account = JSON.parse(await obj.text());
+      } catch {
+        return withCors(request, json({ connected: false }, 200));
+      }
+
+      const cal = account?.calOAuth;
+      const connected = !!(cal?.accessToken && cal?.expiresAt);
+
+      return withCors(
+        request,
+        json(
+          {
+            connected,
+            expiresAt: connected ? cal.expiresAt : null,
+            updatedAt: connected ? cal.updatedAt || null : null,
           },
           200
         )
@@ -364,6 +562,17 @@ export default {
           const r = await projectSupportToClickUp({ env, supportKey, support: nextSupport });
           projection.ok = true;
           projection.taskId = r?.taskId || null;
+
+          if (projection.taskId) {
+            const commentText = formatClickUpR2Comment({
+              canonicalKey: supportKey,
+              payload: validated.payload,
+              receiptKey,
+              title: "Support ticket stored (R2 authority)",
+              introText: "This support task was created by the VA Starter Track API from an in-app support page form submission.",
+            });
+            await clickupCreateTaskComment({ env, taskId: projection.taskId, text: commentText });
+          }
         } catch (err) {
           projection.ok = false;
           projection.error = String(err?.message || err);
@@ -420,22 +629,192 @@ export default {
       const now = new Date().toISOString();
       const accountId = session.accountId;
 
+      const formObj = Object.fromEntries([...params.entries()].sort(([a], [b]) => a.localeCompare(b)));
+
       const profile = {
         accountId,
         createdAt: now,
         eventId,
         slug,
         updatedAt: now,
-        form: Object.fromEntries([...params.entries()].sort(([a], [b]) => a.localeCompare(b))),
+        form: formObj,
       };
 
-      await env.R2_VIRTUAL_LAUNCH.put(`va/pages/${slug}.json`, JSON.stringify(profile, null, 2), {
+      const profileKey = `va/pages/${slug}.json`;
+
+      await env.R2_VIRTUAL_LAUNCH.put(profileKey, JSON.stringify(profile, null, 2), {
         httpMetadata: { contentType: "application/json; charset=utf-8" },
       });
 
       await upsertDirectoryIndex({ env, accountId, slug, updatedAt: now });
 
-      return withCors(request, json({ ok: true, slug }, 200));
+      const accountKey = `accounts/${accountId}.json`;
+      const existingAccountObj = await env.R2_VIRTUAL_LAUNCH.get(accountKey);
+      let account = null;
+      if (existingAccountObj) {
+        try {
+          account = JSON.parse(await existingAccountObj.text());
+        } catch {
+          account = null;
+        }
+      }
+
+      const createdAt = account?.createdAt && typeof account.createdAt === "string" ? account.createdAt : now;
+      const nextAccount = {
+        accountId,
+        createdAt,
+        fullName: account?.fullName || null,
+        primaryEmail: account?.primaryEmail || null,
+        stripe: account?.stripe || null,
+        subscription: account?.subscription || null,
+        va: {
+          ...(account?.va || {}),
+          lastPublishedAt: now,
+          slug,
+        },
+        clickup: account?.clickup || null,
+        updatedAt: now,
+      };
+
+      await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
+        httpMetadata: { contentType: "application/json; charset=utf-8" },
+      });
+
+      const projectionEnabled = env.CLICKUP_PROJECTION_ENABLED === "true";
+      let projection = { enabled: projectionEnabled, attempted: false, ok: false, taskId: null, error: null };
+
+      if (projectionEnabled) {
+        projection.attempted = true;
+        try {
+          const r = await projectAccountToClickUp({ env, accountKey, account: nextAccount });
+          projection.ok = true;
+          projection.taskId = r?.taskId || null;
+
+          if (projection.taskId) {
+            const commentText = formatClickUpR2Comment({
+              canonicalKey: profileKey,
+              payload: profile,
+              receiptKey,
+              title: "VA profile published (R2 authority)",
+              introText: "This account task was created by the VA Starter Track API from a VA profile publish form submission.",
+            });
+            await clickupCreateTaskComment({ env, taskId: projection.taskId, text: commentText });
+          }
+        } catch (err) {
+          projection.ok = false;
+          projection.error = String(err?.message || err);
+
+          const failedAccount = {
+            ...nextAccount,
+            clickup: {
+              ...(nextAccount?.clickup || {}),
+              error: projection.error,
+              updatedAt: new Date().toISOString(),
+            },
+          };
+
+          await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(failedAccount, null, 2), {
+            httpMetadata: { contentType: "application/json; charset=utf-8" },
+          });
+        }
+      }
+
+      return withCors(request, json({ ok: true, projection, slug }, 200));
+    }
+    // ------------------------------------------------------------
+    // POST /cal/webhook
+    // ------------------------------------------------------------
+    if (request.method === "POST" && url.pathname === "/cal/webhook") {
+      if (!env.CAL_WEBHOOK_SECRET) return json({ error: "Missing CAL_WEBHOOK_SECRET" }, 500);
+
+      const signature = request.headers.get("cal-signature") || request.headers.get("x-cal-signature");
+      if (!signature) return json({ error: "Missing Cal signature header" }, 400);
+
+      const rawBody = await request.arrayBuffer();
+      const verified = await verifyGenericHmacSignature({
+        rawBody,
+        secret: env.CAL_WEBHOOK_SECRET,
+        signatureHeader: signature,
+      });
+
+      if (!verified.ok) {
+        return json({ error: "Invalid Cal signature", reason: verified.reason }, 400);
+      }
+
+      let evt;
+      try {
+        evt = JSON.parse(new TextDecoder().decode(new Uint8Array(rawBody)));
+      } catch {
+        return json({ error: "Invalid JSON" }, 400);
+      }
+
+      const eventId = safeString(evt?.id || evt?.uid);
+      const eventType = safeString(evt?.type || evt?.event);
+      if (!eventId) return json({ error: "Missing event id" }, 400);
+
+      const receiptKey = `receipts/cal/${eventId}.json`;
+      const existingReceipt = await env.R2_VIRTUAL_LAUNCH.get(receiptKey);
+      if (existingReceipt) {
+        return json({ ok: true, deduped: true, eventId, eventType }, 200);
+      }
+
+      await env.R2_VIRTUAL_LAUNCH.put(receiptKey, rawBody, {
+        httpMetadata: { contentType: "application/json; charset=utf-8" },
+      });
+
+      // Create support task from Cal booking
+      const supportId = await supportIdFromEventId(eventId);
+      const supportKey = `support/${supportId}.json`;
+      const now = new Date().toISOString();
+
+      const support = {
+        accountId: null,
+        category: "Appointment",
+        createdAt: now,
+        email: evt?.payload?.attendee?.email || null,
+        eventId,
+        issueType: "Appt - Support",
+        latestUpdate: `Cal booking received (${eventType})`,
+        messages: [
+          {
+            createdAt: now,
+            message: JSON.stringify(evt, null, 2),
+            subject: `Cal booking (${eventType})`,
+          },
+        ],
+        name: evt?.payload?.attendee?.name || "Cal Attendee",
+        priority: "Normal",
+        status: "open / new",
+        subject: `Cal booking (${eventType})`,
+        supportId,
+        updatedAt: now,
+        urgency: "Normal",
+        clickup: null,
+      };
+
+      await env.R2_VIRTUAL_LAUNCH.put(supportKey, JSON.stringify(support, null, 2), {
+        httpMetadata: { contentType: "application/json; charset=utf-8" },
+      });
+
+      if (env.CLICKUP_PROJECTION_ENABLED === "true") {
+        try {
+          const r = await projectSupportToClickUp({ env, supportKey, support });
+          if (r?.taskId) {
+            const commentText = formatClickUpR2Comment({
+              canonicalKey: supportKey,
+              payload: evt,
+              receiptKey,
+              title: `Cal ${eventType} stored (R2 authority)`,
+              introText: `This support task was created by the VA Starter Track API from a Cal.com payload (${eventType}).`,
+            });
+            await clickupCreateTaskComment({ env, taskId: r.taskId, text: commentText });
+          }
+        } catch {
+          // non-fatal
+        }
+      }
+
+      return json({ ok: true, eventId, eventType, supportId }, 200);
     }
 
     // ------------------------------------------------------------
@@ -482,26 +861,22 @@ export default {
         httpMetadata: { contentType: "application/json; charset=utf-8" },
       });
 
-      const allowedTypes = new Set([
-        "charge.succeeded",
-        "checkout.session.completed",
-        "payment_intent.succeeded",
-      ]);
+      const allowedTypes = new Set(["charge.succeeded", "checkout.session.completed", "payment_intent.succeeded"]);
 
       if (!allowedTypes.has(eventType)) {
         return json({ ok: true, storedReceipt: true, ignoredType: eventType, eventId }, 200);
       }
 
       if (eventType === "checkout.session.completed") {
-        return await handleCheckoutSessionCompleted({ env, evt });
+        return await handleCheckoutSessionCompleted({ env, evt, receiptKey });
       }
 
       if (eventType === "payment_intent.succeeded") {
-        return await handlePaymentIntentSucceeded({ env, evt, eventId });
+        return await handlePaymentIntentSucceeded({ env, evt, eventId, receiptKey });
       }
 
       if (eventType === "charge.succeeded") {
-        return await handleChargeSucceeded({ env, evt, eventId });
+        return await handleChargeSucceeded({ env, evt, eventId, receiptKey });
       }
 
       return json({ ok: true, eventId, eventType, storedReceipt: true }, 200);
@@ -521,6 +896,77 @@ function clampString(v, maxLen) {
   return s.length > maxLen ? s.slice(0, maxLen) : s;
 }
 
+function exchangeCalAuthorizationCode({ code, env, redirectUri }) {
+  return fetch(CAL_TOKEN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: String(env.CAL_OAUTH_CLIENT_ID || ""),
+      client_secret: String(env.CAL_OAUTH_CLIENT_SECRET || ""),
+      code: String(code || ""),
+      grant_type: "authorization_code",
+      redirect_uri: String(redirectUri || ""),
+    }),
+  })
+    .then(async (res) => {
+      const text = await res.text();
+      let j = null;
+      try {
+        j = text ? JSON.parse(text) : null;
+      } catch {
+        j = { raw: text };
+      }
+
+      if (!res.ok) {
+        console.log("cal_oauth_exchange_failed", { status: res.status, body: j });
+        return { ok: false };
+      }
+
+      const accessToken = safeString(j?.access_token);
+      const refreshToken = safeString(j?.refresh_token);
+      const expiresIn = Number(j?.expires_in || 0);
+
+      if (!accessToken || !refreshToken || !expiresIn) return { ok: false };
+
+      return { ok: true, accessToken, expiresIn, refreshToken };
+    })
+    .catch(() => ({ ok: false }));
+}
+
+function escapeForCodeBlock(s) {
+  return String(s || "").replace(/```/g, "`​``");
+}
+
+function formatClickUpR2Comment({ canonicalKey, payload, receiptKey, title, introText }) {
+  const canonicalUrl = `${R2_OBJECT_URL_BASE}${encodeURIComponent(String(canonicalKey || ""))}`;
+  const receiptUrl = receiptKey ? `${R2_OBJECT_URL_BASE}${encodeURIComponent(String(receiptKey))}` : "";
+
+  const payloadJson = escapeForCodeBlock(JSON.stringify(payload || {}, null, 2));
+
+  const lines = [];
+
+  if (introText) {
+    lines.push(String(introText));
+    lines.push("");
+  }
+
+  lines.push(`**${String(title || "R2 record")}**`);
+  lines.push("");
+  lines.push(`R2 canonical: ${canonicalUrl}`);
+  if (receiptUrl) lines.push(`R2 receipt: ${receiptUrl}`);
+  lines.push("");
+  lines.push("<details>");
+  lines.push("<summary>Payload JSON</summary>");
+  lines.push("");
+  lines.push("```json");
+  lines.push(payloadJson);
+  lines.push("```");
+  lines.push("</details>");
+
+  return lines.join("
+");
+}
+
 async function supportIdFromEventId(eventId) {
   const h = await sha256Hex(String(eventId || ""));
   return `SUP-${String(h).slice(0, 8).toUpperCase()}`;
@@ -529,20 +975,7 @@ async function supportIdFromEventId(eventId) {
 function validateSupportMessagePayload(input) {
   if (!input || typeof input !== "object" || Array.isArray(input)) return { ok: false, error: "Payload must be an object" };
 
-  const allowed = new Set([
-    "category",
-    "email",
-    "eventId",
-    "issueType",
-    "message",
-    "name",
-    "priority",
-    "relatedOrderId",
-    "sessionToken",
-    "subject",
-    "tokenId",
-    "urgency",
-  ]);
+  const allowed = new Set(["category", "email", "eventId", "issueType", "message", "name", "priority", "relatedOrderId", "sessionToken", "subject", "tokenId", "urgency"]);
 
   const keys = Object.keys(input).sort();
   for (const k of keys) {
@@ -562,7 +995,6 @@ function validateSupportMessagePayload(input) {
     urgency: clampString(input.urgency, 60),
   };
 
-  // Required (Alphabetical)
   if (!payload.category) return { ok: false, error: "Missing category" };
   if (!payload.email) return { ok: false, error: "Missing email" };
   if (!payload.eventId) return { ok: false, error: "Missing eventId" };
@@ -573,7 +1005,6 @@ function validateSupportMessagePayload(input) {
   if (!payload.subject) return { ok: false, error: "Missing subject" };
   if (!payload.urgency) return { ok: false, error: "Missing urgency" };
 
-  // Optional (Alphabetical)
   const relatedOrderId = clampString(input.relatedOrderId, 160);
   const sessionToken = clampString(input.sessionToken, 240);
   const tokenId = clampString(input.tokenId, 160);
@@ -592,7 +1023,6 @@ function validateSupportMessagePayload(input) {
 
   return { ok: true, payload };
 }
-
 
 function allowedMethod(method) {
   return ["GET", "OPTIONS", "POST"].includes(String(method || ""));
@@ -626,13 +1056,7 @@ function getAllowedOrigin(request) {
 }
 
 async function hmacSha256B64({ secret, message }) {
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
 
   const sigBuf = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message));
   return base64url(new Uint8Array(sigBuf));
@@ -851,6 +1275,25 @@ async function upsertDirectoryIndex({ env, accountId, slug, updatedAt }) {
 }
 
 // ============================================================
+// ClickUp (Common)
+// ============================================================
+
+async function clickupCreateTaskComment({ env, taskId, text }) {
+  if (!env.CLICKUP_API_KEY) throw new Error("Missing CLICKUP_API_KEY");
+  if (!taskId) throw new Error("Missing taskId");
+
+  return await clickupFetch({
+    body: {
+      comment_text: String(text || ""),
+      notify_all: false,
+    },
+    env,
+    method: "POST",
+    path: `/task/${taskId}/comment`,
+  });
+}
+
+// ============================================================
 // ClickUp (Support)
 // ============================================================
 
@@ -881,8 +1324,6 @@ async function projectSupportToClickUp({ env, supportKey, support }) {
     Normal: "ea5fda7f-7c60-4e72-9034-0434836950a2",
   };
 
-  // Map our issueType to the closest Support Type dropdown option.
-  // (We prefer exact match; fall back to Ticket - Intake.)
   const typeOptionId = {
     "Appt - Demo": "5f847513-d4dd-4e45-af47-b229dbfbbb8f",
     "Appt - Exit / Offboarding": "a8d9484d-df52-42fa-a2c8-e4df801e398e",
@@ -913,8 +1354,6 @@ async function projectSupportToClickUp({ env, supportKey, support }) {
   custom_fields.push({ id: CF.supportLatestUpdate, value: support?.latestUpdate || "" });
   custom_fields.push({ id: CF.supportPriority, value: priorityOption });
   custom_fields.push({ id: CF.supportType, value: supportTypeOption });
-
-  // We don't have Cal eventTypeId on this form; leave Support Event ID empty.
 
   const clickupPayload = {
     custom_fields,
@@ -951,27 +1390,87 @@ async function projectSupportToClickUp({ env, supportKey, support }) {
   return { ok: true, taskId };
 }
 
+async function upsertAccountCalOAuth({ accountId, env, next }) {
+  const accountKey = `accounts/${accountId}.json`;
+  const obj = await env.R2_VIRTUAL_LAUNCH.get(accountKey);
+
+  let account = null;
+  if (obj) {
+    try {
+      account = JSON.parse(await obj.text());
+    } catch {
+      account = null;
+    }
+  }
+
+  const now = new Date().toISOString();
+
+  const createdAt = account?.createdAt && typeof account.createdAt === "string" ? account.createdAt : now;
+
+  const merged = {
+    ...(account || {}),
+    accountId,
+    createdAt,
+    calOAuth: {
+      accessToken: safeString(next?.accessToken),
+      expiresAt: safeString(next?.expiresAt),
+      refreshToken: safeString(next?.refreshToken),
+      updatedAt: safeString(next?.updatedAt) || now,
+    },
+    updatedAt: now,
+  };
+
+  await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(merged, null, 2), {
+    httpMetadata: { contentType: "application/json; charset=utf-8" },
+  });
+
+  return { ok: true };
+}
+
+async function upsertVaProfileCalConnected({ accountId, env, slug }) {
+  const key = `va/pages/${slug}.json`;
+  const obj = await env.R2_VIRTUAL_LAUNCH.get(key);
+  if (!obj) return { ok: false };
+
+  let profile;
+  try {
+    profile = JSON.parse(await obj.text());
+  } catch {
+    return { ok: false };
+  }
+
+  if (safeString(profile?.accountId) !== String(accountId)) return { ok: false };
+
+  const next = {
+    ...profile,
+    calConnectedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  await env.R2_VIRTUAL_LAUNCH.put(key, JSON.stringify(next, null, 2), {
+    httpMetadata: { contentType: "application/json; charset=utf-8" },
+  });
+
+  return { ok: true };
+}
+
 // ============================================================
-// Stripe + ClickUp (Existing)
+// Stripe + ClickUp
 // ============================================================
 
-async function handleCheckoutSessionCompleted({ env, evt }) {
+async function handleCheckoutSessionCompleted({ env, evt, receiptKey }) {
   const o = evt?.data?.object;
 
-  const sessionId = o?.id;
+  const customerId = o?.customer;
+  const fullName = o?.customer_details?.name;
   const paymentIntentId = o?.payment_intent;
   const paymentLink = o?.payment_link;
   const paymentStatus = o?.status;
-  const fullName = o?.customer_details?.name;
   const primaryEmail = o?.customer_details?.email;
-  const customerId = o?.customer;
+  const sessionId = o?.id;
 
   const normalizedPaymentIntentId =
-    typeof paymentIntentId === "string"
-      ? paymentIntentId
-      : typeof paymentIntentId?.id === "string"
-      ? paymentIntentId.id
-      : null;
+    typeof paymentIntentId === "string" ? paymentIntentId : typeof paymentIntentId?.id === "string" ? paymentIntentId.id : null;
 
   if (!normalizedPaymentIntentId) {
     return json(
@@ -986,7 +1485,7 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
     );
   }
 
-  const accountId = normalizedPaymentIntentId;
+  const accountId = customerId ? `acct_stripe_${customerId}` : normalizedPaymentIntentId;
   const accountKey = `accounts/${accountId}.json`;
   const now = new Date().toISOString();
 
@@ -1021,6 +1520,7 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
       activatedAt: account?.subscription?.activatedAt || now,
     },
     clickup: account?.clickup || null,
+    updatedAt: now,
   };
 
   await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
@@ -1050,6 +1550,17 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
       const r = await projectAccountToClickUp({ env, accountKey, account: nextAccount });
       projection.ok = true;
       projection.taskId = r?.taskId || null;
+
+      if (projection.taskId) {
+        const commentText = formatClickUpR2Comment({
+          canonicalKey: accountKey,
+          payload: evt,
+          receiptKey,
+          title: `Stripe ${evt.type} stored (R2 authority)`,
+          introText: `This account task was created by the VA Starter Track API from a Stripe payload (${evt.type}).`,
+        });
+        await clickupCreateTaskComment({ env, taskId: projection.taskId, text: commentText });
+      }
     } catch (err) {
       projection.ok = false;
       projection.error = String(err?.message || err);
@@ -1072,7 +1583,7 @@ async function handleCheckoutSessionCompleted({ env, evt }) {
   return json({ ok: true, accountId, eventId: evt.id, eventType: evt.type, projection, subscription: { active: true } }, 200);
 }
 
-async function handlePaymentIntentSucceeded({ env, evt, eventId }) {
+async function handlePaymentIntentSucceeded({ env, evt, eventId, receiptKey }) {
   const o = evt?.data?.object;
 
   const paymentIntentId = o?.id;
@@ -1116,21 +1627,38 @@ async function handlePaymentIntentSucceeded({ env, evt, eventId }) {
   const nextAccount = {
     ...account,
     stripe: {
-      ...account.stripe,
+      ...(account?.stripe || {}),
       eventId: evt.id,
       paymentIntentId: paymentIntentId || account?.stripe?.paymentIntentId || null,
       paymentStatus: paymentStatus || account?.stripe?.paymentStatus || null,
     },
+    updatedAt: new Date().toISOString(),
   };
 
   await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
 
+  const taskId = nextAccount?.clickup?.taskId;
+  if (taskId && env.CLICKUP_PROJECTION_ENABLED === "true") {
+    const commentText = formatClickUpR2Comment({
+      canonicalKey: accountKey,
+      payload: evt,
+      receiptKey,
+      title: `Stripe ${evt.type} stored (R2 authority)`,
+    });
+
+    try {
+      await clickupCreateTaskComment({ env, taskId, text: commentText });
+    } catch {
+      // non-fatal
+    }
+  }
+
   return json({ ok: true, accountId, eventId: evt.id, eventType: evt.type }, 200);
 }
 
-async function handleChargeSucceeded({ env, evt, eventId }) {
+async function handleChargeSucceeded({ env, evt, eventId, receiptKey }) {
   const o = evt?.data?.object || evt?.object || evt?.data || evt;
 
   const paymentIntentId = o?.payment_intent;
@@ -1174,17 +1702,34 @@ async function handleChargeSucceeded({ env, evt, eventId }) {
   const nextAccount = {
     ...account,
     stripe: {
-      ...account.stripe,
+      ...(account?.stripe || {}),
       eventId: evt.id,
       paymentIntentId: paymentIntentId || account?.stripe?.paymentIntentId || null,
       paymentStatus: paymentStatus || account?.stripe?.paymentStatus || null,
       receiptUrl: receiptUrl || account?.stripe?.receiptUrl || null,
     },
+    updatedAt: new Date().toISOString(),
   };
 
   await env.R2_VIRTUAL_LAUNCH.put(accountKey, JSON.stringify(nextAccount, null, 2), {
     httpMetadata: { contentType: "application/json; charset=utf-8" },
   });
+
+  const taskId = nextAccount?.clickup?.taskId;
+  if (taskId && env.CLICKUP_PROJECTION_ENABLED === "true") {
+    const commentText = formatClickUpR2Comment({
+      canonicalKey: accountKey,
+      payload: evt,
+      receiptKey,
+      title: `Stripe ${evt.type} stored (R2 authority)`,
+    });
+
+    try {
+      await clickupCreateTaskComment({ env, taskId, text: commentText });
+    } catch {
+      // non-fatal
+    }
+  }
 
   return json({ ok: true, accountId, eventId: evt.id, eventType: evt.type }, 200);
 }
@@ -1282,6 +1827,24 @@ async function clickupFetch({ env, method, path, body }) {
   return jsonBody;
 }
 
+async function verifyGenericHmacSignature({ rawBody, secret, signatureHeader }) {
+  const rawText = new TextDecoder().decode(new Uint8Array(rawBody));
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const sigBuf = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(rawText));
+  const expected = bufToHex(new Uint8Array(sigBuf));
+
+  if (timingSafeEqual(expected, signatureHeader)) return { ok: true };
+
+  return { ok: false, reason: "Signature mismatch" };
+}
+
 async function verifyStripeSignature({ rawBody, secret, signatureHeader, toleranceSeconds }) {
   const parts = parseStripeSignatureHeader(signatureHeader);
   if (!parts.timestamp) return { ok: false, reason: "Missing timestamp" };
@@ -1294,13 +1857,7 @@ async function verifyStripeSignature({ rawBody, secret, signatureHeader, toleran
   const rawText = new TextDecoder().decode(new Uint8Array(rawBody));
   const signedPayload = new TextEncoder().encode(`${parts.timestamp}.${rawText}`);
 
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
 
   const sigBuf = await crypto.subtle.sign("HMAC", key, signedPayload);
   const expected = bufToHex(new Uint8Array(sigBuf));
