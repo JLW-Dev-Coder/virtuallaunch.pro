@@ -269,22 +269,29 @@
           <div class="mt-3 flex flex-wrap gap-2">
             <button id="btn-collapse-all" class="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-extrabold text-white/85 hover:bg-white/10" type="button">Collapse all</button>
             <button id="btn-expand-all" class="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-extrabold text-white/85 hover:bg-white/10" type="button">Expand all</button>
-            <a class="ml-auto inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-extrabold text-white/85 hover:bg-white/10" href="#top">Top of preview</a>
+            <a class="ml-auto inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-xs font-extrabold text-white/85 hover:bg-white/10" data-scroll href="#top">Top of preview</a>
           </div>
 
+          <!-- Save / Reset (builder state) -->
           <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
-            <a class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" href="#jump-hero">Hero</a>
-            <a class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" href="#jump-about">About</a>
-            <a class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" href="#jump-services">Services</a>
-            <a class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" href="#jump-proofs">Work Proofs</a>
-            <a class="col-span-2 rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" href="#jump-cv">CV</a>
+            <button id="btn-save" class="rounded-xl bg-brand-500 px-3 py-2 font-extrabold text-ink-900 hover:bg-brand-400" type="button">Save</button>
+            <button id="btn-reset" class="rounded-xl border border-white/15 bg-white/5 px-3 py-2 font-extrabold text-white/85 hover:bg-white/10" type="button">Reset</button>
+          </div>
+          <div id="builder-status" class="mt-2 hidden rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 text-[11px] font-extrabold text-white/70" aria-live="polite"></div>
+
+          <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+            <button class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" data-nav data-builder-target="builder-hero" data-preview-target="hero" type="button">Hero</button>
+            <button class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" data-nav data-builder-target="builder-about" data-preview-target="about" type="button">About</button>
+            <button class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" data-nav data-builder-target="builder-services" data-preview-target="services" type="button">Services</button>
+            <button class="rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" data-nav data-builder-target="builder-work-proofs" data-preview-target="work-proofs" type="button">Work Proofs</button>
+            <button class="col-span-2 rounded-xl border border-white/10 bg-ink-950/40 px-3 py-2 font-extrabold text-white/75 hover:bg-ink-950/55" data-nav data-builder-target="builder-cv" data-preview-target="cv" type="button">CV</button>
           </div>
         </div>
 
         <div class="space-y-4">
 
         <!-- HERO -->
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div id="builder-hero" class="rounded-2xl border border-white/10 bg-white/5 p-4 scroll-mt-[140px]">
           <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">Hero</div>
 
           <label class="mt-3 block text-xs font-extrabold text-white/80">Name</label>
@@ -318,7 +325,7 @@
         </div>
 
         <!-- ABOUT -->
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div id="builder-about" class="rounded-2xl border border-white/10 bg-white/5 p-4 scroll-mt-[140px]">
           <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">About</div>
 
           <label class="mt-3 block text-xs font-extrabold text-white/80">About heading</label>
@@ -335,7 +342,7 @@
         </div>
 
         <!-- SERVICES -->
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div id="builder-services" class="rounded-2xl border border-white/10 bg-white/5 p-4 scroll-mt-[140px]">
           <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">Services (4 cards)</div>
           <div class="mt-3 text-xs text-white/60">Each card: title | 3 bullets (one per line).</div>
 
@@ -375,7 +382,7 @@ Task closure notes</textarea>
         </div>
 
         <!-- WORK PROOFS -->
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div id="builder-work-proofs" class="rounded-2xl border border-white/10 bg-white/5 p-4 scroll-mt-[140px]">
           <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">Work Proofs</div>
           <div class="mt-2 text-xs text-white/60">
             Provide up to 10 cards. Format: <span class="text-white/80">Title || Front paragraph A || Front paragraph B || Back body text</span> (one card per line).
@@ -393,7 +400,7 @@ VA Agencies || I support agency operations with organized delivery systems and i
         </div>
 
         <!-- CV + SECTIONS -->
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div id="builder-cv" class="rounded-2xl border border-white/10 bg-white/5 p-4 scroll-mt-[140px]">
           <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">CV</div>
 
           <label class="mt-3 block text-xs font-extrabold text-white/80">CV headline (under name)</label>
@@ -500,6 +507,7 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
 
           <!-- HERO -->
           <section id="top">
+            <div id="hero"></div>
             <div class="mb-5">
               <span id="p-badge" class="inline-flex w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
                 VA Starter Track • Profile Preview
@@ -747,6 +755,20 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
       }
 
       function runTests() {
+        // Builder sections exist
+        assert("builder_about_exists", !!byId("builder-about"));
+        assert("builder_cv_exists", !!byId("builder-cv"));
+        assert("builder_hero_exists", !!byId("builder-hero"));
+        assert("builder_services_exists", !!byId("builder-services"));
+        assert("builder_work_proofs_exists", !!byId("builder-work-proofs"));
+        // Anchor + controls exist
+        assert("anchor_about_exists", !!byId("about"));
+        assert("anchor_cv_exists", !!byId("cv"));
+        assert("anchor_hero_exists", !!byId("hero"));
+        assert("anchor_services_exists", !!byId("services"));
+        assert("anchor_work_proofs_exists", !!byId("work-proofs"));
+        assert("save_btn_exists", !!byId("btn-save"));
+        assert("reset_btn_exists", !!byId("btn-reset"));
         // Dashboard shell sanity (partials required)
         assert("dashboard_shell_exists", !!byId("dashboard-shell"));
         assert("dashboard_main_exists", !!byId("dashboard-main"));
@@ -1098,6 +1120,148 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
         applyAll();
       }
 
+      function showBuilderStatus(text) {
+        var el = byId("builder-status");
+        if (!el) return;
+        if (!text) {
+          el.classList.add("hidden");
+          el.textContent = "";
+          return;
+        }
+        el.classList.remove("hidden");
+        el.textContent = String(text);
+      }
+
+      function scrollToId(id) {
+        var el = byId(id);
+        if (!el) return;
+        var offset = 140;
+        var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+      }
+
+      function initAnchorNav() {
+        // Preview anchor scroll (right side) using data-scroll anchors
+        document.addEventListener(
+          "click",
+          function (e) {
+            var a = e.target && e.target.closest ? e.target.closest("a") : null;
+            if (!a) return;
+            if (!a.hasAttribute("data-scroll")) return;
+            var href = String(a.getAttribute("href") || "");
+            if (!href || href[0] !== "#") return;
+            var id = href.slice(1);
+            if (!id) return;
+            e.preventDefault();
+            try {
+              history.replaceState(null, "", href);
+            } catch (_) {}
+            scrollToId(id);
+          },
+          false
+        );
+
+        // Dual-nav buttons: scroll builder + preview
+        document.addEventListener(
+          "click",
+          function (e) {
+            var btn = e.target && e.target.closest ? e.target.closest("button[data-nav]") : null;
+            if (!btn) return;
+
+            var b = String(btn.getAttribute("data-builder-target") || "").trim();
+            var p = String(btn.getAttribute("data-preview-target") || "").trim();
+
+            if (b) scrollBuilderToId(b);
+            if (p) scrollToId(p);
+          },
+          false
+        );
+
+        if (window.location.hash) {
+          var id = window.location.hash.replace(/^#/, "");
+          if (id) setTimeout(function () { scrollToId(id); }, 0);
+        }
+      }
+
+      function scrollBuilderToId(id) {
+        var el = byId(id);
+        if (!el) return;
+        // Use scrollIntoView so it works on mobile where the builder is above preview
+        try {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch (_) {
+          // Fallback
+          var top = el.getBoundingClientRect().top + window.pageYOffset - 140;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
+      }
+
+      function getBuilderInputs() {
+        return Array.prototype.slice.call(document.querySelectorAll("aside input[id^='f-'], aside textarea[id^='f-']"));
+      }
+
+      function snapshotValues() {
+        var out = {};
+        getBuilderInputs().forEach(function (el) {
+          out[el.id] = el.value;
+        });
+        return out;
+      }
+
+      function applySnapshot(snap) {
+        if (!snap) return;
+        Object.keys(snap).forEach(function (id) {
+          var el = byId(id);
+          if (el) el.value = String(snap[id]);
+        });
+        applyAll();
+      }
+
+      var INITIAL_SNAPSHOT = null;
+      var STORAGE_KEY = "vlp_va_setup_builder_v1";
+
+      function saveDraft() {
+        try {
+          var data = snapshotValues();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 1, savedAt: Date.now(), data: data }));
+          showBuilderStatus("Saved.");
+          setTimeout(function () { showBuilderStatus(""); }, 1400);
+        } catch (_) {
+          showBuilderStatus("Save failed (storage blocked).");
+        }
+      }
+
+      function restoreDraft() {
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          var parsed = JSON.parse(raw);
+          if (!parsed || !parsed.data) return false;
+          applySnapshot(parsed.data);
+          showBuilderStatus("Draft restored.");
+          setTimeout(function () { showBuilderStatus(""); }, 1400);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function resetToInitial() {
+        if (!INITIAL_SNAPSHOT) return;
+        applySnapshot(INITIAL_SNAPSHOT);
+        showBuilderStatus("Reset.");
+        setTimeout(function () { showBuilderStatus(""); }, 1400);
+      }
+
+      function initPersistence() {
+        INITIAL_SNAPSHOT = snapshotValues();
+        var saveBtn = byId("btn-save");
+        var resetBtn = byId("btn-reset");
+        if (saveBtn) saveBtn.addEventListener("click", saveDraft);
+        if (resetBtn) resetBtn.addEventListener("click", resetToInitial);
+        restoreDraft();
+      }
+
       function initAll() {
         // Run tests only when explicitly requested
         try {
@@ -1105,6 +1269,9 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
           var run = String(url.searchParams.get("runTests") || "").trim().toLowerCase();
           if (run === "1" || run === "true") runTests();
         } catch (_) {}
+
+        initAnchorNav();
+        initPersistence();
 
         bindAll();
         wireFlipAll();
