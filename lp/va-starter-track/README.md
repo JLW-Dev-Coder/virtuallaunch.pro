@@ -16,7 +16,7 @@
 * [Event Trigger System](#event-trigger-system)
 * [Idempotency & Safety](#idempotency--safety)
 * [Operational Checklist](#operational-checklist)
-* [Payloads (Stripe, Transcript Report, Cal Support)](#payloads-stripe-transcript-report-cal-support)
+* [Payloads (Stripe, Cal)](#payloads-stripe-cal)
 * [Processing Contract (Write Order)](#processing-contract-write-order)
 * [Read Models (Worker GET Endpoints)](#read-models-worker-get-endpoints)
 * [Repository Structure (Exact Tree)](#repository-structure-exact-tree)
@@ -75,12 +75,15 @@ ClickUp is projection only. R2 is the only authority.
 
 All tasks link to the account via the **Account ID** custom field.
 
-### Task Names 
-Account List:
-Client Full Name | VA Starter Track
+### Task Names
 
-Support List:
-Client Full Name | Support Type | Support Priority
+Account list:
+
+* `Client Full Name | VA Starter Track`
+
+Support list:
+
+* `Client Full Name | Support Type | Support Priority`
 
 Endpoint:
 
@@ -108,7 +111,22 @@ Canonical → projection mapping:
 * Stripe Payment Status — `1b9a762e-cf3e-47d7-8ae7-98efe9e11eab`
 * Stripe Receipt URL — `f8cb77f1-26b3-4788-83ed-2914bb608c11`
 * Stripe Session ID — `57e6c42b-a471-4316-92dc-23ce0f59d8b4`
-```
+
+### Support fields (Alphabetical)
+
+* Support Action Required — `aac0816d-0e05-4c57-8196-6098929f35ac`
+* Support Email — `7f547901-690d-4f39-8851-d19e19f87bf8`
+* Support Event ID — `8e8b453e-01f3-40fe-8156-2e9d9633ebd6`
+* Support Latest Update — `03ebc8ba-714e-4f7c-9748-eb1b62e657f7`
+* Support Priority — `b96403c7-028a-48eb-b6b1-349f295244b5`
+* Support Type — `e09d9f53-4f03-49fe-8c5f-abe3b160b167`
+
+## Reference (ClickUp API Dumps)
+
+<details>
+<summary><strong>Accounts list (ClickUp list object)</strong></summary>
+
+```json
 {
   "id": "901711473499",
   "name": "Accounts",
@@ -185,9 +203,15 @@ Canonical → projection mapping:
   ],
   "permission_level": "create"
 }
- ```
 ```
-     {
+
+</details>
+
+<details>
+<summary><strong>Accounts list fields (ClickUp custom fields)</strong></summary>
+
+```json
+{
   "fields": [
     {
       "id": "059a571b-aa5d-41b4-ae12-3681b451b474",
@@ -340,16 +364,13 @@ Canonical → projection mapping:
   ]
 }
 ```
-### Support fields (Alphabetical)
 
-* Support Action Required — `aac0816d-0e05-4c57-8196-6098929f35ac`
-* Support Email — `7f547901-690d-4f39-8851-d19e19f87bf8`
-* Support Event ID — `8e8b453e-01f3-40fe-8156-2e9d9633ebd6`
-* Support Latest Update — `03ebc8ba-714e-4f7c-9748-eb1b62e657f7`
-* Support Priority — `b96403c7-028a-48eb-b6b1-349f295244b5`
-* Support Type — `e09d9f53-4f03-49fe-8c5f-abe3b160b167`
+</details>
 
-```
+<details>
+<summary><strong>Support list (ClickUp list object)</strong></summary>
+
+```json
 {
   "id": "901711478590",
   "name": "Support",
@@ -452,7 +473,13 @@ Canonical → projection mapping:
   "permission_level": "create"
 }
 ```
-```
+
+</details>
+
+<details>
+<summary><strong>Support list fields (ClickUp custom fields)</strong></summary>
+
+```json
 {
   "fields": [
     {
@@ -678,6 +705,8 @@ Canonical → projection mapping:
 }
 ```
 
+</details>
+
 ## Projection Rules
 
 * Worker never reads ClickUp to decide canonical state.
@@ -689,10 +718,10 @@ Canonical → projection mapping:
 
 All mutations must:
 
-* Validate strict JSON schema
-* Reject unknown fields
-* Normalize booleans and arrays
 * Append receipt before canonical mutation
+* Normalize booleans and arrays
+* Reject unknown fields
+* Validate strict JSON schema
 
 ---
 
@@ -723,19 +752,13 @@ va/pages/{slug}.json
 Notes:
 
 * `receipts/*` is the immutable ledger.
-* `va/pages/*` holds each VA public profile source of truth.
-* `va/directory/index.json` is the public directory read model input.
 * `support/*` stores support threads + status.
+* `va/directory/index.json` is the public directory read model input.
+* `va/pages/*` holds each VA public profile source of truth.
 
 ---
 
 # Domains & Routing
-
-## UI Domain
-
-```
-https://virtuallaunch.pro
-```
 
 ## API Domain
 
@@ -747,6 +770,12 @@ Worker route:
 
 ```
 api.virtuallaunch.pro/*
+```
+
+## UI Domain
+
+```
+https://virtuallaunch.pro
 ```
 
 Rules:
@@ -765,10 +794,11 @@ Final Trigger Set (Alphabetical):
 * Form
 * Payment
 
-Form → VA publish + support message
-Payment → Stripe webhook (subscription active)
+Notes:
 
-Only mutation sources append receipts.
+* Form → VA publish + support message
+* Payment → Stripe webhook (subscription active)
+* Only mutation sources append receipts
 
 ---
 
@@ -784,11 +814,11 @@ Only mutation sources append receipts.
 # Operational Checklist
 
 * All forms POST absolute Worker URLs
+* Directory index updated on publish
+* Emails (if any) sent only after canonical update
 * eventId included in every mutation
 * Receipt written before state change
 * sessionToken validated (authenticated mutations)
-* Directory index updated on publish
-* Emails (if any) sent only after canonical update
 
 ---
 
@@ -806,6 +836,8 @@ If receipt exists → exit safely.
 
 Receipt append always precedes canonical mutation.
 
+**Cal webhook write order (required):** signature → receipt → canonical → projection.
+
 ---
 
 # Read Models (Worker GET Endpoints)
@@ -821,8 +853,8 @@ Examples:
 ```
 GET /directory
 GET /va/{slug}
-GET /va/dashboard/profile
 GET /va/dashboard/analytics
+GET /va/dashboard/profile
 ```
 
 ---
@@ -839,8 +871,8 @@ GET /va/dashboard/analytics
 │  └─ README.md
 └─ va/
    ├─ dashboard/
-   │  ├─ index.html
    │  ├─ analytics.html
+   │  ├─ index.html
    │  ├─ setup.html
    │  └─ support.html
    ├─ directory/
@@ -854,10 +886,10 @@ GET /va/dashboard/analytics
 # Security & Legal Controls
 
 * Deny-by-default endpoints
-* Webhook signature validation (Stripe, Cal)
 * No secrets in client payload
-* Strict JSON validation (reject unknown fields)
 * R2 is authority
+* Strict JSON validation (reject unknown fields)
+* Webhook signature validation (Cal, Stripe)
 
 ---
 
@@ -865,20 +897,100 @@ GET /va/dashboard/analytics
 
 Stripe does NOT provide an authenticated session token for your app.
 
-Stripe redirect URLs are UI redirects only.
-They are not authentication.
+Stripe redirect URLs are UI redirects only. They are not authentication.
 
 Correct model:
 
 1. Stripe webhook marks subscription active in R2
-2. System issues a sessionToken (signed, short-lived)
-3. Dashboard uses sessionToken for authenticated POST/GET
+2. System issues a session token or session cookie (Worker-signed)
+3. Dashboard uses the Worker-issued session for authenticated POST/GET
 
 Session tokens must:
 
-* Be verifiable (HMAC or JWT)
 * Be short-lived
+* Be verifiable (HMAC or JWT)
 * Map to a canonical account/profile
+
+## Dashboard Authentication (Cookie-Based Session Contract)
+
+### Canonical Authentication Mechanism (v1)
+
+Authenticated dashboard routes use a **Worker-validated session cookie**.
+
+The dashboard UI sends authenticated requests using:
+
+```
+fetch(..., { credentials: "include" })
+```
+
+This instructs the browser to include cookies for:
+
+```
+https://api.virtuallaunch.pro
+```
+
+Therefore, authentication for dashboard POST and GET routes is:
+
+* Cookie-based
+* Worker-validated
+* Not derived from client payload
+* Not derived from Stripe redirect
+* Not derived from hidden form inputs
+
+### Required Cookie Properties
+
+The session cookie MUST:
+
+* Be cryptographically signed (HMAC or JWT)
+* Be invalidated on logout
+* Be issued only by the Worker
+* Be sent with `HttpOnly`
+* Be sent with `SameSite=Lax` or `SameSite=Strict`
+* Be sent with `Secure`
+* Be short-lived
+* Map to a canonical `accountId`
+
+The UI must never store:
+
+* accountId in hidden inputs
+* accountId in localStorage
+* accountId in querystring
+* sessionToken in localStorage
+
+### Worker Validation Rules
+
+For any authenticated POST route (including `/forms/va/publish`):
+
+1. Read cookie
+2. Verify signature
+3. Resolve `accountId` from session
+4. Reject request if invalid
+5. Append receipt
+6. Mutate canonical state
+
+The Worker MUST ignore any `accountId` submitted by the client.
+
+### Identity Resolution Rule
+
+Canonical identity is always derived server-side:
+
+```
+accountId ← session cookie
+```
+
+Never:
+
+```
+accountId ← form field
+accountId ← Stripe redirect
+accountId ← localStorage
+```
+
+### Security Invariant
+
+UI pages never define identity. UI pages never define canonical truth.
+
+R2 is authority. Worker is gatekeeper.
 
 ---
 
@@ -888,9 +1000,9 @@ VA Starter Track uses **Stripe Subscription Payment Links**.
 
 ## Product
 
+* Product ID: `prod_U3fRQzFg676SLl`
 * Product Name: VA Starter Track — Monthly
 * Price: $1.99 USD / month
-* Product ID: `prod_U3fRQzFg676SLl`
 * Tax Code: `txcd_20030000` (General - Services)
 
 ## Payment Link
@@ -903,9 +1015,9 @@ https://billing.taxmonitor.pro/b/fZu6oGcImaZk3k48z0aR206
 
 Rules:
 
+* Subscription activation occurs only via Stripe webhook
 * UI never grants access
 * UI redirect is cosmetic only
-* Subscription activation occurs only via Stripe webhook
 
 ## Webhook Source of Truth
 
@@ -917,6 +1029,98 @@ Stripe webhook must:
 4. Enable dashboard access
 
 Redirect pages must never mutate canonical state.
+
+## Stripe Canonical Mapping (v1)
+
+### Account identity
+
+```
+accountId = acct_stripe_{customerId}
+```
+
+### Idempotency
+
+* Receipt dedupe key: `eventId`
+* Payment dedupe key: `stripeSessionId` (for `checkout.session.completed`)
+
+### R2 receipt ledger
+
+```
+receipts/stripe/{eventId}.json
+```
+
+### Canonical account object
+
+```
+accounts/{accountId}.json
+```
+
+Top-level keys (alphabetical):
+
+* accountId
+* createdAt
+* primaryEmail
+* stripe
+* subscription
+
+stripe keys (alphabetical):
+
+* customerId
+* eventId
+* paymentIntentId
+* paymentLink
+* paymentStatus
+* receiptUrl
+* sessionId
+
+subscription keys (alphabetical):
+
+* activatedAt
+* active
+
+### Stripe event field mapping
+
+`checkout.session.completed` (store):
+
+* customerId = `data.object.customer`
+* eventId = `id`
+* fullName = `data.object.customer_details.name`
+* paymentIntentId = `data.object.payment_intent`
+* paymentLink = `data.object.payment_link`
+* paymentStatus = `data.object.status`
+* primaryEmail = `data.object.customer_details.email`
+* stripeSessionId = `data.object.id`
+
+`payment_intent.succeeded` (store):
+
+* eventId = `id`
+* paymentIntentId = `data.object.id`
+* paymentStatus = `data.object.status`
+
+`charge.succeeded` (store):
+
+* paymentIntentId = `data.object.payment_intent`
+* paymentStatus = `data.object.status`
+* receiptUrl = `data.object.receipt_url`
+
+## Stripe Correlation Index (paymentIntentId → accountId) (v1)
+
+Purpose: enable `charge.succeeded` and `payment_intent.succeeded` to resolve `accountId` using `paymentIntentId`, since those events may not include `customerId`.
+
+R2 key:
+
+```
+stripe/payment-intents/{paymentIntentId}.json
+```
+
+Created during:
+
+* `checkout.session.completed`
+
+Used during:
+
+* `charge.succeeded`
+* `payment_intent.succeeded`
 
 ---
 
@@ -963,42 +1167,115 @@ Rules:
 
 ---
 
+# Payloads (Stripe, Cal)
+
+This section documents the inbound payload shapes the Worker must accept.
+
+## Payload Groups (By Source)
+
+### Cal
+
+* BOOKING_CANCELLED
+* BOOKING_CREATED
+* BOOKING_RESCHEDULED
+
+### Stripe
+
+* charge.succeeded
+* checkout.session.completed
+* payment_intent.succeeded
+
+## Cal (Webhook)
+
+Endpoint:
+
+```
+POST /cal/webhook
+```
+
+Required:
+
+* Signature validation (CAL_WEBHOOK_SECRET)
+* Write order: signature → receipt → canonical → projection
+
+## Stripe (checkout.session.completed)
+
+Event source: Stripe webhook.
+
+Purpose: stores the user purchase and links to canonical account.
+
+Minimum fields used:
+
+* `id` (event id) → receipt + Account Event ID CF
+* `data.object.id` → Stripe Session ID CF (dedupe key)
+* `data.object.customer_details.email` → Account Primary Email CF
+* `data.object.customer_details.name` → Account Full Name CF
+* `data.object.payment_intent` → Stripe Payment Intent ID CF
+* `data.object.payment_link` → Stripe Payment URL CF
+* `data.object.status` → Stripe Payment Status CF
+
+Canonical effects:
+
+* Create account (if new)
+
+## Stripe (payment_intent.succeeded)
+
+Event source: Stripe webhook.
+
+Purpose: confirms payment intent succeeded and links by `payment_intent` id.
+
+Minimum fields used:
+
+* `id` (event id) → Account Event ID CF
+* `data.object.id` → Stripe Payment Intent ID CF
+* `data.object.status` → Stripe Payment Status CF
+
+## Stripe (charge.succeeded)
+
+Event source: Stripe webhook.
+
+Purpose: supplies receipt URL for the order.
+
+Minimum fields used:
+
+* `object.payment_intent` → Stripe Payment Intent ID CF
+* `object.receipt_url` → Stripe Receipt URL CF
+* `object.status` → Stripe Payment Status CF
+
+---
+
 # System Architecture
+
+## Logic Layer
+
+Cloudflare Worker (`api.virtuallaunch.pro`):
+
+* Enforces idempotency
+* Serves read-only GET endpoints
+* Upserts canonical state
+* Validates inbound events
+* Writes append-only receipts
 
 ## Presentation Layer
 
 Cloudflare Pages serves:
 
 * `/lp/va-starter-track/*` (marketing)
-* `/va/dashboard` (in-app authenticated UI root)
-* `/va/dashboard/setup` (in-app edit landing-page form, authenticated UI)
-* `/va/dashboard/analytics` (in app booking + page views, authenticated UI)
-* `/va/damian-reyes/{slug}` (public profile render pattern example)
-* `/va/dashboard/support.html` (in-app support page)
+* `/va/dashboard` (authenticated UI root)
+* `/va/dashboard/analytics` (authenticated UI)
+* `/va/dashboard/setup` (authenticated UI)
+* `/va/dashboard/support.html` (authenticated UI)
 * `/va/directory` (public listing)
+* `/va/{slug}` (public profile)
 
 UI never mutates canonical state directly. All mutations go through Worker endpoints.
-
----
-
-## Logic Layer
-
-Cloudflare Worker (`api.virtuallaunch.pro`):
-
-* Validates inbound events
-* Writes append-only receipts
-* Upserts canonical state
-* Enforces idempotency
-* Serves read-only GET endpoints
-
----
 
 ## Storage Layer
 
 Cloudflare R2:
 
-* Canonical objects (mutable state)
 * Append-only receipt ledger (immutable)
+* Canonical objects (mutable state)
 
 R2 is authority.
 
@@ -1018,7 +1295,70 @@ Alphabetical:
 * Profile page → `/va/{slug}`
 * Support page → `/va/dashboard/support.html`
 
----
+## Endpoint Ownership (UI vs Worker)
+
+Pages (static UI) routes and Worker (API) routes are separate concerns.
+
+Example:
+
+* `/pages/calendar` can exist as a **UI-only** route (Cloudflare Pages). The Worker does **not** need `GET /pages/calendar`.
+* The Worker only needs calendar-related **API** routes:
+
+  * `GET /cal/oauth/start`
+  * `GET /cal/oauth/status`
+  * `POST /cal/webhook`
+
+As long as the UI page is deployed at its UI path and its JavaScript calls the Worker endpoints, the path is valid.
+
+## Map UI Pages to Worker Endpoints (Alphabetical)
+
+### Dashboard analytics → `/va/dashboard/analytics`
+
+* `GET /auth/session`
+
+### Dashboard root → `/va/dashboard`
+
+* `GET /auth/session`
+* `GET /cal/oauth/status`
+
+### Dashboard setup → `/va/dashboard/setup`
+
+* `GET /auth/session`
+* `GET /cal/oauth/start`
+* `GET /cal/oauth/status`
+
+### Directory → `/va/directory`
+
+* `GET /directory`
+
+### Landing → `lp/va-starter-track/index.html`
+
+* `POST /stripe/webhook` (indirect, Stripe calls this not the page)
+
+### Login → `/va/login`
+
+* `GET /auth/confirm` (user clicks magic link)
+* `POST /auth/login`
+
+### Payment success → `lp/va-starter-track/payment-success.html`
+
+* none required (unless you add a read model later)
+
+### Profile → `/va/{slug}`
+
+* `GET /r2/object` (public object fetch by allowlisted prefix)
+
+### Support → `/va/dashboard/support.html`
+
+* `GET /auth/session`
+* `GET /support/status` (optional, if you show ticket status)
+* `POST /forms/support/message`
+
+## Public `GET /r2/object` Warning
+
+`GET /r2/object` is public by design. Anything under your allowlisted prefixes is retrievable.
+
+Do not store secrets (tokens, OAuth creds, etc.) under public prefixes unless you want to practice incident response for fun.
 
 ---
 
@@ -1051,205 +1391,27 @@ Alphabetical:
 
 ---
 
-# Payloads (Stripe, Transcript Report, Cal Support)
+# Worker POST Contract (VA Publish v1)
 
-This section documents the inbound payload shapes the Worker must accept.
-
-## Payload Groups (By Source)
-
-### Stripe
-
-*Webhook: 
-
-* charge.succeeded
-* checkout.session.completed
-* payment_intent.succeeded
-
-### Cal.com
-
-* BOOKING_CANCELLED
-* BOOKING_CREATED
-* BOOKING_RESCHEDULED
+(TODO: document the exact POST shape and canonical effects for VA publish, including required fields, optional fields, receipt key, and which canonical keys are mutated.)
 
 ---
 
-## Stripe (checkout.session.completed)
+# Support Status Read Model
 
-Event source: Stripe webhook.
-
-Purpose:
-
-Stores the user purchases and links to the Support task for Admin reference.
-
-Minimum fields used:
-
-* `id` (event id) → receipt + Account Event ID CF
-* `data.object.id` → Stripe Session ID CF (dedupe key)
-* `data.object.customer_details.name` → Account Full Name CF
-* `data.object.customer_details.email` → Account Primary Email CF
-* `data.object.status` → Stripe Payment Status CF
-* `data.object.payment_link` → Stripe Payment URL CF
-* `data.object.payment_intent` → Stripe Payment Intent ID CF
-
-Example (trimmed):
-
-```json
-{
-  "id": "evt_1SzncbCMpIgwe61ZklDYVjgV",
-  "type": "checkout.session.completed",
-  "data": {
-    "object": {
-      "id": "cs_live_a15vr7buckd0jG38Vzsuf7QObOwGanLb20JXqw7CZLeDve32AatnSY7TaY",
-      "status": "complete",
-      "payment_status": "paid",
-      "payment_intent": "pi_3SzncZCMpIgwe61Z0ro4Ruxv",
-      "payment_link": "plink_1SznXhCMpIgwe61ZUclAKXCj",
-      "customer_details": {
-        "name": "Jamie L Williams",
-        "email": "jamie.williams@virtuallaunch.pro",
-        "business_name": null
-      }
-    }
-  }
-}
-```
-
-Canonical effects:
-
-* Create account (if new)
-
-## Stripe (payment_intent.succeeded)
-
-Event source: Stripe webhook.
-
-Purpose:
-
-Confirms payment intent succeeded
-Links to Checkout Session + Charge by `payment_intent` id
-
-Minimum fields used:
-
-* `id` (event id) → Account Event ID CF
-* `data.object.id` → Stripe Payment Intent ID CF
-* `data.object.status` → Stripe Payment Status CF
-
-Example (trimmed):
-
-```json
-{
-  "id": "evt_3SzncZCMpIgwe61Z0XeE9DfJ",
-  "type": "payment_intent.succeeded",
-  "data": {
-    "object": {
-      "id": "pi_3SzncZCMpIgwe61Z0ro4Ruxv",
-      "status": "succeeded",
-      "latest_charge": "ch_3SzncZCMpIgwe61Z0faf2v3f"
-    }
-  }
-}
-```
-
-## Stripe (charge.succeeded)
-
-Event source: Stripe webhook.
-
-Purpose:
-
-Supplies receipt URL for the order
-
-Minimum fields used:
-
-* `object.payment_intent` → Stripe Payment Intent ID CF
-* `object.receipt_url` → Stripe Receipt URL CF
-* `object.status` → Stripe Payment Status CF
-
-Example (trimmed):
-
-```json
-{
-  "object": {
-    "id": "ch_3SzncZCMpIgwe61Z0faf2v3f",
-    "object": "charge",
-    "status": "succeeded",
-    "payment_intent": "pi_3SzncZCMpIgwe61Z0ro4Ruxv",
-    "receipt_url": "https://pay.stripe.com/receipts/payment/CAcQARoXChVhY2N0XzFSTmdtWENNcElnd2U2MVoo-bi0zAYyBnyGtbiKBjosFlkRUNJF8liaNSNl-GMQaxhh_fccQx5an3FCrTmIN6kgO6QtPRoXRJr3ZR8"
-  }
-}
-```
+(TODO: document the support status read model endpoint(s) and response shape used by the UI.)
 
 ---
 
-## Stripe Webhook Destination (Production)
+# Support Status Webhook Ingestion
 
-Destination details
+(TODO: document ClickUp webhook ingestion (if enabled) that mirrors Support status into `support/{supportId}.json`.)
 
-Destination ID
-`we_1T5csCCMpIgwe61ZVclziEhq`
+---
 
-Name
-`virtuallaunch-pro-stripe-webhook`
+# Support Webhook Health Watchdog
 
-Endpoint URL
-`https://api.virtuallaunch.pro/stripe/webhook`
-
-Description
-Receives Stripe events for Virtual Launch Pro checkouts and subscription lifecycle updates. Used to confirm successful payments and keep service access in sync with renewals, cancellations, and failed invoices.
-
-API version
-`2025-04-30.basil`
-
-Listening to
-3 events
-
-Events (Alphabetical):
-
-* charge.succeeded
-* checkout.session.completed
-* payment_intent.succeeded
-
-```json
-{
-"object": {
-"id": "ch_3SzncZCMpIgwe61Z0faf2v3f",
-"object": "charge",
-"status": "succeeded",
-"payment_intent": "pi_3SzncZCMpIgwe61Z0ro4Ruxv",
-"receipt_url": "[https://pay.stripe.com/receipts/payment/CAcQARoXChVhY2N0XzFSTmdtWENNcElnd2U2MVoo-bi0zAYyBnyGtbiKBjosFlkRUNJF8liaNSNl-GMQaxhh_fccQx5an3FCrTmIN6kgO6QtPRoXRJr3ZR8](https://pay.stripe.com/receipts/payment/CAcQARoXChVhY2N0XzFSTmdtWENNcElnd2U2MVoo-bi0zAYyBnyGtbiKBjosFlkRUNJF8liaNSNl-GMQaxhh_fccQx5an3FCrTmIN6kgO6QtPRoXRJr3ZR8)"
-}
-}
-
-```
-
-## Cal.com (BOOKING_CREATED, BOOKING_CANCELLED, BOOKING_RESCHEDULED)
-
-Event source: Cal webhook.
-
-Purpose:
-
-Supplies task for support to conduct the booking.
-
-Minimum fields used:
-
-* `payload.title` -> Task Name
-* `payload.eventTypeId` (must match transcript support event type) ->Support Event ID CF
-
-Canonical effects:
-
-* Upsert `support/{supportId}.json`
-* Project latest Support Event ID CF
-* Project start / due dates and times
-
-```json
-{
-  "triggerEvent": "BOOKING_CREATED",
-  "payload": {
-    "title": "[Cal Video] Tax Monitor Service Support between Jamie Williams and Jamie Williams",
-    "startTime": "2026-02-11T00:45:00Z",
-    "endTime": "2026-02-11T01:00:00Z",
-    "eventTypeId": 4715669
-  }
-}
-````
+(TODO: document meta key, thresholds, and alert task behavior.)
 
 ---
 
@@ -1263,237 +1425,3 @@ crons = ["0 16 * * *"]
 ```
 
 Move hour if operationally preferred.
-
----
-
-Paste this into the README (recommended section)
-Stripe Canonical Mapping v1
-
-Account identity
-
-accountId = acct_stripe_{customerId}
-
-Idempotency
-
-Receipt dedupe key: eventId
-
-Payment dedupe key: stripeSessionId (for checkout.session.completed)
-
-R2 receipt ledger
-
-receipts/stripe/{eventId}.json
-
-Canonical account object
-
-accounts/{accountId}.json
-
-Top-level keys (alphabetical):
-
-accountId
-
-createdAt
-
-primaryEmail
-
-stripe
-
-subscription
-
-stripe keys (alphabetical):
-
-customerId
-
-eventId
-
-paymentIntentId
-
-paymentLink
-
-paymentStatus
-
-receiptUrl
-
-sessionId
-
-subscription keys (alphabetical):
-
-active
-
-activatedAt
-
-Stripe event field mapping
-
-checkout.session.completed (store):
-
-eventId = id
-
-stripeSessionId = data.object.id
-
-fullName = data.object.customer_details.name
-
-primaryEmail = data.object.customer_details.email
-
-paymentStatus = data.object.status
-
-paymentLink = data.object.payment_link
-
-paymentIntentId = data.object.payment_intent
-
-customerId = data.object.customer
-
-payment_intent.succeeded (store):
-
-eventId = id
-
-paymentIntentId = data.object.id
-
-paymentStatus = data.object.status
-
-charge.succeeded (store):
-
-paymentIntentId = data.object.payment_intent
-
-receiptUrl = data.object.receipt_url
-
-paymentStatus = data.object.status
-
-That locks the fields, locks the schema, locks the identity rule, and eliminates the “pretend” problem permanently.
----
-What to add to the README (drop-in text)
-
-Add a section under your Stripe mapping:
-
-Stripe Correlation Index (paymentIntentId → accountId) v1
-
-Purpose:
-Enable charge.succeeded and payment_intent.succeeded to resolve accountId using paymentIntentId, since those events may not include customerId.
-
-R2 key:
-
-stripe/payment-intents/{paymentIntentId}.json
-
-Created during:
-
-checkout.session.completed
-
-Used during:
-
-charge.succeeded
-
-payment_intent.succeeded
----
-Good. You’re finally asking the right question instead of guessing.
-
-Here is the exact **drop-in README insert** that permanently answers the cookie/session question and prevents future confusion.
-
-Paste this under **“Session Model & Tokens”**.
-
----
-
-# Dashboard Authentication (Cookie-Based Session Contract)
-
-## Canonical Authentication Mechanism (v1)
-
-Authenticated dashboard routes use a **Worker-validated session cookie**.
-
-The dashboard UI sends authenticated requests using:
-
-```
-fetch(..., { credentials: "include" })
-```
-
-This instructs the browser to include cookies for:
-
-```
-https://api.virtuallaunch.pro
-```
-
-### Therefore:
-
-Authentication for dashboard POST and GET routes is:
-
-* Cookie-based
-* Worker-validated
-* Not derived from client payload
-* Not derived from Stripe redirect
-* Not derived from hidden form inputs
-
----
-
-## Required Cookie Properties
-
-The session cookie MUST:
-
-* Be issued only by the Worker
-* Be cryptographically signed (HMAC or JWT)
-* Map to a canonical `accountId`
-* Be short-lived
-* Be invalidated on logout
-* Be sent with `Secure`
-* Be sent with `HttpOnly`
-* Be sent with `SameSite=Lax` or `SameSite=Strict`
-
-The UI must never store:
-
-* `accountId` in hidden inputs
-* `accountId` in localStorage
-* `accountId` in querystring
-* `sessionToken` in localStorage
-
----
-
-## Worker Validation Rules
-
-For any authenticated POST route (including `/forms/va/publish`):
-
-1. Read cookie
-2. Verify signature
-3. Resolve `accountId` from session
-4. Reject request if invalid
-5. Append receipt
-6. Mutate canonical state
-
-The Worker MUST ignore any `accountId` submitted by the client.
-
-Client-submitted identity is never trusted.
-
----
-
-## Identity Resolution Rule
-
-Canonical identity is always derived server-side:
-
-```
-accountId ← session cookie
-```
-
-Never:
-
-```
-accountId ← form field
-accountId ← Stripe redirect
-accountId ← localStorage
-```
-
----
-
-## Security Invariant
-
-UI pages never define identity.
-UI pages never define canonical truth.
-R2 is authority.
-Worker is gatekeeper.
-
----
-
-Update your README to include:
-
-POST /cal/webhook
-
-CAL_WEBHOOK_SECRET in required env
-
-Write order: signature → receipt → canonical → projection
----
-That locks it.
-
-Now in six months when you forget how this works, you won’t have to reverse-engineer your own app like a confused archaeologist.
