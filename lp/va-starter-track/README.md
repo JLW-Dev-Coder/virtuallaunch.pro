@@ -1486,6 +1486,14 @@ Worker is gatekeeper.
 
 ---
 
+Update your README to include:
+
+POST /cal/webhook
+
+CAL_WEBHOOK_SECRET in required env
+
+Write order: signature → receipt → canonical → projection
+---
 That locks it.
 
 Now in six months when you forget how this works, you won’t have to reverse-engineer your own app like a confused archaeologist.
