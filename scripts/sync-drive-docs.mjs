@@ -1,116 +1,101 @@
 import fs from "node:fs";
+import { execSync } from "node:child_process";
 import path from "node:path";
-import process from "node:process";
-import { google } from "googleapis";
 
-function mustGetEnv(k) {
-  const v = String(process.env[k] || "").trim();
-  if (!v) throw new Error(`Missing env var: ${k}`);
-  return v;
+const GITHUB_REPO = process.env.GITHUB_REPO || "";
+const GITHUB_SHA = process.env.GITHUB_SHA || "";
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
+const SLACK_CHANNEL = process.env.SLACK_CHANNEL;
+
+if (!SLACK_BOT_TOKEN) throw new Error("Missing SLACK_BOT_TOKEN");
+if (!SLACK_CHANNEL) throw new Error("Missing SLACK_CHANNEL");
+
+function clamp(s, max) {
+  const t = String(s || "");
+  return t.length > max ? `${t.slice(0, max)}\n…(truncated)` : t;
 }
 
-function readFileOrThrow(p) {
-  const abs = path.resolve(p);
-  if (!fs.existsSync(abs)) throw new Error(`File not found: ${abs}`);
-  return { abs, stream: fs.createReadStream(abs) };
+function sh(cmd) {
+  return execSync(cmd, { encoding: "utf8" }).trim();
 }
 
-async function findFileIdByName({ drive, folderId, name }) {
-  const q = [
-    `'${folderId}' in parents`,
-    `name='${name.replace(/'/g, "\\'")}'`,
-    "trashed=false",
-  ]
-    .sort()
-    .join(" and ");
+function safeRead(relPath) {
+  const abs = path.join(process.cwd(), relPath);
+  if (!fs.existsSync(abs)) return { ok: false, relPath, content: "" };
+  return { ok: true, relPath, content: fs.readFileSync(abs, "utf8") };
+}
 
-  const res = await drive.files.list({
-    fields: "files(id,name)",
-    includeItemsFromAllDrives: true,
-    pageSize: 10,
-    q,
-    supportsAllDrives: true,
+async function slackPost({ channel, text }) {
+  const res = await fetch("https://slack.com/api/chat.postMessage", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify({ channel, text }),
   });
 
-  const files = Array.isArray(res.data.files) ? res.data.files : [];
-  return files.length ? files[0].id : null;
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data?.ok) throw new Error(`Slack post failed: ${res.status} ${JSON.stringify(data)}`);
 }
 
-async function createOrUpdate({ drive, folderId, mimeType, name, stream }) {
-  const existingId = await findFileIdByName({ drive, folderId, name });
+function escapeTripleBackticks(s) {
+  return String(s || "").replace(/```/g, "`\u200b``");
+}
 
-  if (existingId) {
-    await drive.files.update({
-      fileId: existingId,
-      media: { mimeType, body: stream },
-      supportsAllDrives: true,
-    });
-    return { action: "updated", id: existingId, name };
+// Keep the file list alphabetical.
+const FILES = [
+  "README.md",
+  "workers/api/src/index.js",
+  "workers/api/wrangler.toml",
+].sort((a, b) => a.localeCompare(b));
+
+const shortSha = GITHUB_SHA ? GITHUB_SHA.slice(0, 7) : "";
+const commitUrl = GITHUB_REPO && GITHUB_SHA ? `https://github.com/${GITHUB_REPO}/commit/${GITHUB_SHA}` : "";
+
+const commitMsg = clamp(sh("git log -1 --pretty=%B"), 300);
+const diffStat = clamp(sh("git show --stat --oneline --no-color -1"), 1800);
+
+// Message 1: summary
+{
+  const lines = [];
+  lines.push("*Repo sync update*");
+  if (commitUrl) lines.push(`Commit: ${commitUrl}`);
+  if (!commitUrl && shortSha) lines.push(`Commit: ${shortSha}`);
+  if (commitMsg) lines.push(`Message: ${commitMsg}`);
+  lines.push("");
+  lines.push("```");
+  lines.push(escapeTripleBackticks(diffStat));
+  lines.push("```");
+
+  await slackPost({ channel: SLACK_CHANNEL, text: lines.join("\n") });
+}
+
+// Message 2: canonical source bundle (snippets to avoid Slack limits)
+{
+  const lines = [];
+  lines.push("*Canonical sources (latest)*");
+  if (commitUrl) lines.push(`Commit: ${commitUrl}`);
+  lines.push("");
+
+  for (const relPath of FILES) {
+    const r = safeRead(relPath);
+    lines.push(`*${relPath}*`);
+    if (!r.ok) {
+      lines.push("`(missing)`");
+      lines.push("");
+      continue;
+    }
+
+    // Slack hard-limits message size; keep per-file chunks reasonable.
+    const snippet = clamp(r.content, 3500);
+    lines.push("```");
+    lines.push(escapeTripleBackticks(snippet));
+    lines.push("```");
+    lines.push("");
   }
 
-  const created = await drive.files.create({
-    fields: "id,name",
-    media: { mimeType, body: stream },
-    requestBody: {
-      mimeType,
-      name,
-      parents: [folderId],
-    },
-    supportsAllDrives: true,
-  });
-
-  return { action: "created", id: created.data.id, name };
+  await slackPost({ channel: SLACK_CHANNEL, text: lines.join("\n") });
 }
 
-async function main() {
-  const folderId = mustGetEnv("DRIVE_FOLDER_ID");
-
-  const saJson = mustGetEnv("GOOGLE_SERVICE_ACCOUNT_JSON");
-  const creds = JSON.parse(saJson);
-
-  const readmePath = mustGetEnv("README_PATH");
-  const workerPath = mustGetEnv("WORKER_PATH");
-
-  const readmeDriveName = mustGetEnv("README_DRIVE_NAME");
-  const workerDriveName = mustGetEnv("WORKER_DRIVE_NAME");
-
-  const { stream: readmeStream } = readFileOrThrow(readmePath);
-  const { stream: workerStream } = readFileOrThrow(workerPath);
-
-  const auth = new google.auth.JWT({
-    email: creds.client_email,
-    key: creds.private_key,
-    scopes: ["https://www.googleapis.com/auth/drive.file"],
-  });
-
-  const drive = google.drive({ auth, version: "v3" });
-
-  const results = [];
-  results.push(
-    await createOrUpdate({
-      drive,
-      folderId,
-      mimeType: "text/markdown",
-      name: readmeDriveName,
-      stream: readmeStream,
-    }),
-  );
-  results.push(
-    await createOrUpdate({
-      drive,
-      folderId,
-      mimeType: "text/javascript",
-      name: workerDriveName,
-      stream: workerStream,
-    }),
-  );
-
-  results
-    .sort((a, b) => String(a.name).localeCompare(String(b.name)))
-    .forEach((r) => console.log(`${r.action}: ${r.name} (${r.id})`));
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+console.log("Posted repo sync (summary + canonical sources).");
