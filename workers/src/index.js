@@ -963,8 +963,7 @@ function formatClickUpR2Comment({ canonicalKey, payload, receiptKey, title, intr
   lines.push("```");
   lines.push("</details>");
 
-  return lines.join("
-");
+return lines.join("\n");
 }
 
 async function supportIdFromEventId(eventId) {
