@@ -1,12 +1,21 @@
 <!-- va/dashboard/setup.html -->
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Virtual Launch Pro - VA Profile Preview Builder</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VA Starter Track | Setup</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+  <!-- Canonical SDKs (kept additive; builder content unchanged) -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+
+  <!-- Existing Tailwind config retained (content preserved) -->
   <script>
     tailwind.config = {
       theme: {
@@ -23,8 +32,8 @@
   </script>
 
   <style>
-    html { scroll-behavior: smooth; }
-    body { margin: 0; }
+    html { scroll-behavior: smooth; font-family: system-ui, -apple-system, sans-serif; }
+    body { margin: 0; box-sizing: border-box; }
 
     .vlp-space-bg {
       background:
@@ -91,18 +100,9 @@
     }
 
     @keyframes vlpTwinkle {
-      0% {
-        opacity: 0.2;
-        transform: scale(0.8);
-      }
-      50% {
-        opacity: 1;
-        transform: scale(1.4);
-      }
-      100% {
-        opacity: 0.3;
-        transform: scale(0.9);
-      }
+      0% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.4); }
+      100% { opacity: 0.3; transform: scale(0.9); }
     }
 
     .vlp-glass {
@@ -147,9 +147,7 @@
     }
 
     /* Keep the preview feeling like the real page */
-    .preview-wrap {
-      min-height: 100vh;
-    }
+    .preview-wrap { min-height: 100vh; }
 
     /* Proof cards */
     .vlp-proof-back { transform: rotateY(180deg); }
@@ -186,7 +184,7 @@
       color: rgba(255,255,255,0.92);
       font-size: 13px;
       font-weight: 900;
-      letter-spacing: .06em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
     .vlp-proof-front-top {
@@ -223,7 +221,10 @@
   </style>
 </head>
 
-<body class="bg-ink-950 text-white antialiased">
+<body class="h-full bg-ink-950 text-white antialiased overflow-auto">
+  <!-- Canonical shell wrappers (additive; builder content preserved) -->
+  <div class="min-h-full">
+
   <div class="builder-shell">
 
     <!-- =========================
@@ -729,6 +730,53 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
     (function () {
       function byId(id) { return document.getElementById(id); }
 
+      // ===== tiny tests (run with ?runTests=1) =====
+      function assert(name, condition) {
+        if (!condition) {
+          console.error("test_failed", name);
+          throw new Error("test_failed:" + name);
+        }
+      }
+
+      function runTests() {
+        // Structure sanity
+        assert("builder_shell_exists", !!document.querySelector(".builder-shell"));
+        assert("preview_exists", !!document.querySelector("main.preview-wrap"));
+        assert("services_grid_target_exists", !!byId("p-servicesGrid"));
+        assert("proofs_grid_target_exists", !!byId("p-proofsGrid"));
+
+        // Parser sanity
+        assert("lines_fn_splits_newlines", (function(){
+          var out = lines("a\n b\r\n c\n\n");
+          return out.length === 3 && out[0] === "a" && out[1] === "b" && out[2] === "c";
+        })());
+        assert("parsePairs_splits_on_pipepipe", (function(){
+          var out = parsePairs("x || 1\ny || 2", "||");
+          return out.length === 2 && out[0][0] === "x" && out[0][1] === "1" && out[1][0] === "y" && out[1][1] === "2";
+        })());
+
+        // Rendering should not throw + should produce expected markers
+        assert("renderList_injects_bullets", (function(){
+          var tmp = document.createElement("ul");
+          tmp.id = "__tmp";
+          document.body.appendChild(tmp);
+          renderList("__tmp", "One\nTwo");
+          var ok = tmp.querySelectorAll("li").length === 2 && tmp.textContent.indexOf("One") !== -1;
+          tmp.remove();
+          return ok;
+        })());
+
+        assert("renderServices_populates_grid", (function(){
+          renderServices();
+          return byId("p-servicesGrid").children.length === 4;
+        })());
+
+        assert("renderProofs_limits_to_10", (function(){
+          renderProofs();
+          return byId("p-proofsGrid").children.length <= 10;
+        })());
+      }
+
       function safeText(el, value) {
         if (!el) return;
         el.textContent = value == null ? "" : String(value);
@@ -740,6 +788,7 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
       }
 
       function lines(text) {
+        // IMPORTANT: keep regex intact (no literal newlines inside regex)
         return String(text || "")
           .split(/\r?\n/)
           .map(function (s) { return s.trim(); })
@@ -756,6 +805,7 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
       function renderServices() {
         var grid = byId("p-servicesGrid");
         if (!grid) return;
+
         var cards = [
           { title: byId("f-svc1Title").value, bullets: lines(byId("f-svc1Bullets").value) },
           { title: byId("f-svc2Title").value, bullets: lines(byId("f-svc2Bullets").value) },
@@ -837,8 +887,16 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
         var el = byId(targetId);
         if (!el) return;
         var items = lines(sourceText);
+
+        // NOTE: Avoid Tailwind arbitrary content syntax inside JS strings.
+        // It is easy to corrupt with escaping and create hard-to-debug parse errors.
         el.innerHTML = items.map(function (t) {
-          return '<li class="relative pl-4 before:absolute before:left-0 before:top-0 before:font-extrabold before:text-brand-500 before:content-[\\\'▸\\\']">' + t + '</li>';
+          return (
+            '<li class="relative flex gap-2">' +
+              '<span class="font-extrabold text-brand-500" aria-hidden="true">▸</span>' +
+              '<span>' + t + '</span>' +
+            '</li>'
+          );
         }).join("");
       }
 
@@ -854,11 +912,12 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
         var html = "";
         pairs.forEach(function (item, idx) {
           var colSpan = (idx < 3) ? "md:col-span-2" : "md:col-span-3";
+          var score = Math.max(0, Math.min(5, item.score));
           html +=
             '<div class="' + colSpan + ' flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-white/5 px-[16px] py-3 text-white/75">' +
               '<strong class="text-white/90">' + item.label + ':</strong>' +
               '<span class="flex items-center gap-2">' +
-                '<span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">' + Math.max(0, Math.min(5, item.score)) + '</span>' +
+                '<span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">' + score + '</span>' +
                 '<span class="leading-none text-white/60">/ 5</span>' +
               '</span>' +
             '</div>';
@@ -1027,12 +1086,28 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
         applyAll();
       }
 
-      // init
-      bindAll();
-      wireFlipAll();
-      byId("btn-load-sample").addEventListener("click", loadSample);
-      applyAll();
+      function initAll() {
+        // Run tests only when explicitly requested
+        try {
+          var url = new URL(window.location.href);
+          var run = String(url.searchParams.get("runTests") || "").trim().toLowerCase();
+          if (run === "1" || run === "true") runTests();
+        } catch (_) {}
+
+        bindAll();
+        wireFlipAll();
+        byId("btn-load-sample").addEventListener("click", loadSample);
+        applyAll();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initAll);
+      } else {
+        initAll();
+      }
     })();
   </script>
+
+  </div>
 </body>
 </html>
