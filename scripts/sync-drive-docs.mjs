@@ -26,8 +26,10 @@ async function findFileIdByName({ drive, folderId, name }) {
 
   const res = await drive.files.list({
     fields: "files(id,name)",
+    includeItemsFromAllDrives: true,
     pageSize: 10,
     q,
+    supportsAllDrives: true,
   });
 
   const files = Array.isArray(res.data.files) ? res.data.files : [];
@@ -41,18 +43,20 @@ async function createOrUpdate({ drive, folderId, mimeType, name, stream }) {
     await drive.files.update({
       fileId: existingId,
       media: { mimeType, body: stream },
+      supportsAllDrives: true,
     });
     return { action: "updated", id: existingId, name };
   }
 
   const created = await drive.files.create({
     fields: "id,name",
+    media: { mimeType, body: stream },
     requestBody: {
       mimeType,
       name,
       parents: [folderId],
     },
-    media: { mimeType, body: stream },
+    supportsAllDrives: true,
   });
 
   return { action: "created", id: created.data.id, name };
