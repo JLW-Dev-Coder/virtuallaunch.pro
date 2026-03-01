@@ -26,7 +26,7 @@ jobs:
           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           README_PATH: lp/va-starter-track/README.md
-          WORKER_PATH: workers/api/src/index.js
+          WORKER_PATH: workers/src/index.js
           README_DRIVE_NAME: README.md
-          WORKER_DRIVE_NAME: workers-api-index.js
+          WORKER_DRIVE_NAME: workers-src-index.js
         run: node scripts/sync-drive-docs.mjs
