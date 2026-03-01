@@ -1,32 +1,27 @@
-name: Sync docs to Google Drive
+name: Slack Sync
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch: {}
 
 jobs:
-  sync:
+  post:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install deps
-        run: npm i googleapis
-
-      - name: Sync README + Worker to Drive
+      - name: Post repo sync to Slack
         env:
-          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-          README_PATH: lp/va-starter-track/README.md
-          WORKER_PATH: workers/src/index.js
-          README_DRIVE_NAME: README.md
-          WORKER_DRIVE_NAME: workers-src-index.js
-        run: node scripts/sync-drive-docs.mjs
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+        run: node scripts/slack-sync.mjs
