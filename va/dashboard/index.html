@@ -1,1 +1,646 @@
 <!-- /va/dashboard/index.html -->
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - VA Starter Track</title>
+
+    <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "ink-black": "#070a10",
+              "ink-navy": "#0b1220",
+              "ink-deep": "#111a2e",
+              "accent-purple": "#a855f7",
+              "accent-purple-hover": "#c084fc",
+              "accent-emerald": "#34d399",
+              "glass-white": "rgba(255, 255, 255, 0.06)",
+              "glass-border": "rgba(255, 255, 255, 0.12)"
+            },
+            fontFamily: {
+              heading: ["Raleway", "sans-serif"],
+              body: ["Inter", "sans-serif"]
+            }
+          }
+        }
+      };
+    </script>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        box-sizing: border-box;
+      }
+
+      .grid-texture {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .glass-button {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        transition: all 0.2s ease;
+      }
+
+      .glass-button:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .status-badge.active {
+        background: rgba(52, 211, 153, 0.15);
+        color: #34d399;
+      }
+
+      .status-badge.inactive {
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        text-align: center;
+      }
+
+      .progress-circle {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .progress-circle.completed {
+        background: rgba(168, 85, 247, 0.2);
+        border-color: rgba(168, 85, 247, 0.4);
+        color: #a855f7;
+      }
+
+      .progress-circle.active {
+        background: rgba(168, 85, 247, 0.3);
+        border-color: #a855f7;
+        color: #a855f7;
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+      }
+
+      .progress-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .progress-circle.completed ~ .progress-label,
+      .progress-circle.active ~ .progress-label {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .fade-in {
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .nav-item {
+        transition: all 0.2s ease;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-item.active {
+        background: rgba(168, 85, 247, 0.15);
+        border-left: 3px solid #a855f7;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    </style>
+  </head>
+
+  <body class="h-full bg-slate-950 overflow-auto text-white font-body">
+    <div class="min-h-full lg:flex">
+      <!-- PARTIAL:sidebar -->
+
+      <div class="flex-1 min-w-0">
+        <!-- PARTIAL:topbar -->
+
+        <main class="p-4 lg:p-8 w-full">
+          <div class="max-w-6xl mx-auto">
+            <!-- Hero Section -->
+            <div class="mb-12 fade-in">
+              <h1 id="heroTitle" class="font-heading text-4xl lg:text-5xl font-bold text-white mb-4">
+                Your path to real bookings starts here.
+              </h1>
+              <p id="heroSubtitle" class="text-white/70 text-lg lg:text-xl max-w-2xl mb-8">
+                You don't need another job board. You need visibility, structure, and proof.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <a
+                  href="/va/dashboard/setup"
+                  class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-purple-hover hover:shadow-lg hover:shadow-accent-purple/20 text-white font-semibold transition-all"
+                >
+                  Continue Setup
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7l5 5m0 0l-5 5m5-5H6"
+                    />
+                  </svg>
+                </a>
+                <a
+                  href="/va/dashboard/analytics"
+                  class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl glass-button text-white/90 font-semibold"
+                >
+                  View Analytics
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Progress Card -->
+            <div class="glass-card rounded-2xl p-8 mb-12 fade-in" style="animation-delay: 0.1s;">
+              <div class="mb-8">
+                <h2 id="progressTitle" class="font-heading text-2xl font-semibold text-white mb-2">Your Progress</h2>
+                <p id="progressDescription" class="text-white/60">Complete your setup to appear in the directory.</p>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="mb-8">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm text-white/60">Setup Progress</span>
+                  <span id="progressPercentage" class="text-sm font-semibold text-accent-purple">0%<\/span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    id="progressBar"
+                    class="h-full bg-gradient-to-r from-accent-purple to-accent-purple-hover transition-all duration-500"
+                    style="width: 0%;"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Progress Steps (7 sections) -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="progress-step">
+                  <div class="progress-circle">1</div>
+                  <span class="progress-label">About</span>
+                </div>
+                <div class="progress-step">
+                  <div class="progress-circle">2</div>
+                  <span class="progress-label">Availability</span>
+                </div>
+                <div class="progress-step">
+                  <div class="progress-circle">3</div>
+                  <span class="progress-label">CV</span>
+                </div>
+                <div class="progress-step">
+                  <div class="progress-circle">4</div>
+                  <span class="progress-label">Hero</span>
+                </div>
+                <div class="progress-step">
+                  <div class="progress-circle">5</div>
+                  <span class="progress-label">Links</span>
+                </div>
+                <div class="progress-step">
+                  <div class="progress-circle">6</div>
+                  <span class="progress-label">Services</span>
+                </div>
+                <div class="progress-step">
+                  <div class="progress-circle">7</div>
+                  <span class="progress-label">Work Proofs</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Status Snapshot Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 fade-in" style="animation-delay: 0.2s;">
+              <!-- Booking Status -->
+              <div class="glass-card rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-6">
+                  <div class="w-10 h-10 rounded-xl bg-accent-purple/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="status-badge inactive">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    Not Connected
+                  </span>
+                </div>
+                <h3 class="font-heading font-semibold text-white mb-4">Booking Status</h3>
+                <div class="space-y-3">
+                  <div>
+                    <p class="text-xs text-white/50 uppercase tracking-wider mb-1">Calendar</p>
+                    <p class="text-white/80">—</p>
+                    <p class="text-xs text-white/50 mt-1">No data yet</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-white/50 uppercase tracking-wider mb-1">Next Booking</p>
+                    <p class="text-white/80">—</p>
+                    <p class="text-xs text-white/50 mt-1">No data yet</p>
+                  </div>
+                </div>
+                <a
+                  class="w-full mt-6 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-glass-border text-sm text-white/70 hover:text-white transition-colors font-medium"
+                  href="/va/dashboard/setup"
+                >
+                  Manage Calendar
+                </a>
+              </div>
+
+              <!-- Directory Visibility -->
+              <div class="glass-card rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-6">
+                  <div class="w-10 h-10 rounded-xl bg-accent-emerald/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent-emerald" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                      />
+                    </svg>
+                  </div>
+                  <span class="status-badge inactive">
+                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                    Draft
+                  </span>
+                </div>
+                <h3 class="font-heading font-semibold text-white mb-4">Directory Visibility</h3>
+                <div class="space-y-3">
+                  <div>
+                    <p class="text-xs text-white/50 uppercase tracking-wider mb-1">Listed</p>
+                    <p class="text-white/80">Not Yet</p>
+                    <p class="text-xs text-white/50 mt-1">No data yet</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-white/50 uppercase tracking-wider mb-1">Profile Slug</p>
+                    <p class="text-white/80 font-mono text-sm">—</p>
+                    <p class="text-xs text-white/50 mt-1">No data yet</p>
+                  </div>
+                </div>
+                <a
+                  class="w-full mt-6 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-glass-border text-sm text-white/70 hover:text-white transition-colors font-medium"
+                  href="/va/directory"
+                >
+                  View Directory
+                </a>
+              </div>
+
+              <!-- Performance Snapshot -->
+              <div class="glass-card rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-6">
+                  <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-xs text-white/40">7 days</span>
+                </div>
+                <h3 class="font-heading font-semibold text-white mb-4">Performance Snapshot</h3>
+                <div class="space-y-3">
+                  <div>
+                    <p class="text-xs text-white/50 uppercase tracking-wider mb-1">Page Views</p>
+                    <p class="text-white/80">—</p>
+                    <p class="text-xs text-white/50 mt-1">No data yet</p>
+                  </div>
+                  <div>
+                    <p class="text-xs text-white/50 uppercase tracking-wider mb-1">Clicks to Booking</p>
+                    <p class="text-white/80">—</p>
+                    <p class="text-xs text-white/50 mt-1">No data yet</p>
+                  </div>
+                </div>
+                <a
+                  class="w-full mt-6 inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-glass-border text-sm text-white/70 hover:text-white transition-colors font-medium"
+                  href="/va/dashboard/analytics"
+                >
+                  Open Analytics
+                </a>
+              </div>
+            </div>
+
+            <!-- Motivation Block -->
+            <div class="glass-card rounded-2xl p-8 lg:p-12 text-center mb-12 fade-in" style="animation-delay: 0.3s;">
+              <h2 id="motivationTitle" class="font-heading text-3xl lg:text-4xl font-bold text-white mb-6">
+                Stop chasing listings. Start being discoverable.
+              </h2>
+              <p id="motivationText" class="text-white/70 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
+                Most remote job seekers apply and wait. You are building an asset that clients can book directly.
+              </p>
+              <a
+                href="/va/dashboard/setup"
+                class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-accent-purple to-accent-purple-hover hover:shadow-lg hover:shadow-accent-purple/20 text-white font-semibold transition-all"
+              >
+                Complete Setup
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
+
+            <!-- Support Block -->
+            <div class="mb-12 fade-in" style="animation-delay: 0.4s;">
+              <a
+                href="/va/dashboard/support.html"
+                class="glass-card rounded-2xl p-6 flex items-center justify-between group hover:bg-white/8 transition-all"
+              >
+                <div>
+                  <h3 class="font-heading font-semibold text-white group-hover:text-accent-purple transition-colors">
+                    Need help?
+                  </h3>
+                  <p class="text-white/60 text-sm">Visit our support center for guidance.</p>
+                </div>
+                <svg
+                  class="w-6 h-6 text-white/60 group-hover:text-accent-purple group-hover:translate-x-1 transition-all"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Default configuration
+      const defaultConfig = {
+        hero_title: "Your path to real bookings starts here.",
+        hero_subtitle: "You don't need another job board. You need visibility, structure, and proof.",
+        progress_title: "Your Progress",
+        progress_description: "Complete your setup to appear in the directory.",
+        motivation_title: "Stop chasing listings. Start being discoverable.",
+        motivation_text: "Most remote job seekers apply and wait. You are building an asset that clients can book directly.",
+        support_text: "Need help? Visit Support →",
+        background_color: "#070a10",
+        primary_action_color: "#a855f7",
+        progress_percent: 0,
+        text_color: "#ffffff"
+      };
+
+      // Element SDK initialization
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            const heroTitle = document.getElementById("heroTitle");
+            if (heroTitle) heroTitle.textContent = config.hero_title || defaultConfig.hero_title;
+
+            const heroSubtitle = document.getElementById("heroSubtitle");
+            if (heroSubtitle) heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+
+            const progressTitle = document.getElementById("progressTitle");
+            if (progressTitle) progressTitle.textContent = config.progress_title || defaultConfig.progress_title;
+
+            const progressDesc = document.getElementById("progressDescription");
+            if (progressDesc) progressDesc.textContent = config.progress_description || defaultConfig.progress_description;
+
+            const motivationTitle = document.getElementById("motivationTitle");
+            if (motivationTitle) motivationTitle.textContent = config.motivation_title || defaultConfig.motivation_title;
+
+            const motivationText = document.getElementById("motivationText");
+            if (motivationText) motivationText.textContent = config.motivation_text || defaultConfig.motivation_text;
+
+            // Progress is default-mode (0%) until real worker-backed data exists.
+            const pct = Number.isFinite(Number(config.progress_percent)) ? Number(config.progress_percent) : 0;
+            const clampedPct = Math.max(0, Math.min(100, pct));
+
+            const pctEl = document.getElementById("progressPercentage");
+            if (pctEl) pctEl.textContent = clampedPct + "%";
+
+            const barEl = document.getElementById("progressBar");
+            if (barEl) barEl.style.width = clampedPct + "%";
+
+            if (config.background_color) {
+              document.body.style.setProperty("--bg-color", config.background_color);
+            }
+          },
+          mapToCapabilities: (config) => ({
+            borderables: [],
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => window.elementSdk.setConfig({ background_color: value })
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => window.elementSdk.setConfig({ primary_action_color: value })
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => window.elementSdk.setConfig({ text_color: value })
+              }
+            ],
+            fontEditable: {
+              get: () => config.font_family || "Raleway",
+              set: (value) => window.elementSdk.setConfig({ font_family: value })
+            },
+            fontSizeable: {
+              get: () => config.font_size || 16,
+              set: (value) => window.elementSdk.setConfig({ font_size: value })
+            }
+          }),
+          mapToEditPanelValues: (config) =>
+            new Map([
+              ["hero_title", config.hero_title || defaultConfig.hero_title],
+              ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+              ["progress_title", config.progress_title || defaultConfig.progress_title],
+              ["progress_description", config.progress_description || defaultConfig.progress_description],
+              ["motivation_title", config.motivation_title || defaultConfig.motivation_title],
+              ["motivation_text", config.motivation_text || defaultConfig.motivation_text],
+              ["support_text", config.support_text || defaultConfig.support_text],
+              ["progress_percent", Number.isFinite(Number(config.progress_percent)) ? Number(config.progress_percent) : defaultConfig.progress_percent]
+            ])
+        });
+      }
+
+      /**
+       * NAV WIRING (safe for partials)
+       *
+       * This page uses <!-- PARTIAL:sidebar --> and <!-- PARTIAL:topbar -->.
+       * Those partials may be injected after this script runs.
+       *
+       * Expected behavior question:
+       * Should the sidebar mobile open/close logic live in the sidebar partial (shared),
+       * or is it OK for each page to wire it like below (with retry to handle late injection)?
+       */
+      function wireMobileSidebarOnce() {
+        const mobileNavToggle = document.getElementById("mobileNavToggle");
+        const sidebar = document.getElementById("sidebar");
+        const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+        // If partials aren’t in the DOM yet, do nothing (and let retry handle it).
+        if (!mobileNavToggle || !sidebar || !sidebarOverlay) return false;
+
+        // Prevent duplicate wiring on retries
+        if (mobileNavToggle.dataset.wired === "1") return true;
+        mobileNavToggle.dataset.wired = "1";
+
+        mobileNavToggle.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          sidebarOverlay.classList.toggle("hidden");
+        });
+
+        sidebarOverlay.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          sidebarOverlay.classList.add("hidden");
+        });
+
+        // Close sidebar when clicking nav items
+        sidebar.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            sidebar.classList.add("-translate-x-full");
+            sidebarOverlay.classList.add("hidden");
+          });
+        });
+
+        return true;
+      }
+
+      function wireMobileSidebarWithRetry() {
+        let attempts = 0;
+        const maxAttempts = 10;
+        const delayMs = 250;
+
+        const tick = () => {
+          attempts += 1;
+          const ok = wireMobileSidebarOnce();
+          if (ok || attempts >= maxAttempts) return;
+          setTimeout(tick, delayMs);
+        };
+
+        tick();
+      }
+
+      // Basic “tests” (browser-safe) to ensure we never throw on missing partial DOM.
+      (function selfTest() {
+        const results = [];
+
+        function assert(name, fn) {
+          try {
+            fn();
+            results.push({ name, ok: true });
+          } catch (e) {
+            results.push({ name, ok: false, error: String(e && e.message ? e.message : e) });
+          }
+        }
+
+        assert("wireMobileSidebarOnce() does not throw when elements are missing", () => {
+          // Temporarily call without requiring DOM elements.
+          const ok = wireMobileSidebarOnce();
+          if (typeof ok !== "boolean") throw new Error("Expected boolean return");
+        });
+
+        window.__vaDashboardSelfTest = results;
+      })();
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", wireMobileSidebarWithRetry);
+      } else {
+        wireMobileSidebarWithRetry();
+      }
+    </script>
+  </body>
+</html>
