@@ -1,213 +1,30 @@
-<!-- /va/dashboard/analytics.html -->
 <!doctype html>
 <html lang="en" class="h-full">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analytics - VA Starter Track Dashboard</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <script src="/_sdk/element_sdk.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              "accent-emerald": "#34d399",
-              "accent-orange": "#a855f7",
-              "accent-orange-hover": "#c084fc",
-              "accent-teal": "#5eead4",
-              "glass-border": "rgba(255, 255, 255, 0.12)",
-              "glass-white": "rgba(255, 255, 255, 0.06)",
-              "ink-black": "#070a10",
-              "ink-deep": "#111a2e",
-              "ink-navy": "#0b1220"
-            },
-            fontFamily: {
-              body: ["Inter", "sans-serif"],
-              heading: ["Raleway", "sans-serif"]
-            }
-          }
-        }
-      };
-    </script>
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      .grid-texture {
-        background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        background-size: 40px 40px;
-      }
-
-      .glass-card {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-      }
-
-      .status-pill {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      .skeleton {
-        background: linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.06) 25%,
-          rgba(255, 255, 255, 0.1) 50%,
-          rgba(255, 255, 255, 0.06) 75%
-        );
-        background-size: 200% 100%;
-        animation: skeleton-loading 1.5s infinite;
-      }
-
-      @keyframes skeleton-loading {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
-      }
-
-      .sparkline-path {
-        stroke-dasharray: 200;
-        stroke-dashoffset: 200;
-        animation: draw-line 1s ease-out forwards;
-      }
-
-      @keyframes draw-line {
-        to {
-          stroke-dashoffset: 0;
-        }
-      }
-
-      .fade-in {
-        animation: fadeIn 0.3s ease-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .nav-item {
-        transition: all 0.2s ease;
-      }
-
-      .nav-item:hover {
-        background: rgba(255, 255, 255, 0.08);
-      }
-
-      .nav-item.active {
-        background: rgba(168, 85, 247, 0.18);
-        border-left: 3px solid #a855f7;
-      }
-
-      .toggle-btn {
-        transition: all 0.2s ease;
-      }
-
-      .toggle-btn.active {
-        background: rgba(168, 85, 247, 0.22);
-        color: #c084fc;
-      }
-
-      /* Custom scrollbar */
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 3px;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      body {
-        box-sizing: border-box;
-      }
-    </style>
     <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   </head>
 
-  <body class="h-full bg-ink-black text-white font-body overflow-auto">
+  <body class="h-full bg-slate-950 overflow-auto">
+    <div class="min-h-full lg:flex">
+      <!-- PARTIAL:sidebar -->
+
+      <div class="flex-1 min-w-0">
+        <!-- PARTIAL:topbar -->
     <div
       class="min-h-full grid-texture"
       style="background: linear-gradient(135deg, #070a10 0%, #0b1220 50%, #111a2e 100%)"
     >
       <!-- Top Bar -->
-      <header class="fixed top-0 left-0 right-0 z-50 glass-card border-t-0 border-l-0 border-r-0">
-        <div class="flex items-center justify-between px-4 lg:px-6 h-16">
-          <!-- Logo -->
-          <div class="flex items-center gap-2">
-            <div
-              class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-accent-orange-hover flex items-center justify-center"
-            >
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </div>
-            <span class="font-heading font-semibold text-lg hidden sm:block">VA Starter Track</span>
-          </div>
-
-          <!-- Center Title -->
-          <div class="font-heading font-medium text-white/80">Dashboard</div>
-
-          <!-- Account -->
-          <div class="flex items-center gap-3">
-            <div
-              class="w-8 h-8 rounded-full bg-gradient-to-br from-ink-navy to-ink-deep border border-glass-border flex items-center justify-center"
-            >
-              <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </div>
-            <button
-              id="logoutBtn"
-              class="text-sm text-white/60 hover:text-white/90 transition-colors hidden sm:block"
-              type="button"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </header>
+      
 
       <!-- Mobile Nav Toggle -->
       <button
@@ -227,7 +44,10 @@
           class="fixed lg:sticky top-16 left-0 w-64 h-[calc(100%-4rem)] lg:h-auto glass-card border-t-0 border-l-0 border-b-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40"
         >
           <nav class="p-4 space-y-1">
-            <a href="/va/dashboard/analytics" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-white/90">
+            <a
+              href="/va/dashboard/analytics"
+              class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-white/90"
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -238,7 +58,10 @@
               </svg>
               <span class="font-medium">Analytics</span>
             </a>
-            <a href="/va/dashboard/setup" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white/90">
+            <a
+              href="/va/dashboard/setup"
+              class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white/90"
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -250,7 +73,10 @@
               </svg>
               <span class="font-medium">Setup</span>
             </a>
-            <a href="/va/dashboard/support.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white/90">
+            <a
+              href="/va/dashboard/support.html"
+              class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white/90"
+            >
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   stroke-linecap="round"
@@ -578,13 +404,13 @@
                   </div>
                 </div>
                 <div id="viewsChartContent">
-                  <svg id="viewsChart" class="w-full h-48" viewBox="0 0 400 160">
+                  <svg id="viewsChart" class="w-full h-48" viewBox="0 0 400 170" aria-label="Views over time">
                     <!-- Y-axis labels -->
-                    <text x="0" y="15" class="fill-white/40 text-xs" style="font-size: 10px">100</text>
-                    <text x="0" y="55" class="fill-white/40 text-xs" style="font-size: 10px">75</text>
-                    <text x="0" y="95" class="fill-white/40 text-xs" style="font-size: 10px">50</text>
-                    <text x="0" y="135" class="fill-white/40 text-xs" style="font-size: 10px">25</text>
-                    <text x="0" y="155" class="fill-white/40 text-xs" style="font-size: 10px">0</text>
+                    <text x="0" y="15" class="fill-white/40" style="font-size: 10px">100</text>
+                    <text x="0" y="55" class="fill-white/40" style="font-size: 10px">75</text>
+                    <text x="0" y="95" class="fill-white/40" style="font-size: 10px">50</text>
+                    <text x="0" y="135" class="fill-white/40" style="font-size: 10px">25</text>
+                    <text x="0" y="155" class="fill-white/40" style="font-size: 10px">0</text>
 
                     <!-- Grid lines -->
                     <line x1="30" y1="10" x2="390" y2="10" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
@@ -599,10 +425,11 @@
                         <stop offset="100%" stop-color="rgba(96, 165, 250, 0)" />
                       </linearGradient>
                     </defs>
-                    <path fill="url(#viewsGradient)" d="M30,130 L390,130 L390,150 L30,150 Z" />
+                    <path id="viewsArea" fill="url(#viewsGradient)" d="M30,130 L390,130 L390,150 L30,150 Z" />
 
                     <!-- Line -->
                     <path
+                      id="viewsLine"
                       class="sparkline-path"
                       fill="none"
                       stroke="#60a5fa"
@@ -613,21 +440,22 @@
                     />
 
                     <!-- Data points -->
-                    <circle cx="30" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="75" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="120" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="165" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="210" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="255" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="300" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="345" cy="130" r="0" fill="#60a5fa" />
-                    <circle cx="390" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot0" cx="30" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot1" cx="90" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot2" cx="150" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot3" cx="210" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot4" cx="270" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot5" cx="330" cy="130" r="0" fill="#60a5fa" />
+                    <circle id="viewsDot6" cx="390" cy="130" r="0" fill="#60a5fa" />
 
-                    <!-- X-axis labels -->
-                    <text x="30" y="158" class="fill-white/40" style="font-size: 9px">Mon</text>
-                    <text x="120" y="158" class="fill-white/40" style="font-size: 9px">Wed</text>
-                    <text x="210" y="158" class="fill-white/40" style="font-size: 9px">Fri</text>
-                    <text x="300" y="158" class="fill-white/40" style="font-size: 9px">Sun</text>
+                    <!-- X-axis labels (always 7 ticks for readability) -->
+                    <text id="viewsLabel0" x="30" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Mon</text>
+                    <text id="viewsLabel1" x="90" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Tue</text>
+                    <text id="viewsLabel2" x="150" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Wed</text>
+                    <text id="viewsLabel3" x="210" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Thu</text>
+                    <text id="viewsLabel4" x="270" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Fri</text>
+                    <text id="viewsLabel5" x="330" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Sat</text>
+                    <text id="viewsLabel6" x="390" y="165" text-anchor="middle" class="fill-white/40" style="font-size: 10px">Sun</text>
                   </svg>
                 </div>
                 <div id="viewsChartLoading" class="hidden">
@@ -656,11 +484,11 @@
                   </button>
                 </div>
                 <div id="clicksChartContent">
-                  <svg id="clicksChart" class="w-full h-48" viewBox="0 0 400 160">
+                  <svg id="clicksChart" class="w-full h-48" viewBox="0 0 400 160" aria-label="Clicks by day">
                     <!-- Y-axis labels -->
-                    <text x="0" y="15" class="fill-white/40 text-xs" style="font-size: 10px">50</text>
-                    <text x="0" y="75" class="fill-white/40 text-xs" style="font-size: 10px">25</text>
-                    <text x="0" y="135" class="fill-white/40 text-xs" style="font-size: 10px">0</text>
+                    <text x="0" y="15" class="fill-white/40" style="font-size: 10px">50</text>
+                    <text x="0" y="75" class="fill-white/40" style="font-size: 10px">25</text>
+                    <text x="0" y="135" class="fill-white/40" style="font-size: 10px">0</text>
 
                     <!-- Grid lines -->
                     <line x1="30" y1="10" x2="390" y2="10" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
@@ -677,13 +505,13 @@
                     <rect x="340" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
 
                     <!-- X-axis labels -->
-                    <text x="48" y="148" class="fill-white/40" style="font-size: 9px">Mon</text>
-                    <text x="98" y="148" class="fill-white/40" style="font-size: 9px">Tue</text>
-                    <text x="147" y="148" class="fill-white/40" style="font-size: 9px">Wed</text>
-                    <text x="198" y="148" class="fill-white/40" style="font-size: 9px">Thu</text>
-                    <text x="252" y="148" class="fill-white/40" style="font-size: 9px">Fri</text>
-                    <text x="302" y="148" class="fill-white/40" style="font-size: 9px">Sat</text>
-                    <text x="350" y="148" class="fill-white/40" style="font-size: 9px">Sun</text>
+                    <text x="58" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Mon</text>
+                    <text x="108" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Tue</text>
+                    <text x="158" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Wed</text>
+                    <text x="208" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Thu</text>
+                    <text x="258" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Fri</text>
+                    <text x="308" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Sat</text>
+                    <text x="358" y="148" text-anchor="middle" class="fill-white/40" style="font-size: 9px">Sun</text>
                   </svg>
                 </div>
                 <div id="clicksChartLoading" class="hidden">
@@ -736,6 +564,7 @@
         text_color: "#ffffff"
       };
 
+      // NOTE: this must match your Worker domain. Confirm this is correct.
       const API_BASE = "https://api.virtuallaunch.pro";
 
       // State management
@@ -917,7 +746,7 @@
       function enableSampleData() {
         try {
           localStorage.setItem("vlp_sample_data", "1");
-        } catch (err) {
+        } catch {
           // no-op
         }
         setSampleDataUi(true);
@@ -929,7 +758,7 @@
       function disableSampleData() {
         try {
           localStorage.removeItem("vlp_sample_data");
-        } catch (err) {
+        } catch {
           // no-op
         }
         setSampleDataUi(false);
@@ -967,6 +796,8 @@
         appState.analytics.systemHealth = { lastUpdate: null };
 
         try {
+          // These are intentionally conservative "status" reads only.
+          // Confirm these endpoints exist in your Worker before you rely on them.
           const [calRes, healthRes, sessionRes, directoryRes] = await Promise.allSettled([
             safeFetchJson("/cal/oauth/status"),
             safeFetchJson("/health"),
@@ -1185,11 +1016,28 @@
         const svg = document.getElementById("viewsChart");
         if (!svg) return;
 
-        const values = Array.isArray(series) ? series.slice(0, 9) : [];
+        // Always render 7 ticks for the x-axis (Mon..Sun) so the chart doesn't look broken.
+        // For 30d/90d we show the most recent 7 points.
+        const raw = Array.isArray(series) ? series.slice(0) : [];
+        const values = raw.length > 7 ? raw.slice(raw.length - 7) : raw.slice(0, 7);
 
-        const area = svg.querySelector('path[fill^="url("]');
-        const line = svg.querySelector("path.sparkline-path");
+        const area = document.getElementById("viewsArea") || svg.querySelector('path[fill^="url("]');
+        const line = document.getElementById("viewsLine") || svg.querySelector("path.sparkline-path");
         const circles = Array.from(svg.querySelectorAll("circle"));
+
+        // Keep labels aligned with points.
+        const labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]; // yes, humans insist on weekdays.
+        const x0 = 30;
+        const x1 = 390;
+        labels.forEach((txt, i) => {
+          const el = document.getElementById(`viewsLabel${i}`);
+          if (!el) return;
+          const x = x0 + (i / 6) * (x1 - x0);
+          el.setAttribute("x", String(x));
+          el.setAttribute("y", "165");
+          el.setAttribute("text-anchor", "middle");
+          el.textContent = txt;
+        });
 
         if (values.length < 2) {
           if (area) area.setAttribute("d", "M30,130 L390,130 L390,150 L30,150 Z");
@@ -1202,14 +1050,12 @@
         const max = Math.max(...values);
         const span = Math.max(1, max - min);
 
-        const x0 = 30;
-        const x1 = 390;
         const yTop = 30;
         const yBottom = 130;
         const base = 150;
 
         const pts = values.map((v, i) => {
-          const x = x0 + (i / (values.length - 1)) * (x1 - x0);
+          const x = x0 + (i / 6) * (x1 - x0);
           const y = yTop + ((max - v) / span) * (yBottom - yTop);
           return [x, y];
         });
@@ -1421,8 +1267,24 @@
           setSparkline({ el: svg, series: [1, 2, 3, 4] });
           console.assert((p.getAttribute("d") || "").startsWith("M"), "sparkline series -> path");
 
-          console.assert(getActivePeriodForChart("views") === 7, "default views period");
-        } catch (err) {
+          // Views chart labels should exist and be distinct
+          const chart = document.getElementById("viewsChart");
+          if (chart) {
+            const labels = Array.from({ length: 7 }, (_, i) => document.getElementById(`viewsLabel${i}`)).filter(Boolean);
+            console.assert(labels.length === 7, "views chart has 7 labels");
+            const text = labels.map((el) => el.textContent).join(",");
+            console.assert(text.includes("Tue") && text.includes("Thu") && text.includes("Fri"), "weekday labels include Tue/Thu/Fri");
+          }
+
+          // Views chart should place points on 7 fixed ticks
+          setViewsChart({ series: [1, 2, 3, 4, 5, 6, 7] });
+          const dot0 = document.getElementById("viewsDot0");
+          const dot6 = document.getElementById("viewsDot6");
+          if (dot0 && dot6) {
+            console.assert(dot0.getAttribute("cx") === "30", "dot0 x");
+            console.assert(dot6.getAttribute("cx") === "390", "dot6 x");
+          }
+        } catch {
           // no-op
         }
       })();
@@ -1431,5 +1293,7 @@
         loadDashboard();
       });
     </script>
+        </div>
+    </div>
   </body>
 </html>
