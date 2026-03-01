@@ -1,1 +1,1435 @@
 <!-- /va/dashboard/analytics.html -->
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics - VA Starter Track Dashboard</title>
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "accent-emerald": "#34d399",
+              "accent-orange": "#a855f7",
+              "accent-orange-hover": "#c084fc",
+              "accent-teal": "#5eead4",
+              "glass-border": "rgba(255, 255, 255, 0.12)",
+              "glass-white": "rgba(255, 255, 255, 0.06)",
+              "ink-black": "#070a10",
+              "ink-deep": "#111a2e",
+              "ink-navy": "#0b1220"
+            },
+            fontFamily: {
+              body: ["Inter", "sans-serif"],
+              heading: ["Raleway", "sans-serif"]
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .grid-texture {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .status-pill {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .skeleton {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.06) 25%,
+          rgba(255, 255, 255, 0.1) 50%,
+          rgba(255, 255, 255, 0.06) 75%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+      }
+
+      @keyframes skeleton-loading {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .sparkline-path {
+        stroke-dasharray: 200;
+        stroke-dashoffset: 200;
+        animation: draw-line 1s ease-out forwards;
+      }
+
+      @keyframes draw-line {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .nav-item {
+        transition: all 0.2s ease;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-item.active {
+        background: rgba(168, 85, 247, 0.18);
+        border-left: 3px solid #a855f7;
+      }
+
+      .toggle-btn {
+        transition: all 0.2s ease;
+      }
+
+      .toggle-btn.active {
+        background: rgba(168, 85, 247, 0.22);
+        color: #c084fc;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      body {
+        box-sizing: border-box;
+      }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  </head>
+
+  <body class="h-full bg-ink-black text-white font-body overflow-auto">
+    <div
+      class="min-h-full grid-texture"
+      style="background: linear-gradient(135deg, #070a10 0%, #0b1220 50%, #111a2e 100%)"
+    >
+      <!-- Top Bar -->
+      <header class="fixed top-0 left-0 right-0 z-50 glass-card border-t-0 border-l-0 border-r-0">
+        <div class="flex items-center justify-between px-4 lg:px-6 h-16">
+          <!-- Logo -->
+          <div class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-accent-orange-hover flex items-center justify-center"
+            >
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <span class="font-heading font-semibold text-lg hidden sm:block">VA Starter Track</span>
+          </div>
+
+          <!-- Center Title -->
+          <div class="font-heading font-medium text-white/80">Dashboard</div>
+
+          <!-- Account -->
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-full bg-gradient-to-br from-ink-navy to-ink-deep border border-glass-border flex items-center justify-center"
+            >
+              <svg class="w-4 h-4 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </div>
+            <button
+              id="logoutBtn"
+              class="text-sm text-white/60 hover:text-white/90 transition-colors hidden sm:block"
+              type="button"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Mobile Nav Toggle -->
+      <button
+        id="mobileNavToggle"
+        class="lg:hidden fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-accent-orange shadow-lg flex items-center justify-center"
+        type="button"
+      >
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <div class="flex pt-16 min-h-full">
+        <!-- Sidebar -->
+        <aside
+          id="sidebar"
+          class="fixed lg:sticky top-16 left-0 w-64 h-[calc(100%-4rem)] lg:h-auto glass-card border-t-0 border-l-0 border-b-0 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40"
+        >
+          <nav class="p-4 space-y-1">
+            <a href="/va/dashboard/analytics" class="nav-item active flex items-center gap-3 px-4 py-3 rounded-lg text-white/90">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+              <span class="font-medium">Analytics</span>
+            </a>
+            <a href="/va/dashboard/setup" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white/90">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span class="font-medium">Setup</span>
+            </a>
+            <a href="/va/dashboard/support.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-white/60 hover:text-white/90">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+              <span class="font-medium">Support</span>
+            </a>
+          </nav>
+        </aside>
+
+        <!-- Sidebar Overlay -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden"></div>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 lg:p-8 w-full">
+          <div class="max-w-6xl mx-auto">
+            <!-- Page Header -->
+            <div class="mb-8 fade-in">
+              <h1 id="pageTitle" class="font-heading text-3xl lg:text-4xl font-bold text-white mb-2">Analytics</h1>
+              <p id="pageSubtitle" class="text-white/60 text-lg mb-3">Proof of visibility and bookings over time. Calm systems beat chaos.</p>
+              <p id="lastUpdated" class="text-white/40 text-sm">Last updated: Loading...</p>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <button
+                  id="sampleDataBtn"
+                  class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-glass-border text-sm text-white/70 hover:text-white transition-colors"
+                  type="button"
+                >
+                  Load sample data
+                </button>
+                <button
+                  id="clearSampleDataBtn"
+                  class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-glass-border text-sm text-white/70 hover:text-white transition-colors hidden"
+                  type="button"
+                >
+                  Clear sample data
+                </button>
+                <span id="sampleDataHint" class="text-sm text-white/40 hidden">Sample data is on. Real data will replace it when endpoints exist.</span>
+              </div>
+            </div>
+
+            <!-- Error Banner (hidden by default) -->
+            <div id="errorBanner" class="hidden mb-6 glass-card rounded-xl p-4 border-l-4 border-amber-500/60 fade-in">
+              <div class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-amber-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
+                </svg>
+                <div class="flex-1">
+                  <p id="errorMessage" class="text-white/80 text-sm">We couldn't load some data. This might be temporary.</p>
+                  <button
+                    id="retryBtn"
+                    class="mt-2 text-sm text-accent-orange hover:text-accent-orange-hover transition-colors flex items-center gap-1"
+                    type="button"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                    Try again
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- System Status Strip -->
+            <div class="flex flex-wrap gap-3 mb-8 fade-in" style="animation-delay: 0.1s">
+              <div id="statusApi" class="status-pill rounded-full px-4 py-2 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-accent-emerald animate-pulse"></div>
+                <span class="text-sm text-white/70">API:</span>
+                <span class="text-sm font-medium text-accent-emerald">Online</span>
+              </div>
+              <div id="statusCalendar" class="status-pill rounded-full px-4 py-2 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-white/40"></div>
+                <span class="text-sm text-white/70">Calendar:</span>
+                <span class="text-sm font-medium text-white/50">Checking...</span>
+              </div>
+              <div id="statusSession" class="status-pill rounded-full px-4 py-2 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-accent-emerald"></div>
+                <span class="text-sm text-white/70">Session:</span>
+                <span class="text-sm font-medium text-accent-emerald">Active</span>
+              </div>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div id="kpiGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
+              <!-- Bookings Card -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.15s">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-10 h-10 rounded-xl bg-accent-orange/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-xs text-white/40 uppercase tracking-wider">Bookings</span>
+                </div>
+                <div id="bookingsContent">
+                  <div class="space-y-2">
+                    <div class="flex items-baseline gap-2">
+                      <span id="bookingsCount" class="text-3xl font-heading font-bold text-white">—</span>
+                      <span class="text-sm text-white/50">requests received</span>
+                    </div>
+                    <p class="text-sm text-white/60">Next scheduled: <span id="nextScheduled" class="text-white/80">—</span></p>
+                  </div>
+                </div>
+                <div id="bookingsLoading" class="hidden space-y-3">
+                  <div class="skeleton h-8 w-20 rounded"></div>
+                  <div class="skeleton h-4 w-32 rounded"></div>
+                </div>
+              </div>
+
+              <!-- Directory Card -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.2s">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-10 h-10 rounded-xl bg-accent-teal/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-xs text-white/40 uppercase tracking-wider">Directory</span>
+                </div>
+                <div id="directoryContent">
+                  <div class="space-y-2">
+                    <div class="flex items-center gap-2 mb-2">
+                      <span class="text-sm text-white/60">Listed:</span>
+                      <span
+                        id="directoryListed"
+                        class="px-2 py-0.5 rounded-full text-xs font-medium bg-accent-emerald/20 text-accent-emerald"
+                        >—</span
+                      >
+                    </div>
+                    <div class="flex items-baseline gap-2">
+                      <span id="directoryViews" class="text-3xl font-heading font-bold text-white">—</span>
+                      <span class="text-sm text-white/50">views from directory</span>
+                    </div>
+                  </div>
+                </div>
+                <div id="directoryLoading" class="hidden space-y-3">
+                  <div class="skeleton h-5 w-24 rounded"></div>
+                  <div class="skeleton h-8 w-16 rounded"></div>
+                </div>
+              </div>
+
+              <!-- Page Views Card -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.25s">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="flex gap-1">
+                    <button class="toggle-btn active px-2 py-1 rounded text-xs text-white/60" data-period="7" type="button">7d</button>
+                    <button class="toggle-btn px-2 py-1 rounded text-xs text-white/60" data-period="30" type="button">30d</button>
+                    <button class="toggle-btn px-2 py-1 rounded text-xs text-white/60" data-period="90" type="button">90d</button>
+                  </div>
+                </div>
+                <div id="pageViewsContent">
+                  <div class="flex items-baseline gap-2 mb-3">
+                    <span id="pageViewsCount" class="text-3xl font-heading font-bold text-white">—</span>
+                    <span class="text-sm text-white/50">page views</span>
+                  </div>
+                  <svg id="pageViewsSparkline" class="w-full h-12" viewBox="0 0 120 40">
+                    <path
+                      class="sparkline-path"
+                      fill="none"
+                      stroke="rgba(96, 165, 250, 0.6)"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      d="M0,28 L120,28"
+                    />
+                  </svg>
+                </div>
+                <div id="pageViewsLoading" class="hidden space-y-3">
+                  <div class="skeleton h-8 w-20 rounded"></div>
+                  <div class="skeleton h-12 w-full rounded"></div>
+                </div>
+              </div>
+
+              <!-- Profile Clicks Card -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.3s">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-xs text-white/40 uppercase tracking-wider">Profile Clicks</span>
+                </div>
+                <div id="profileClicksContent">
+                  <div class="flex items-baseline gap-2 mb-3">
+                    <span id="profileClicksCount" class="text-3xl font-heading font-bold text-white">—</span>
+                    <span class="text-sm text-white/50">clicks to booking</span>
+                  </div>
+                  <svg id="profileClicksSparkline" class="w-full h-12" viewBox="0 0 120 40">
+                    <path
+                      class="sparkline-path"
+                      fill="none"
+                      stroke="rgba(192, 132, 252, 0.6)"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      d="M0,28 L120,28"
+                    />
+                  </svg>
+                </div>
+                <div id="profileClicksLoading" class="hidden space-y-3">
+                  <div class="skeleton h-8 w-20 rounded"></div>
+                  <div class="skeleton h-12 w-full rounded"></div>
+                </div>
+              </div>
+
+              <!-- Support Card -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.35s">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-xs text-white/40 uppercase tracking-wider">Support</span>
+                </div>
+                <div id="supportContent">
+                  <div class="space-y-2">
+                    <div class="flex items-baseline gap-2">
+                      <span id="openRequests" class="text-3xl font-heading font-bold text-white">—</span>
+                      <span class="text-sm text-white/50">open requests</span>
+                    </div>
+                    <p class="text-sm text-white/60">Latest update: <span id="latestUpdate" class="text-white/80">No data yet</span></p>
+                  </div>
+                </div>
+                <div id="supportLoading" class="hidden space-y-3">
+                  <div class="skeleton h-8 w-12 rounded"></div>
+                  <div class="skeleton h-4 w-36 rounded"></div>
+                </div>
+              </div>
+
+              <!-- System Health Card -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.4s">
+                <div class="flex items-start justify-between mb-4">
+                  <div class="w-10 h-10 rounded-xl bg-accent-emerald/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent-emerald" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="text-xs text-white/40 uppercase tracking-wider">System Health</span>
+                </div>
+                <div id="systemHealthContent">
+                  <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-accent-emerald" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span class="text-sm text-white/80">No failed actions</span>
+                    </div>
+                    <p class="text-sm text-white/60">
+                      Last successful update:<br />
+                      <span id="lastSuccessfulUpdate" class="text-white/80">—</span>
+                    </p>
+                  </div>
+                </div>
+                <div id="systemHealthLoading" class="hidden space-y-3">
+                  <div class="skeleton h-5 w-28 rounded"></div>
+                  <div class="skeleton h-4 w-40 rounded"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div id="chartsSection" class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-8">
+              <!-- Views Over Time Chart -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.45s">
+                <div class="flex items-center justify-between mb-6">
+                  <h3 class="font-heading font-semibold text-white">Views over time</h3>
+                  <div class="flex gap-1">
+                    <button class="chart-toggle toggle-btn active px-2 py-1 rounded text-xs text-white/60" data-chart="views" data-period="7" type="button">
+                      7d
+                    </button>
+                    <button class="chart-toggle toggle-btn px-2 py-1 rounded text-xs text-white/60" data-chart="views" data-period="30" type="button">
+                      30d
+                    </button>
+                    <button class="chart-toggle toggle-btn px-2 py-1 rounded text-xs text-white/60" data-chart="views" data-period="90" type="button">
+                      90d
+                    </button>
+                  </div>
+                </div>
+                <div id="viewsChartContent">
+                  <svg id="viewsChart" class="w-full h-48" viewBox="0 0 400 160">
+                    <!-- Y-axis labels -->
+                    <text x="0" y="15" class="fill-white/40 text-xs" style="font-size: 10px">100</text>
+                    <text x="0" y="55" class="fill-white/40 text-xs" style="font-size: 10px">75</text>
+                    <text x="0" y="95" class="fill-white/40 text-xs" style="font-size: 10px">50</text>
+                    <text x="0" y="135" class="fill-white/40 text-xs" style="font-size: 10px">25</text>
+                    <text x="0" y="155" class="fill-white/40 text-xs" style="font-size: 10px">0</text>
+
+                    <!-- Grid lines -->
+                    <line x1="30" y1="10" x2="390" y2="10" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="30" y1="50" x2="390" y2="50" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="30" y1="90" x2="390" y2="90" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="30" y1="130" x2="390" y2="130" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+
+                    <!-- Area fill -->
+                    <defs>
+                      <linearGradient id="viewsGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="rgba(96, 165, 250, 0.3)" />
+                        <stop offset="100%" stop-color="rgba(96, 165, 250, 0)" />
+                      </linearGradient>
+                    </defs>
+                    <path fill="url(#viewsGradient)" d="M30,130 L390,130 L390,150 L30,150 Z" />
+
+                    <!-- Line -->
+                    <path
+                      class="sparkline-path"
+                      fill="none"
+                      stroke="#60a5fa"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M30,130 L390,130"
+                    />
+
+                    <!-- Data points -->
+                    <circle cx="30" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="75" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="120" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="165" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="210" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="255" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="300" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="345" cy="130" r="0" fill="#60a5fa" />
+                    <circle cx="390" cy="130" r="0" fill="#60a5fa" />
+
+                    <!-- X-axis labels -->
+                    <text x="30" y="158" class="fill-white/40" style="font-size: 9px">Mon</text>
+                    <text x="120" y="158" class="fill-white/40" style="font-size: 9px">Wed</text>
+                    <text x="210" y="158" class="fill-white/40" style="font-size: 9px">Fri</text>
+                    <text x="300" y="158" class="fill-white/40" style="font-size: 9px">Sun</text>
+                  </svg>
+                </div>
+                <div id="viewsChartLoading" class="hidden">
+                  <div class="skeleton h-48 w-full rounded"></div>
+                </div>
+              </div>
+
+              <!-- Clicks by Day Chart -->
+              <div class="glass-card rounded-2xl p-6 fade-in" style="animation-delay: 0.5s">
+                <div class="flex items-center justify-between mb-6">
+                  <h3 class="font-heading font-semibold text-white">Clicks by day</h3>
+                  <button
+                    id="exportCsvBtn"
+                    class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-glass-border text-sm text-white/70 hover:text-white transition-colors"
+                    type="button"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Export CSV
+                  </button>
+                </div>
+                <div id="clicksChartContent">
+                  <svg id="clicksChart" class="w-full h-48" viewBox="0 0 400 160">
+                    <!-- Y-axis labels -->
+                    <text x="0" y="15" class="fill-white/40 text-xs" style="font-size: 10px">50</text>
+                    <text x="0" y="75" class="fill-white/40 text-xs" style="font-size: 10px">25</text>
+                    <text x="0" y="135" class="fill-white/40 text-xs" style="font-size: 10px">0</text>
+
+                    <!-- Grid lines -->
+                    <line x1="30" y1="10" x2="390" y2="10" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="30" y1="70" x2="390" y2="70" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+                    <line x1="30" y1="130" x2="390" y2="130" stroke="rgba(255,255,255,0.05)" stroke-width="1" />
+
+                    <!-- Bars -->
+                    <rect x="40" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+                    <rect x="90" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+                    <rect x="140" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+                    <rect x="190" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+                    <rect x="240" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+                    <rect x="290" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+                    <rect x="340" y="130" width="35" height="0" rx="4" fill="rgba(192, 132, 252, 0.35)" />
+
+                    <!-- X-axis labels -->
+                    <text x="48" y="148" class="fill-white/40" style="font-size: 9px">Mon</text>
+                    <text x="98" y="148" class="fill-white/40" style="font-size: 9px">Tue</text>
+                    <text x="147" y="148" class="fill-white/40" style="font-size: 9px">Wed</text>
+                    <text x="198" y="148" class="fill-white/40" style="font-size: 9px">Thu</text>
+                    <text x="252" y="148" class="fill-white/40" style="font-size: 9px">Fri</text>
+                    <text x="302" y="148" class="fill-white/40" style="font-size: 9px">Sat</text>
+                    <text x="350" y="148" class="fill-white/40" style="font-size: 9px">Sun</text>
+                  </svg>
+                </div>
+                <div id="clicksChartLoading" class="hidden">
+                  <div class="skeleton h-48 w-full rounded"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Empty State (hidden by default) -->
+            <div id="emptyState" class="hidden">
+              <div class="glass-card rounded-2xl p-8 lg:p-12 text-center max-w-lg mx-auto fade-in">
+                <div class="w-16 h-16 rounded-2xl bg-accent-orange/20 flex items-center justify-center mx-auto mb-6">
+                  <svg class="w-8 h-8 text-accent-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
+                  </svg>
+                </div>
+                <h3 class="font-heading text-xl font-semibold text-white mb-3">No data yet</h3>
+                <p id="emptyStateMessage" class="text-white/60 mb-6">Complete setup to publish your booking page and start tracking.</p>
+                <a
+                  href="/va/dashboard/setup"
+                  class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-accent-orange hover:bg-accent-orange-hover text-white font-medium transition-colors"
+                >
+                  Complete Setup
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      // Default configuration
+      const defaultConfig = {
+        background_color: "#070a10",
+        empty_state_message: "Complete setup to publish your booking page and start tracking.",
+        page_subtitle: "Proof of visibility and bookings over time. Calm systems beat chaos.",
+        page_title: "Analytics",
+        primary_action_color: "#a855f7",
+        secondary_action_color: "#5eead4",
+        surface_color: "rgba(255, 255, 255, 0.06)",
+        text_color: "#ffffff"
+      };
+
+      const API_BASE = "https://api.virtuallaunch.pro";
+
+      // State management
+      const appState = {
+        analytics: {
+          bookings: { count: null, nextScheduled: null },
+          directory: { listed: null, views: null },
+          pageViews: { count: null },
+          profileClicks: { count: null },
+          series: null,
+          support: { latestUpdate: null, openRequests: null },
+          systemHealth: { lastUpdate: null }
+        },
+        system: {
+          apiOnline: null,
+          calConnected: null,
+          sessionActive: null
+        },
+        ui: {
+          sampleDataEnabled: false
+        }
+      };
+
+      function formatCount(v) {
+        if (typeof v !== "number" || !Number.isFinite(v)) return "—";
+        return v.toLocaleString();
+      }
+
+      function formatText(v) {
+        const s = String(v || "").trim();
+        return s ? s : "No data yet";
+      }
+
+      function setPill({ dotClass, elId, labelClass, labelText }) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const dot = el.querySelector("div");
+        const spans = el.querySelectorAll("span");
+        const valueSpan = spans[spans.length - 1];
+
+        if (dot) dot.className = `w-2 h-2 rounded-full ${dotClass}`;
+        if (valueSpan) {
+          valueSpan.textContent = labelText;
+          valueSpan.className = `text-sm font-medium ${labelClass}`;
+        }
+      }
+
+      function showError(message) {
+        const banner = document.getElementById("errorBanner");
+        const msg = document.getElementById("errorMessage");
+        if (msg) msg.textContent = message;
+        if (banner) banner.classList.remove("hidden");
+      }
+
+      function hideError() {
+        const banner = document.getElementById("errorBanner");
+        if (banner) banner.classList.add("hidden");
+      }
+
+      function showLoadingState(isLoading) {
+        const contentElements = [
+          "bookingsContent",
+          "clicksChartContent",
+          "directoryContent",
+          "pageViewsContent",
+          "profileClicksContent",
+          "supportContent",
+          "systemHealthContent",
+          "viewsChartContent"
+        ];
+
+        const loadingElements = [
+          "bookingsLoading",
+          "clicksChartLoading",
+          "directoryLoading",
+          "pageViewsLoading",
+          "profileClicksLoading",
+          "supportLoading",
+          "systemHealthLoading",
+          "viewsChartLoading"
+        ];
+
+        contentElements.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.classList.toggle("hidden", isLoading);
+        });
+
+        loadingElements.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.classList.toggle("hidden", !isLoading);
+        });
+      }
+
+      async function safeFetchJson(path) {
+        const url = `${API_BASE}${path}`;
+        const res = await fetch(url, {
+          credentials: "include",
+          headers: { "content-type": "application/json" },
+          method: "GET"
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(`GET ${path} failed (${res.status})${text ? `: ${text.slice(0, 200)}` : ""}`);
+        }
+
+        return await res.json();
+      }
+
+      function applySampleData() {
+        // Purpose: let users preview the UI without pretending endpoints exist.
+        // This never calls the API.
+        const now = new Date();
+        const next = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+
+        appState.analytics.bookings = {
+          count: 12,
+          nextScheduled: next.toLocaleString("en-US", {
+            day: "numeric",
+            hour: "numeric",
+            hour12: true,
+            minute: "2-digit",
+            month: "short"
+          })
+        };
+
+        appState.analytics.directory = {
+          listed: true,
+          views: 248
+        };
+
+        appState.analytics.pageViews = { count: 1840 };
+        appState.analytics.profileClicks = { count: 96 };
+
+        appState.analytics.support = {
+          latestUpdate: "Reply received. Next step: confirm your Cal slug.",
+          openRequests: 1
+        };
+
+        appState.analytics.systemHealth = {
+          lastUpdate: now.toLocaleString("en-US", {
+            day: "numeric",
+            hour: "numeric",
+            hour12: true,
+            minute: "2-digit",
+            month: "short",
+            year: "numeric"
+          })
+        };
+
+        appState.analytics.series = {
+          clicks: {
+            7: [8, 12, 6, 14, 10, 18, 9],
+            30: [3, 6, 4, 7, 9, 12, 8, 5, 6, 10, 11, 7, 6, 9, 14, 12, 8, 7, 6, 10, 13, 9, 8, 7, 11, 12, 10, 8, 6, 9],
+            90: Array.from({ length: 90 }, (_, i) => Math.max(0, Math.round(6 + 6 * Math.sin(i / 6) + (i % 7 === 5 ? 6 : 0))))
+          },
+          views: {
+            7: [120, 180, 150, 230, 210, 280, 260],
+            30: [
+              90, 120, 110, 140, 160, 180, 170, 150, 155, 165, 175, 190, 210, 205, 220,
+              240, 230, 225, 210, 200, 215, 235, 245, 255, 240, 230, 220, 210, 205, 215
+            ],
+            90: Array.from({ length: 90 }, (_, i) => Math.max(0, Math.round(140 + 80 * Math.sin(i / 9) + (i % 11 === 0 ? 60 : 0))))
+          }
+        };
+      }
+
+      function setSampleDataUi(enabled) {
+        appState.ui.sampleDataEnabled = !!enabled;
+        const btn = document.getElementById("sampleDataBtn");
+        const clearBtn = document.getElementById("clearSampleDataBtn");
+        const hint = document.getElementById("sampleDataHint");
+
+        if (btn) btn.classList.toggle("hidden", enabled);
+        if (clearBtn) clearBtn.classList.toggle("hidden", !enabled);
+        if (hint) hint.classList.toggle("hidden", !enabled);
+      }
+
+      function enableSampleData() {
+        try {
+          localStorage.setItem("vlp_sample_data", "1");
+        } catch (err) {
+          // no-op
+        }
+        setSampleDataUi(true);
+        applySampleData();
+        updateDashboardUi();
+        toggleEmptyState(false);
+      }
+
+      function disableSampleData() {
+        try {
+          localStorage.removeItem("vlp_sample_data");
+        } catch (err) {
+          // no-op
+        }
+        setSampleDataUi(false);
+
+        appState.analytics.bookings = { count: null, nextScheduled: null };
+        appState.analytics.directory = { listed: null, views: null };
+        appState.analytics.pageViews = { count: null };
+        appState.analytics.profileClicks = { count: null };
+        appState.analytics.series = null;
+        appState.analytics.support = { latestUpdate: null, openRequests: null };
+        appState.analytics.systemHealth = { lastUpdate: null };
+
+        updateDashboardUi();
+        toggleEmptyState(true);
+      }
+
+      function isSampleDataEnabled() {
+        try {
+          return localStorage.getItem("vlp_sample_data") === "1";
+        } catch {
+          return false;
+        }
+      }
+
+      async function loadDashboard() {
+        hideError();
+        showLoadingState(true);
+
+        appState.analytics.bookings = { count: null, nextScheduled: null };
+        appState.analytics.directory = { listed: null, views: null };
+        appState.analytics.pageViews = { count: null };
+        appState.analytics.profileClicks = { count: null };
+        appState.analytics.series = null;
+        appState.analytics.support = { latestUpdate: null, openRequests: null };
+        appState.analytics.systemHealth = { lastUpdate: null };
+
+        try {
+          const [calRes, healthRes, sessionRes, directoryRes] = await Promise.allSettled([
+            safeFetchJson("/cal/oauth/status"),
+            safeFetchJson("/health"),
+            safeFetchJson("/auth/session"),
+            safeFetchJson("/directory")
+          ]);
+
+          appState.system.apiOnline = healthRes.status === "fulfilled" && !!healthRes.value?.ok;
+
+          if (sessionRes.status === "fulfilled") {
+            appState.system.sessionActive = !!sessionRes.value?.authenticated;
+          } else {
+            appState.system.sessionActive = null;
+          }
+
+          if (calRes.status === "fulfilled") {
+            appState.system.calConnected = !!calRes.value?.connected;
+          } else {
+            appState.system.calConnected = null;
+          }
+
+          if (directoryRes.status === "fulfilled") {
+            const dir = directoryRes.value?.directory;
+            if (Array.isArray(dir)) {
+              // No per-account analytics read model yet. Keep placeholders.
+              appState.analytics.directory = { listed: null, views: null };
+            }
+          }
+
+          if (isSampleDataEnabled()) {
+            setSampleDataUi(true);
+            applySampleData();
+          } else {
+            setSampleDataUi(false);
+          }
+
+          const url = new URL(window.location.href);
+          const supportId = url.searchParams.get("supportId");
+          if (supportId) {
+            try {
+              const support = await safeFetchJson(`/support/status?supportId=${encodeURIComponent(supportId)}`);
+              appState.analytics.support = {
+                latestUpdate: support?.latestUpdate || null,
+                openRequests: support?.status ? 1 : null
+              };
+            } catch {
+              // Keep placeholders.
+            }
+          }
+
+          updateDashboardUi();
+
+          const hasAnyMetric = Object.values(appState.analytics).some((o) => {
+            if (!o || typeof o !== "object") return false;
+            return Object.values(o).some((v) => typeof v === "number" && Number.isFinite(v));
+          });
+
+          toggleEmptyState(appState.ui.sampleDataEnabled ? false : !hasAnyMetric);
+        } catch {
+          showError("We could not load dashboard status right now. Try again in a minute.");
+          updateDashboardUi();
+          toggleEmptyState(true);
+        } finally {
+          showLoadingState(false);
+
+          const now = new Date();
+          const lastUpdated = document.getElementById("lastUpdated");
+          if (lastUpdated) {
+            lastUpdated.textContent = `Last updated: ${now.toLocaleString("en-US", {
+              day: "numeric",
+              hour: "numeric",
+              hour12: true,
+              minute: "2-digit",
+              month: "short",
+              year: "numeric"
+            })}`;
+          }
+        }
+      }
+
+      function updateDashboardUi() {
+        document.getElementById("bookingsCount").textContent = formatCount(appState.analytics.bookings.count);
+        document.getElementById("nextScheduled").textContent = formatText(appState.analytics.bookings.nextScheduled);
+
+        const listedEl = document.getElementById("directoryListed");
+        if (listedEl) {
+          listedEl.textContent = appState.analytics.directory.listed === true ? "Yes" : appState.analytics.directory.listed === false ? "No" : "—";
+          listedEl.classList.remove("bg-accent-emerald/20", "text-accent-emerald", "bg-white/10", "text-white/60");
+          listedEl.classList.add("bg-white/10", "text-white/60");
+        }
+
+        document.getElementById("directoryViews").textContent = formatCount(appState.analytics.directory.views);
+        document.getElementById("pageViewsCount").textContent = formatCount(appState.analytics.pageViews.count);
+        document.getElementById("profileClicksCount").textContent = formatCount(appState.analytics.profileClicks.count);
+        document.getElementById("openRequests").textContent = formatCount(appState.analytics.support.openRequests);
+        document.getElementById("latestUpdate").textContent = formatText(appState.analytics.support.latestUpdate);
+        document.getElementById("lastSuccessfulUpdate").textContent = formatText(appState.analytics.systemHealth.lastUpdate);
+
+        if (appState.system.apiOnline === true) {
+          setPill({ dotClass: "bg-accent-emerald animate-pulse", elId: "statusApi", labelClass: "text-accent-emerald", labelText: "Online" });
+        } else if (appState.system.apiOnline === false) {
+          setPill({ dotClass: "bg-amber-400", elId: "statusApi", labelClass: "text-amber-400", labelText: "Offline" });
+        } else {
+          setPill({ dotClass: "bg-white/40", elId: "statusApi", labelClass: "text-white/50", labelText: "Checking…" });
+        }
+
+        if (appState.system.calConnected === true) {
+          setPill({ dotClass: "bg-accent-emerald", elId: "statusCalendar", labelClass: "text-accent-emerald", labelText: "Connected" });
+        } else if (appState.system.calConnected === false) {
+          setPill({ dotClass: "bg-white/40", elId: "statusCalendar", labelClass: "text-white/50", labelText: "Not connected" });
+        } else {
+          setPill({ dotClass: "bg-white/40", elId: "statusCalendar", labelClass: "text-white/50", labelText: "Checking…" });
+        }
+
+        if (appState.system.sessionActive === true) {
+          setPill({ dotClass: "bg-accent-emerald", elId: "statusSession", labelClass: "text-accent-emerald", labelText: "Active" });
+        } else if (appState.system.sessionActive === false) {
+          setPill({ dotClass: "bg-amber-400", elId: "statusSession", labelClass: "text-amber-400", labelText: "Signed out" });
+        } else {
+          setPill({ dotClass: "bg-white/40", elId: "statusSession", labelClass: "text-white/50", labelText: "Checking…" });
+        }
+
+        renderCharts();
+      }
+
+      function getActivePeriodForChart(chart) {
+        const active = document.querySelector(`.chart-toggle[data-chart="${chart}"].active`);
+        const raw = active ? active.getAttribute("data-period") : null;
+        const n = Number(raw || 7);
+        return n === 30 || n === 90 ? n : 7;
+      }
+
+      function renderCharts() {
+        const hasSample = appState.ui.sampleDataEnabled === true;
+
+        const pageViewsSparkline = document.getElementById("pageViewsSparkline");
+        const profileClicksSparkline = document.getElementById("profileClicksSparkline");
+
+        if (!hasSample) {
+          setSparkline({ el: pageViewsSparkline, series: [] });
+          setSparkline({ el: profileClicksSparkline, series: [] });
+          setClicksChart({ series: [] });
+          setViewsChart({ series: [] });
+          return;
+        }
+
+        const period = getActivePeriodForChart("views");
+        const viewsSeries = appState.analytics.series?.views?.[period] || [];
+        const clicksSeries = appState.analytics.series?.clicks?.[period] || [];
+
+        setSparkline({ el: pageViewsSparkline, series: viewsSeries });
+        setSparkline({ el: profileClicksSparkline, series: clicksSeries });
+        setViewsChart({ series: viewsSeries });
+        setClicksChart({ series: clicksSeries });
+      }
+
+      function setSparkline({ el, series }) {
+        if (!el) return;
+        const path = el.querySelector("path");
+        if (!path) return;
+
+        const values = Array.isArray(series) ? series.slice(0) : [];
+        if (values.length < 2) {
+          path.setAttribute("d", "M0,28 L120,28");
+          return;
+        }
+
+        const w = 120;
+        const h = 40;
+        const pad = 6;
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const span = Math.max(1, max - min);
+
+        const pts = values.map((v, i) => {
+          const x = (i / (values.length - 1)) * w;
+          const y = pad + ((max - v) / span) * (h - pad * 2);
+          return [x, y];
+        });
+
+        const d = pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+        path.setAttribute("d", d);
+      }
+
+      function setClicksChart({ series }) {
+        const svg = document.getElementById("clicksChart");
+        if (!svg) return;
+
+        const values = Array.isArray(series) ? series.slice(0, 7) : [];
+        const bars = Array.from(svg.querySelectorAll("rect"));
+
+        if (values.length === 0 || bars.length === 0) {
+          bars.forEach((r) => {
+            r.setAttribute("y", "130");
+            r.setAttribute("height", "0");
+            r.setAttribute("fill", "rgba(192, 132, 252, 0.35)");
+          });
+          return;
+        }
+
+        const max = Math.max(1, Math.max(...values));
+        const baseY = 130;
+        const maxH = 105;
+
+        bars.forEach((r, i) => {
+          const v = Number(values[i] || 0);
+          const h = Math.max(0, Math.round((v / max) * maxH));
+          const y = baseY - h;
+          r.setAttribute("y", String(y));
+          r.setAttribute("height", String(h));
+          r.setAttribute("fill", "rgba(192, 132, 252, 0.6)");
+        });
+      }
+
+      function setViewsChart({ series }) {
+        const svg = document.getElementById("viewsChart");
+        if (!svg) return;
+
+        const values = Array.isArray(series) ? series.slice(0, 9) : [];
+
+        const area = svg.querySelector('path[fill^="url("]');
+        const line = svg.querySelector("path.sparkline-path");
+        const circles = Array.from(svg.querySelectorAll("circle"));
+
+        if (values.length < 2) {
+          if (area) area.setAttribute("d", "M30,130 L390,130 L390,150 L30,150 Z");
+          if (line) line.setAttribute("d", "M30,130 L390,130");
+          circles.forEach((c) => c.setAttribute("r", "0"));
+          return;
+        }
+
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        const span = Math.max(1, max - min);
+
+        const x0 = 30;
+        const x1 = 390;
+        const yTop = 30;
+        const yBottom = 130;
+        const base = 150;
+
+        const pts = values.map((v, i) => {
+          const x = x0 + (i / (values.length - 1)) * (x1 - x0);
+          const y = yTop + ((max - v) / span) * (yBottom - yTop);
+          return [x, y];
+        });
+
+        const lineD = pts.map(([x, y], i) => `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+        const areaD = `${lineD} L${x1},${base} L${x0},${base} Z`;
+
+        if (area) area.setAttribute("d", areaD);
+        if (line) line.setAttribute("d", lineD);
+
+        circles.forEach((c, i) => {
+          const pt = pts[i];
+          if (!pt) {
+            c.setAttribute("r", "0");
+            return;
+          }
+          c.setAttribute("cx", String(pt[0]));
+          c.setAttribute("cy", String(pt[1]));
+          c.setAttribute("r", "4");
+        });
+      }
+
+      async function logout() {
+        const url = `${API_BASE}/auth/logout`;
+        try {
+          const res = await fetch(url, {
+            credentials: "include",
+            headers: { "content-type": "application/json" },
+            method: "POST"
+          });
+
+          if (!res.ok) throw new Error(`Logout failed (${res.status})`);
+
+          window.location.href = "/va/login";
+        } catch {
+          showError("Logout failed. Try again.");
+        }
+      }
+
+      function toggleEmptyState(show) {
+        document.getElementById("chartsSection").classList.toggle("hidden", show);
+        document.getElementById("emptyState").classList.toggle("hidden", !show);
+        document.getElementById("kpiGrid").classList.toggle("hidden", show);
+      }
+
+      // Element SDK initialization
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          mapToCapabilities: (config) => ({
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || "Raleway",
+              set: (value) => window.elementSdk.setConfig({ font_family: value })
+            },
+            fontSizeable: {
+              get: () => config.font_size || 16,
+              set: (value) => window.elementSdk.setConfig({ font_size: value })
+            },
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => window.elementSdk.setConfig({ background_color: value })
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => window.elementSdk.setConfig({ primary_action_color: value })
+              },
+              {
+                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (value) => window.elementSdk.setConfig({ secondary_action_color: value })
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => window.elementSdk.setConfig({ surface_color: value })
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => window.elementSdk.setConfig({ text_color: value })
+              }
+            ]
+          }),
+          mapToEditPanelValues: (config) =>
+            new Map([
+              ["empty_state_message", config.empty_state_message || defaultConfig.empty_state_message],
+              ["page_subtitle", config.page_subtitle || defaultConfig.page_subtitle],
+              ["page_title", config.page_title || defaultConfig.page_title]
+            ]),
+          onConfigChange: async (config) => {
+            const titleEl = document.getElementById("pageTitle");
+            if (titleEl) titleEl.textContent = config.page_title || defaultConfig.page_title;
+
+            const subtitleEl = document.getElementById("pageSubtitle");
+            if (subtitleEl) subtitleEl.textContent = config.page_subtitle || defaultConfig.page_subtitle;
+
+            const emptyMsgEl = document.getElementById("emptyStateMessage");
+            if (emptyMsgEl) emptyMsgEl.textContent = config.empty_state_message || defaultConfig.empty_state_message;
+
+            document.body.style.setProperty("--bg-color", config.background_color || defaultConfig.background_color);
+          }
+        });
+      }
+
+      // Mobile navigation toggle
+      const mobileNavToggle = document.getElementById("mobileNavToggle");
+      const sidebar = document.getElementById("sidebar");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+      if (mobileNavToggle && sidebar && sidebarOverlay) {
+        mobileNavToggle.addEventListener("click", () => {
+          sidebar.classList.toggle("-translate-x-full");
+          sidebarOverlay.classList.toggle("hidden");
+        });
+
+        sidebarOverlay.addEventListener("click", () => {
+          sidebar.classList.add("-translate-x-full");
+          sidebarOverlay.classList.add("hidden");
+        });
+      }
+
+      // Toggle buttons for period selection (UI only)
+      document.querySelectorAll(".toggle-btn[data-period]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const parent = e.target.closest(".flex");
+          if (!parent) return;
+          parent.querySelectorAll(".toggle-btn").forEach((b) => b.classList.remove("active"));
+          e.target.classList.add("active");
+          if (appState.ui.sampleDataEnabled) renderCharts();
+        });
+      });
+
+      // Chart toggle buttons (UI only)
+      document.querySelectorAll(".chart-toggle").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          const chartType = e.target.dataset.chart;
+          document.querySelectorAll(`.chart-toggle[data-chart="${chartType}"]`).forEach((b) => b.classList.remove("active"));
+          e.target.classList.add("active");
+          if (appState.ui.sampleDataEnabled) renderCharts();
+        });
+      });
+
+      // Export CSV button (UI only)
+      const exportCsvBtn = document.getElementById("exportCsvBtn");
+      if (exportCsvBtn) {
+        exportCsvBtn.addEventListener("click", () => {
+          const btn = document.getElementById("exportCsvBtn");
+          const originalText = btn.innerHTML;
+          btn.innerHTML = `
+            <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Exporting…
+          `;
+          btn.disabled = true;
+
+          setTimeout(() => {
+            btn.innerHTML = `
+              <svg class="w-4 h-4 text-accent-emerald" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              Exported!
+            `;
+            setTimeout(() => {
+              btn.innerHTML = originalText;
+              btn.disabled = false;
+            }, 2000);
+          }, 1500);
+        });
+      }
+
+      // Retry button
+      const retryBtn = document.getElementById("retryBtn");
+      if (retryBtn) {
+        retryBtn.addEventListener("click", () => {
+          hideError();
+          loadDashboard();
+        });
+      }
+
+      // Logout
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) logoutBtn.addEventListener("click", logout);
+
+      // Sample data buttons
+      const clearSampleDataBtn = document.getElementById("clearSampleDataBtn");
+      const sampleDataBtn = document.getElementById("sampleDataBtn");
+
+      if (clearSampleDataBtn) clearSampleDataBtn.addEventListener("click", disableSampleData);
+      if (sampleDataBtn) sampleDataBtn.addEventListener("click", enableSampleData);
+
+      // Tiny, boring tests (because humans love shipping bugs)
+      (function runTests() {
+        try {
+          console.assert(formatCount(0) === "0", "formatCount(0)");
+          console.assert(formatCount(1000) === "1,000", "formatCount(1000)");
+          console.assert(formatCount(NaN) === "—", "formatCount(NaN)");
+          console.assert(formatCount(Infinity) === "—", "formatCount(Infinity)");
+          console.assert(formatText("") === "No data yet", "formatText(empty)");
+          console.assert(formatText(null) === "No data yet", "formatText(null)");
+
+          // Sparkline path generation sanity
+          const ns = "http://www.w3.org/2000/svg";
+          const svg = document.createElementNS(ns, "svg");
+          const p = document.createElementNS(ns, "path");
+          svg.appendChild(p);
+          setSparkline({ el: svg, series: [] });
+          console.assert(p.getAttribute("d") === "M0,28 L120,28", "sparkline empty -> flat");
+          setSparkline({ el: svg, series: [1, 2, 3, 4] });
+          console.assert((p.getAttribute("d") || "").startsWith("M"), "sparkline series -> path");
+
+          console.assert(getActivePeriodForChart("views") === 7, "default views period");
+        } catch (err) {
+          // no-op
+        }
+      })();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDashboard();
+      });
+    </script>
+  </body>
+</html>
