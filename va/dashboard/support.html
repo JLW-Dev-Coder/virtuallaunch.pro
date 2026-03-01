@@ -162,8 +162,8 @@
               </p>
               <button
                 class="w-full px-6 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-900/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-900/70 flex items-center justify-center gap-2"
-                data-cal-link="tax-monitor-pro/tax-monitor-transcript-support"
-                data-cal-namespace="tax-monitor-transcript-support"
+                data-cal-link="tax-monitor-pro/va-starter-track-support"
+                data-cal-namespace="va-starter-track-support"
                 data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
                 type="button"
               >
@@ -882,16 +882,9 @@
           };
       })(window, "https://app.cal.com/embed/embed.js", "init");
 
-      Cal("init", "tax-monitor-transcript-support", { origin: "https://app.cal.com" });
+      Cal("init", "va-starter-track-support", {origin:"https://app.cal.com"});
 
-      Cal.ns["tax-monitor-transcript-support"]("ui", {
-        cssVarsPerTheme: {
-          light: { "cal-brand": "#292929" },
-          dark: { "cal-brand": "#f97316" },
-        },
-        hideEventTypeDetails: false,
-        layout: "month_view",
-      });
+      Cal.ns["va-starter-track-support"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#292929"},"dark":{"cal-brand":"#f97316"}},"hideEventTypeDetails":false,"layout":"month_view"});
     </script>
     <!-- Cal element-click embed code ends -->
   </body>
