@@ -222,8 +222,16 @@
 </head>
 
 <body class="h-full bg-ink-950 text-white antialiased overflow-auto">
-  <!-- Canonical shell wrappers (additive; builder content preserved) -->
-  <div class="min-h-full">
+  <!-- Dashboard shell + partials (required for va/dashboard/*) -->
+  <div id="dashboard-shell" class="min-h-full lg:flex">
+    <!-- PARTIAL:sidebar -->
+
+    <div id="dashboard-main" class="flex-1 min-w-0">
+      <!-- PARTIAL:topbar -->
+
+      <div id="dashboard-content" class="w-full">
+        <!-- Canonical shell wrappers (additive; builder content preserved) -->
+        <div class="min-h-full">
 
   <div class="builder-shell">
 
@@ -739,6 +747,10 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
       }
 
       function runTests() {
+        // Dashboard shell sanity (partials required)
+        assert("dashboard_shell_exists", !!byId("dashboard-shell"));
+        assert("dashboard_main_exists", !!byId("dashboard-main"));
+        assert("dashboard_content_exists", !!byId("dashboard-content"));
         // Structure sanity
         assert("builder_shell_exists", !!document.querySelector(".builder-shell"));
         assert("preview_exists", !!document.querySelector("main.preview-wrap"));
@@ -1108,6 +1120,9 @@ Portfolio links || Use the link fields below to populate icons.</textarea>
     })();
   </script>
 
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 </html>
