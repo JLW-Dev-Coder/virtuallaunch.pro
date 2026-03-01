@@ -12,7 +12,7 @@ function mustGetEnv(k) {
 function readFileOrThrow(p) {
   const abs = path.resolve(p);
   if (!fs.existsSync(abs)) throw new Error(`File not found: ${abs}`);
-  return { abs, buf: fs.readFileSync(abs) };
+  return { abs, stream: fs.createReadStream(abs) };
 }
 
 async function findFileIdByName({ drive, folderId, name }) {
@@ -20,7 +20,9 @@ async function findFileIdByName({ drive, folderId, name }) {
     `'${folderId}' in parents`,
     `name='${name.replace(/'/g, "\\'")}'`,
     "trashed=false",
-  ].sort().join(" and ");
+  ]
+    .sort()
+    .join(" and ");
 
   const res = await drive.files.list({
     fields: "files(id,name)",
@@ -32,13 +34,13 @@ async function findFileIdByName({ drive, folderId, name }) {
   return files.length ? files[0].id : null;
 }
 
-async function createOrUpdate({ drive, folderId, name, mimeType, buf }) {
+async function createOrUpdate({ drive, folderId, mimeType, name, stream }) {
   const existingId = await findFileIdByName({ drive, folderId, name });
 
   if (existingId) {
     await drive.files.update({
       fileId: existingId,
-      media: { mimeType, body: Buffer.from(buf) },
+      media: { mimeType, body: stream },
     });
     return { action: "updated", id: existingId, name };
   }
@@ -50,7 +52,7 @@ async function createOrUpdate({ drive, folderId, name, mimeType, buf }) {
       name,
       parents: [folderId],
     },
-    media: { mimeType, body: Buffer.from(buf) },
+    media: { mimeType, body: stream },
   });
 
   return { action: "created", id: created.data.id, name };
@@ -68,8 +70,8 @@ async function main() {
   const readmeDriveName = mustGetEnv("README_DRIVE_NAME");
   const workerDriveName = mustGetEnv("WORKER_DRIVE_NAME");
 
-  const { buf: readmeBuf } = readFileOrThrow(readmePath);
-  const { buf: workerBuf } = readFileOrThrow(workerPath);
+  const { stream: readmeStream } = readFileOrThrow(readmePath);
+  const { stream: workerStream } = readFileOrThrow(workerPath);
 
   const auth = new google.auth.JWT({
     email: creds.client_email,
@@ -77,25 +79,25 @@ async function main() {
     scopes: ["https://www.googleapis.com/auth/drive.file"],
   });
 
-  const drive = google.drive({ version: "v3", auth });
+  const drive = google.drive({ auth, version: "v3" });
 
   const results = [];
   results.push(
     await createOrUpdate({
-      buf: readmeBuf,
       drive,
       folderId,
       mimeType: "text/markdown",
       name: readmeDriveName,
+      stream: readmeStream,
     }),
   );
   results.push(
     await createOrUpdate({
-      buf: workerBuf,
       drive,
       folderId,
       mimeType: "text/javascript",
       name: workerDriveName,
+      stream: workerStream,
     }),
   );
 
