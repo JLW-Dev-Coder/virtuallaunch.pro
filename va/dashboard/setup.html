@@ -1,970 +1,976 @@
 <!-- va/dashboard/setup.html -->
 <!doctype html>
-<html lang="en" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VA Profile Builder</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VA Profile Preview Builder</title>
 
-    <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="/_sdk/element_sdk.js"></script>
-    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-
-    <style>
-      html {
-        font-family: system-ui, -apple-system, sans-serif;
-      }
-      .glass-card {
-        background: rgba(30, 41, 59, 0.6);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-      }
-      .preview-glass {
-        background: linear-gradient(
-          135deg,
-          rgba(30, 41, 59, 0.7) 0%,
-          rgba(30, 41, 59, 0.6) 100%
-        );
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-      }
-      .input-field {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      .input-field:focus {
-        transform: translateY(-1px);
-      }
-      .skill-tag {
-        animation: fadeIn 0.3s ease-out;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: scale(0.9);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: { soft: "0 10px 30px rgba(0,0,0,0.18)" },
+          colors: {
+            brand: { 500: "#f97316", 400: "#fb923c" },
+            ink: { 950: "#070a10", 900: "#0b1220", 800: "#111a2e", 700: "#152237" }
+          },
+          maxWidth: { "6-5xl": "77.5rem" }
         }
       }
-      @keyframes float {
-        0%,
-        100% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-      .floating {
-        animation: float 6s ease-in-out infinite;
-      }
-      .pattern-bg {
-        background-image: radial-gradient(
-            circle at 20% 80%,
-            rgba(251, 146, 60, 0.05) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 80% 20%,
-            rgba(20, 184, 166, 0.05) 0%,
-            transparent 50%
-          ),
-          radial-gradient(
-            circle at 40% 40%,
-            rgba(251, 146, 60, 0.03) 0%,
-            transparent 30%
-          );
-      }
-    </style>
-    <style>
-      body {
-        box-sizing: border-box;
-      }
-    </style>
-  </head>
+    };
+  </script>
 
-  <body class="h-full bg-slate-950 overflow-auto">
-    <div class="min-h-full lg:flex">
-      <!-- PARTIAL:sidebar -->
+  <style>
+    html { scroll-behavior: smooth; }
+    body { margin: 0; }
 
-      <div class="flex-1 min-w-0">
-        <!-- PARTIAL:topbar -->
+    .vlp-space-bg {
+      background:
+        radial-gradient(1200px 700px at 12% 12%, rgba(249,115,22,0.18), transparent 60%),
+        radial-gradient(1000px 700px at 88% 80%, rgba(16,185,129,0.12), transparent 62%),
+        radial-gradient(900px 600px at 55% 22%, rgba(255,255,255,0.05), transparent 60%),
+        linear-gradient(180deg, #1a1a1a 0%, #111113 100%);
+      position: relative;
+    }
 
-        <main class="w-full min-h-full p-6 md:p-8">
-      <!-- Header -->
-      <header class="text-center mb-8">
-        <h1 id="page-title" class="text-3xl md:text-4xl font-bold text-white mb-2">
-          Virtual Assistant Profile Builder
-        </h1>
-        <p class="text-slate-400">Create your professional profile in minutes.</p>
-      </header>
+    .vlp-stars::before {
+      background: transparent;
+      box-shadow:
+        6vw 10vh rgba(255,255,255,0.26),
+        10vw 26vh rgba(255,255,255,0.18),
+        14vw 52vh rgba(255,255,255,0.22),
+        18vw 72vh rgba(255,255,255,0.18),
+        22vw 16vh rgba(255,255,255,0.22),
+        26vw 40vh rgba(255,255,255,0.18),
+        30vw 64vh rgba(255,255,255,0.22),
+        34vw 22vh rgba(255,255,255,0.18),
+        38vw 46vh rgba(255,255,255,0.22),
+        42vw 78vh rgba(255,255,255,0.20),
+        46vw 14vh rgba(255,255,255,0.18),
+        50vw 34vh rgba(255,255,255,0.22),
+        54vw 58vh rgba(255,255,255,0.20),
+        58vw 84vh rgba(255,255,255,0.22),
+        62vw 20vh rgba(255,255,255,0.18),
+        66vw 44vh rgba(255,255,255,0.22),
+        70vw 68vh rgba(255,255,255,0.20),
+        74vw 26vh rgba(255,255,255,0.18),
+        78vw 50vh rgba(255,255,255,0.22),
+        82vw 74vh rgba(255,255,255,0.20),
+        86vw 18vh rgba(255,255,255,0.18),
+        90vw 42vh rgba(255,255,255,0.22),
+        94vw 66vh rgba(255,255,255,0.20);
+      content: "";
+      height: 2px;
+      left: 0;
+      opacity: 0.65;
+      position: absolute;
+      top: 0;
+      width: 2px;
+    }
 
-      <!-- Main Content -->
-      <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Left: Form Section -->
-        <div class="space-y-6">
-          <div class="glass-card rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50">
-            <h2 id="form-heading" class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-              <span
-                class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white shadow-lg shadow-orange-900/50"
-              >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  ></path>
-                </svg>
+    .vlp-glass {
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .vlp-card-frame {
+      background: rgba(7,10,16,0.40);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+    }
+
+    .vlp-hero-wrap { position: relative; }
+
+    .vlp-hero-img {
+      bottom: 0;
+      height: auto;
+      max-width: 520px;
+      position: absolute;
+      right: 0;
+      width: 48vw;
+    }
+
+    @media (max-width: 1023px) {
+      .vlp-hero-img {
+        margin: 18px auto 0 auto;
+        max-width: 520px;
+        position: static;
+        width: 100%;
+      }
+    }
+
+    /* Builder layout */
+    .builder-shell {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      min-height: 100vh;
+    }
+    @media (max-width: 1100px) {
+      .builder-shell { grid-template-columns: 1fr; }
+    }
+
+    /* Keep the preview feeling like the real page */
+    .preview-wrap {
+      min-height: 100vh;
+    }
+
+    /* Proof cards */
+    .vlp-proof-back { transform: rotateY(180deg); }
+    .vlp-proof-card { height: 280px; perspective: 1200px; position: relative; width: 100%; }
+    .vlp-proof-face {
+      backface-visibility: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      height: 100%;
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+    .vlp-proof-front, .vlp-proof-back { backdrop-filter: blur(10px); background: rgba(255,255,255,0.05); display:flex; flex-direction:column; }
+    .vlp-proof-front { padding: 14px; }
+    .vlp-proof-back { padding: 0; }
+    .vlp-proof-inner { height: 100%; position: relative; transform-style: preserve-3d; transition: transform 520ms cubic-bezier(0.2, 0.0, 0.2, 1); width: 100%; }
+    .vlp-proof-toggle { height: 1px; left: -9999px; position: absolute; top: -9999px; width: 1px; }
+    .vlp-proof-toggle:checked + .vlp-proof-inner { transform: rotateY(180deg); }
+    @media (hover:hover) and (pointer:fine) {
+      .vlp-proof-card:hover .vlp-proof-inner { transform: rotateY(180deg); }
+    }
+    .vlp-proof-back-body { flex:1; overflow:auto; padding: 10px 10px 12px 10px; }
+    .vlp-proof-back-top {
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      padding: 10px 12px;
+    }
+    .vlp-proof-back-title {
+      color: rgba(255,255,255,0.92);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .vlp-proof-front-top {
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      padding-bottom: 10px;
+    }
+    .vlp-proof-front-title { align-items:center; display:flex; gap:10px; min-width:0; }
+    .vlp-proof-front-title h2 { font-size: 18px; font-weight: 900; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vlp-proof-front-desc { color: rgba(255,255,255,0.78); font-size: 13px; font-weight: 700; line-height: 1.5; margin-top: 10px; }
+    .vlp-proof-front-desc p { margin: 0; padding-bottom: 10px; }
+    .vlp-proof-front-desc p:last-child { padding-bottom: 0; }
+    .vlp-proof-front-actions { display:flex; gap:10px; margin-top:10px; }
+    .vlp-proof-cta {
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      font-size: 12px;
+      font-weight: 900;
+      gap: 8px;
+      justify-content: center;
+      padding: 10px 12px;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .vlp-proof-cta--ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.88); }
+    .vlp-proof-cta--primary { background: rgba(249,115,22,0.92); border-color: rgba(249,115,22,0.35); color: #070a10; }
+    @media (max-width: 767px) { .vlp-proof-card { height: 320px; } }
+  </style>
+</head>
+
+<body class="bg-ink-950 text-white antialiased">
+  <div class="builder-shell">
+
+    <!-- =========================
+         BUILDER FORM (LEFT)
+         ========================= -->
+    <aside class="border-r border-white/10 bg-ink-900/80 p-4 md:p-5">
+      <div class="flex items-center justify-between gap-3">
+        <div>
+          <div class="text-sm font-extrabold text-white/90">Profile Preview Builder</div>
+          <div class="text-xs text-white/60">Edits feed the preview on the right</div>
+        </div>
+
+        <button
+          id="btn-load-sample"
+          class="rounded-xl bg-brand-500 px-3 py-2 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
+          type="button"
+        >
+          Load sample
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-4">
+
+        <!-- HERO -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">Hero</div>
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Name</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-name" type="text" value="Damian Reyes" />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Subtitle</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-subtitle" type="text" value="Calm ops. Clean delivery. Verified execution." />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Badge (top-left)</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-badge" type="text" value="VA Starter Track • Profile Preview" />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Hero image URL</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-heroImage" type="text" value="/assets/va/va-profile-damian-reyes-hero.webp" />
+
+          <div class="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Availability</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-availability" type="text" value="Weekdays" />
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Time zone</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-timezone" type="text" value="Pacific Time" />
+            </div>
+          </div>
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Best for</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-bestFor" type="text" value="Admin ops, inbox cleanup, scheduling" />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Tools (comma-separated)</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-tools" type="text" value="ClickUp, Google Workspace, SuiteDash" />
+        </div>
+
+        <!-- ABOUT -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">About</div>
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">About heading</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-aboutHeading" type="text" value="About Damian" />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">About paragraph</label>
+          <textarea class="mt-2 h-28 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-aboutBody">Damian is a structured Virtual Assistant built for calm execution. He performs best with clear inputs, defined outcomes, and clean workflows. If your team is overloaded, behind on follow-up, or stuck in inbox chaos, Damian restores order and delivers client-ready output without creating rework.</textarea>
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Highlight label</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-highlightTitle" type="text" value="About Damian" />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Highlight paragraph</label>
+          <textarea class="mt-2 h-24 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-highlightBody">Trained inside Virtual Launch Pro systems, including SuiteDash portals and ClickUp delivery lanes, so tasks get tracked, clarified, completed, and closed out with visible progress and clean handoff.</textarea>
+        </div>
+
+        <!-- SERVICES -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">Services (4 cards)</div>
+          <div class="mt-3 text-xs text-white/60">Each card: title | 3 bullets (one per line).</div>
+
+          <div class="mt-3 space-y-3">
+            <div class="rounded-xl border border-white/10 bg-ink-950/40 p-3">
+              <label class="block text-xs font-extrabold text-white/80">Card 1</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc1Title" type="text" value="Calendar operations" />
+              <textarea class="mt-2 h-20 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc1Bullets">Booking confirmations
+Calendar cleanup
+Reminder sequences</textarea>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-ink-950/40 p-3">
+              <label class="block text-xs font-extrabold text-white/80">Card 2</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc2Title" type="text" value="Client follow-up" />
+              <textarea class="mt-2 h-20 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc2Bullets">Client status updates
+Document reminders
+Next-step routing</textarea>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-ink-950/40 p-3">
+              <label class="block text-xs font-extrabold text-white/80">Card 3</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc3Title" type="text" value="Inbox triage" />
+              <textarea class="mt-2 h-20 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc3Bullets">Labeling and sorting
+Priority queues
+Response drafting</textarea>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-ink-950/40 p-3">
+              <label class="block text-xs font-extrabold text-white/80">Card 4</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc4Title" type="text" value="SOP execution" />
+              <textarea class="mt-2 h-20 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-svc4Bullets">Checklist-based delivery
+Standardized outputs
+Task closure notes</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- WORK PROOFS -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">Work Proofs</div>
+          <div class="mt-2 text-xs text-white/60">
+            Provide up to 10 cards. Format: <span class="text-white/80">Title || Front paragraph A || Front paragraph B || Back body text</span> (one card per line).
+          </div>
+          <textarea class="mt-3 h-56 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-proofs">Coaches &amp; Consultants || I keep your content consistent and your delivery dependable so your audience sees progress without you living in your inbox. || This includes maintaining a working content plan and tracking schedules so updates happen on time and the message stays aligned. || Proofs: Content plan + weekly calendar examples.
+Creatives || I keep your projects organized so drafts, revisions, and approvals move without losing files or context. || This includes simple trackers, asset handoffs, and clean communication cadence. || Proofs: Asset board + client messages examples.
+E-Commerce || I keep operations clean: product updates, order follow-ups, and support workflows that don’t drop tickets. || This includes trackers, template replies, and consistent status handling. || Proofs: Order queue + support inbox examples.
+Healthcare Providers || I keep intake, documentation, and client-facing workflows organized so your team can focus on care. || This includes clean intake forms and structured information capture that stays compliant and easy to maintain. || Proofs: Intake form + services overview examples.
+Legal &amp; Immigration || I keep client files and documentation structured so your process stays consistent and audit-ready. || This includes clean folder systems and documented process summaries your team can rely on. || Proofs: Case folders + process summary examples.
+Marketing Agencies || I support agency delivery with research, execution, and scheduling that keeps campaigns on track. || This includes research trackers, asset coordination, and calendar-driven follow-through. || Proofs: Research tracker + campaign calendar examples.
+Real Estate &amp; Investors || I keep appointments scheduled, itineraries organized, and expenses tracked so deals move without chaos. || This includes clean schedules, visit plans, and trackers your team can maintain without guesswork. || Proofs: Itinerary + expense tracker examples.
+Tax &amp; Accounting || I keep reporting inputs clean and communication tight so deadlines don’t get missed. || This includes trackers, structured files, and inbox triage your team can rely on. || Proofs: Reporting inputs + client triage examples.
+Tech Founders || I support founder operations with clean research and structured execution. || This includes comparisons, documentation, and outbound communication that saves time. || Proofs: Vendor comparison + outreach drafts examples.
+VA Agencies || I support agency operations with organized delivery systems and inbox workflows that scale. || This includes planning, coordination, and communication structures your team can reuse. || Proofs: Delivery plan + ops inbox examples.</textarea>
+        </div>
+
+        <!-- CV + SECTIONS -->
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="text-xs font-extrabold uppercase tracking-wider text-white/70">CV</div>
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">CV headline (under name)</label>
+          <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-cvHeadline" type="text" value="Structured Support | Clear Communication | Reliable Execution" />
+
+          <label class="mt-3 block text-xs font-extrabold text-white/80">Professional summary</label>
+          <textarea class="mt-2 h-24 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-profSummary">Executive VA with 5+ years supporting founders and small teams across inbox management, calendar coordination, client comms, and light ops. Known for clean follow-through, proactive reminders, and making “what’s next” obvious. Comfortable working across multiple clients with clear SOPs, tight deadlines, and a calm, professional tone.</textarea>
+
+          <div class="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Preferred client types (comma-separated)</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-clientTypes" type="text" value="Coaches &amp; Consultants, Marketing Agencies, Real Estate &amp; Investors, Tech Founders" />
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Preferred client notes</label>
+              <textarea class="mt-2 h-20 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-clientNotes">Best fit with leaders who want weekly planning, reliable follow-up, and a VA who can keep a lightweight system organized (inbox, calendar, tasks, and client updates) without constant direction.</textarea>
+            </div>
+          </div>
+
+          <div class="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Primary services (one per line)</label>
+              <textarea class="mt-2 h-28 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-primaryServices">Admin support
+Client communications
+Content support
+Data entry and formatting
+Inbox and calendar management
+Operations and systems
+Project coordination</textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Tools and platforms (one per line)</label>
+              <textarea class="mt-2 h-28 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-toolsList">ClickUp
+CRM systems
+Email marketing tools
+Google Workspace
+Spreadsheets
+SuiteDash</textarea>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label class="block text-xs font-extrabold text-white/80">Skill depth (5 lines: Label || Score)</label>
+            <textarea class="mt-2 h-28 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-skillDepth">Client communication (written) || 5
+Email and inbox management || 5
+Google Workspace || 4
+Project tracking (multi-client) || 4
+Systems/process follow-through || 5</textarea>
+          </div>
+
+          <div class="mt-3">
+            <label class="block text-xs font-extrabold text-white/80">Skill examples (multiline)</label>
+            <textarea class="mt-2 h-24 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-skillExamples">Inbox: Created triage rules (VIP, urgent, vendor, client) and reduced response backlog from 3 days to same-day.
+Projects: Maintained weekly priorities board in ClickUp with owner + due date + next action for every active item.
+Ops: Built a “Friday wrap” template so clients always saw status, blockers, and next steps in 5 minutes.</textarea>
+          </div>
+
+          <div class="mt-3">
+            <label class="block text-xs font-extrabold text-white/80">Execution judgment (3 blocks: Title || Body)</label>
+            <textarea class="mt-2 h-36 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-execution">Inbox triage scenario || A client marks 18 emails as “urgent” overnight. I would: (1) group by sender + topic, (2) identify true deadlines (today vs this week), (3) draft short recommended replies for the top 5, (4) flag anything needing a decision, and (5) send a “priority map” summary so the client can approve quickly instead of reading every thread.
+Client protection scenario || A new lead asks for access to a shared drive and sensitive docs before signing. I would politely redirect: provide a sanitized sample, confirm scope + timeline, and route them into the standard onboarding step (agreement + access checklist). No access until approval and minimum intake requirements are met.
+Task sequencing scenario || A client wants: newsletter, invoices, calendar cleanup, and vendor follow-ups due this week. I’d sequence by: (1) hard deadlines (invoices), (2) time-sensitive follow-ups, (3) calendar cleanup, then (4) newsletter drafting + approvals. I’d confirm priorities in writing and update a single task board so nothing gets “lost in chat.”</textarea>
+          </div>
+
+          <div class="mt-3">
+            <label class="block text-xs font-extrabold text-white/80">Trust &amp; proof (3 blocks: Title || Body)</label>
+            <textarea class="mt-2 h-28 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-trust">Confidential work experience || Supported a financial services founder handling client PII. Followed strict access rules, used least-privilege file sharing, kept a change log for documents, and never shared client details outside approved tools.
+Work history highlights || Executive VA (2021–2025): Calendar + inbox ownership, weekly planning, light ops, client updates. Ops Assistant (2019–2021): CRM hygiene, reporting, scheduling, vendor coordination, documentation/SOPs.
+Portfolio links || Use the link fields below to populate icons.</textarea>
+          </div>
+
+          <div class="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Facebook URL</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-facebook" type="text" value="https://facebook.com/ariana.fields.va" />
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Instagram URL</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-instagram" type="text" value="https://instagram.com/ariana.fields.va" />
+            </div>
+          </div>
+
+          <div class="mt-3 grid gap-3 md:grid-cols-2">
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">LinkedIn URL</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-linkedin" type="text" value="" />
+            </div>
+            <div>
+              <label class="block text-xs font-extrabold text-white/80">Website URL</label>
+              <input class="mt-2 w-full rounded-xl border border-white/10 bg-ink-950/60 px-3 py-2 text-sm" id="f-website" type="text" value="" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- =========================
+         PREVIEW (RIGHT)
+         ========================= -->
+    <main class="preview-wrap vlp-space-bg vlp-stars">
+      <div class="mx-auto max-w-6-5xl px-4 pb-10 pt-8 md:pb-14">
+        <div class="mx-auto max-w-6xl">
+
+          <!-- HERO -->
+          <section id="top">
+            <div class="mb-5">
+              <span id="p-badge" class="inline-flex w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
+                VA Starter Track • Profile Preview
               </span>
-              Edit Your Profile
-            </h2>
-
-            <!--
-              NOTE:
-              This form is now wired to the canonical CF names that generate the public VA page.
-              It submits urlencoded data to the Worker endpoint:
-                POST https://api.virtuallaunch.pro/forms/va/publish
-
-              Identity rules (per your instruction):
-              - accountId = paymentIntentId
-              - slug = human-friendly (derived from name) and may change
-            -->
-            <form id="profile-form" class="space-y-5" novalidate>
-              <!-- ===============================
-                   REQUIRED HIDDEN FIELDS
-                   =============================== -->
-              <input type="hidden" id="eventId" name="eventId" value="" />
-              <input type="hidden" id="accountId" name="accountId" value="" />
-              <input type="hidden" id="paymentIntentId" name="paymentIntentId" value="" />
-              <input type="hidden" id="slug" name="slug" value="" />
-
-              <!-- ===============================
-                   MAPPED PROFILE CFs
-                   =============================== -->
-
-              <!-- Full Name → headline select/custom fields are separate, but we also store name on canonical.
-                   We map Full Name into the long-form profile fields:
-                   - vlp_profile__vlp_cv_download_url (display-only)
-                   - vlp_profile__vlp_profile_headline_1_select (optional)
-                   - vlp_profile__vlp_profile_headline_1 (optional)
-                   - vlp_profile__vlp_profile_headline_2_select (optional)
-                   - vlp_profile__vlp_profile_headline_2 (optional)
-                   plus we use it to generate slug.
-              -->
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="full-name">
-                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    ></path>
-                  </svg>
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="full-name"
-                  name="full_name"
-                  placeholder="e.g., Sarah Mitchell"
-                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
-                  autocomplete="name"
-                />
-              </div>
-
-              <!-- Tagline → maps cleanly to headline line 2 custom (since this UI is simplified)
-                   We store the selected/custom pair:
-                   - vlp_profile__vlp_profile_headline_2_select = "Custom"
-                   - vlp_profile__vlp_profile_headline_2 = tagline
-              -->
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="tagline">
-                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
-                    ></path>
-                  </svg>
-                  Tagline
-                </label>
-                <input
-                  type="text"
-                  id="tagline"
-                  name="tagline"
-                  placeholder="e.g., Calm ops. Clean delivery. Verified execution."
-                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
-                />
-              </div>
-
-              <!-- About → maps to short bio by default -->
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="about">
-                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                    ></path>
-                  </svg>
-                  About Me
-                </label>
-                <textarea
-                  id="about"
-                  name="about"
-                  rows="4"
-                  placeholder="Tell clients about your experience and what makes you unique..."
-                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500 resize-none"
-                ></textarea>
-              </div>
-
-              <!-- Services → maps to primary services + service groups (stored as strings/arrays)
-                   This UI collects a single comma list.
-              -->
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="services">
-                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                  Services Offered
-                </label>
-                <input
-                  type="text"
-                  id="services"
-                  name="services"
-                  placeholder="e.g., Email Management, Calendar Scheduling, Data Entry"
-                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
-                />
-                <p class="text-xs text-slate-500">Separate services with commas</p>
-              </div>
-
-              <!-- Skills & Tools → maps to tools fields -->
-              <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="skills">
-                  <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                    ></path>
-                  </svg>
-                  Skills &amp; Tools
-                </label>
-                <input
-                  type="text"
-                  id="skills"
-                  name="skills"
-                  placeholder="e.g., Google Workspace, ClickUp, Canva, Zoom"
-                  class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
-                />
-                <p class="text-xs text-slate-500">Separate skills with commas</p>
-              </div>
-
-              <!-- Availability & Rate Row -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                  <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="availability">
-                    <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      ></path>
-                    </svg>
-                    Availability
-                  </label>
-                  <select
-                    id="availability"
-                    name="availability"
-                    class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white"
-                  >
-                    <option value="">Select availability</option>
-                    <option value="Full-time">Full-time (40+ hrs/week)</option>
-                    <option value="Part-time">Part-time (20-40 hrs/week)</option>
-                    <option value="Flexible">Flexible hours</option>
-                    <option value="Project-based">Project-based only</option>
-                  </select>
-                </div>
-                <div class="space-y-2">
-                  <label class="flex items-center gap-2 text-sm font-medium text-slate-200" for="hourly-rate">
-                    <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      ></path>
-                    </svg>
-                    Hourly Rate
-                  </label>
-                  <input
-                    type="text"
-                    id="hourly-rate"
-                    name="hourly_rate"
-                    placeholder="e.g., $25-40"
-                    class="input-field w-full px-4 py-3 rounded-xl border border-slate-600 bg-slate-800/50 focus:bg-slate-800 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none text-white placeholder:text-slate-500"
-                  />
-                </div>
-              </div>
-
-              <!-- Action Buttons -->
-              <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <button
-                  type="submit"
-                  id="save-btn"
-                  class="flex-1 px-6 py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-900/50 transition-all duration-300 hover:shadow-xl hover:shadow-orange-900/70 flex items-center justify-center gap-2"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                  Save Profile
-                </button>
-
-                <button
-                  type="button"
-                  id="reset-btn"
-                  class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl border border-slate-600 transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    ></path>
-                  </svg>
-                  Reset
-                </button>
-              </div>
-
-              <!-- ===============================
-                   HIDDEN CF PAYLOAD (CANONICAL)
-                   These are the exact CF names from the old (working) builder.
-                   The JS maps your simplified UI into these canonical keys.
-                   =============================== -->
-
-              <input type="hidden" name="vlp_profile__vlp_availability_rate" id="cf_rate" value="" />
-              <input type="hidden" name="vlp_profile__vlp_availability_rate_custom" id="cf_rate_custom" value="" />
-
-              <input type="hidden" name="vlp_profile__vlp_availability_work_schedule_1" id="cf_work_schedule_1" value="" />
-              <input type="hidden" name="vlp_profile__vlp_availability_work_schedule_2" id="cf_work_schedule_2" value="" />
-              <input type="hidden" name="vlp_profile__vlp_availability_work_schedule_2_custom" id="cf_work_schedule_2_custom" value="" />
-
-              <input type="hidden" name="vlp_profile__vlp_profile_headline_1_select" id="cf_headline_1_select" value="" />
-              <input type="hidden" name="vlp_profile__vlp_profile_headline_1" id="cf_headline_1" value="" />
-              <input type="hidden" name="vlp_profile__vlp_profile_headline_2_select" id="cf_headline_2_select" value="" />
-              <input type="hidden" name="vlp_profile__vlp_profile_headline_2" id="cf_headline_2" value="" />
-
-              <textarea class="hidden" name="vlp_profile__vlp_profile_bio_short" id="cf_bio_short"></textarea>
-              <textarea class="hidden" name="vlp_profile__vlp_profile_bio_long" id="cf_bio_long"></textarea>
-
-              <input type="hidden" name="vlp_profile__vlp_services_primary" id="cf_services_primary" value="" />
-              <textarea class="hidden" name="vlp_profile__vlp_services_sop_execution_other" id="cf_services_other"></textarea>
-
-              <input type="hidden" name="vlp_profile__vlp_tools_primary" id="cf_tools_primary" value="" />
-              <input type="hidden" name="vlp_profile__vlp_tools_secondary[]" id="cf_tools_secondary" value="" />
-
-              <input type="hidden" name="vlp_profile__vlp_profile_public_consent" id="cf_public_consent" value="Yes — approved for public display." />
-            </form>
-          </div>
-
-          <!-- Saved Profiles List (kept, but now read-only to avoid clashing with canonical backend)
-               This panel will only show if dataSdk is enabled, but saves are done via Worker.
-          -->
-          <div id="saved-profiles-section" class="glass-card rounded-3xl p-6 shadow-2xl border border-slate-700/50 hidden">
-            <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                ></path>
-              </svg>
-              Saved Profiles
-            </h3>
-            <div id="profiles-list" class="space-y-3 max-h-64 overflow-y-auto"></div>
-          </div>
-        </div>
-
-        <!-- Right: Live Preview -->
-        <div class="lg:sticky lg:top-8 h-fit">
-          <div class="preview-glass rounded-3xl p-6 md:p-8 shadow-2xl border border-slate-700/50 floating">
-            <div class="flex items-center gap-2 mb-6">
-              <span class="w-3 h-3 rounded-full bg-red-500"></span>
-              <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
-              <span class="w-3 h-3 rounded-full bg-green-500"></span>
-              <span id="preview-heading" class="ml-2 text-sm font-medium text-slate-400">Profile Preview</span>
             </div>
 
-            <!-- Profile Card Preview -->
-            <div class="bg-slate-800/60 rounded-2xl p-6 border border-slate-700 shadow-inner">
-              <!-- Profile Image -->
-              <div class="flex justify-center mb-5">
-                <div
-                  id="preview-avatar"
-                  class="w-24 h-24 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-3xl font-bold shadow-xl shadow-orange-900/50 ring-4 ring-slate-800"
-                >
-                  ?
+            <div class="vlp-hero-wrap">
+              <div class="grid gap-8 lg:grid-cols-12">
+                <div class="lg:col-span-8">
+                  <h1 id="p-name" class="text-4xl font-extrabold leading-tight md:text-6xl">Damian Reyes</h1>
+                  <p id="p-subtitle" class="mt-3 max-w-2xl text-sm text-white/70 md:text-base">
+                    Calm ops. Clean delivery. Verified execution.
+                  </p>
+
+                  <div class="mt-6 flex flex-wrap gap-3">
+                    <a class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-xs font-extrabold text-ink-900 hover:bg-brand-400" href="#booking-video">
+                      Book an intro
+                    </a>
+                    <a class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-6 py-3 text-xs font-extrabold text-white hover:bg-white/10" href="#services">
+                      View CV / Services
+                    </a>
+                  </div>
+
+                  <div class="mt-7 grid gap-4 md:grid-cols-3">
+                    <div class="vlp-card-frame p-5">
+                      <div class="text-xs font-extrabold text-white/80">Availability</div>
+                      <div id="p-availability" class="mt-2 text-sm font-extrabold">Weekdays</div>
+                      <div id="p-timezone" class="mt-1 text-xs text-white/70">Pacific Time</div>
+                    </div>
+
+                    <div class="vlp-card-frame p-5">
+                      <div class="text-xs font-extrabold text-white/80">Best for</div>
+                      <div id="p-bestFor" class="mt-2 text-sm text-white/80">
+                        Admin ops, inbox cleanup, scheduling
+                      </div>
+                    </div>
+
+                    <div class="vlp-card-frame p-5">
+                      <div class="text-xs font-extrabold text-white/80">Tools</div>
+                      <div id="p-tools" class="mt-2 text-sm text-white/80">
+                        ClickUp, Google Workspace, SuiteDash
+                      </div>
+                    </div>
+                  </div>
+
+                  <section id="about" class="mt-12">
+                    <h2 id="p-aboutHeading" class="text-3xl font-extrabold">About Damian</h2>
+                    <p id="p-aboutBody" class="mt-4 max-w-3xl text-sm text-white/75 md:text-base">
+                      Damian is a structured Virtual Assistant built for calm execution...
+                    </p>
+                  </section>
+
+                  <div class="mt-8 vlp-glass rounded-2xl p-6">
+                    <div class="text-sm font-extrabold" id="p-highlightTitle">About Damian</div>
+                    <p id="p-highlightBody" class="mt-3 text-sm text-white/75">
+                      Trained inside Virtual Launch Pro systems...
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <!-- Name & Tagline -->
-              <div class="text-center mb-5">
-                <h3 id="preview-name" class="text-2xl font-bold text-white mb-1">Your Name Here</h3>
-                <p id="preview-tagline" class="text-orange-400 font-medium">Your professional tagline</p>
-              </div>
-
-              <!-- Availability Badge -->
-              <div class="flex justify-center mb-5">
-                <span
-                  id="preview-availability"
-                  class="px-4 py-1.5 bg-slate-700/60 text-orange-300 rounded-full text-sm font-medium border border-slate-600"
-                >
-                  Availability: Not set
-                </span>
-              </div>
-
-              <!-- About Section -->
-              <div class="mb-5">
-                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    ></path>
-                  </svg>
-                  About
-                </h4>
-                <p id="preview-about" class="text-slate-300 text-sm leading-relaxed">
-                  Your bio will appear here. Tell potential clients about your experience, work style, and what makes you unique.
-                </p>
-              </div>
-
-              <!-- Services Section -->
-              <div class="mb-5">
-                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                  Services
-                </h4>
-                <div id="preview-services" class="flex flex-wrap gap-2">
-                  <span class="px-3 py-1 bg-orange-900/30 text-orange-300 rounded-lg text-xs font-medium">Add services above</span>
+                <div class="lg:col-span-4">
+                  <div class="relative min-h-[520px] lg:min-h-[720px] overflow-visible">
+                    <img
+                      id="p-heroImage"
+                      alt="VA portrait"
+                      class="vlp-hero-img"
+                      decoding="async"
+                      loading="eager"
+                      src="/assets/va/va-profile-damian-reyes-hero.webp"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <!-- Skills Section -->
-              <div class="mb-5">
-                <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2 flex items-center gap-2">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                    ></path>
-                  </svg>
-                  Skills &amp; Tools
-                </h4>
-                <div id="preview-skills" class="flex flex-wrap gap-2">
-                  <span class="px-3 py-1 bg-orange-900/30 text-orange-300 rounded-lg text-xs font-medium">Add skills above</span>
-                </div>
               </div>
+            </div>
+          </section>
 
-              <!-- Rate Section -->
-              <div class="pt-4 border-t border-slate-700">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-slate-400">Hourly Rate</span>
-                  <span id="preview-rate" class="text-lg font-bold text-white">Not set</span>
+          <!-- SERVICES -->
+          <section id="services" class="mt-14">
+            <h2 class="text-3xl font-extrabold text-brand-500">Services</h2>
+
+            <div id="p-servicesGrid" class="mt-6 grid gap-4 md:grid-cols-2">
+              <!-- injected -->
+            </div>
+          </section>
+
+          <!-- WORK PROOFS -->
+          <section id="work-proofs" class="mt-14">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <h2 class="text-3xl font-extrabold text-brand-500">Work Proofs</h2>
+
+              <button
+                id="vlp-proof-flip-all"
+                class="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-xs font-extrabold text-ink-900 hover:bg-brand-400"
+                type="button"
+              >
+                Flip all cards
+                <span aria-hidden="true">↻</span>
+              </button>
+            </div>
+
+            <div id="p-proofsGrid" class="mt-4 grid gap-4 md:grid-cols-3">
+              <!-- injected -->
+            </div>
+          </section>
+
+          <!-- BOOKING VIDEO PLACEHOLDER -->
+          <section id="booking-video" class="mt-14">
+            <h2 class="text-3xl font-extrabold text-brand-500">Booking video</h2>
+            <div class="mt-4 vlp-glass rounded-2xl p-6 text-white/75">
+              Placeholder block (your real embed stays in the real profile page).
+            </div>
+          </section>
+
+          <!-- CV -->
+          <section id="cv" class="mt-14">
+            <h2 class="text-3xl font-extrabold text-brand-500">CV</h2>
+
+            <div class="mt-6">
+              <div class="mx-auto max-w-[1100px] px-0">
+                <div class="mx-auto px-0 pb-[60px] pt-2">
+                  <!-- CV HERO -->
+                  <div class="relative overflow-hidden rounded-2xl border border-[rgba(255,165,0,0.18)] bg-[radial-gradient(900px_380px_at_20%_0%,rgba(255,165,0,0.22)_0%,rgba(255,165,0,0)_60%),linear-gradient(135deg,rgba(2,8,24,0.92),rgba(7,18,46,0.92))] px-[18px] py-7 text-center shadow-[0_18px_40px_rgba(0,0,0,0.35)]">
+                    <div class="bg-[linear-gradient(90deg,#ffffff_0%,#ffd08a_45%,#ffa500_100%)] bg-clip-text text-[2.2rem] font-extrabold leading-[1.1] tracking-[0.2px] text-transparent md:text-[2.4rem]" id="p-cvName">
+                      Damian Reyes
+                    </div>
+                    <div class="mx-auto mt-2 max-w-[860px] text-[1.05rem] font-medium leading-[1.45] text-[rgba(255,255,255,0.65)]">
+                      <span id="p-cvHeadline" class="text-[rgba(255,255,255,0.85)]">Structured Support | Clear Communication | Reliable Execution</span>
+                    </div>
+                  </div>
+
+                  <!-- PROFESSIONAL SUMMARY -->
+                  <div class="mt-[26px]">
+                    <h3 class="text-center text-[1.4rem] font-extrabold text-white/90">Professional Summary</h3>
+                    <div id="p-profSummary" class="mx-auto mt-3 max-w-[980px] rounded-[15px] border border-[rgba(255,255,255,0.14)] border-l-[5px] border-l-[rgba(255,255,255,0.65)] bg-[rgba(255,255,255,0.05)] px-[18px] py-[18px] text-[1.02rem] leading-[1.85] text-white/75">
+                      Executive VA with 5+ years...
+                    </div>
+                  </div>
+
+                  <hr class="my-[18px] opacity-[0.22]" />
+
+                  <!-- PREFERRED CLIENT TYPES -->
+                  <div class="mt-[26px]">
+                    <h3 class="text-center text-[1.4rem] font-extrabold text-white/90">Preferred Client Types</h3>
+
+                    <div class="mt-[18px] grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+                      <div class="rounded-xl border border-white/10 bg-white/5 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                        <div class="text-[1.05rem] font-extrabold text-white/95">Client types (selected)</div>
+                        <div id="p-clientTypes" class="mt-2 text-white/65" style="line-height: 1.8;">
+                          Coaches &amp; Consultants, Marketing Agencies, Real Estate &amp; Investors, Tech Founders
+                        </div>
+                      </div>
+
+                      <div class="rounded-xl border border-white/10 bg-white/5 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                        <div class="text-[1.05rem] font-extrabold text-white/95">Notes</div>
+                        <div id="p-clientNotes" class="mt-2 text-white/65" style="line-height: 1.8;">
+                          Best fit with leaders who want weekly planning...
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr class="my-[18px] opacity-[0.22]" />
+
+                  <!-- CORE SERVICES & TOOLS -->
+                  <div class="mt-[26px]">
+                    <h3 class="text-center text-[1.4rem] font-extrabold text-white/90">Core Services &amp; Tools</h3>
+
+                    <div class="mt-[18px] grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+                      <div class="rounded-xl border border-white/10 bg-white/5 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                        <div class="text-[1.05rem] font-extrabold text-white/95">Primary services offered</div>
+                        <ul id="p-primaryServices" class="mt-3 space-y-1 text-white/75">
+                          <!-- injected -->
+                        </ul>
+                      </div>
+
+                      <div class="rounded-xl border border-white/10 bg-white/5 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">
+                        <div class="text-[1.05rem] font-extrabold text-white/95">Tools and platforms</div>
+                        <ul id="p-toolsList" class="mt-3 space-y-1 text-white/75">
+                          <!-- injected -->
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <hr class="my-[18px] opacity-[0.22]" />
+
+                  <!-- SKILL DEPTH -->
+                  <div class="mt-[26px]">
+                    <h3 class="text-center text-[1.4rem] font-extrabold text-white/90">Skill Depth (1–5)</h3>
+
+                    <div id="p-skillDepthGrid" class="mt-4 grid gap-[10px] md:grid-cols-6">
+                      <!-- injected -->
+                    </div>
+
+                    <div class="mt-4 rounded-xl border border-[rgba(255,165,0,0.18)] border-l-[5px] border-l-[#ffa500] bg-white/5 px-[18px] py-4 leading-[1.85] text-white/75">
+                      <div class="font-extrabold text-white/90">Examples for any 4–5 ratings:</div>
+                      <div id="p-skillExamples" class="mt-2 whitespace-pre-line"></div>
+                    </div>
+                  </div>
+
+                  <hr class="my-[18px] opacity-[0.22]" />
+
+                  <!-- EXECUTION JUDGMENT -->
+                  <div class="mt-[26px]">
+                    <h3 class="text-center text-[1.4rem] font-extrabold text-white/90">Execution Judgment</h3>
+                    <div id="p-executionGrid" class="mt-4 grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+                      <!-- injected -->
+                    </div>
+                  </div>
+
+                  <hr class="my-[18px] opacity-[0.22]" />
+
+                  <!-- TRUST & PROOF -->
+                  <div class="mt-[26px]">
+                    <h3 class="text-center text-[1.4rem] font-extrabold text-white/90">Trust &amp; Proof</h3>
+
+                    <div id="p-trustGrid" class="mt-4 grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
+                      <!-- injected -->
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </section>
 
-      <!-- Toast Notification -->
-      <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-orange-600 text-white px-6 py-3 rounded-xl shadow-xl shadow-orange-900/50 flex items-center gap-3">
-          <svg class="w-5 h-5 text-orange-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          <span id="toast-message">Profile saved!</span>
-        </div>
-      </div>
-
-      <!-- Data Limit Warning (kept) -->
-      <div
-        id="limit-warning"
-        class="fixed top-6 left-1/2 -translate-x-1/2 transform -translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
-      >
-        <div class="bg-orange-600 text-white px-6 py-3 rounded-xl shadow-xl shadow-orange-900/50 flex items-center gap-3">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            ></path>
-          </svg>
-          <span>Maximum profiles limit reached (999). Please delete some profiles first.</span>
+          <div class="pb-16"></div>
         </div>
       </div>
     </main>
-      </div>
-    </div>
 
-    <script>
-      // Default configuration
-      const defaultConfig = {
-        page_title: "Virtual Assistant Profile Builder",
-        form_heading: "Edit Your Profile",
-        preview_heading: "Profile Preview",
-        background_color: "#0b1220",
-        surface_color: "#111827",
-        text_color: "#e2e8f0",
-        primary_action_color: "#f97316",
-        secondary_action_color: "#14b8a6",
-      };
+  </div>
 
-      // DOM Elements
-      const form = document.getElementById("profile-form");
-      const fullNameInput = document.getElementById("full-name");
-      const taglineInput = document.getElementById("tagline");
-      const aboutInput = document.getElementById("about");
-      const servicesInput = document.getElementById("services");
-      const skillsInput = document.getElementById("skills");
-      const availabilitySelect = document.getElementById("availability");
-      const hourlyRateInput = document.getElementById("hourly-rate");
-      const saveBtn = document.getElementById("save-btn");
-      const resetBtn = document.getElementById("reset-btn");
+  <script>
+    (function () {
+      function byId(id) { return document.getElementById(id); }
 
-      // Hidden canonical fields
-      const accountIdEl = document.getElementById("accountId");
-      const eventIdEl = document.getElementById("eventId");
-      const paymentIntentIdEl = document.getElementById("paymentIntentId");
-      const slugEl = document.getElementById("slug");
-
-      const cfBioShort = document.getElementById("cf_bio_short");
-      const cfBioLong = document.getElementById("cf_bio_long");
-      const cfHeadline1 = document.getElementById("cf_headline_1");
-      const cfHeadline1Select = document.getElementById("cf_headline_1_select");
-      const cfHeadline2 = document.getElementById("cf_headline_2");
-      const cfHeadline2Select = document.getElementById("cf_headline_2_select");
-
-      const cfRate = document.getElementById("cf_rate");
-      const cfRateCustom = document.getElementById("cf_rate_custom");
-
-      const cfWorkSchedule1 = document.getElementById("cf_work_schedule_1");
-      const cfWorkSchedule2 = document.getElementById("cf_work_schedule_2");
-      const cfWorkSchedule2Custom = document.getElementById("cf_work_schedule_2_custom");
-
-      const cfServicesPrimary = document.getElementById("cf_services_primary");
-      const cfServicesOther = document.getElementById("cf_services_other");
-
-      const cfToolsPrimary = document.getElementById("cf_tools_primary");
-      const cfToolsSecondary = document.getElementById("cf_tools_secondary");
-
-      // Preview elements
-      const previewName = document.getElementById("preview-name");
-      const previewTagline = document.getElementById("preview-tagline");
-      const previewAbout = document.getElementById("preview-about");
-      const previewServices = document.getElementById("preview-services");
-      const previewSkills = document.getElementById("preview-skills");
-      const previewAvailability = document.getElementById("preview-availability");
-      const previewRate = document.getElementById("preview-rate");
-      const previewAvatar = document.getElementById("preview-avatar");
-
-      function ensureEventId() {
-        if (eventIdEl.value) return eventIdEl.value;
-        const v = (crypto && crypto.randomUUID) ? crypto.randomUUID() : `evt_${Date.now()}_${Math.random().toString(16).slice(2)}`;
-        eventIdEl.value = v;
-        return v;
+      function safeText(el, value) {
+        if (!el) return;
+        el.textContent = value == null ? "" : String(value);
       }
 
-      function getPaymentIntentIdFromQuery() {
-        const url = new URL(window.location.href);
-        // Accept multiple common param names because humans are inconsistent.
-        const candidates = [
-          "payment_intent",
-          "payment_intent_id",
-          "paymentIntentId",
-          "pi",
-        ];
-        for (const k of candidates) {
-          const v = url.searchParams.get(k);
-          if (v && typeof v === "string") return v;
-        }
-        return "";
+      function safeHTML(el, value) {
+        if (!el) return;
+        el.innerHTML = value == null ? "" : String(value);
       }
 
-      function slugifyHuman(name) {
-        const base = String(name || "")
-          .trim()
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, "")
-          .replace(/\s+/g, "-")
-          .replace(/-+/g, "-")
-          .replace(/^-|-$/g, "");
-        // Human-friendly but can change. Add short entropy so collisions don’t wreck your day.
-        const suffix = Math.random().toString(36).slice(2, 6);
-        return base ? `${base}-${suffix}` : `profile-${suffix}`;
-      }
-
-      function getInitials(name) {
-        if (!name) return "?";
-        return name
-          .split(" ")
-          .filter(Boolean)
-          .map((n) => n[0])
-          .join("")
-          .toUpperCase()
-          .slice(0, 2);
-      }
-
-      function createTags(input, bgClass, textClass) {
-        if (!input || !input.trim()) {
-          return `<span class="px-3 py-1 ${bgClass} ${textClass} rounded-lg text-xs font-medium">None added</span>`;
-        }
-        return input
-          .split(",")
-          .map((item) => item.trim())
-          .filter((item) => item)
-          .map((item) => `<span class="skill-tag px-3 py-1 ${bgClass} ${textClass} rounded-lg text-xs font-medium">${escapeHtml(item)}</span>`)
-          .join("");
-      }
-
-      function escapeHtml(s) {
-        return String(s || "")
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/\"/g, "&quot;")
-          .replace(/'/g, "&#039;");
-      }
-
-      function showToast(message) {
-        const toast = document.getElementById("toast");
-        document.getElementById("toast-message").textContent = message;
-        toast.classList.remove("translate-y-20", "opacity-0", "pointer-events-none");
-        toast.classList.add("translate-y-0", "opacity-100");
-        setTimeout(() => {
-          toast.classList.add("translate-y-20", "opacity-0", "pointer-events-none");
-          toast.classList.remove("translate-y-0", "opacity-100");
-        }, 3000);
-      }
-
-      // Map simplified UI → canonical CFs (from old working builder)
-      function syncCanonicalCfs() {
-        const name = fullNameInput.value || "";
-        const tagline = taglineInput.value || "";
-        const about = aboutInput.value || "";
-        const services = servicesInput.value || "";
-        const skills = skillsInput.value || "";
-        const availability = availabilitySelect.value || "";
-        const hourlyRate = hourlyRateInput.value || "";
-
-        // Headlines
-        cfHeadline1Select.value = "Custom";
-        cfHeadline1.value = name ? `${name}` : "";
-        cfHeadline2Select.value = "Custom";
-        cfHeadline2.value = tagline;
-
-        // Bios (short + long)
-        cfBioShort.value = about;
-        cfBioLong.value = about;
-
-        // Rate: keep numbers out of public display if you want later, but you explicitly collect it here.
-        // We store it as Custom so the renderer can decide whether to show or not.
-        cfRate.value = "Custom";
-        cfRateCustom.value = hourlyRate;
-
-        // Work schedule mapping: keep it simple and stable.
-        cfWorkSchedule1.value = availability ? availability : "";
-        cfWorkSchedule2.value = "Custom";
-        cfWorkSchedule2Custom.value = availability ? `Availability: ${availability}` : "";
-
-        // Services: store comma list into “other” so it displays as list if your renderer supports it.
-        // Primary category is best effort.
-        cfServicesPrimary.value = services ? "Operations and systems" : "";
-        cfServicesOther.value = services
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean)
-          .join("\n");
-
-        // Tools: infer primary tool from skills if possible.
-        const skillList = skills
-          .split(",")
-          .map((s) => s.trim())
+      function lines(text) {
+        return String(text || "")
+          .split(/\r?\n/)
+          .map(function (s) { return s.trim(); })
           .filter(Boolean);
-
-        const primaryTool = pickPrimaryTool(skillList);
-        cfToolsPrimary.value = primaryTool;
-
-        // Secondary tools is an array CF in the old builder.
-        // Because this is a single hidden input, we store a comma list.
-        // The Worker should split this into multiple values when building canonical.
-        cfToolsSecondary.value = skillList.join(", ");
       }
 
-      function pickPrimaryTool(skills) {
-        const s = new Set((skills || []).map((x) => String(x || "").toLowerCase()));
-        if (s.has("clickup")) return "ClickUp";
-        if (s.has("google workspace") || s.has("gmail") || s.has("google drive")) return "Google Workspace";
-        if (s.has("suitedash")) return "SuiteDash";
-        return skills && skills.length ? "Other" : "";
-      }
-
-      // Live preview updates
-      function updatePreview() {
-        const name = fullNameInput.value || "Your Name Here";
-        const tagline = taglineInput.value || "Your professional tagline";
-        const about =
-          aboutInput.value ||
-          "Your bio will appear here. Tell potential clients about your experience, work style, and what makes you unique.";
-        const services = servicesInput.value;
-        const skills = skillsInput.value;
-        const availability = availabilitySelect.value;
-        const rate = hourlyRateInput.value;
-
-        previewName.textContent = name;
-        previewTagline.textContent = tagline;
-        previewAbout.textContent = about;
-        previewAvatar.textContent = getInitials(fullNameInput.value);
-
-        previewServices.innerHTML =
-          createTags(services, "bg-orange-900/30", "text-orange-300") ||
-          '<span class="px-3 py-1 bg-orange-900/30 text-orange-300 rounded-lg text-xs font-medium">Add services above</span>';
-
-        previewSkills.innerHTML =
-          createTags(skills, "bg-teal-900/30", "text-teal-300") ||
-          '<span class="px-3 py-1 bg-teal-900/30 text-teal-300 rounded-lg text-xs font-medium">Add skills above</span>';
-
-        previewAvailability.textContent = availability ? `📅 ${availability}` : "Availability: Not set";
-        previewRate.textContent = rate || "Not set";
-
-        syncCanonicalCfs();
-      }
-
-      function resetForm() {
-        form.reset();
-        updatePreview();
-        saveBtn.disabled = false;
-        saveBtn.innerHTML = `
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          Save Profile
-        `;
-      }
-
-      async function submitToWorker() {
-        ensureEventId();
-
-        const paymentIntentId = paymentIntentIdEl.value || getPaymentIntentIdFromQuery();
-        paymentIntentIdEl.value = paymentIntentId;
-        accountIdEl.value = paymentIntentId;
-
-        // Human-friendly slug derived from name; can change.
-        if (!slugEl.value) slugEl.value = slugifyHuman(fullNameInput.value);
-
-        // Ensure canonical CFs are synced
-        syncCanonicalCfs();
-
-        const endpoint = "https://api.virtuallaunch.pro/forms/va/publish";
-
-        const fd = new FormData(form);
-
-        // Add the canonical CFs + identity fields into the payload.
-        // (FormData already includes everything in the form, including hidden CF inputs.)
-
-        const res = await fetch(endpoint, {
-          method: "POST",
-          body: new URLSearchParams([...fd.entries()]),
-          headers: {
-            "content-type": "application/x-www-form-urlencoded;charset=UTF-8",
-          },
-        });
-
-        let out = null;
-        const text = await res.text();
-        try {
-          out = text ? JSON.parse(text) : null;
-        } catch {
-          out = { raw: text };
-        }
-
-        if (!res.ok) {
-          throw new Error(`Publish failed: ${res.status} ${JSON.stringify(out)}`);
-        }
-
-        return out;
-      }
-
-      // Event listeners
-      fullNameInput.addEventListener("input", updatePreview);
-      taglineInput.addEventListener("input", updatePreview);
-      aboutInput.addEventListener("input", updatePreview);
-      servicesInput.addEventListener("input", updatePreview);
-      skillsInput.addEventListener("input", updatePreview);
-      availabilitySelect.addEventListener("change", updatePreview);
-      hourlyRateInput.addEventListener("input", updatePreview);
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        saveBtn.disabled = true;
-        saveBtn.innerHTML = `
-          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-          Saving...
-        `;
-
-        try {
-          const result = await submitToWorker();
-          // Optional: also mirror into local data store if it exists.
-          // This is not authoritative; it just makes the UI feel alive.
-          if (window.dataSdk && window.dataSdk.create) {
-            const mirror = {
-              __backendId: result?.slug || slugEl.value || null,
-              about: aboutInput.value || "",
-              availability: availabilitySelect.value || "",
-              created_at: new Date().toISOString(),
-              full_name: fullNameInput.value || "",
-              hourly_rate: hourlyRateInput.value || "",
-              services: servicesInput.value || "",
-              skills: skillsInput.value || "",
-              tagline: taglineInput.value || "",
-            };
-            try {
-              await window.dataSdk.create(mirror);
-            } catch {
-              // ignore local mirror failure
-            }
-          }
-
-          showToast("Profile saved!");
-        } catch (err) {
-          console.error(err);
-          showToast("Error saving profile. Check console.");
-        } finally {
-          saveBtn.disabled = false;
-          saveBtn.innerHTML = `
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            Save Profile
-          `;
-        }
-      });
-
-      resetBtn.addEventListener("click", resetForm);
-
-      // Initialize Element SDK
-      if (window.elementSdk) {
-        window.elementSdk.init({
-          defaultConfig,
-          onConfigChange: async (config) => {
-            document.getElementById("page-title").textContent = config.page_title || defaultConfig.page_title;
-            document.getElementById("form-heading").textContent = config.form_heading || defaultConfig.form_heading;
-            document.getElementById("preview-heading").textContent = config.preview_heading || defaultConfig.preview_heading;
-          },
-          mapToCapabilities: (config) => ({
-            borderables: [],
-            fontEditable: undefined,
-            fontSizeable: undefined,
-            recolorables: [
-              {
-                get: () => config.background_color || defaultConfig.background_color,
-                set: (value) => {
-                  config.background_color = value;
-                  window.elementSdk.setConfig({ background_color: value });
-                },
-              },
-              {
-                get: () => config.surface_color || defaultConfig.surface_color,
-                set: (value) => {
-                  config.surface_color = value;
-                  window.elementSdk.setConfig({ surface_color: value });
-                },
-              },
-              {
-                get: () => config.text_color || defaultConfig.text_color,
-                set: (value) => {
-                  config.text_color = value;
-                  window.elementSdk.setConfig({ text_color: value });
-                },
-              },
-              {
-                get: () => config.primary_action_color || defaultConfig.primary_action_color,
-                set: (value) => {
-                  config.primary_action_color = value;
-                  window.elementSdk.setConfig({ primary_action_color: value });
-                },
-              },
-              {
-                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-                set: (value) => {
-                  config.secondary_action_color = value;
-                  window.elementSdk.setConfig({ secondary_action_color: value });
-                },
-              },
-            ],
-          }),
-          mapToEditPanelValues: (config) =>
-            new Map([
-              ["page_title", config.page_title || defaultConfig.page_title],
-              ["form_heading", config.form_heading || defaultConfig.form_heading],
-              ["preview_heading", config.preview_heading || defaultConfig.preview_heading],
-            ]),
+      function parsePairs(text, sep) {
+        return lines(text).map(function (row) {
+          var parts = row.split(sep).map(function (p) { return p.trim(); });
+          return parts;
         });
       }
 
-      // Initialize Data SDK (optional UI mirror)
-      (async () => {
-        if (window.dataSdk) {
-          try {
-            await window.dataSdk.init({
-              onDataChanged: () => {},
-            });
-          } catch {
-            // ignore
-          }
-        }
-      })();
+      function renderServices() {
+        var grid = byId("p-servicesGrid");
+        if (!grid) return;
+        var cards = [
+          { title: byId("f-svc1Title").value, bullets: lines(byId("f-svc1Bullets").value) },
+          { title: byId("f-svc2Title").value, bullets: lines(byId("f-svc2Bullets").value) },
+          { title: byId("f-svc3Title").value, bullets: lines(byId("f-svc3Bullets").value) },
+          { title: byId("f-svc4Title").value, bullets: lines(byId("f-svc4Bullets").value) }
+        ];
 
-      // Boot identity fields
-      (function bootIdentity() {
-        ensureEventId();
-        const pi = getPaymentIntentIdFromQuery();
-        if (pi) {
-          paymentIntentIdEl.value = pi;
-          accountIdEl.value = pi;
-        }
-      })();
+        grid.innerHTML = cards.map(function (c) {
+          return (
+            '<div class="vlp-glass rounded-2xl p-6">' +
+              '<div class="text-sm font-extrabold">' + c.title + '</div>' +
+              '<ul class="mt-3 space-y-2 text-sm text-white/75">' +
+                c.bullets.slice(0, 6).map(function (b) { return '<li>' + b + '</li>'; }).join('') +
+              '</ul>' +
+            '</div>'
+          );
+        }).join("");
+      }
 
-      // Initial preview update
-      updatePreview();
-    </script>
-  </body>
+      function renderProofs() {
+        var grid = byId("p-proofsGrid");
+        if (!grid) return;
+
+        var rows = lines(byId("f-proofs").value);
+        var cards = rows.map(function (row, idx) {
+          var parts = row.split("||").map(function (p) { return p.trim(); });
+          return {
+            title: parts[0] || ("Proof " + (idx + 1)),
+            a: parts[1] || "",
+            b: parts[2] || "",
+            back: parts[3] || ""
+          };
+        }).slice(0, 10);
+
+        grid.innerHTML = cards.map(function (c, idx) {
+          var id = "proof-" + idx;
+          return (
+            '<div class="vlp-proof-card ' + (idx === 9 ? 'md:col-span-3' : '') + '">' +
+              '<input class="vlp-proof-toggle" id="' + id + '" type="checkbox" />' +
+              '<div class="vlp-proof-inner">' +
+
+                '<div class="vlp-proof-face vlp-proof-front">' +
+                  '<div class="vlp-proof-front-top">' +
+                    '<div class="vlp-proof-front-title"><h2>' + c.title + '</h2></div>' +
+                    '<label class="vlp-proof-cta vlp-proof-cta--primary" for="' + id + '" role="button" tabindex="0">' +
+                      'View proofs <span aria-hidden="true">↻</span>' +
+                    '</label>' +
+                  '</div>' +
+                  '<div class="vlp-proof-front-desc">' +
+                    '<p>' + c.a + '</p>' +
+                    '<p>' + c.b + '</p>' +
+                  '</div>' +
+                  '<div class="vlp-proof-front-actions">' +
+                    '<label class="vlp-proof-cta vlp-proof-cta--ghost" for="' + id + '" role="button" tabindex="0">' +
+                      'Flip card <span aria-hidden="true">→</span>' +
+                    '</label>' +
+                  '</div>' +
+                '</div>' +
+
+                '<div class="vlp-proof-face vlp-proof-back">' +
+                  '<div class="vlp-proof-back-top">' +
+                    '<div class="vlp-proof-back-title">' + c.title + ' — Proofs</div>' +
+                    '<label class="vlp-proof-cta vlp-proof-cta--ghost" for="' + id + '" role="button" tabindex="0">' +
+                      'Back <span aria-hidden="true">↺</span>' +
+                    '</label>' +
+                  '</div>' +
+                  '<div class="vlp-proof-back-body text-sm text-white/75">' +
+                    (c.back ? c.back : 'Add back-body text for this proof card.') +
+                  '</div>' +
+                '</div>' +
+
+              '</div>' +
+            '</div>'
+          );
+        }).join("");
+      }
+
+      function renderList(targetId, sourceText) {
+        var el = byId(targetId);
+        if (!el) return;
+        var items = lines(sourceText);
+        el.innerHTML = items.map(function (t) {
+          return '<li class="relative pl-4 before:absolute before:left-0 before:top-0 before:font-extrabold before:text-brand-500 before:content-[\\\'▸\\\']">' + t + '</li>';
+        }).join("");
+      }
+
+      function renderSkillDepth() {
+        var grid = byId("p-skillDepthGrid");
+        if (!grid) return;
+
+        var pairs = parsePairs(byId("f-skillDepth").value, "||")
+          .map(function (p) { return { label: (p[0] || "").trim(), score: Number((p[1] || "").trim()) || 0 }; })
+          .slice(0, 5);
+
+        // Match the original layout: 3-up then 2-up
+        var html = "";
+        pairs.forEach(function (item, idx) {
+          var colSpan = (idx < 3) ? "md:col-span-2" : "md:col-span-3";
+          html +=
+            '<div class="' + colSpan + ' flex min-h-[58px] items-center justify-between rounded-xl border border-[rgba(255,165,0,0.12)] bg-white/5 px-[16px] py-3 text-white/75">' +
+              '<strong class="text-white/90">' + item.label + ':</strong>' +
+              '<span class="flex items-center gap-2">' +
+                '<span class="inline-flex h-6 w-6 items-center justify-center text-center font-black leading-none text-[#ffa500]">' + Math.max(0, Math.min(5, item.score)) + '</span>' +
+                '<span class="leading-none text-white/60">/ 5</span>' +
+              '</span>' +
+            '</div>';
+        });
+
+        grid.innerHTML = html;
+      }
+
+      function renderBlocks(targetId, text) {
+        var el = byId(targetId);
+        if (!el) return;
+
+        var blocks = parsePairs(text, "||").map(function (p) {
+          return { title: (p[0] || "").trim(), body: (p.slice(1).join("||") || "").trim() };
+        }).filter(function (b) { return b.title || b.body; });
+
+        el.innerHTML = blocks.map(function (b) {
+          return (
+            '<div class="rounded-xl border border-white/10 bg-white/5 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">' +
+              '<div class="text-[1.05rem] font-extrabold text-white/95">' + b.title + '</div>' +
+              '<div class="mt-2 text-white/65" style="line-height:1.85;">' + b.body + '</div>' +
+            '</div>'
+          );
+        }).join("");
+      }
+
+      function renderTrustBlocks(text) {
+        var el = byId("p-trustGrid");
+        if (!el) return;
+
+        var blocks = parsePairs(text, "||").map(function (p) {
+          return { title: (p[0] || "").trim(), body: (p.slice(1).join("||") || "").trim() };
+        }).filter(function (b) { return b.title || b.body; });
+
+        var facebook = byId("f-facebook").value.trim();
+        var instagram = byId("f-instagram").value.trim();
+        var linkedin = byId("f-linkedin").value.trim();
+        var website = byId("f-website").value.trim();
+
+        function iconLink(url, label, svg) {
+          if (!url) return "";
+          return (
+            '<a class="inline-flex h-[22px] w-[22px] opacity-90 transition-opacity duration-200 hover:opacity-100" href="' + url + '" target="_blank" rel="noreferrer" aria-label="' + label + '">' +
+              svg +
+            '</a>'
+          );
+        }
+
+        var icons =
+          '<div class="mt-[10px] flex justify-center gap-3">' +
+            iconLink(facebook, "Facebook",
+              '<svg class="h-full w-full fill-current" viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.3l-.4 3h-1.9v7A10 10 0 0 0 22 12"></path></svg>'
+            ) +
+            iconLink(instagram, "Instagram",
+              '<svg class="h-full w-full fill-current" viewBox="0 0 24 24"><path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm0 7.4A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.6 6.4a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"></path></svg>'
+            ) +
+            iconLink(linkedin, "LinkedIn",
+              '<svg class="h-full w-full fill-current" viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0.5 23.5h4V7.98h-4V23.5zM8 7.98h3.84v2.12h.05c.54-1.02 1.86-2.1 3.83-2.1 4.1 0 4.86 2.7 4.86 6.2v9.3h-4v-8.25c0-1.97-.04-4.5-2.74-4.5-2.74 0-3.16 2.14-3.16 4.36v8.39H8V7.98z"></path></svg>'
+            ) +
+            iconLink(website, "Website",
+              '<svg class="h-full w-full fill-current" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm7.93 9h-3.17a15.6 15.6 0 0 0-1.2-5.02A8.03 8.03 0 0 1 19.93 11ZM12 4.07c.98 1.33 1.78 3.38 2.22 5.93H9.78C10.22 7.45 11.02 5.4 12 4.07ZM4.07 13h3.17a15.6 15.6 0 0 0 1.2 5.02A8.03 8.03 0 0 1 4.07 13Zm3.17-2H4.07a8.03 8.03 0 0 1 4.37-5.02A15.6 15.6 0 0 0 7.24 11Zm2.54 2h4.44c-.44 2.55-1.24 4.6-2.22 5.93-.98-1.33-1.78-3.38-2.22-5.93Zm6.78 5.02A15.6 15.6 0 0 0 16.76 13h3.17a8.03 8.03 0 0 1-4.37 5.02Z"></path></svg>'
+            ) +
+          '</div>';
+
+        el.innerHTML = blocks.map(function (b) {
+          var isPortfolio = /portfolio/i.test(b.title);
+          return (
+            '<div class="rounded-xl border border-white/10 bg-white/5 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.2)]">' +
+              '<div class="text-[1.05rem] font-extrabold text-white/95">' + b.title + '</div>' +
+              '<div class="mt-2 text-white/65" style="line-height:1.85;">' + b.body + '</div>' +
+              (isPortfolio ? icons : '') +
+            '</div>'
+          );
+        }).join("");
+      }
+
+      function applyAll() {
+        safeText(byId("p-name"), byId("f-name").value);
+        safeText(byId("p-cvName"), byId("f-name").value);
+        safeText(byId("p-subtitle"), byId("f-subtitle").value);
+        safeText(byId("p-badge"), byId("f-badge").value);
+
+        safeText(byId("p-availability"), byId("f-availability").value);
+        safeText(byId("p-timezone"), byId("f-timezone").value);
+        safeText(byId("p-bestFor"), byId("f-bestFor").value);
+        safeText(byId("p-tools"), byId("f-tools").value);
+
+        safeText(byId("p-aboutHeading"), byId("f-aboutHeading").value);
+        safeText(byId("p-aboutBody"), byId("f-aboutBody").value);
+        safeText(byId("p-highlightTitle"), byId("f-highlightTitle").value);
+        safeText(byId("p-highlightBody"), byId("f-highlightBody").value);
+
+        var heroUrl = byId("f-heroImage").value.trim();
+        if (heroUrl) byId("p-heroImage").src = heroUrl;
+
+        safeText(byId("p-cvHeadline"), byId("f-cvHeadline").value);
+        safeText(byId("p-profSummary"), byId("f-profSummary").value);
+        safeHTML(byId("p-clientTypes"), byId("f-clientTypes").value);
+        safeText(byId("p-clientNotes"), byId("f-clientNotes").value);
+
+        renderServices();
+        renderProofs();
+
+        renderList("p-primaryServices", byId("f-primaryServices").value);
+        renderList("p-toolsList", byId("f-toolsList").value);
+
+        renderSkillDepth();
+        safeText(byId("p-skillExamples"), byId("f-skillExamples").value);
+
+        renderBlocks("p-executionGrid", byId("f-execution").value);
+        renderTrustBlocks(byId("f-trust").value);
+      }
+
+      function bindAll() {
+        var inputs = document.querySelectorAll("input, textarea");
+        Array.prototype.forEach.call(inputs, function (el) {
+          el.addEventListener("input", applyAll);
+          el.addEventListener("change", applyAll);
+        });
+      }
+
+      function wireFlipAll() {
+        var btn = byId("vlp-proof-flip-all");
+        if (!btn) return;
+
+        function getToggles() {
+          return Array.prototype.slice.call(document.querySelectorAll("#work-proofs .vlp-proof-toggle"));
+        }
+
+        function setButtonLabel(isFlipped) {
+          btn.innerHTML = isFlipped
+            ? 'Reset all cards <span aria-hidden="true">↺</span>'
+            : 'Flip all cards <span aria-hidden="true">↻</span>';
+        }
+
+        btn.addEventListener("click", function () {
+          var toggles = getToggles();
+          var anyUnflipped = toggles.some(function (t) { return !t.checked; });
+          toggles.forEach(function (t) { t.checked = anyUnflipped; });
+          setButtonLabel(anyUnflipped);
+        });
+
+        document.addEventListener("change", function (e) {
+          if (!e.target || !e.target.classList || !e.target.classList.contains("vlp-proof-toggle")) return;
+          var toggles = getToggles();
+          var allFlipped = toggles.length && toggles.every(function (t) { return t.checked; });
+          setButtonLabel(allFlipped);
+        });
+      }
+
+      function loadSample() {
+        byId("f-name").value = "Damian Reyes";
+        byId("f-subtitle").value = "Calm ops. Clean delivery. Verified execution.";
+        byId("f-badge").value = "VA Starter Track • Profile Preview";
+        byId("f-heroImage").value = "/assets/va/va-profile-damian-reyes-hero.webp";
+        byId("f-availability").value = "Weekdays";
+        byId("f-timezone").value = "Pacific Time";
+        byId("f-bestFor").value = "Admin ops, inbox cleanup, scheduling";
+        byId("f-tools").value = "ClickUp, Google Workspace, SuiteDash";
+        byId("f-aboutHeading").value = "About Damian";
+        byId("f-aboutBody").value =
+          "Damian is a structured Virtual Assistant built for calm execution. He performs best with clear inputs, defined outcomes, and clean workflows. If your team is overloaded, behind on follow-up, or stuck in inbox chaos, Damian restores order and delivers client-ready output without creating rework.";
+        byId("f-highlightTitle").value = "About Damian";
+        byId("f-highlightBody").value =
+          "Trained inside Virtual Launch Pro systems, including SuiteDash portals and ClickUp delivery lanes, so tasks get tracked, clarified, completed, and closed out with visible progress and clean handoff.";
+        applyAll();
+      }
+
+      // init
+      bindAll();
+      wireFlipAll();
+      byId("btn-load-sample").addEventListener("click", loadSample);
+      applyAll();
+    })();
+  </script>
+</body>
 </html>
