@@ -36,7 +36,8 @@
     type="image/svg+xml"
   />
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canonical Tailwind pin (keep consistent across repo) -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -112,8 +113,8 @@
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
 
-  <!-- SHARED HEADER -->
-  <div data-include="header"></div>
+  <!-- SHARED HEADER (build injects /partials/header.html) -->
+  <!-- PARTIAL:header -->
   <div class="vlp-header-spacer" aria-hidden="true"></div>
 
   <main id="top">
@@ -548,58 +549,7 @@
     </section>
   </main>
 
-  <!-- SHARED FOOTER -->
-  <div data-include="footer-lp"></div>
-
-  <script>
-    (function () {
-      function runScripts(container) {
-        var scripts = container.querySelectorAll("script");
-        scripts.forEach(function (oldScript) {
-          var newScript = document.createElement("script");
-
-          for (var i = 0; i < oldScript.attributes.length; i++) {
-            var attr = oldScript.attributes[i];
-            newScript.setAttribute(attr.name, attr.value);
-          }
-
-          if (!oldScript.src) {
-            newScript.text = oldScript.textContent || "";
-          }
-
-          oldScript.parentNode.replaceChild(newScript, oldScript);
-        });
-      }
-
-      function loadIncludes() {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
-        if (!nodes.length) return;
-
-        nodes.forEach(function (node) {
-          var key = node.getAttribute("data-include");
-          var url = "/partials/" + key + ".html";
-
-          fetch(url, { cache: "no-store" })
-            .then(function (res) {
-              if (!res.ok) throw new Error("Include failed: " + url);
-              return res.text();
-            })
-            .then(function (html) {
-              node.innerHTML = html;
-              runScripts(node);
-            })
-            .catch(function (err) {
-              console.error(err);
-            });
-        });
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadIncludes);
-      } else {
-        loadIncludes();
-      }
-    })();
-  </script>
+  <!-- SHARED FOOTER (build injects /partials/footer.html) -->
+  <!-- PARTIAL:footer -->
 </body>
 </html>
