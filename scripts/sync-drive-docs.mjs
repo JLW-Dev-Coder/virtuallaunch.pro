@@ -1,13 +1,36 @@
+// scripts/sync-slack-missing-and-changes.mjs
+//
+// Purpose:
+// - One-time: post ONLY the repo files you previously identified as "missing" from Slack.
+// - Ongoing: post ANY subsequent changes (git diff) for ANY file, using the same format:
+//   summary message (parent) + per-file top-level message + file contents as thread replies.
+//
+// Env:
+// - SLACK_BOT_TOKEN (required)
+// - SLACK_CHANNEL (required)  // channel ID like C0123ABCDEF
+// - SYNC_MODE (optional)      // "missing" | "changed" | "all"  (default: "changed")
+// - GITHUB_BEFORE (optional)  // GitHub Actions
+// - GITHUB_REPO (optional)    // owner/repo
+// - GITHUB_SHA (optional)     // commit sha
+//
+// Notes:
+// - Slack requires proper scopes: chat:write (and files:write for binary uploads).
+// - This script avoids uploading binaries by default (see isBinaryByExt). If you want binaries uploaded, keep as-is.
+// - Threading format:
+//   - Summary post: top-level message
+//   - Each file: its own top-level message
+//   - File content: replies in that file's thread
+//
 import fs from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
 
-const FULL_SYNC = String(process.env.FULL_SYNC || "false").toLowerCase() === "true";
 const GITHUB_BEFORE = process.env.GITHUB_BEFORE || "";
 const GITHUB_REPO = process.env.GITHUB_REPO || "";
 const GITHUB_SHA = process.env.GITHUB_SHA || "";
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL; // channel ID like C0123ABCDEF
+const SYNC_MODE = String(process.env.SYNC_MODE || "changed").toLowerCase(); // "missing" | "changed" | "all"
 
 if (!SLACK_BOT_TOKEN) throw new Error("Missing SLACK_BOT_TOKEN");
 if (!SLACK_CHANNEL) throw new Error("Missing SLACK_CHANNEL");
@@ -173,6 +196,63 @@ function getChangedFiles() {
   return Array.from(map.values()).sort((a, b) => a.path.localeCompare(b.path));
 }
 
+// Alphabetical list of previously identified "missing" files.
+// (Assets intentionally excluded.)
+const MISSING_FILES = [
+  ".github/workflows/sync-docs-to-drive.yml",
+  "about.html",
+  "blog/blog.css",
+  "blog/index.html",
+  "blog/the-5-client-journey-categories-model-a/index.html",
+  "blog/welcome-aboard-agency-builders-tide-report/index.html",
+  "book.html",
+  "build.mjs",
+  "index.html",
+  "installs.html",
+  "lp/tax-monitor/details/index.html",
+  "lp/tax-monitor/index.html",
+  "lp/va-agency-setup/index.html",
+  "lp/va-starter-track/MARKET.md",
+  "lp/va-starter-track/README.md",
+  "lp/va-starter-track/index.html",
+  "lp/va-starter-track/payment-success.html",
+  "partials/blog/footer.html",
+  "partials/cookie-consent.html",
+  "partials/dashboard-preview.html",
+  "partials/footer-lp.html",
+  "partials/footer.html",
+  "partials/header.html",
+  "partials/lenbot.html",
+  "pricing.html",
+  "privacy.html",
+  "scripts/sync-drive-docs.mjs",
+  "signup.html",
+  "site.js",
+  "styles.css",
+  "terms.html",
+  "test.html",
+  "va/damian-reyes/index.html",
+  "va/dashboard/analytics.html",
+  "va/dashboard/index.html",
+  "va/dashboard/partials/sidebar.html",
+  "va/dashboard/partials/topbar.html",
+  "va/dashboard/setup.html",
+  "va/dashboard/support.html",
+  "va/directory.html",
+  "va/login.html",
+  "wrangler.toml",
+].sort((a, b) => a.localeCompare(b));
+
+function getMissingTargetsFromRepo() {
+  const repoSet = new Set(getAllRepoFiles());
+  const out = [];
+  for (const p of MISSING_FILES) {
+    if (repoSet.has(p)) out.push({ status: "A", path: p });
+    else out.push({ status: "A", path: p, note: "(not tracked by git ls-files)" });
+  }
+  return out.sort((a, b) => a.path.localeCompare(b.path));
+}
+
 async function postFileThread({ relPath, status, summaryThreadTs }) {
   // Create a NEW top-level message per file (keeps each file in its own thread)
   const headerBits = [];
@@ -243,37 +323,71 @@ async function postFileThread({ relPath, status, summaryThreadTs }) {
   }
 }
 
-async function main() {
+function buildSummaryText({ diffStat, modeLabel }) {
   const shortSha = GITHUB_SHA ? GITHUB_SHA.slice(0, 12) : "";
   const repoLabel = GITHUB_REPO || "repo";
   const marker = `LATEST SNAPSHOT: ${repoLabel}${shortSha ? ` @ ${shortSha}` : ""}`;
 
   const commitUrl =
     GITHUB_REPO && GITHUB_SHA ? `https://github.com/${GITHUB_REPO}/commit/${GITHUB_SHA}` : "";
-  const commitMsg = sh("git log -1 --pretty=%B");
-  const diffStat = sh("git show --stat --oneline --no-color -1");
+  const commitMsg = safeGit(() => sh("git log -1 --pretty=%B"));
 
-  // Summary message (single parent)
   const summaryLines = [];
   summaryLines.push(marker);
   summaryLines.push("");
-  summaryLines.push(FULL_SYNC ? "*Mode:* FULL REPO (THREAD PER FILE)" : "*Mode:* CHANGED FILES (THREAD PER FILE)");
+  summaryLines.push(`*Mode:* ${modeLabel} (THREAD PER FILE)`);
   if (commitUrl) summaryLines.push(`Commit: ${commitUrl}`);
   if (commitMsg) summaryLines.push(`Message: ${commitMsg}`);
   summaryLines.push("");
   summaryLines.push("```");
-  summaryLines.push(escapeTripleBackticks(diffStat));
+  summaryLines.push(escapeTripleBackticks(diffStat || ""));
   summaryLines.push("```");
+
+  return summaryLines.join("\n");
+}
+
+function safeGit(fn) {
+  try {
+    return fn();
+  } catch {
+    return "";
+  }
+}
+
+async function main() {
+  const mode = SYNC_MODE;
+
+  // Determine targets
+  let targets = [];
+  let modeLabel = "";
+  let diffStat = "";
+
+  if (mode === "all") {
+    modeLabel = "FULL REPO";
+    diffStat = safeGit(() => sh("git show --stat --oneline --no-color -1")) || "(full repo sync)";
+    targets = getAllRepoFiles().map((p) => ({ status: "A", path: p }));
+  } else if (mode === "missing") {
+    modeLabel = "MISSING FILES (INITIAL BACKFILL)";
+    diffStat = "(missing files backfill)";
+    targets = getMissingTargetsFromRepo();
+  } else if (mode === "changed") {
+    modeLabel = "CHANGED FILES";
+    diffStat = safeGit(() => sh("git show --stat --oneline --no-color -1")) || "(changed files sync)";
+    targets = getChangedFiles();
+  } else {
+    throw new Error(`Invalid SYNC_MODE: ${SYNC_MODE}. Use "missing", "changed", or "all".`);
+  }
+
+  // Summary message (single parent)
+  const summaryText = buildSummaryText({ diffStat, modeLabel });
 
   const summaryPost = await slackPost({
     channel: SLACK_CHANNEL,
-    text: summaryLines.join("\n"),
+    text: summaryText,
   });
 
   // Keep the file list alphabetical.
-  const targets = FULL_SYNC
-    ? getAllRepoFiles().map((p) => ({ status: "A", path: p }))
-    : getChangedFiles();
+  targets = targets.sort((a, b) => a.path.localeCompare(b.path));
 
   if (targets.length === 0) {
     await slackPost({
