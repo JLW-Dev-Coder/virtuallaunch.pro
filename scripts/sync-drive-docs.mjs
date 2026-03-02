@@ -1,26 +1,3 @@
-// scripts/sync-slack-missing-and-changes.mjs
-//
-// Purpose:
-// - One-time: post ONLY the repo files you previously identified as "missing" from Slack.
-// - Ongoing: post ANY subsequent changes (git diff) for ANY file, using the same format:
-//   summary message (parent) + per-file top-level message + file contents as thread replies.
-//
-// Env:
-// - SLACK_BOT_TOKEN (required)
-// - SLACK_CHANNEL (required)  // channel ID like C0123ABCDEF
-// - SYNC_MODE (optional)      // "missing" | "changed" | "all"  (default: "changed")
-// - GITHUB_BEFORE (optional)  // GitHub Actions
-// - GITHUB_REPO (optional)    // owner/repo
-// - GITHUB_SHA (optional)     // commit sha
-//
-// Notes:
-// - Slack requires proper scopes: chat:write (and files:write for binary uploads).
-// - This script avoids uploading binaries by default (see isBinaryByExt). If you want binaries uploaded, keep as-is.
-// - Threading format:
-//   - Summary post: top-level message
-//   - Each file: its own top-level message
-//   - File content: replies in that file's thread
-//
 import fs from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
@@ -31,6 +8,7 @@ const GITHUB_SHA = process.env.GITHUB_SHA || "";
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL; // channel ID like C0123ABCDEF
 const SYNC_MODE = String(process.env.SYNC_MODE || "changed").toLowerCase(); // "missing" | "changed" | "all"
+const STOP_ON_ERROR = String(process.env.STOP_ON_ERROR || "false").toLowerCase() === "true";
 
 if (!SLACK_BOT_TOKEN) throw new Error("Missing SLACK_BOT_TOKEN");
 if (!SLACK_CHANNEL) throw new Error("Missing SLACK_CHANNEL");
@@ -45,7 +23,8 @@ function escapeTripleBackticks(s) {
   return String(s || "").replace(/```/g, "`\u200b``");
 }
 
-function chunkString(str, max = 8000) {
+// Slack message text limit is large, but don’t push your luck.
+function chunkString(str, max = 6500) {
   const out = [];
   const s = String(str || "");
   for (let i = 0; i < s.length; i += max) out.push(s.slice(i, i + max));
@@ -74,32 +53,78 @@ function isBinaryByExt(relPath) {
   return binaryExt.includes(ext);
 }
 
+function safeGit(fn) {
+  try {
+    return fn();
+  } catch {
+    return "";
+  }
+}
+
+async function slackFetchJson(url, options, { label }) {
+  // Basic retry for rate limits + occasional Slack flakiness.
+  const maxAttempts = 6;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const res = await fetch(url, options);
+
+    // Rate limit
+    if (res.status === 429) {
+      const retryAfter = Number(res.headers.get("retry-after") || "2");
+      console.log(`[slack] 429 rate limited (${label}) retry-after=${retryAfter}s`);
+      await sleep((retryAfter + 1) * 1000);
+      continue;
+    }
+
+    const data = await res.json().catch(() => null);
+
+    // Slack API error (ok:false) or HTTP error
+    if (!res.ok || !data?.ok) {
+      const err = new Error(
+        `Slack API failed (${label}) status=${res.status} body=${JSON.stringify(data)}`
+      );
+
+      // Retry a couple times for transient server errors
+      if (res.status >= 500 && attempt < maxAttempts) {
+        console.log(`[slack] ${res.status} transient (${label}) attempt=${attempt} retrying…`);
+        await sleep(1500 * attempt);
+        continue;
+      }
+
+      throw err;
+    }
+
+    return { res, data };
+  }
+
+  throw new Error(`Slack API failed after retries (${label})`);
+}
+
 async function slackPost({ channel, text, thread_ts }) {
   const body = { channel, text };
   if (thread_ts) body.thread_ts = thread_ts;
 
-  const res = await fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-      "Content-Type": "application/json; charset=utf-8",
+  const { data } = await slackFetchJson(
+    "https://slack.com/api/chat.postMessage",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify(body),
     },
-    body: JSON.stringify(body),
-  });
-
-  const data = await res.json().catch(() => null);
-  if (!res.ok || !data?.ok) {
-    throw new Error(`Slack post failed: ${res.status} ${JSON.stringify(data)}`);
-  }
+    { label: "chat.postMessage" }
+  );
 
   return data; // includes ts
 }
 
 /**
  * Modern file upload flow:
- * - files.getUploadURLExternal (x-www-form-urlencoded: filename, length)
+ * - files.getUploadURLExternal
  * - POST bytes to upload_url
- * - files.completeUploadExternal (JSON)
+ * - files.completeUploadExternal
  */
 async function slackUploadFile({ absPath, displayName, thread_ts }) {
   const buf = fs.readFileSync(absPath);
@@ -109,48 +134,46 @@ async function slackUploadFile({ absPath, displayName, thread_ts }) {
   form.set("filename", filename);
   form.set("length", String(buf.length));
 
-  const urlRes = await fetch("https://slack.com/api/files.getUploadURLExternal", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-      "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+  const { data: urlData } = await slackFetchJson(
+    "https://slack.com/api/files.getUploadURLExternal",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+      },
+      body: form.toString(),
     },
-    body: form.toString(),
-  });
+    { label: "files.getUploadURLExternal" }
+  );
 
-  const urlData = await urlRes.json().catch(() => null);
-  if (!urlRes.ok || !urlData?.ok) {
-    throw new Error(`Slack getUploadURLExternal failed: ${urlRes.status} ${JSON.stringify(urlData)}`);
-  }
-
-  const upRes = await fetch(urlData.upload_url, {
-    method: "POST",
-    body: buf,
-  });
-
-  if (!upRes.ok) {
+  // Upload raw bytes to Slack-provided URL (NOT Slack API domain)
+  const upRes = await fetch(urlData.upload_url, { method: "POST", body: buf });
+  if (upRes.status === 429) {
+    // Extremely rare, but handle it anyway.
+    await sleep(3000);
+    const retryRes = await fetch(urlData.upload_url, { method: "POST", body: buf });
+    if (!retryRes.ok) throw new Error(`Slack upload POST failed: ${retryRes.status}`);
+  } else if (!upRes.ok) {
     throw new Error(`Slack upload POST failed: ${upRes.status}`);
   }
 
-  const completeRes = await fetch("https://slack.com/api/files.completeUploadExternal", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-      "Content-Type": "application/json; charset=utf-8",
+  await slackFetchJson(
+    "https://slack.com/api/files.completeUploadExternal",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
+        "Content-Type": "application/json; charset=utf-8",
+      },
+      body: JSON.stringify({
+        channel_id: SLACK_CHANNEL,
+        files: [{ id: urlData.file_id, title: filename }],
+        thread_ts,
+      }),
     },
-    body: JSON.stringify({
-      channel_id: SLACK_CHANNEL,
-      files: [{ id: urlData.file_id, title: filename }],
-      thread_ts,
-    }),
-  });
-
-  const completeData = await completeRes.json().catch(() => null);
-  if (!completeRes.ok || !completeData?.ok) {
-    throw new Error(
-      `Slack completeUploadExternal failed: ${completeRes.status} ${JSON.stringify(completeData)}`
-    );
-  }
+    { label: "files.completeUploadExternal" }
+  );
 }
 
 function getAllRepoFiles() {
@@ -163,14 +186,12 @@ function getChangedFiles() {
   if (!before || before === "0000000000000000000000000000000000000000") before = "";
 
   const range = before ? `${before}..${GITHUB_SHA}` : "HEAD~1..HEAD";
-  const lines = sh(`git diff --name-status ${range}`).split("\n").filter(Boolean);
+  const lines = safeGit(() => sh(`git diff --name-status ${range}`))
+    .split("\n")
+    .filter(Boolean);
 
   const entries = [];
   for (const line of lines) {
-    // A path
-    // M path
-    // D path
-    // R100 old new
     const parts = line.split(/\s+/);
     const status = parts[0] || "";
 
@@ -196,8 +217,7 @@ function getChangedFiles() {
   return Array.from(map.values()).sort((a, b) => a.path.localeCompare(b.path));
 }
 
-// Alphabetical list of previously identified "missing" files.
-// (Assets intentionally excluded.)
+// Alphabetical list of previously identified "missing" files (assets excluded).
 const MISSING_FILES = [
   ".github/workflows/sync-docs-to-drive.yml",
   "about.html",
@@ -244,82 +264,51 @@ const MISSING_FILES = [
 ].sort((a, b) => a.localeCompare(b));
 
 function getMissingTargetsFromRepo() {
-  const repoSet = new Set(getAllRepoFiles());
+  // We intentionally only post files that exist in the checkout.
+  // If your CI checkout is shallow or missing directories, you’ll see "(missing in checkout)" in Slack.
   const out = [];
-  for (const p of MISSING_FILES) {
-    if (repoSet.has(p)) out.push({ status: "A", path: p });
-    else out.push({ status: "A", path: p, note: "(not tracked by git ls-files)" });
-  }
+  for (const p of MISSING_FILES) out.push({ status: "A", path: p });
   return out.sort((a, b) => a.path.localeCompare(b.path));
 }
 
 async function postFileThread({ relPath, status, summaryThreadTs }) {
-  // Create a NEW top-level message per file (keeps each file in its own thread)
   const headerBits = [];
   headerBits.push(`*${relPath}*`);
   headerBits.push(`Status: \`${status}\``);
   if (summaryThreadTs) headerBits.push(`Snapshot thread: \`${summaryThreadTs}\``);
 
-  const root = await slackPost({
-    channel: SLACK_CHANNEL,
-    text: headerBits.join(" • "),
-  });
-
-  // Gentle pacing to avoid suppression.
-  await sleep(1100);
+  const root = await slackPost({ channel: SLACK_CHANNEL, text: headerBits.join(" • ") });
+  await sleep(900);
 
   if (status === "D") {
-    await slackPost({
-      channel: SLACK_CHANNEL,
-      thread_ts: root.ts,
-      text: "`(deleted)`",
-    });
-    await sleep(1100);
+    await slackPost({ channel: SLACK_CHANNEL, thread_ts: root.ts, text: "`(deleted)`" });
+    await sleep(900);
     return;
   }
 
   const absPath = path.join(process.cwd(), relPath);
   if (!fs.existsSync(absPath)) {
-    await slackPost({
-      channel: SLACK_CHANNEL,
-      thread_ts: root.ts,
-      text: "`(missing in checkout)`",
-    });
-    await sleep(1100);
+    await slackPost({ channel: SLACK_CHANNEL, thread_ts: root.ts, text: "`(missing in checkout)`" });
+    await sleep(900);
     return;
   }
 
   if (isBinaryByExt(relPath)) {
-    await slackPost({
-      channel: SLACK_CHANNEL,
-      thread_ts: root.ts,
-      text: "`(binary upload)`",
-    });
-    await sleep(1100);
-
-    await slackUploadFile({
-      absPath,
-      displayName: relPath,
-      thread_ts: root.ts,
-    });
-    await sleep(1100);
+    await slackPost({ channel: SLACK_CHANNEL, thread_ts: root.ts, text: "`(binary upload)`" });
+    await sleep(900);
+    await slackUploadFile({ absPath, displayName: relPath, thread_ts: root.ts });
+    await sleep(900);
     return;
   }
 
   const content = fs.readFileSync(absPath, "utf8");
-  const chunks = chunkString(content, 8000);
+  const chunks = chunkString(content, 6500);
 
   for (let i = 0; i < chunks.length; i++) {
     const label = chunks.length > 1 ? `_${relPath} (${i + 1}/${chunks.length})_\n` : "";
     const block = `\`\`\`\n${escapeTripleBackticks(chunks[i])}\n\`\`\``;
-
-    await slackPost({
-      channel: SLACK_CHANNEL,
-      thread_ts: root.ts,
-      text: `${label}${block}`,
-    });
-
-    await sleep(1100);
+    await slackPost({ channel: SLACK_CHANNEL, thread_ts: root.ts, text: `${label}${block}` });
+    await sleep(900);
   }
 }
 
@@ -346,48 +335,42 @@ function buildSummaryText({ diffStat, modeLabel }) {
   return summaryLines.join("\n");
 }
 
-function safeGit(fn) {
-  try {
-    return fn();
-  } catch {
-    return "";
-  }
-}
-
 async function main() {
-  const mode = SYNC_MODE;
+  // Guardrails so this doesn’t “run” and do nothing while you wonder why.
+  if (!["all", "changed", "missing"].includes(SYNC_MODE)) {
+    throw new Error(`Invalid SYNC_MODE: ${SYNC_MODE}. Use "missing", "changed", or "all".`);
+  }
 
-  // Determine targets
   let targets = [];
   let modeLabel = "";
   let diffStat = "";
 
-  if (mode === "all") {
+  if (SYNC_MODE === "all") {
     modeLabel = "FULL REPO";
     diffStat = safeGit(() => sh("git show --stat --oneline --no-color -1")) || "(full repo sync)";
     targets = getAllRepoFiles().map((p) => ({ status: "A", path: p }));
-  } else if (mode === "missing") {
-    modeLabel = "MISSING FILES (INITIAL BACKFILL)";
+  }
+
+  if (SYNC_MODE === "missing") {
+    modeLabel = "MISSING FILES (BACKFILL)";
     diffStat = "(missing files backfill)";
     targets = getMissingTargetsFromRepo();
-  } else if (mode === "changed") {
+  }
+
+  if (SYNC_MODE === "changed") {
     modeLabel = "CHANGED FILES";
     diffStat = safeGit(() => sh("git show --stat --oneline --no-color -1")) || "(changed files sync)";
     targets = getChangedFiles();
-  } else {
-    throw new Error(`Invalid SYNC_MODE: ${SYNC_MODE}. Use "missing", "changed", or "all".`);
   }
 
-  // Summary message (single parent)
-  const summaryText = buildSummaryText({ diffStat, modeLabel });
+  targets = targets.sort((a, b) => a.path.localeCompare(b.path));
+  console.log(`[sync] mode=${SYNC_MODE} targets=${targets.length}`);
+  for (const t of targets) console.log(`[sync] ${t.status}\t${t.path}`);
 
   const summaryPost = await slackPost({
     channel: SLACK_CHANNEL,
-    text: summaryText,
+    text: buildSummaryText({ diffStat, modeLabel }),
   });
-
-  // Keep the file list alphabetical.
-  targets = targets.sort((a, b) => a.path.localeCompare(b.path));
 
   if (targets.length === 0) {
     await slackPost({
@@ -398,7 +381,6 @@ async function main() {
     return;
   }
 
-  // Post a manifest in the summary thread
   const manifestLines = [];
   manifestLines.push("*Manifest (Alphabetical)*");
   manifestLines.push("```");
@@ -411,12 +393,37 @@ async function main() {
     text: manifestLines.join("\n"),
   });
 
-  // Now one top-level thread per file
+  const failures = [];
+
   for (const t of targets) {
-    await postFileThread({
-      relPath: t.path,
-      status: t.status,
-      summaryThreadTs: summaryPost.ts,
+    try {
+      await postFileThread({
+        relPath: t.path,
+        status: t.status,
+        summaryThreadTs: summaryPost.ts,
+      });
+    } catch (e) {
+      failures.push({ path: t.path, error: String(e?.message || e) });
+      console.error(`[sync] FAILED ${t.path}:`, e);
+
+      if (STOP_ON_ERROR) throw e;
+
+      // Keep going, because humans like progress.
+      await sleep(1200);
+    }
+  }
+
+  if (failures.length > 0) {
+    const lines = [];
+    lines.push(`*Failures:* ${failures.length}`);
+    lines.push("```");
+    for (const f of failures) lines.push(`${f.path}\n  ${f.error}`);
+    lines.push("```");
+
+    await slackPost({
+      channel: SLACK_CHANNEL,
+      thread_ts: summaryPost.ts,
+      text: lines.join("\n"),
     });
   }
 
