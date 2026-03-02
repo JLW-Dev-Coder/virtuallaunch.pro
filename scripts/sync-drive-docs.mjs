@@ -2,13 +2,18 @@ import fs from "node:fs";
 import { execSync } from "node:child_process";
 import path from "node:path";
 
+const FULL_SYNC = String(process.env.FULL_SYNC || "false").toLowerCase() === "true";
 const GITHUB_BEFORE = process.env.GITHUB_BEFORE || "";
 const GITHUB_REPO = process.env.GITHUB_REPO || "";
 const GITHUB_SHA = process.env.GITHUB_SHA || "";
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL; // channel ID like C0123ABCDEF
-const SYNC_MODE = String(process.env.SYNC_MODE || "changed").toLowerCase(); // "missing" | "changed" | "all"
+const RAW_SYNC_MODE = String(process.env.SYNC_MODE || "changed").toLowerCase(); // "missing" | "changed" | "all"
 const STOP_ON_ERROR = String(process.env.STOP_ON_ERROR || "false").toLowerCase() === "true";
+
+// FIX: if workflow dispatch sets FULL_SYNC=true, force a full repo sync.
+// This restores "type true in the UI and it posts everything" behavior.
+const SYNC_MODE = FULL_SYNC ? "all" : RAW_SYNC_MODE;
 
 if (!SLACK_BOT_TOKEN) throw new Error("Missing SLACK_BOT_TOKEN");
 if (!SLACK_CHANNEL) throw new Error("Missing SLACK_CHANNEL");
@@ -264,8 +269,6 @@ const MISSING_FILES = [
 ].sort((a, b) => a.localeCompare(b));
 
 function getMissingTargetsFromRepo() {
-  // We intentionally only post files that exist in the checkout.
-  // If your CI checkout is shallow or missing directories, you’ll see "(missing in checkout)" in Slack.
   const out = [];
   for (const p of MISSING_FILES) out.push({ status: "A", path: p });
   return out.sort((a, b) => a.path.localeCompare(b.path));
@@ -336,7 +339,6 @@ function buildSummaryText({ diffStat, modeLabel }) {
 }
 
 async function main() {
-  // Guardrails so this doesn’t “run” and do nothing while you wonder why.
   if (!["all", "changed", "missing"].includes(SYNC_MODE)) {
     throw new Error(`Invalid SYNC_MODE: ${SYNC_MODE}. Use "missing", "changed", or "all".`);
   }
@@ -359,12 +361,13 @@ async function main() {
 
   if (SYNC_MODE === "changed") {
     modeLabel = "CHANGED FILES";
-    diffStat = safeGit(() => sh("git show --stat --oneline --no-color -1")) || "(changed files sync)";
+    diffStat =
+      safeGit(() => sh("git show --stat --oneline --no-color -1")) || "(changed files sync)";
     targets = getChangedFiles();
   }
 
   targets = targets.sort((a, b) => a.path.localeCompare(b.path));
-  console.log(`[sync] mode=${SYNC_MODE} targets=${targets.length}`);
+  console.log(`[sync] full_sync=${FULL_SYNC} mode=${SYNC_MODE} targets=${targets.length}`);
   for (const t of targets) console.log(`[sync] ${t.status}\t${t.path}`);
 
   const summaryPost = await slackPost({
@@ -408,7 +411,6 @@ async function main() {
 
       if (STOP_ON_ERROR) throw e;
 
-      // Keep going, because humans like progress.
       await sleep(1200);
     }
   }
