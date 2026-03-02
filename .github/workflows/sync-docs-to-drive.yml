@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      full_sync:
+        default: "false"
+        description: "Post every file in the repo (true/false)"
+        required: true
 
 jobs:
   post:
@@ -12,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Node
         uses: actions/setup-node@v4
@@ -20,6 +28,8 @@ jobs:
 
       - name: Post repo sync to Slack
         env:
+          FULL_SYNC: ${{ github.event.inputs.full_sync || 'false' }}
+          GITHUB_BEFORE: ${{ github.event.before }}
           GITHUB_REPO: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
