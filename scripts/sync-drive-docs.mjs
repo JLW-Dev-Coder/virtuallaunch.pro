@@ -31,6 +31,8 @@ function chunkString(str, max = 8000) {
 
 function isBinaryByExt(relPath) {
   const ext = path.extname(relPath).toLowerCase();
+
+  // Keep alphabetical.
   const binaryExt = [
     ".gif",
     ".ico",
@@ -45,6 +47,7 @@ function isBinaryByExt(relPath) {
     ".webm",
     ".webp",
   ];
+
   return binaryExt.includes(ext);
 }
 
@@ -70,24 +73,26 @@ async function slackPost({ text, thread_ts }) {
 
 /**
  * Modern file upload flow:
- * - files.getUploadURLExternal
- * - PUT bytes to upload_url
- * - files.completeUploadExternal
+ * - files.getUploadURLExternal (x-www-form-urlencoded: filename, length)
+ * - POST bytes to upload_url
+ * - files.completeUploadExternal (JSON)
  */
 async function slackUploadFile({ absPath, displayName, thread_ts }) {
   const buf = fs.readFileSync(absPath);
   const filename = displayName || path.basename(absPath);
 
+  // IMPORTANT: Slack expects application/x-www-form-urlencoded (NOT JSON).
+  const form = new URLSearchParams();
+  form.set("filename", filename);
+  form.set("length", String(buf.length));
+
   const urlRes = await fetch("https://slack.com/api/files.getUploadURLExternal", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${SLACK_BOT_TOKEN}`,
-      "Content-Type": "application/json; charset=utf-8",
+      "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
     },
-    body: JSON.stringify({
-      filename,
-      length: buf.length,
-    }),
+    body: form.toString(),
   });
 
   const urlData = await urlRes.json().catch(() => null);
@@ -95,14 +100,17 @@ async function slackUploadFile({ absPath, displayName, thread_ts }) {
     throw new Error(`Slack getUploadURLExternal failed: ${urlRes.status} ${JSON.stringify(urlData)}`);
   }
 
-  const putRes = await fetch(urlData.upload_url, {
-    method: "PUT",
+  // Upload bytes to the returned URL (POST is supported).
+  const upRes = await fetch(urlData.upload_url, {
+    method: "POST",
     body: buf,
   });
-  if (!putRes.ok) {
-    throw new Error(`Slack upload PUT failed: ${putRes.status}`);
+
+  if (!upRes.ok) {
+    throw new Error(`Slack upload POST failed: ${upRes.status}`);
   }
 
+  // Finalize + share into channel/thread.
   const completeRes = await fetch("https://slack.com/api/files.completeUploadExternal", {
     method: "POST",
     headers: {
@@ -217,10 +225,11 @@ async function main() {
   summaryLines.push("```");
 
   const summaryPost = await slackPost({ text: summaryLines.join("\n") });
-
   const thread_ts = summaryPost.ts;
 
-  const targets = FULL_SYNC ? getAllRepoFiles().map((p) => ({ status: "A", path: p })) : getChangedFiles();
+  const targets = FULL_SYNC
+    ? getAllRepoFiles().map((p) => ({ status: "A", path: p }))
+    : getChangedFiles();
 
   if (targets.length === 0) {
     await slackPost({ text: "No file changes detected.", thread_ts });
