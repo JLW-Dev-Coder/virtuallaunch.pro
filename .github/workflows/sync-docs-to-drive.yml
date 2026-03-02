@@ -28,7 +28,7 @@ jobs:
 
       - name: Post repo sync to Slack
         env:
-          FULL_SYNC: ${{ github.event.inputs.full_sync || 'false' }}
+          FULL_SYNC: ${{ inputs.full_sync || 'false' }}
           GITHUB_BEFORE: ${{ github.event.before }}
           GITHUB_REPO: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
