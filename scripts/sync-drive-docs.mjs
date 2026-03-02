@@ -51,8 +51,8 @@ function isBinaryByExt(relPath) {
   return binaryExt.includes(ext);
 }
 
-async function slackPost({ text, thread_ts }) {
-  const body = { channel: SLACK_CHANNEL, text };
+async function slackPost({ channel, text, thread_ts }) {
+  const body = { channel, text };
   if (thread_ts) body.thread_ts = thread_ts;
 
   const res = await fetch("https://slack.com/api/chat.postMessage", {
@@ -68,6 +68,7 @@ async function slackPost({ text, thread_ts }) {
   if (!res.ok || !data?.ok) {
     throw new Error(`Slack post failed: ${res.status} ${JSON.stringify(data)}`);
   }
+
   return data; // includes ts
 }
 
@@ -81,7 +82,6 @@ async function slackUploadFile({ absPath, displayName, thread_ts }) {
   const buf = fs.readFileSync(absPath);
   const filename = displayName || path.basename(absPath);
 
-  // IMPORTANT: Slack expects application/x-www-form-urlencoded (NOT JSON).
   const form = new URLSearchParams();
   form.set("filename", filename);
   form.set("length", String(buf.length));
@@ -100,7 +100,6 @@ async function slackUploadFile({ absPath, displayName, thread_ts }) {
     throw new Error(`Slack getUploadURLExternal failed: ${urlRes.status} ${JSON.stringify(urlData)}`);
   }
 
-  // Upload bytes to the returned URL (POST is supported).
   const upRes = await fetch(urlData.upload_url, {
     method: "POST",
     body: buf,
@@ -110,7 +109,6 @@ async function slackUploadFile({ absPath, displayName, thread_ts }) {
     throw new Error(`Slack upload POST failed: ${upRes.status}`);
   }
 
-  // Finalize + share into channel/thread.
   const completeRes = await fetch("https://slack.com/api/files.completeUploadExternal", {
     method: "POST",
     headers: {
@@ -138,26 +136,21 @@ function getAllRepoFiles() {
 }
 
 function getChangedFiles() {
-  // Use name-status so we can detect deletes.
-  // Prefer GITHUB_BEFORE from push event; fall back to last commit.
   let before = GITHUB_BEFORE;
-  if (!before || before === "0000000000000000000000000000000000000000") {
-    // Likely first push or unknown "before"; just treat it as a full sync-ish delta from HEAD~1.
-    before = "";
-  }
+  if (!before || before === "0000000000000000000000000000000000000000") before = "";
 
   const range = before ? `${before}..${GITHUB_SHA}` : "HEAD~1..HEAD";
   const lines = sh(`git diff --name-status ${range}`).split("\n").filter(Boolean);
 
   const entries = [];
   for (const line of lines) {
-    // Examples:
-    // A  path
-    // M  path
-    // D  path
+    // A path
+    // M path
+    // D path
     // R100 old new
     const parts = line.split(/\s+/);
     const status = parts[0] || "";
+
     if (status.startsWith("R")) {
       const oldPath = parts[1];
       const newPath = parts[2];
@@ -165,11 +158,11 @@ function getChangedFiles() {
       if (newPath) entries.push({ status: "A", path: newPath });
       continue;
     }
+
     const p = parts[1];
     if (p) entries.push({ status, path: p });
   }
 
-  // De-dupe by path, prefer non-delete if both appear.
   const map = new Map();
   for (const e of entries) {
     const prev = map.get(e.path);
@@ -180,26 +173,74 @@ function getChangedFiles() {
   return Array.from(map.values()).sort((a, b) => a.path.localeCompare(b.path));
 }
 
-async function postTextFile({ relPath, absPath, thread_ts }) {
+async function postFileThread({ relPath, status, summaryThreadTs }) {
+  // Create a NEW top-level message per file (keeps each file in its own thread)
+  const headerBits = [];
+  headerBits.push(`*${relPath}*`);
+  headerBits.push(`Status: \`${status}\``);
+  if (summaryThreadTs) headerBits.push(`Snapshot thread: \`${summaryThreadTs}\``);
+
+  const root = await slackPost({
+    channel: SLACK_CHANNEL,
+    text: headerBits.join(" • "),
+  });
+
+  // Gentle pacing to avoid suppression.
+  await sleep(1100);
+
+  if (status === "D") {
+    await slackPost({
+      channel: SLACK_CHANNEL,
+      thread_ts: root.ts,
+      text: "`(deleted)`",
+    });
+    await sleep(1100);
+    return;
+  }
+
+  const absPath = path.join(process.cwd(), relPath);
+  if (!fs.existsSync(absPath)) {
+    await slackPost({
+      channel: SLACK_CHANNEL,
+      thread_ts: root.ts,
+      text: "`(missing in checkout)`",
+    });
+    await sleep(1100);
+    return;
+  }
+
+  if (isBinaryByExt(relPath)) {
+    await slackPost({
+      channel: SLACK_CHANNEL,
+      thread_ts: root.ts,
+      text: "`(binary upload)`",
+    });
+    await sleep(1100);
+
+    await slackUploadFile({
+      absPath,
+      displayName: relPath,
+      thread_ts: root.ts,
+    });
+    await sleep(1100);
+    return;
+  }
+
   const content = fs.readFileSync(absPath, "utf8");
   const chunks = chunkString(content, 8000);
 
-  await slackPost({ text: `*${relPath}*`, thread_ts });
-  await sleep(1100);
-
   for (let i = 0; i < chunks.length; i++) {
-    const label = chunks.length > 1 ? `\n_${relPath} (${i + 1}/${chunks.length})_\n` : "";
+    const label = chunks.length > 1 ? `_${relPath} (${i + 1}/${chunks.length})_\n` : "";
     const block = `\`\`\`\n${escapeTripleBackticks(chunks[i])}\n\`\`\``;
-    await slackPost({ text: `${label}${block}`, thread_ts });
+
+    await slackPost({
+      channel: SLACK_CHANNEL,
+      thread_ts: root.ts,
+      text: `${label}${block}`,
+    });
+
     await sleep(1100);
   }
-}
-
-async function postBinaryFile({ relPath, absPath, thread_ts }) {
-  await slackPost({ text: `*${relPath}* (binary upload)`, thread_ts });
-  await sleep(1100);
-  await slackUploadFile({ absPath, displayName: relPath, thread_ts });
-  await sleep(1100);
 }
 
 async function main() {
@@ -212,11 +253,11 @@ async function main() {
   const commitMsg = sh("git log -1 --pretty=%B");
   const diffStat = sh("git show --stat --oneline --no-color -1");
 
-  // Parent summary
+  // Summary message (single parent)
   const summaryLines = [];
   summaryLines.push(marker);
   summaryLines.push("");
-  summaryLines.push(FULL_SYNC ? "*Mode:* FULL REPO POST" : "*Mode:* CHANGED FILES ONLY");
+  summaryLines.push(FULL_SYNC ? "*Mode:* FULL REPO (THREAD PER FILE)" : "*Mode:* CHANGED FILES (THREAD PER FILE)");
   if (commitUrl) summaryLines.push(`Commit: ${commitUrl}`);
   if (commitMsg) summaryLines.push(`Message: ${commitMsg}`);
   summaryLines.push("");
@@ -224,42 +265,48 @@ async function main() {
   summaryLines.push(escapeTripleBackticks(diffStat));
   summaryLines.push("```");
 
-  const summaryPost = await slackPost({ text: summaryLines.join("\n") });
-  const thread_ts = summaryPost.ts;
+  const summaryPost = await slackPost({
+    channel: SLACK_CHANNEL,
+    text: summaryLines.join("\n"),
+  });
 
+  // Keep the file list alphabetical.
   const targets = FULL_SYNC
     ? getAllRepoFiles().map((p) => ({ status: "A", path: p }))
     : getChangedFiles();
 
   if (targets.length === 0) {
-    await slackPost({ text: "No file changes detected.", thread_ts });
+    await slackPost({
+      channel: SLACK_CHANNEL,
+      thread_ts: summaryPost.ts,
+      text: "No file changes detected.",
+    });
     return;
   }
 
+  // Post a manifest in the summary thread
+  const manifestLines = [];
+  manifestLines.push("*Manifest (Alphabetical)*");
+  manifestLines.push("```");
+  for (const t of targets) manifestLines.push(`${t.status}\t${t.path}`);
+  manifestLines.push("```");
+
+  await slackPost({
+    channel: SLACK_CHANNEL,
+    thread_ts: summaryPost.ts,
+    text: manifestLines.join("\n"),
+  });
+
+  // Now one top-level thread per file
   for (const t of targets) {
-    const relPath = t.path;
-    const absPath = path.join(process.cwd(), relPath);
-
-    if (t.status === "D") {
-      await slackPost({ text: `*${relPath}* (deleted)`, thread_ts });
-      await sleep(1100);
-      continue;
-    }
-
-    if (!fs.existsSync(absPath)) {
-      await slackPost({ text: `*${relPath}* (missing in checkout)`, thread_ts });
-      await sleep(1100);
-      continue;
-    }
-
-    if (isBinaryByExt(relPath)) {
-      await postBinaryFile({ relPath, absPath, thread_ts });
-    } else {
-      await postTextFile({ relPath, absPath, thread_ts });
-    }
+    await postFileThread({
+      relPath: t.path,
+      status: t.status,
+      summaryThreadTs: summaryPost.ts,
+    });
   }
 
-  console.log("Posted repo sync to Slack.");
+  console.log("Posted repo sync (summary + per-file threads).");
 }
 
 main().catch((err) => {
