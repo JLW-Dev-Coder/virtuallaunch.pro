@@ -1,365 +1,462 @@
-<!-- /about.html -->
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>About | Virtual Launch Pro</title>
-  <meta name="description" content="Get to know Jamie L. Williams, EA — the systems engineer behind Virtual Launch Pro." />
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Favicons -->
-  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-  <meta name="theme-color" content="#070a10" />
+    <title>About | Virtual Launch Pro</title>
+    <meta
+      name="description"
+      content="Learn why Virtual Launch Pro exists: to help service professionals launch faster with cleaner systems, stronger positioning, and a more credible online presence."
+    />
 
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script defer src="/site.js?v=20260127-1"></script>
+    <link rel="icon" href="/assets/favicon.svg" />
+    <link rel="stylesheet" href="/styles/site.css?v=1" />
 
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-
-  <link
-    rel="preload"
-    as="image"
-    href="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
-    type="image/svg+xml"
-  />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          boxShadow: {
-            soft: "0 10px 30px rgba(0,0,0,0.12)",
-            topbar: "0 18px 50px rgba(0,0,0,0.18)"
-          },
-          colors: {
-            brand: { 500: "#f97316", 400: "#fb923c" },
-            ink: { 950: "#070a10", 900: "#0b1220", 800: "#111a2e", 700: "#152237" }
-          },
-          maxWidth: {
-            "6-5xl": "77.5rem"
-          }
-        }
-      }
-    };
-  </script>
-
-  <link rel="stylesheet" href="/styles.css?v=20260127-1" />
-
-  <style>
-    html { scroll-behavior: smooth; }
-
-    .vlp-grid {
-      background-image:
-        linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
-      background-size: 56px 56px;
-      mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
-    }
-
-    .vlp-grid-pan { animation: gridPan 22s linear infinite; }
-
-    @keyframes gridPan {
-      from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(-56px,-56px,0); }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .vlp-grid-pan { animation: none; }
-    }
-  </style>
-</head>
-
-<body class="bg-ink-950 text-white antialiased">
-  <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
-  <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
-  <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
-
-  <!-- SHARED HEADER -->
-  <div data-include="header"></div>
-
-  <main id="top">
-    <!-- HERO -->
-    <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
-      <p class="mx-auto mb-5 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
-        About the builder behind Virtual Launch Pro
-      </p>
-
-      <h1 class="mx-auto max-w-4xl text-center text-4xl font-extrabold leading-tight md:text-6xl">
-        Get to Know Jamie L. Williams, EA
-      </h1>
-
-      <p class="mx-auto mt-6 max-w-3xl text-center text-base text-white/70 md:text-lg">
-        The systems engineer behind Virutal Launch Pro — built to give VAs, agency founders, and tax pros a cleaner, faster path to work.
-      </p>
-    </section>
-
-    <!-- HERO ROW -->
-    <section class="border-t border-white/10">
-      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
-        <div class="grid gap-10 md:grid-cols-12 md:items-start">
-          <div class="md:col-span-8">
-            <div class="space-y-6">
-              <!-- SECTION: INTRO (left of image) -->
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
-                <div class="border-l-4 border-white/80 pl-5 text-base leading-relaxed text-white/80 md:text-lg">
-                  <p>I’m Jamie L. Williams, EA, CB, OTC — a tax pro turned systems builder for virtual assistants, tax professionals, and remote workers.</p>
-                  <p class="mt-4">I spent years inside messy back offices, watching smart people lose time and money because their systems could not keep up. I built Virtual Launch Pro to solve that problem.</p>
-                  <p class="mt-4">Today, I help new and growing VAs, agency founders, and tax pros launch with clear offers, clean client portals, and simple workflows so they can earn without burning out.</p>
-                </div>
-              </div>
-
-              <!-- SECTION: ABOUT (moved here, still left of image) -->
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
-                <div class="mx-auto max-w-3xl">
-                  <p class="text-xs font-semibold tracking-widest text-brand-400">ABOUT</p>
-                  <h2 class="mt-3 text-2xl font-extrabold md:text-3xl">About Jamie</h2>
-                  <p class="mt-4 text-base text-white/70 md:text-lg">
-                    Built from real back-office experience — and designed to keep delivery calm, consistent, and visible.
-                  </p>
-
-                  <div class="mt-6 space-y-4 text-base leading-relaxed text-white/75 md:text-lg">
-                    <p>I started where many people start — managing the work, managing clients, and juggling systems that were never built for growth.</p>
-                    <p>Virtual Launch Pro is the system I wish existed years ago: a clean, launch-ready platform for VAs, tax pros, and remote workers who want to begin professionally instead of piecing things together.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <aside class="md:col-span-4">
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-soft">
-              <img
-                class="mx-auto block w-full rounded-2xl border border-white/10 bg-ink-950/30 object-cover"
-                src="https://20896460.fs1.hubspotusercontent-na1.net/hubfs/20896460/Development%20Materials/Miscellaneous/Pic_JLW_Left-removebg-preview.png"
-                alt="Jamie L. Williams"
-                loading="lazy"
-                decoding="async"
-              />
-
-              <p class="mt-4 text-sm font-semibold text-white/85">Jamie L. Williams, EA, CB, OTC</p>
-              <p class="mt-1 text-xs text-white/60">Systems engineer • Delivery-first ops</p>
-
-              <div class="mt-5 flex items-center justify-center gap-4">
-                <a class="inline-flex h-7 w-7 text-white/80 hover:text-white" href="https://www.facebook.com/taxdebtfreedom/" target="_blank" rel="noopener" aria-label="Facebook">
-                  <svg viewBox="0 0 24 24" class="h-full w-full fill-current"><path d="M22 12a10 10 0 1 0-11.5 9.9v-7h-2v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.1 1.8.1v2h-1c-1 0-1.3.6-1.3 1.2V12h2.3l-.4 3h-1.9v7A10 10 0 0 0 22 12"/></svg>
-                </a>
-
-                <a class="inline-flex h-7 w-7 text-white/80 hover:text-white" href="https://www.instagram.com/lentax.co/" target="_blank" rel="noopener" aria-label="Instagram">
-                  <svg viewBox="0 0 24 24" class="h-full w-full fill-current"><path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10zm-5 3.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.7A3 3 0 1 1 15 12a3 3 0 0 1-3 3zm4.8-8.9a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1z"/></svg>
-                </a>
-
-                <a class="inline-flex h-7 w-7 text-white/80 hover:text-white" href="https://www.linkedin.com/in/lenoreinc/" target="_blank" rel="noopener" aria-label="LinkedIn">
-                  <svg viewBox="0 0 24 24" class="h-full w-full fill-current"><path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.4 8h4.1v14H.4V8zm7.2 0h3.9v1.9h.1c.5-.9 1.8-1.9 3.7-1.9 3.9 0 4.6 2.6 4.6 6V22H15V14.1c0-1.9 0-4.3-2.6-4.3-2.6 0-3 2-3 4.1V22H7.6V8z"/></svg>
-                </a>
-
-                <a class="inline-flex h-7 w-7 text-white/80 hover:text-white" href="https://www.threads.com/@lentax.co" target="_blank" rel="noopener" aria-label="Threads">
-                  <svg viewBox="0 0 24 24" class="h-full w-full fill-current"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.3 13.9c-.8 1.2-2.2 2.1-4.3 2.1-2.7 0-4.9-1.6-4.9-4.6 0-2.7 1.9-4.6 4.5-4.6 2.4 0 4.1 1.3 4.4 3.5h-2c-.2-1-.9-1.7-2.4-1.7-1.5 0-2.5 1-2.5 2.7 0 1.8 1 2.7 2.6 2.7 1.3 0 2.1-.5 2.4-1.4H12v-1.7h4.6c.1.5.1 1 .1 1.5 0 .8-.1 1.5-.4 2.1z"/></svg>
-                </a>
-              </div>
-
-              <div class="mt-6">
-                <a class="inline-flex w-full justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html" rel="noopener">
-                  Explore the system
-                </a>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- HOW I WORK WITH YOU -->
-    <section class="border-t border-white/10">
-      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
-        <div class="mx-auto max-w-3xl text-center">
-          <p class="text-xs font-semibold tracking-widest text-brand-400">WORKING STYLE</p>
-          <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">How I Work With You</h2>
-          <p class="mt-5 text-base text-white/70 md:text-lg">
-            This is built for people who are ready to run their skill like a real business.
-          </p>
-        </div>
-
-        <div class="mx-auto mt-10 max-w-3xl rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
-          <p class="text-base text-white/75 md:text-lg">I support:</p>
-
-          <div class="mt-6 space-y-4">
-            <div class="flex gap-3">
-              <span aria-hidden="true" class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-              <div class="text-sm text-white/70 md:text-base">New and aspiring VA agency owners seeking done-for-you structure.</div>
-            </div>
-
-            <div class="flex gap-3">
-              <span aria-hidden="true" class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-              <div class="text-sm text-white/70 md:text-base">Remote workers who want a professional foundation for their services.</div>
-            </div>
-
-            <div class="flex gap-3">
-              <span aria-hidden="true" class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-              <div class="text-sm text-white/70 md:text-base">Tax professionals wanting clean workflows, portals, and automation.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RESULTS -->
-    <section class="border-t border-white/10">
-      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
-        <div class="mx-auto max-w-3xl text-center">
-          <p class="text-xs font-semibold tracking-widest text-brand-400">OUTCOMES</p>
-          <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Results You Can Expect</h2>
-          <p class="mt-5 text-base text-white/70 md:text-lg">
-            Clean systems reduce friction. Reduced friction increases delivery capacity.
-          </p>
-        </div>
-
-        <div class="mx-auto mt-10 max-w-3xl rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
-          <div class="space-y-4">
-            <div class="flex gap-3">
-              <span aria-hidden="true" class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-              <div class="text-sm text-white/70 md:text-base"><span class="font-extrabold text-white">Clean systems</span> — Intake, communication, tasks, and billing in one place.</div>
-            </div>
-
-            <div class="flex gap-3">
-              <span aria-hidden="true" class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-              <div class="text-sm text-white/70 md:text-base"><span class="font-extrabold text-white">Clarity</span> — A clean path from lead → client → delivery.</div>
-            </div>
-
-            <div class="flex gap-3">
-              <span aria-hidden="true" class="mt-2 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-              <div class="text-sm text-white/70 md:text-base"><span class="font-extrabold text-white">Confidence</span> — Clients see you as a professional from day one.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- QUOTE -->
-    <section class="border-t border-white/10">
-      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
-        <div class="mx-auto max-w-3xl rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
-          <div class="flex gap-4">
-            <div class="h-full w-1 rounded-full bg-brand-500"></div>
-            <div>
-              <p class="text-base italic leading-relaxed text-white/80 md:text-lg">
-                You bring your goals. I bring the map, the system, and the workflow that keeps the business moving.
-                We&apos;ll build cleaner systems so you have room to scale.
-              </p>
-              <p class="mt-4 text-sm font-extrabold text-white/85">— JLW</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA GRID -->
-    <section class="border-t border-white/10">
-      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
-        <div class="mx-auto max-w-3xl text-center">
-          <p class="text-xs font-semibold tracking-widest text-brand-400">NEXT STEP</p>
-          <h2 class="mt-3 text-3xl font-extrabold md:text-4xl">Choose Your Next Step</h2>
-          <p class="mt-5 text-base text-white/70 md:text-lg">
-            Select the option that matches where you are right now.
-          </p>
-        </div>
-
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <a
-            href="/lp/va-agency-setup/"
-            class="group rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-soft hover:border-white/20"
-            rel="noopener"
-          >
-            <div class="text-lg font-extrabold text-white">Book a Strategy Call</div>
-            <div class="mt-2 text-sm text-white/70">Clarify your goals and map the right setup.</div>
-          </a>
-
-          <a
-            href="/installs.html"
-            class="group rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-soft hover:border-white/20"
-          >
-            <div class="text-lg font-extrabold text-white">Explore Installs</div>
-            <div class="mt-2 text-sm text-white/70">Review the install types and outcomes.</div>
-          </a>
-
-          <a
-            href="/lp/va-starter-track/"
-            class="group rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-soft hover:border-white/20"
-            rel="noopener"
-          >
-            <div class="text-lg font-extrabold text-white">Start the VA Starter Track</div>
-            <div class="mt-2 text-sm text-white/70">Get structured onboarding for VAs and remote workers.</div>
-          </a>
-
-          <a
-            href="/blog.html"
-            class="group rounded-2xl border border-white/10 bg-white/5 p-6 text-center shadow-soft hover:border-white/20"
-            rel="noopener"
-          >
-            <div class="text-lg font-extrabold text-white">Visit the Blog Port</div>
-            <div class="mt-2 text-sm text-white/70">Read the Tide Report and system breakdowns.</div>
-          </a>
-        </div>
-
-        <div class="mt-12 flex justify-center">
-          <a
-            class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-            href="/signup.html"
-            rel="noopener"
-          >
-            Get a Free Account — No Credit Card Required
-          </a>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- SHARED FOOTER -->
-  <div data-include="footer"></div>
-
-  <!-- LENBOT (GLOBAL, OUTSIDE FOOTER) -->
-  <div data-include="lenbot"></div>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <script>
-    (function () {
-      function loadIncludes() {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
-        if (!nodes.length) return;
+      tailwind = window.tailwind || {};
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: {
+              soft: '0 10px 30px rgba(0,0,0,0.12)',
+              topbar: '0 18px 50px rgba(0,0,0,0.18)'
+            },
+            colors: {
+              brand: { 400: '#fb923c', 500: '#f97316' },
+              charcoal: '#334155',
+              gold: '#fbbf24',
+              ink: { 700: '#152237', 800: '#111a2e', 900: '#0b1220', 950: '#070a10' },
+              midnight: '#0f172a',
+              navy: '#111827',
+              warm: '#ea580c'
+            },
+            fontFamily: {
+              sans: ['Raleway', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial']
+            },
+            maxWidth: {
+              '6-5xl': '77.5rem'
+            }
+          }
+        }
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        nodes.forEach(function (node) {
-          var key = node.getAttribute("data-include");
-          var url = "/partials/" + key + ".html";
+    <script defer src="/_sdk/element_sdk.js"></script>
 
-          fetch(url, { cache: "no-store" })
-            .then(function (res) {
-              if (!res.ok) throw new Error("Include failed: " + url);
-              return res.text();
-            })
-            .then(function (html) {
-              node.innerHTML = html;
-            })
-            .catch(function (err) {
-              console.error(err);
-            });
+    <style>
+      * { font-family: 'Raleway', sans-serif; }
+      body { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
+      .vlp-grid {
+        background-image:
+          linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
+      }
+
+      .vlp-grid-pan {
+        animation: gridPan 22s linear infinite;
+      }
+
+      .orange-card {
+        background: linear-gradient(180deg, rgba(30,41,59,0.98) 0%, rgba(2,6,23,0.98) 100%);
+        border: 1px solid rgba(249,115,22,0.18);
+        box-shadow: 0 24px 60px rgba(2, 6, 23, 0.34);
+      }
+
+      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+      .floaty { animation: float 6s ease-in-out infinite; }
+      .floaty:nth-child(2) { animation-delay: -1s; }
+      .floaty:nth-child(3) { animation-delay: -2s; }
+      .floaty:nth-child(4) { animation-delay: -3s; }
+      .floaty:nth-child(5) { animation-delay: -4s; }
+      .floaty:nth-child(6) { animation-delay: -5s; }
+
+      @keyframes gridPan {
+        from { transform: translate3d(0,0,0); }
+        to { transform: translate3d(-56px,-56px,0); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .vlp-grid-pan,
+        .floaty {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="h-full bg-ink-950 text-charcoal overflow-auto font-sans text-white antialiased">
+    <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
+    <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
+    <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
+    <div id="app" class="w-full min-h-full">
+      <!-- /about.html -->
+      <!-- PARTIAL:header -->
+
+      <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
+        <p class="mx-auto mb-5 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
+          White-labeled onboarding &amp; delivery systems
+        </p>
+
+        <h1 id="hero-headline" class="mx-auto max-w-4xl text-center text-4xl font-extrabold leading-tight md:text-6xl">
+          Become a member. Sell service. Deliver calmly. Repeat.
+        </h1>
+
+        <div id="hero-subheadline" class="mx-auto mt-6 max-w-3xl text-center text-base text-white/70 md:text-lg">
+          A clean client journey, a controlled scope, and an internal system that does not break when you are trying to scale.
+        </div>
+
+        <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <a class="rounded-xl bg-brand-500 px-7 py-3.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/index.html#pricing">
+            View packages
+          </a>
+          <a class="rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10" href="/contact.html">
+            Contact us
+          </a>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-6-5xl px-4 pb-14 md:pb-20">
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-soft md:p-8">
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-white/10 bg-ink-950/60 p-6">
+              <div class="text-xs font-semibold tracking-widest text-brand-400">STARTER</div>
+              <div class="mt-3 text-xl font-extrabold text-white">Fast, clean setup</div>
+              <p class="mt-3 text-sm text-white/70">Great for solo operators who need intake, status, and payment links working without a maze of tools.</p>
+            </div>
+            <div class="rounded-2xl border border-brand-500/40 bg-brand-500/10 p-6">
+              <div class="text-xs font-semibold tracking-widest text-brand-400">PRO</div>
+              <div class="mt-3 text-xl font-extrabold text-white">Protected delivery flow</div>
+              <p class="mt-3 text-sm text-white/80">Best for active service businesses that need templates, uploads, routing, and lifecycle enforcement.</p>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-ink-950/60 p-6">
+              <div class="text-xs font-semibold tracking-widest text-brand-400">ADVANCED</div>
+              <div class="mt-3 text-xl font-extrabold text-white">Built for team volume</div>
+              <p class="mt-3 text-sm text-white/70">Adds deeper automation, multi-offer routing, and client-ready status surfaces for growing teams.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16 md:py-24 bg-slate-900">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="grid lg:grid-cols-2 gap-10 items-center">
+            <div class="orange-card rounded-3xl shadow-xl p-8">
+              <div class="flex flex-col items-center text-center">
+                <div class="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gradient-to-br from-orange-100 to-orange-200">
+                  <img
+                    src="https://20896460.fs1.hubspotusercontent-na1.net/hubfs/20896460/Development%20Materials/Miscellaneous/Pic_JLW_Left-removebg-preview.png"
+                    alt="Jamie L. Williams"
+                    class="w-full h-full object-cover object-top"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <p class="mt-4 text-lg font-bold text-white">Jamie L. Williams</p>
+                <p class="mt-1 text-sm text-slate-300">Founder • Systems builder</p>
+              </div>
+              <div class="mt-8 text-center">
+                <span class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold border border-orange-400/20">
+                  <svg class="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  Built by JLW for real-world service businesses
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <span class="inline-flex items-center gap-2 bg-orange-500/15 text-orange-200 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-orange-500/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                Our mission
+              </span>
+              <h2 class="text-3xl md:text-4xl font-bold text-white mb-5">Make it easier to launch with confidence, not patchwork</h2>
+              <p class="text-lg text-slate-200 leading-relaxed mb-8">Too many skilled professionals end up with patchwork marketing, tax resolution as the default offer, and onboarding that complicates the simple enjoyment of delivering quality work. Virtual Launch Pro fixes that with member promotion across the Tax Monitor public network, structured package services with clear end‑points, and a cleaner launch system so expertise turns into steady client flow while members focus on serving clients.</p>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="orange-card rounded-2xl p-5 shadow-md">
+                  <p class="text-3xl font-bold text-white">Credible</p>
+                  <p class="text-sm text-slate-300">Cleaner client-facing presence</p>
+                </div>
+                <div class="orange-card rounded-2xl p-5 shadow-md">
+                  <p class="text-3xl font-bold text-white">Structured</p>
+                  <p class="text-sm text-slate-300">Offers, pages, and systems aligned</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16 md:py-24 bg-gradient-to-b from-slate-900 to-slate-800">
+        <div class="max-w-6xl mx-auto px-4">
+          <div class="text-center mb-12">
+            <span class="inline-flex items-center gap-2 bg-orange-500/15 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-orange-500/20">
+              <svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4L7.5 17l.9-5L4.8 8.3l5-.7L12 2z" /></svg>
+              Why this exists
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">We built this around the launch problems people keep running into</h2>
+            <p class="text-lg text-slate-300 max-w-2xl mx-auto">Great work does not sell itself when the presentation is weak, the offer is messy, and the systems feel improvised. So naturally the rational answer was to build a platform around fixing that mess.</p>
+          </div>
+
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <a href="https://www.reddit.com/r/smallbusiness/search/?q=website%20not%20getting%20clients" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">1</div>
+                <div>
+                  <p class="font-semibold text-white">Website but no clients</p>
+                  <p class="text-xs text-slate-400">Common Reddit complaint</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Professionals build a site but it does not convert because the offer, positioning, and client path are unclear.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: clearer packages and stronger client-facing positioning</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/Entrepreneur/search/?q=how%20do%20i%20price%20my%20services" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">2</div>
+                <div>
+                  <p class="font-semibold text-white">Services are hard to explain</p>
+                  <p class="text-xs text-slate-400">Packaging issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Offers live in conversations instead of structured packages, which makes pricing and sales calls harder than they should be.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: structured services with clear end‑points</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/Entrepreneur/search/?q=how%20to%20get%20clients%20for%20service%20business" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">3</div>
+                <div>
+                  <p class="font-semibold text-white">Where do clients come from?</p>
+                  <p class="text-xs text-slate-400">Lead generation issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Many skilled professionals rely on referrals alone and struggle to create predictable client flow.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: promotion across the Tax Monitor public network</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/consulting/search/?q=client%20onboarding%20process" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">4</div>
+                <div>
+                  <p class="font-semibold text-white">Messy onboarding</p>
+                  <p class="text-xs text-slate-400">Delivery issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Intake forms, files, scheduling, and payments often live in separate tools, creating friction before work even starts.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: a cleaner onboarding and delivery system</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/freelance/search/?q=too%20many%20tools%20for%20clients" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">5</div>
+                <div>
+                  <p class="font-semibold text-white">Too many disconnected tools</p>
+                  <p class="text-xs text-slate-400">Systems issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Professionals often stitch together forms, calendars, CRMs, and payments instead of using one coherent system.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: a unified launch and service workflow</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/smallbusiness/search/?q=how%20to%20scale%20service%20business" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">6</div>
+                <div>
+                  <p class="font-semibold text-white">Growth without chaos</p>
+                  <p class="text-xs text-slate-400">Scaling issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Without structure, more clients simply means more confusion and more manual coordination.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: structured packages and repeatable delivery systems</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/Entrepreneur/search/?q=clients%20ghosting%20after%20proposal" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">7</div>
+                <div>
+                  <p class="font-semibold text-white">Clients disappear after proposals</p>
+                  <p class="text-xs text-slate-400">Trust and clarity issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Potential clients hesitate when the service path feels unclear or the presentation lacks credibility.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: clearer positioning and professional launch pages</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/freelance/search/?q=clients%20asking%20too%20many%20questions" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">8</div>
+                <div>
+                  <p class="font-semibold text-white">Endless client questions</p>
+                  <p class="text-xs text-slate-400">Communication overload</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Without clear steps and visible status, clients constantly ask what happens next.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: a structured client journey and visible delivery steps</p>
+              </div>
+            </a>
+
+            <a href="https://www.reddit.com/r/smallbusiness/search/?q=marketing%20takes%20too%20much%20time" target="_blank" class="floaty orange-card rounded-2xl p-6 hover:shadow-xl transition-shadow block">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold">9</div>
+                <div>
+                  <p class="font-semibold text-white">Marketing eats all your time</p>
+                  <p class="text-xs text-slate-400">Visibility issue</p>
+                </div>
+              </div>
+              <p class="text-slate-200 leading-relaxed mb-4">Professionals spend hours trying to attract clients instead of delivering the work they are good at.</p>
+              <div class="mt-4 pt-4 border-t border-slate-700">
+                <p class="text-sm font-semibold text-orange-300">Solved with: promotion across the Tax Monitor public network</p>
+              </div>
+            </a>
+
+          </div>
+
+          <div class="mt-10 text-center">
+            <div class="inline-flex items-center gap-3 bg-white/10 px-6 py-4 rounded-2xl border border-orange-400/20">
+              <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+              </div>
+              <p class="text-white font-semibold">We built this to make launching look more professional without making the process heavier.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-16 md:py-24 bg-gradient-to-br from-ink-950 via-ink-900 to-[#7c2d12] text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center hero-content">
+          <div class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur border border-orange-400/20">
+            <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Virtual Launch Pro • Calm, white-labeled delivery systems
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to install a calmer delivery system?</h2>
+          <p class="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">Use Virtual Launch Pro to create a cleaner client journey, tighter scope control, and a delivery flow that feels organized from the start.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/index.html#pricing" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-10 py-4 rounded-xl text-lg transition-all shadow-lg hover:shadow-xl">See Pricing</a>
+            <a href="/contact.html" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-10 py-4 rounded-xl text-lg border border-orange-400/20 transition-all">Contact Us</a>
+          </div>
+          <p class="text-white/60 text-sm mt-8">Install once • Deliver calmly • Repeat</p>
+        </div>
+      </section>
+
+      <!-- PARTIAL:footer -->
+    </div>
+
+    <!-- /contact.html -->
+    <!--
+      Contact page draft placeholder.
+      Next step: split this canvas into a dedicated contact.html file or replace this section with the full contact page.
+    -->
+
+    <script>
+      const defaultConfig = {
+        hero_headline: 'Become a member. Sell service. Deliver calmly. Repeat.',
+        hero_subheadline: 'A clean client journey, a controlled scope, and an internal system that does not break when you are trying to scale.',
+        background_color: '#020617',
+        accent_color: '#7c2d12',
+        action_color: '#f97316',
+        text_color: '#334155',
+        trust_color: '#fbbf24',
+        font_family: 'Raleway'
+      };
+
+      const applyConfig = (config) => {
+        const headline = document.getElementById('hero-headline');
+        const subheadline = document.getElementById('hero-subheadline');
+
+        if (headline) headline.textContent = config.hero_headline || defaultConfig.hero_headline;
+        if (subheadline) subheadline.textContent = config.hero_subheadline || defaultConfig.hero_subheadline;
+
+        const font = config.font_family || defaultConfig.font_family;
+        document.body.style.fontFamily = `${font}, sans-serif`;
+      };
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => applyConfig(config),
+          mapToCapabilities: (config) => ({
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (v) => {
+                config.font_family = v;
+                window.elementSdk.setConfig({ font_family: v });
+              }
+            },
+            fontSizeable: undefined,
+            recolorables: [
+              {
+                get: () => config.action_color || defaultConfig.action_color,
+                set: (v) => {
+                  config.action_color = v;
+                  window.elementSdk.setConfig({ action_color: v });
+                }
+              },
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (v) => {
+                  config.background_color = v;
+                  window.elementSdk.setConfig({ background_color: v });
+                }
+              },
+              {
+                get: () => config.accent_color || defaultConfig.accent_color,
+                set: (v) => {
+                  config.accent_color = v;
+                  window.elementSdk.setConfig({ accent_color: v });
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (v) => {
+                  config.text_color = v;
+                  window.elementSdk.setConfig({ text_color: v });
+                }
+              },
+              {
+                get: () => config.trust_color || defaultConfig.trust_color,
+                set: (v) => {
+                  config.trust_color = v;
+                  window.elementSdk.setConfig({ trust_color: v });
+                }
+              }
+            ]
+          }),
+          mapToEditPanelValues: (config) =>
+            new Map([
+              ['hero_headline', config.hero_headline || defaultConfig.hero_headline],
+              ['hero_subheadline', config.hero_subheadline || defaultConfig.hero_subheadline]
+            ])
         });
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadIncludes);
       } else {
-        loadIncludes();
+        applyConfig(defaultConfig);
       }
-    })();
-  </script>
-
-</body>
+    </script>
+  </body>
 </html>
