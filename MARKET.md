@@ -211,15 +211,15 @@ This creates two strategic effects:
 - Tax professionals gain operational tooling to diagnose issues quickly.
 - Taxpayers using transcript analysis tools can be referred to professionals within the Tax Monitor network.
 
-### Tax Tools Platform
+### Tax Tools Arcade
 
 Tax Tools provides interactive tools that attract taxpayers researching IRS problems and tax situations.
 
 These tools function as:
 
-- Educational resources
-- Diagnostic utilities
+- Educational resources that engage taxpayers
 - Engagement mechanisms that bring taxpayers into the ecosystem
+- Fun interactive games that encourage member profile clicks
 
 When taxpayers discover issues through these tools, they can be connected with professionals listed within the Virtual Launch Pro network.
 
