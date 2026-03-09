@@ -1,41 +1,18 @@
-<!-- /index.html (v2 — adds Starter / Pro / Advanced + Pricing section) -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
   <title>Virtual Launch Pro — Calm, White-Labeled Onboarding &amp; Delivery Systems</title>
   <meta name="description" content="White-labeled onboarding and delivery systems for calm, repeatable service. Install once. Sell service. Deliver calmly. Repeat." />
-
   <meta property="og:title" content="Virtual Launch Pro — Calm, White-Labeled Onboarding &amp; Delivery Systems" />
   <meta property="og:description" content="White-labeled onboarding and delivery systems for calm, repeatable service. Install once. Sell service. Deliver calmly. Repeat." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
-
-  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-  <meta name="theme-color" content="#070a10" />
-
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script defer src="/site.js?v=20260127-1"></script>
-
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-
-  <link
-    rel="preload"
-    as="image"
-    href="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
-    type="image/svg+xml"
-  />
-
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -46,8 +23,8 @@
             topbar: "0 18px 50px rgba(0,0,0,0.18)"
           },
           colors: {
-            brand: { 500: "#f97316", 400: "#fb923c" },
-            ink: { 950: "#070a10", 900: "#0b1220", 800: "#111a2e", 700: "#152237" }
+            brand: { 400: "#fb923c", 500: "#f97316" },
+            ink: { 700: "#152237", 800: "#111a2e", 900: "#0b1220", 950: "#070a10" }
           },
           maxWidth: {
             "6-5xl": "77.5rem"
@@ -56,11 +33,14 @@
       }
     };
   </script>
-
-  <link rel="stylesheet" href="/styles.css?v=20260127-1" />
-
   <style>
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+    }
 
     .container {
       margin-left: auto;
@@ -70,11 +50,21 @@
       padding-right: 1rem;
     }
 
-    .container--wide { max-width: 75rem; }
+    .container--wide {
+      max-width: 75rem;
+    }
 
-    .dash-preview-wrap { margin-top: 24px; }
-    .dash-preview-wrap > [data-preview] { width: 100%; }
-    .preview--hidden { display: none; }
+    .dash-preview-wrap {
+      margin-top: 24px;
+    }
+
+    .dash-preview-wrap > [data-preview] {
+      width: 100%;
+    }
+
+    .preview--hidden {
+      display: none;
+    }
 
     .tab--active {
       background: rgba(7,10,16,1);
@@ -90,28 +80,42 @@
       mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
     }
 
-    .vlp-grid-pan { animation: gridPan 22s linear infinite; }
+    .vlp-grid-pan {
+      animation: gridPan 22s linear infinite;
+    }
+
+    .artifact-tab--active {
+      background: rgba(7,10,16,1);
+      border-color: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,1);
+    }
 
     @keyframes gridPan {
-      from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(-56px,-56px,0); }
+      from {
+        transform: translate3d(0,0,0);
+      }
+      to {
+        transform: translate3d(-56px,-56px,0);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .vlp-grid-pan { animation: none; }
+      .vlp-grid-pan {
+        animation: none;
+      }
     }
   </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
-
 <body class="bg-ink-950 text-white antialiased">
   <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
 
-  <div data-include="header"></div>
+  <!-- PARTIAL:header -->
 
   <main id="top">
-    <!-- HERO -->
     <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
       <p class="mx-auto mb-5 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
         White-labeled onboarding &amp; delivery systems
@@ -121,46 +125,53 @@
         Install once. Sell service. Deliver calmly. Repeat.
       </h1>
 
-      <div class="mt-6 mx-auto max-w-3xl text-center text-base text-white/70 md:text-lg">
-        A clean client journey, a controlled scope, and an internal system that doesn’t break when you’re trying to scale.
+      <div class="mx-auto mt-6 max-w-3xl text-center text-base text-white/70 md:text-lg">
+        A clean client journey, a controlled scope, and an internal system that does not break when you are trying to scale.
       </div>
 
       <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-        <a
-          class="rounded-xl bg-brand-500 px-7 py-3.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-          href="#pricing"
-          rel="noopener"
-        >
+        <a class="rounded-xl bg-brand-500 px-7 py-3.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#pricing">
           View packages
         </a>
-        <a
-          class="rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10"
-          href="/installs.html"
-          rel="noopener"
-        >
-          Explore installs
+        <a class="rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10" href="#offers">
+          Explore offers
         </a>
       </div>
     </section>
 
-    <!-- DASHBOARD PREVIEWS (loaded from /partials/dashboard-preview.html) -->
-    <div data-include="dashboard-preview"></div>
+    <section class="mx-auto max-w-6-5xl px-4 pb-14 md:pb-20">
+      <div class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-soft md:p-8">
+        <div class="grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-ink-950/60 p-6">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">STARTER</div>
+            <div class="mt-3 text-xl font-extrabold">Fast, clean setup</div>
+            <p class="mt-3 text-sm text-white/70">Great for solo operators who need intake, status, and payment links working without a maze of tools.</p>
+          </div>
+          <div class="rounded-2xl border border-brand-500/40 bg-brand-500/10 p-6">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">PRO</div>
+            <div class="mt-3 text-xl font-extrabold">Protected delivery flow</div>
+            <p class="mt-3 text-sm text-white/80">Best for active service businesses that need templates, uploads, routing, and lifecycle enforcement.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-ink-950/60 p-6">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">ADVANCED</div>
+            <div class="mt-3 text-xl font-extrabold">Built for team volume</div>
+            <p class="mt-3 text-sm text-white/70">Adds deeper automation, multi-offer routing, and client-ready status surfaces for growing teams.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- WHY IT WORKS (expanded) -->
     <section class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-4xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">WHY VIRTUAL LAUNCH PRO WORKS</p>
           <h2 class="mt-3 text-4xl font-extrabold md:text-5xl">Predictable delivery, built for calm</h2>
-
           <p class="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">
-            Service delivery breaks down when clients can’t see what happens next, and your team has to answer the same questions repeatedly.
+            Service delivery breaks down when clients cannot see what happens next and your team has to answer the same questions repeatedly.
             Virtual Launch Pro fixes that with visible steps, defined deliverables, and automations that reduce noise.
           </p>
-
           <p class="mx-auto mt-4 max-w-3xl text-base text-white/70 md:text-lg">
-            Install once, then stack add-ons only when you’re ready.
-            You stay in control of scope, timelines, and client expectations—without rebuilding your process every season.
+            Install once, then stack add-ons only when you are ready. You stay in control of scope, timelines, and client expectations without rebuilding your process every season.
           </p>
         </div>
 
@@ -172,18 +183,10 @@
                 <path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
               </svg>
             </div>
-
             <h3 class="text-lg font-extrabold">Clear steps</h3>
-
             <ul class="mt-4 space-y-3 text-sm text-white/70">
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Clients follow a guided path instead of guessing what to do next.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Your team works from the same checklist, every time.</span>
-              </li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Clients follow a guided path instead of guessing what to do next.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Your team works from the same checklist every time.</span></li>
             </ul>
           </div>
 
@@ -194,18 +197,10 @@
                 <path d="M9 12l2 2 4-5" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
               </svg>
             </div>
-
             <h3 class="text-lg font-extrabold">Controlled scope</h3>
-
             <ul class="mt-4 space-y-3 text-sm text-white/70">
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Deliverables define what’s included, so “one more thing” doesn’t take over.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Work stays predictable even when client complexity spikes.</span>
-              </li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Deliverables define what is included, so one more thing does not take over.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Work stays predictable even when client complexity spikes.</span></li>
             </ul>
           </div>
 
@@ -216,18 +211,10 @@
                 <path d="M12 7v5l3 3" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
               </svg>
             </div>
-
             <h3 class="text-lg font-extrabold">Fewer follow-ups</h3>
-
             <ul class="mt-4 space-y-3 text-sm text-white/70">
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Automations send updates before clients feel the need to ask.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Your inbox stays clear for real issues—not status checks.</span>
-              </li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Automations send updates before clients feel the need to ask.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Your inbox stays clear for real issues, not status checks.</span></li>
             </ul>
           </div>
 
@@ -238,18 +225,10 @@
                 <path d="M5 4h14a2 2 0 0 1 2 2v12a4 4 0 0 1-4 4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
               </svg>
             </div>
-
             <h3 class="text-lg font-extrabold">Faster onboarding</h3>
-
             <ul class="mt-4 space-y-3 text-sm text-white/70">
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Intake, files, messages, and payments live in one calm workflow.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Clients get started quickly without manual back-and-forth.</span>
-              </li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Intake, files, messages, and payments live in one calm workflow.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Clients get started quickly without manual back-and-forth.</span></li>
             </ul>
           </div>
 
@@ -259,280 +238,229 @@
                 <path d="M12 2l3 7h7l-5.5 4 2.5 7-7-4.5L5 20l2.5-7L2 9h7l3-7z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
               </svg>
             </div>
-
             <h3 class="text-lg font-extrabold">White-labeled trust</h3>
-
             <ul class="mt-4 space-y-3 text-sm text-white/70">
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Your client sees your brand and your process—not a patchwork of tools.</span>
-              </li>
-              <li class="flex items-start gap-3">
-                <span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span>
-                <span>Consistency builds confidence and makes the service feel premium.</span>
-              </li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Your client sees your brand and your process, not a patchwork of tools.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Consistency builds confidence and makes the service feel premium.</span></li>
             </ul>
           </div>
         </div>
 
         <div class="mt-12 flex justify-center">
-          <a
-            class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-            href="#pricing"
-            rel="noopener"
-          >
+          <a class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#pricing">
             See packages &amp; pricing
           </a>
         </div>
       </div>
     </section>
 
-    <!-- PRICING (NEW) -->
+    <section id="offers" class="border-t border-white/10">
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">OFFERS</p>
+          <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Three installs built for different stages</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
+            The offers are intentionally simple. Start with the install that matches your delivery maturity, then add deeper automation when the workload justifies it. A shocking concept, apparently.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-3">
+          <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="text-sm font-semibold tracking-widest text-brand-400">STARTER</div>
+            <h3 class="mt-3 text-2xl font-extrabold">Clean links, calm handoff</h3>
+            <p class="mt-4 text-sm text-white/70">Built for solo operators or new service offers that need a credible intake-to-delivery path fast.</p>
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Form intake creates the work automatically.</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Payment link updates status without manual chasing.</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Read-only status view reduces basic check-in messages.</span></li>
+            </ul>
+          </article>
+
+          <article class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft">
+            <div class="text-sm font-semibold tracking-widest text-brand-400">PRO</div>
+            <h3 class="mt-3 text-2xl font-extrabold">Lifecycle protected delivery</h3>
+            <p class="mt-4 text-sm text-white/70">Best for teams or active client work where tasks, assets, and checkpoints need to land in the right place every time.</p>
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Task templates and checklists match your real phases.</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Upload links mark assets received and move work forward.</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Workflow rules lock the lifecycle so work does not drift.</span></li>
+            </ul>
+          </article>
+
+          <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="text-sm font-semibold tracking-widest text-brand-400">ADVANCED</div>
+            <h3 class="mt-3 text-2xl font-extrabold">Multi-offer system control</h3>
+            <p class="mt-4 text-sm text-white/70">For growing teams that need routing, role logic, templated documents, and client-facing status at scale.</p>
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Intake answers route work into the correct pipeline.</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Coordinator and assignee logic keeps ownership clear.</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Client-ready progress pages make delivery feel organized and premium.</span></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="pricing" class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
           <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the install that fits your stage</h2>
           <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-            Every package gives you a predictable client journey and an internal delivery system.
-            You keep control of scope, status, and next steps.
+            Every package gives you a predictable client journey and an internal delivery system. You keep control of scope, status, and next steps.
           </p>
         </div>
 
         <div class="mt-12 grid gap-6 lg:grid-cols-3">
-          <!-- Starter -->
           <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
             <div class="flex items-center justify-between">
               <div class="text-lg font-extrabold">Starter</div>
               <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for solo</span>
             </div>
-
             <div class="mt-4">
               <div class="text-4xl font-extrabold">$497</div>
               <div class="mt-2 text-sm text-white/70">One-time install</div>
             </div>
-
-            <p class="mt-5 text-sm text-white/70">
-              A clean intake-to-delivery path with links instead of logins. Quick to ship. Easy to operate.
-            </p>
-
+            <p class="mt-5 text-sm text-white/70">A clean intake-to-delivery path with links instead of logins. Quick to ship. Easy to operate.</p>
             <ul class="mt-6 space-y-3 text-sm text-white/75">
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp: lists, statuses, and core custom fields installed</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Intake link: form → creates task</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Payment link: checkout → updates status</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status link: read-only progress view</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp lists, statuses, and core custom fields installed</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Intake link creates task automatically</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Payment link updates status</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status link gives read-only progress view</span></li>
             </ul>
-
             <div class="mt-8 flex gap-3">
-              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html">Get started</a>
-              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="/installs.html">Details</a>
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Get started</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
             </div>
           </div>
 
-          <!-- Pro -->
           <div class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft">
             <div class="flex items-center justify-between">
               <div class="text-lg font-extrabold">Pro</div>
               <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
             </div>
-
             <div class="mt-4">
               <div class="text-4xl font-extrabold">$1,497</div>
               <div class="mt-2 text-sm text-white/70">One-time install</div>
             </div>
-
-            <p class="mt-5 text-sm text-white/70">
-              Full lifecycle execution with templates, routing, and the minimum automation kernel that protects revenue.
-            </p>
-
+            <p class="mt-5 text-sm text-white/70">Full lifecycle execution with templates, routing, and the minimum automation kernel that protects revenue.</p>
             <ul class="mt-6 space-y-3 text-sm text-white/75">
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp: task templates and checklists for your phases</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Delivery confirmation: status → confirmation sent</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Upload link: file request → marks assets received</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Workflow rules: lifecycle states locked and enforced</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp task templates and checklists for your phases</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Delivery confirmation sends after status change</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Upload link marks assets received</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Workflow rules enforce lifecycle states</span></li>
             </ul>
-
             <div class="mt-8 flex gap-3">
-              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html">Start Pro</a>
-              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="/installs.html">Details</a>
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Pro</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
             </div>
           </div>
 
-          <!-- Advanced -->
           <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
             <div class="flex items-center justify-between">
               <div class="text-lg font-extrabold">Advanced</div>
               <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For teams</span>
             </div>
-
             <div class="mt-4">
               <div class="text-4xl font-extrabold">$3,497</div>
               <div class="mt-2 text-sm text-white/70">One-time install</div>
             </div>
-
-            <p class="mt-5 text-sm text-white/70">
-              Adds multi-offer routing, templated documents, and deeper automation so delivery stays stable under volume.
-            </p>
-
+            <p class="mt-5 text-sm text-white/70">Adds multi-offer routing, templated documents, and deeper automation so delivery stays stable under volume.</p>
             <ul class="mt-6 space-y-3 text-sm text-white/75">
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Documents: agreement and report templates with PDF output</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Multi-offer routing: intake answers → correct pipeline</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Role mapping: coordinator and assignee logic</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status surface: client-ready progress page with labels</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Documents with agreement and report templates plus PDF output</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Multi-offer routing sends intake to the correct pipeline</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Role mapping for coordinator and assignee logic</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status surface gives client-ready progress labels</span></li>
             </ul>
-
             <div class="mt-8 flex gap-3">
-              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/signup.html">Start Advanced</a>
-              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="/installs.html">Details</a>
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Advanced</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
             </div>
           </div>
         </div>
 
-        <div class="mt-10 mx-auto max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white/70 shadow-soft">
+        <div class="mx-auto mt-10 max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white/70 shadow-soft">
           <div class="font-semibold text-white">What you keep</div>
-          <div class="mt-2">
-            Your ClickUp workspace stays yours. Your links stay yours. Your process stays yours.
-            If you stop, you still keep what was installed.
-          </div>
+          <div class="mt-2">Your ClickUp workspace stays yours. Your links stay yours. Your process stays yours. If you stop, you still keep what was installed.</div>
         </div>
       </div>
     </section>
 
-    <!-- BENEFITS (orange panel) -->
     <section class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
         <div class="rounded-2xl bg-brand-500 px-6 py-10 shadow-soft md:px-10 md:py-14">
           <div class="grid gap-10 text-center md:grid-cols-4 md:gap-8">
             <div>
               <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
-                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                  <path d="M12 8v4l3 3" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                </svg>
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M12 8v4l3 3" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
               </div>
               <div class="text-lg font-extrabold text-white">Save Time</div>
-              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">
-                Spend less time answering status questions and more time delivering real work.
-              </p>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Spend less time answering status questions and more time delivering real work.</p>
             </div>
-
             <div>
               <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
-                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                  <path d="M3 17l6-6 4 4 7-7" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M14 8h6v6" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                </svg>
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M14 8h6v6" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
               </div>
               <div class="text-lg font-extrabold text-white">Increase Revenue</div>
-              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">
-                Defined deliverables and follow-ups help convert more clients with less friction.
-              </p>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Defined deliverables and follow-ups help convert more clients with less friction.</p>
             </div>
-
             <div>
               <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
-                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                  <path d="M10 4h4v4h-4V4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M4 10h4v4H4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M16 10h4v4h-4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M10 16h4v4h-4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M12 8v2M8 12h2M14 12h2M12 14v2" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                </svg>
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M10 4h4v4h-4V4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M4 10h4v4H4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M16 10h4v4h-4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M10 16h4v4h-4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M12 8v2M8 12h2M14 12h2M12 14v2" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
               </div>
               <div class="text-lg font-extrabold text-white">Stay Organized</div>
-              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">
-                Keep intake, files, messages, and payments in one calm, structured system.
-              </p>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Keep intake, files, messages, and payments in one calm, structured system.</p>
             </div>
-
             <div>
               <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
-                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                  <path d="M12 3v18" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                  <path d="M16 7H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H8" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-                </svg>
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M12 3v18" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M16 7H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H8" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
               </div>
               <div class="text-lg font-extrabold text-white">Grow Affordably</div>
-              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">
-                Install once, then add modules only when your practice is ready to expand.
-              </p>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Install once, then add modules only when your business is ready to expand.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- WHO IT’S FOR -->
     <section class="border-t border-white/10 bg-ink-950">
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-3xl text-center">
-          <p class="text-xs font-semibold tracking-widest text-brand-400">
-            WHO VIRTUAL LAUNCH PRO IS FOR
-          </p>
-          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">
-            Built for calm, scalable service delivery
-          </h2>
-          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-            Virtual Launch Pro supports service businesses at every stage—whether you’re solo,
-            managing a small team, or preparing to scale without added chaos.
-          </p>
+          <p class="text-xs font-semibold tracking-widest text-brand-400">WHO VIRTUAL LAUNCH PRO IS FOR</p>
+          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">Built for calm, scalable service delivery</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">Virtual Launch Pro supports service businesses at every stage, whether you are solo, managing a small team, or preparing to scale without added chaos.</p>
         </div>
 
         <div class="mt-14 grid gap-8 md:grid-cols-3">
           <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="#FFA500" stroke-width="2"/>
-                <path d="M3 21a9 9 0 0 1 18 0" stroke="#FFA500" stroke-width="2"/>
-              </svg>
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="#FFA500" stroke-width="2"/><path d="M3 21a9 9 0 0 1 18 0" stroke="#FFA500" stroke-width="2"/></svg>
             </div>
             <h3 class="text-lg font-extrabold text-white">Solo service operators</h3>
-            <p class="mt-3 text-sm text-white/70">
-              Look established and professional without building or maintaining a complicated tech stack.
-            </p>
+            <p class="mt-3 text-sm text-white/70">Look established and professional without building or maintaining a complicated tech stack.</p>
           </div>
-
           <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="#FFA500" stroke-width="2"/>
-                <path d="M7 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#FFA500" stroke-width="2"/>
-                <path d="M17 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z" stroke="#FFA500" stroke-width="2"/>
-              </svg>
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="#FFA500" stroke-width="2"/><path d="M7 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#FFA500" stroke-width="2"/><path d="M17 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z" stroke="#FFA500" stroke-width="2"/></svg>
             </div>
             <h3 class="text-lg font-extrabold text-white">Small, growing teams</h3>
-            <p class="mt-3 text-sm text-white/70">
-              Stay organized, reduce internal friction, and deliver consistently as more people touch the work.
-            </p>
+            <p class="mt-3 text-sm text-white/70">Stay organized, reduce internal friction, and deliver consistently as more people touch the work.</p>
           </div>
-
           <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
-              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path d="M3 17l6-6 4 4 7-7" stroke="#FFA500" stroke-width="2"/>
-                <path d="M14 8h6v6" stroke="#FFA500" stroke-width="2"/>
-              </svg>
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7" stroke="#FFA500" stroke-width="2"/><path d="M14 8h6v6" stroke="#FFA500" stroke-width="2"/></svg>
             </div>
             <h3 class="text-lg font-extrabold text-white">Firms ready to scale</h3>
-            <p class="mt-3 text-sm text-white/70">
-              Increase capacity and revenue without adding manual steps, scope creep, or process breakdowns.
-            </p>
+            <p class="mt-3 text-sm text-white/70">Increase capacity and revenue without adding manual steps, scope creep, or process breakdowns.</p>
           </div>
         </div>
 
         <div class="mt-14 flex justify-center">
-          <a
-            class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400"
-            href="#pricing"
-            rel="noopener"
-          >
-            Choose a package
-          </a>
+          <a class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#pricing">Choose a package</a>
         </div>
       </div>
     </section>
 
-    <!-- ARTIFACTS -->
     <section id="artifacts" class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
         <div class="grid gap-6 lg:grid-cols-12">
@@ -540,47 +468,17 @@
             <div class="lg:sticky lg:top-28">
               <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 to-emerald-300/10 p-8 shadow-soft">
                 <p class="text-xs font-semibold tracking-widest text-white/85">ARTIFACTS</p>
-                <h2 class="mt-3 text-3xl font-extrabold">See what problems our setups solve</h2>
-                <p class="mt-4 text-sm text-white/75">
-                  Toggle between offers to preview the deliverables and “problem-solved” artifacts each setup ships with.
-                </p>
-
+                <h2 class="mt-3 text-3xl font-extrabold">See what problems our installs solve</h2>
+                <p class="mt-4 text-sm text-white/75">Toggle between packages to preview the deliverables and problem-solved artifacts each install supports.</p>
                 <div class="mt-6">
-                  <div class="inline-flex items-end gap-1 border-b border-white/15" role="tablist" aria-label="Artifacts offer tabs">
-                    <button
-                      type="button"
-                      class="artifact-tab artifact-tab--active inline-flex items-center rounded-xl border border-white/10 bg-ink-950 px-4 py-2 text-sm font-extrabold text-white shadow-soft"
-                      data-artifacts-tab="tax-monitor"
-                      aria-selected="true"
-                    >
-                      Tax Monitor Setup
-                    </button>
-                    <button
-                      type="button"
-                      class="artifact-tab inline-flex items-center rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-semibold text-white/75 hover:text-white"
-                      data-artifacts-tab="va-agency"
-                      aria-selected="false"
-                    >
-                      Virtual Assistant Agency Setup
-                    </button>
-                    <button
-                      type="button"
-                      class="artifact-tab inline-flex items-center rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-semibold text-white/75 hover:text-white"
-                      data-artifacts-tab="va-setup"
-                      aria-selected="false"
-                    >
-                      Virtual Assistant Setup
-                    </button>
+                  <div class="inline-flex flex-wrap items-end gap-1 border-b border-white/15" role="tablist" aria-label="Artifacts offer tabs">
+                    <button type="button" class="artifact-tab artifact-tab--active inline-flex items-center rounded-xl border border-white/10 bg-ink-950 px-4 py-2 text-sm font-extrabold text-white shadow-soft" data-artifacts-tab="starter" aria-selected="true">Starter</button>
+                    <button type="button" class="artifact-tab inline-flex items-center rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-semibold text-white/75 hover:text-white" data-artifacts-tab="pro" aria-selected="false">Pro</button>
+                    <button type="button" class="artifact-tab inline-flex items-center rounded-xl border border-transparent bg-transparent px-4 py-2 text-sm font-semibold text-white/75 hover:text-white" data-artifacts-tab="advanced" aria-selected="false">Advanced</button>
                   </div>
                 </div>
-
                 <div class="mt-6">
-                  <a
-                    class="inline-flex rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-ink-900 hover:bg-white/90"
-                    href="./installs.html"
-                  >
-                    View installs
-                  </a>
+                  <a class="inline-flex rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-ink-900 hover:bg-white/90" href="#pricing">View installs</a>
                 </div>
               </div>
             </div>
@@ -588,124 +486,30 @@
 
           <div class="lg:col-span-7">
             <div class="relative rounded-2xl border border-white/10 bg-white/5 p-4 shadow-soft md:p-5">
-              <div data-artifacts-panel="tax-monitor" role="tabpanel" aria-label="Tax Monitor artifacts">
+              <div data-artifacts-panel="starter" role="tabpanel" aria-label="Starter artifacts">
                 <div class="grid gap-4 md:grid-cols-2">
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Stop selling before you know.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: premature promises.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“The waiting period is owned.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: status pings.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Scope stays protected.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: scope creep.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“OIC hype gets replaced with data.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: risky defaults.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Capacity is visible before intake piles up.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: overload.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“White-label wins trust.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: tool confusion.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft md:col-span-2">
-                    <div class="text-sm font-extrabold">FY2024 OIC snapshot</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: strategy sold without odds.</p>
-                    <div class="mt-4 grid gap-3 sm:grid-cols-3">
-                      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                        <div class="text-xs font-semibold text-white/60">Proposed</div>
-                        <div class="mt-1 text-xl font-extrabold">33,591</div>
-                      </div>
-                      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                        <div class="text-xs font-semibold text-white/60">Accepted</div>
-                        <div class="mt-1 text-xl font-extrabold">7,199</div>
-                      </div>
-                      <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-                        <div class="text-xs font-semibold text-white/60">Rate</div>
-                        <div class="mt-1 text-xl font-extrabold">≈ 21%</div>
-                      </div>
-                    </div>
-                  </article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Intake stops living in your inbox.</div><p class="mt-3 text-sm text-white/70">Problem solved: manual lead capture.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Payment changes the status automatically.</div><p class="mt-3 text-sm text-white/70">Problem solved: unpaid work drift.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Clients see the next step clearly.</div><p class="mt-3 text-sm text-white/70">Problem solved: repetitive status questions.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">The workflow looks organized from day one.</div><p class="mt-3 text-sm text-white/70">Problem solved: patchwork first impression.</p></article>
                 </div>
               </div>
 
-              <div data-artifacts-panel="va-agency" class="hidden" role="tabpanel" aria-label="Virtual Assistant Agency artifacts">
+              <div data-artifacts-panel="pro" class="hidden" role="tabpanel" aria-label="Pro artifacts">
                 <div class="grid gap-4 md:grid-cols-2">
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Leads stop slipping.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: missed follow-up.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Clients see the process.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: trust friction.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Hiring stays consistent.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: messy intake.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Delivery stays on rails.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: scattered tasks.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Support feels organized.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: reactive help.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Scope stays profitable.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: overdelivery.</p>
-                  </article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Assets move into the workflow without babysitting.</div><p class="mt-3 text-sm text-white/70">Problem solved: scattered files.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">The lifecycle is enforced, not improvised.</div><p class="mt-3 text-sm text-white/70">Problem solved: stage skipping.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Templates stop the reinvention ritual.</div><p class="mt-3 text-sm text-white/70">Problem solved: inconsistent delivery.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Clients get confirmation at the right moment.</div><p class="mt-3 text-sm text-white/70">Problem solved: awkward handoff gaps.</p></article>
                 </div>
               </div>
 
-              <div data-artifacts-panel="va-setup" class="hidden" role="tabpanel" aria-label="Virtual Assistant artifacts">
+              <div data-artifacts-panel="advanced" class="hidden" role="tabpanel" aria-label="Advanced artifacts">
                 <div class="grid gap-4 md:grid-cols-2">
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Your profile reads premium.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: weak positioning.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Prospects know the next step.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: stalled leads.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Onboarding becomes repeatable.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: reinvention.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Clients pay cleanly.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: payment chaos.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Your work stays organized.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: scattered files.</p>
-                  </article>
-
-                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft">
-                    <div class="text-sm font-extrabold">“Delivery feels calm.”</div>
-                    <p class="mt-3 text-sm text-white/70">Problem solved: context switching.</p>
-                  </article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">One intake can feed multiple offers correctly.</div><p class="mt-3 text-sm text-white/70">Problem solved: wrong-pipeline routing.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Role logic keeps the right person accountable.</div><p class="mt-3 text-sm text-white/70">Problem solved: owner confusion.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Documents become templated outputs, not custom chaos.</div><p class="mt-3 text-sm text-white/70">Problem solved: repeated admin assembly.</p></article>
+                  <article class="rounded-2xl border border-white/10 bg-ink-950/40 p-6 shadow-soft"><div class="text-sm font-extrabold">Clients see branded progress without seeing the mess behind it.</div><p class="mt-3 text-sm text-white/70">Problem solved: tool confusion.</p></article>
                 </div>
               </div>
             </div>
@@ -714,238 +518,103 @@
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="border-t border-white/10">
+    <section id="faq" class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
         <div class="mx-auto max-w-3xl text-center">
           <h2 class="text-3xl font-extrabold md:text-4xl">Frequently asked questions</h2>
         </div>
-
         <div class="mx-auto mt-10 max-w-3xl space-y-4">
           <details class="group rounded-2xl border border-white/10 bg-white/5 p-5 shadow-soft">
-            <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">
-              Is it hard to set up?
-              <span class="ml-4 text-white/60 group-open:rotate-180 transition-transform">▾</span>
-            </summary>
-            <p class="mt-3 text-sm text-white/70">
-              No. Each install is scoped and configured cleanly. You get a structured handoff so you can operate immediately.
-            </p>
+            <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">Is it hard to set up?<span class="ml-4 text-white/60 transition-transform group-open:rotate-180">▾</span></summary>
+            <p class="mt-3 text-sm text-white/70">No. Each install is scoped and configured cleanly. You get a structured handoff so you can operate immediately.</p>
           </details>
-
           <details class="group rounded-2xl border border-white/10 bg-white/5 p-5 shadow-soft">
-            <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">
-              Do clients need to log in?
-              <span class="ml-4 text-white/60 group-open:rotate-180 transition-transform">▾</span>
-            </summary>
-            <p class="mt-3 text-sm text-white/70">
-              No. Clients use simple links for intake, payment, uploads, and status. Your delivery system stays internal and stable.
-            </p>
+            <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">Do clients need to log in?<span class="ml-4 text-white/60 transition-transform group-open:rotate-180">▾</span></summary>
+            <p class="mt-3 text-sm text-white/70">No. Clients use simple links for intake, payment, uploads, and status. Your delivery system stays internal and stable.</p>
           </details>
-
           <details class="group rounded-2xl border border-white/10 bg-white/5 p-5 shadow-soft">
-            <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">
-              What makes Virtual Launch Pro different?
-              <span class="ml-4 text-white/60 group-open:rotate-180 transition-transform">▾</span>
-            </summary>
-            <p class="mt-3 text-sm text-white/70">
-              Built around deliverables, workflow visibility, and scope protection—not “more tools.”
-            </p>
+            <summary class="flex cursor-pointer list-none items-center justify-between text-left font-semibold">What makes Virtual Launch Pro different?<span class="ml-4 text-white/60 transition-transform group-open:rotate-180">▾</span></summary>
+            <p class="mt-3 text-sm text-white/70">It is built around deliverables, workflow visibility, and scope protection instead of making you collect more disconnected tools like some kind of software hoarder.</p>
           </details>
         </div>
       </div>
     </section>
 
-    <!-- INSIGHTS -->
     <section class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">INSIGHTS</p>
           <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">How calm delivery is built</h2>
-          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-            Field-tested thinking on onboarding, delivery systems, and white-labeled operations.
-            This is how stable agencies actually run.
-          </p>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">Field-tested thinking on onboarding, delivery systems, and white-labeled operations. This is how stable service businesses actually run.</p>
         </div>
-
         <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
             <div class="text-xs font-semibold text-white/60">Agency Systems</div>
-            <h3 class="mt-3 text-lg font-extrabold">The 5 Client-Journey Categories (Model A)</h3>
-            <p class="mt-3 text-sm text-white/70">
-              The five categories that define your external experience — and turn scattered touchpoints into a frictionless, scalable path.
-            </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="text-xs text-white/60">November 24, 2025</div>
-              <a class="text-sm font-semibold text-brand-400 hover:text-brand-300" href="/blog/the-5-client-journey-categories-model-a/">
-                Read article →
-              </a>
-            </div>
+            <h3 class="mt-3 text-lg font-extrabold">The 5 Client-Journey Categories</h3>
+            <p class="mt-3 text-sm text-white/70">The categories that turn scattered touchpoints into a frictionless, scalable path.</p>
+            <div class="mt-4 flex items-center justify-between"><div class="text-xs text-white/60">Core framework</div><a class="text-sm font-semibold text-brand-400 hover:text-brand-300" href="#top">Read article →</a></div>
           </article>
-
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-            <div class="text-xs font-semibold text-white/60">Agency Systems</div>
-            <h3 class="mt-3 text-lg font-extrabold">Welcome Aboard: The Agency Builder’s Ship Sets Sail</h3>
-            <p class="mt-3 text-sm text-white/70">
-              Why every serious agency needs a predictable operating model before hiring, scaling, or selling outcomes.
-            </p>
-            <div class="mt-4 flex items-center justify-between">
-              <div class="text-xs text-white/60">November 23, 2025</div>
-              <a class="text-sm font-semibold text-brand-400 hover:text-brand-300" href="/blog/welcome-aboard-agency-builders-tide-report/">
-                Read article →
-              </a>
-            </div>
-          </article>
-
           <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
             <div class="text-xs font-semibold text-white/60">Client Onboarding</div>
-            <h3 class="mt-3 text-lg font-extrabold">Why onboarding fails before delivery even starts</h3>
-            <p class="mt-3 text-sm text-white/70">
-              Most delivery problems are actually onboarding problems. Here’s how clean intake protects scope and trust.
-            </p>
-            <div class="mt-4">
-              <a class="text-sm font-semibold text-brand-400 hover:text-brand-300" href="/blog/">
-                Coming soon →
-              </a>
-            </div>
+            <h3 class="mt-3 text-lg font-extrabold">Why onboarding fails before delivery starts</h3>
+            <p class="mt-3 text-sm text-white/70">Most delivery problems are actually onboarding problems. Clean intake protects scope and trust.</p>
+            <div class="mt-4 flex items-center justify-between"><div class="text-xs text-white/60">New insight</div><a class="text-sm font-semibold text-brand-400 hover:text-brand-300" href="#top">Read article →</a></div>
           </article>
-        </div>
-
-        <div class="mt-12 flex justify-center">
-          <a class="rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-sm font-extrabold text-white hover:bg-white/10" href="/blog/">
-            View all articles
-          </a>
+          <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
+            <div class="text-xs font-semibold text-white/60">Operations</div>
+            <h3 class="mt-3 text-lg font-extrabold">How to scale without rebuilding your process</h3>
+            <p class="mt-3 text-sm text-white/70">A practical way to layer templates, routing, and visibility without breaking delivery quality.</p>
+            <div class="mt-4 flex items-center justify-between"><div class="text-xs text-white/60">Coming soon</div><a class="text-sm font-semibold text-brand-400 hover:text-brand-300" href="#top">Read article →</a></div>
+          </article>
         </div>
       </div>
     </section>
   </main>
 
-  <div data-include="footer"></div>
-
-  <!-- load LenBot partial on index too -->
-  <div data-include="lenbot"></div>
+  <!-- PARTIAL:footer -->
 
   <script>
     (function () {
       function boot() {
         initArtifacts();
-        loadIncludes();
-      }
-
-      function executeScripts(root) {
-        var scripts = Array.prototype.slice.call(root.querySelectorAll("script"));
-        if (!scripts.length) return;
-
-        scripts.forEach(function (old) {
-          var s = document.createElement("script");
-
-          Array.prototype.slice.call(old.attributes).forEach(function (attr) {
-            s.setAttribute(attr.name, attr.value);
-          });
-
-          if (old.textContent && old.textContent.trim()) {
-            s.textContent = old.textContent;
-          }
-
-          old.parentNode.replaceChild(s, old);
-        });
       }
 
       function initArtifacts() {
-        var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-tab]"));
-        var panels = Array.prototype.slice.call(document.querySelectorAll("[data-artifacts-panel]"));
+        var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-artifacts-tab]'));
+        var panels = Array.prototype.slice.call(document.querySelectorAll('[data-artifacts-panel]'));
         if (!buttons.length || !panels.length) return;
 
         function setActive(key) {
           buttons.forEach(function (b) {
-            var on = b.getAttribute("data-artifacts-tab") === key;
-            b.setAttribute("aria-selected", on ? "true" : "false");
-            b.classList.toggle("artifact-tab--active", on);
-            b.classList.toggle("bg-ink-950", on);
-            b.classList.toggle("border-white/10", on);
-            b.classList.toggle("shadow-soft", on);
-            b.classList.toggle("text-white", on);
-
-            b.classList.toggle("bg-transparent", !on);
-            b.classList.toggle("border-transparent", !on);
-            b.classList.toggle("text-white/75", !on);
+            var on = b.getAttribute('data-artifacts-tab') === key;
+            b.setAttribute('aria-selected', on ? 'true' : 'false');
+            b.classList.toggle('artifact-tab--active', on);
+            b.classList.toggle('bg-ink-950', on);
+            b.classList.toggle('border-white/10', on);
+            b.classList.toggle('shadow-soft', on);
+            b.classList.toggle('text-white', on);
+            b.classList.toggle('bg-transparent', !on);
+            b.classList.toggle('border-transparent', !on);
+            b.classList.toggle('text-white/75', !on);
           });
 
           panels.forEach(function (p) {
-            var show = p.getAttribute("data-artifacts-panel") === key;
-            p.classList.toggle("hidden", !show);
+            var show = p.getAttribute('data-artifacts-panel') === key;
+            p.classList.toggle('hidden', !show);
           });
         }
 
         buttons.forEach(function (b) {
-          b.addEventListener("click", function () {
-            setActive(b.getAttribute("data-artifacts-tab"));
+          b.addEventListener('click', function () {
+            setActive(b.getAttribute('data-artifacts-tab'));
           });
         });
 
-        setActive("tax-monitor");
+        setActive('starter');
       }
 
-      function initDashboardPreview(root) {
-        var host = root || document.getElementById("dashboard-preview");
-        if (!host) return;
-
-        var panels = Array.prototype.slice.call(host.querySelectorAll("[data-preview]"));
-        var tabs = Array.prototype.slice.call(host.querySelectorAll("[data-tab]"));
-        if (!panels.length || !tabs.length) return;
-
-        function setActive(key) {
-          tabs.forEach(function (t) {
-            var isActive = t.getAttribute("data-tab") === key;
-            t.classList.toggle("tab--active", isActive);
-            t.setAttribute("aria-selected", isActive ? "true" : "false");
-          });
-
-          panels.forEach(function (p) {
-            var isActive = p.getAttribute("data-preview") === key;
-            p.classList.toggle("preview--hidden", !isActive);
-          });
-        }
-
-        tabs.forEach(function (t) {
-          t.addEventListener("click", function () {
-            setActive(t.getAttribute("data-tab"));
-          });
-        });
-
-        setActive((host.querySelector(".tab--active") || tabs[0]).getAttribute("data-tab"));
-      }
-
-      function loadIncludes() {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
-        if (!nodes.length) return;
-
-        nodes.forEach(function (node) {
-          var key = node.getAttribute("data-include");
-          var url = "/partials/" + key + ".html";
-
-          fetch(url, { cache: "no-store" })
-            .then(function (res) {
-              if (!res.ok) throw new Error("Include failed: " + url);
-              return res.text();
-            })
-            .then(function (html) {
-              node.innerHTML = html;
-
-              executeScripts(node);
-
-              if (key === "dashboard-preview") {
-                var section = node.querySelector("#dashboard-preview") || node;
-                initDashboardPreview(section);
-              }
-            })
-            .catch(function (err) {
-              console.error(err);
-            });
-        });
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot);
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
       } else {
         boot();
       }
