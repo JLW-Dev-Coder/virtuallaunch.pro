@@ -45,15 +45,15 @@ Virtual Launch Pro addresses these constraints by providing:
 
 # Target Market Segments
 
-Primary segments served by the platform include:
+Primary segments served by the platform include tax professionals authorized to represent taxpayers before the IRS and sign Form 2848 (Power of Attorney).
 
-- CPAs
+These professionals include:
+
+- Attorneys (tax attorneys)
+- Certified Public Accountants (CPAs)
 - Enrolled Agents (EAs)
-- Independent tax consultants
-- Small tax resolution firms
-- Virtual tax professionals
 
-Secondary segments include:
+Secondary segments include professionals who often work alongside representation-authorized practitioners:
 
 - Bookkeepers expanding into tax services
 - Fractional finance professionals
@@ -186,6 +186,52 @@ Secondary channels include:
 - Educational articles
 - Industry communities
 - Professional referrals
+
+---
+
+# Platform Ecosystem: Transcripts and Tax Tools
+
+Virtual Launch Pro is designed to work alongside two operational platforms in the broader ecosystem:
+
+- Tax Tools
+- Transcripts
+
+These platforms act as both **utility software for professionals** and **distribution channels for client acquisition**.
+
+### Transcripts Platform
+
+The Transcripts platform provides tools that allow professionals to:
+
+- Analyze IRS transcripts
+- Generate client reports
+- Identify issues earlier in the taxpayer lifecycle
+
+This creates two strategic effects:
+
+- Tax professionals gain operational tooling to diagnose issues quickly.
+- Taxpayers using transcript analysis tools can be referred to professionals within the Tax Monitor network.
+
+### Tax Tools Platform
+
+Tax Tools provides interactive tools that attract taxpayers researching IRS problems and tax situations.
+
+These tools function as:
+
+- Educational resources
+- Diagnostic utilities
+- Engagement mechanisms that bring taxpayers into the ecosystem
+
+When taxpayers discover issues through these tools, they can be connected with professionals listed within the Virtual Launch Pro network.
+
+### Ecosystem Effect
+
+Together, the three components form a self‑reinforcing system:
+
+- Tax Tools attract taxpayers searching for answers.
+- Transcripts provide diagnostic and monitoring capabilities.
+- Virtual Launch Pro provides the professional network that delivers the services.
+
+This structure turns software usage into professional distribution while simultaneously increasing the value of the tools themselves.
 
 ---
 
