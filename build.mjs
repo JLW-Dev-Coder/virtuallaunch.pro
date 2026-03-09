@@ -133,7 +133,9 @@ async function main() {
 
   // 3) Copy _redirects if present
   const redirects = path.join(ROOT, "_redirects");
-  if (await exists(redirects)) await copyFile(redirects, path.join(DIST, "_redirects"));
+  if (await exists(redirects)) {
+    await copyFile(redirects, path.join(DIST, "_redirects"));
+  }
 
   // 4) Inject partials into any HTML inside dist (includes /va/** pages)
   const distFiles = await walk(DIST);
@@ -141,8 +143,10 @@ async function main() {
 
   for (const f of distFiles) {
     if (!f.endsWith(".html")) continue;
+
     const html = await readText(f);
     const next = injectAll(html, partials);
+
     if (next !== html) {
       await writeText(f, next);
       injectedCount++;
@@ -155,10 +159,10 @@ async function main() {
     .join(" ");
 
   console.log("build_ok", {
+    copiedDirs: COPY_DIRS.slice().sort(),
     dist: "dist",
     injectedHtmlFiles: injectedCount,
     partials: present,
-    copiedDirs: COPY_DIRS.slice().sort(),
   });
 }
 
