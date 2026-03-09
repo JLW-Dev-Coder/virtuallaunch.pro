@@ -1,0 +1,411 @@
+<!-- booking.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Effortless Cal.com Booking for Tax Pro Profile Pages | Virtual Launch Pro</title>
+  <meta name="description" content="A membership feature for tax professionals: connect Cal.com, publish a clean booking block on your profile, and let clients schedule without the usual back-and-forth." />
+  <meta property="og:title" content="Managed Cal.com Booking for Tax Pros | Virtual Launch Pro" />
+  <meta property="og:description" content="A membership feature for tax professionals: connect Cal.com, publish a clean booking block on your profile, and let clients schedule without the usual back-and-forth." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: '0 10px 30px rgba(0,0,0,0.12)',
+            topbar: '0 18px 50px rgba(0,0,0,0.18)'
+          },
+          colors: {
+            brand: { 400: '#fb923c', 500: '#f97316' },
+            ink: { 700: '#152237', 800: '#111a2e', 900: '#0b1220', 950: '#070a10' }
+          },
+          maxWidth: {
+            '6-5xl': '77.5rem'
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 72rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .container--wide {
+      max-width: 75rem;
+    }
+
+    .vlp-grid {
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
+    }
+
+    .vlp-grid-pan {
+      animation: gridPan 22s linear infinite;
+    }
+
+    .feature-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+    }
+
+    @keyframes gridPan {
+      from {
+        transform: translate3d(0,0,0);
+      }
+      to {
+        transform: translate3d(-56px,-56px,0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .vlp-grid-pan {
+        animation: none;
+      }
+    }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+</head>
+<body class="bg-ink-950 text-white antialiased">
+  <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
+  <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
+  <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
+
+  <!-- PARTIAL:header -->
+
+  <main id="top">
+    <section class="mx-auto max-w-6-5xl px-4 pb-12 pt-16 md:pb-16 md:pt-24">
+      <p class="mx-auto mb-5 w-fit rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">
+        Membership feature for tax professionals
+      </p>
+
+      <h1 class="mx-auto max-w-5xl text-center text-4xl font-extrabold leading-tight md:text-6xl">
+        Effortless Cal.com booking for <span class="text-brand-400">Tax Pro</span> profile pages
+      </h1>
+
+      <div class="mx-auto mt-6 max-w-3xl text-center text-base text-white/70 md:text-lg">
+        Connect once, let clients book from your profile, and keep availability controlled inside Cal.com. No pasted embed code. No scheduler patchwork. No preventable nonsense.
+      </div>
+
+      <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a class="rounded-xl bg-brand-500 px-7 py-3.5 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#how-it-works">
+          See how it works
+        </a>
+        <a class="rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-extrabold text-white hover:bg-white/10" href="#feature-breakdown">
+          Explore feature details
+        </a>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6-5xl px-4 pb-14 md:pb-20">
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+          <div class="text-xs font-semibold tracking-widest text-brand-400">CONNECT</div>
+          <h2 class="mt-3 text-2xl font-extrabold">TM-managed OAuth</h2>
+          <p class="mt-4 text-sm text-white/70">Professionals connect Cal.com through your flow, so the booking system stays standardized across the network.</p>
+        </article>
+
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+          <div class="text-xs font-semibold tracking-widest text-brand-400">CONFIGURE</div>
+          <h2 class="mt-3 text-2xl font-extrabold">Hours stay in Cal.com</h2>
+          <p class="mt-4 text-sm text-white/70">Availability, calendar sync, and buffer time stay where they belong instead of bloating your app with a half-built scheduler.</p>
+        </article>
+
+        <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+          <div class="text-xs font-semibold tracking-widest text-brand-400">PUBLISH</div>
+          <h2 class="mt-3 text-2xl font-extrabold">Profile booking block</h2>
+          <p class="mt-4 text-sm text-white/70">Your selected consultation type renders on the Tax Pro profile automatically, with fallback booking support if needed.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="border-t border-white/10">
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-4xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">HOW IT WORKS</p>
+          <h2 class="mt-3 text-4xl font-extrabold md:text-5xl">A calm booking flow for membership clients</h2>
+          <p class="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">
+            This feature is built for membership businesses that want a cleaner client-facing booking experience for professionals without forcing each person to improvise their own scheduling setup.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-brand-500/30 bg-brand-500/10 text-lg font-extrabold text-brand-400">1</div>
+            <h3 class="text-lg font-extrabold">Connect Cal.com</h3>
+            <p class="mt-4 text-sm text-white/70">The professional connects once using your approved OAuth flow through Virtual Launch Pro.</p>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-brand-500/30 bg-brand-500/10 text-lg font-extrabold text-brand-400">2</div>
+            <h3 class="text-lg font-extrabold">Sync calendar</h3>
+            <p class="mt-4 text-sm text-white/70">They connect their calendar and manage availability, block time, and scheduling rules inside Cal.com.</p>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-brand-500/30 bg-brand-500/10 text-lg font-extrabold text-brand-400">3</div>
+            <h3 class="text-lg font-extrabold">Choose event type</h3>
+            <p class="mt-4 text-sm text-white/70">They pick the consultation type that should appear on the public profile page.</p>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-brand-500/30 bg-brand-500/10 text-lg font-extrabold text-brand-400">4</div>
+            <h3 class="text-lg font-extrabold">Publish automatically</h3>
+            <p class="mt-4 text-sm text-white/70">Virtual Launch Pro renders the booking section automatically with managed display settings and optional fallback link support.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="feature-breakdown" class="border-t border-white/10 bg-ink-950">
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">FEATURE BREAKDOWN</p>
+          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">What the feature includes</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
+            The point is not another scheduler glued onto the page. The point is a controlled booking experience you can add to a member-facing profile system.
+          </p>
+        </div>
+
+        <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-6">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M3 21a9 9 0 0 1 18 0" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Managed OAuth connection</h3>
+            <ul class="mt-4 space-y-3 text-sm text-white/70">
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Members connect through your approved flow instead of pasting embed code.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>The booking experience stays standardized across the network.</span></li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M12 7v5l3 3" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Cal.com free-tier friendly</h3>
+            <ul class="mt-4 space-y-3 text-sm text-white/70">
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>A strong fit for cost-sensitive service businesses.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Scheduling can start without piling on another paid tool.</span></li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path d="M12 22s8-3 8-10V6l-8-3-8 3v6c0 7 8 10 8 10z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M9 12l2 2 4-5" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Live availability control</h3>
+            <ul class="mt-4 space-y-3 text-sm text-white/70">
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Hours, buffers, and calendar sync stay in Cal.com where they belong.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Your app avoids becoming a fragile half-built scheduler.</span></li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-3">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path d="M7 7h10M7 12h10M7 17h6" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M5 4h14a2 2 0 0 1 2 2v12a4 4 0 0 1-4 4H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Selected event type publishing</h3>
+            <ul class="mt-4 space-y-3 text-sm text-white/70">
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>The professional chooses which consultation type appears on the profile page.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>The public booking block updates automatically once the selection is saved.</span></li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-3">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path d="M3 17l6-6 4 4 7-7" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M14 8h6v6" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Fallback and display controls</h3>
+            <ul class="mt-4 space-y-3 text-sm text-white/70">
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Store a fallback booking URL for flexibility when managed booking is unavailable.</span></li>
+              <li class="flex items-start gap-3"><span aria-hidden="true" class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Keep a custom title and description so the booking section feels intentional.</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-white/10">
+      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
+        <div class="rounded-2xl bg-brand-500 px-6 py-10 shadow-soft md:px-10 md:py-14">
+          <div class="grid gap-10 text-center md:grid-cols-4 md:gap-8">
+            <div>
+              <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M12 8v4l3 3" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+              </div>
+              <div class="text-lg font-extrabold text-white">Save time</div>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Let members manage their schedule once instead of coordinating appointments manually across inboxes.</p>
+            </div>
+            <div>
+              <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M14 8h6v6" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+              </div>
+              <div class="text-lg font-extrabold text-white">Look more premium</div>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">A consistent booking block makes your member profiles feel like part of a real system, not stitched-together tools.</p>
+            </div>
+            <div>
+              <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M10 4h4v4h-4V4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M4 10h4v4H4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M16 10h4v4h-4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M10 16h4v4h-4v-4z" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M12 8v2M8 12h2M14 12h2M12 14v2" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+              </div>
+              <div class="text-lg font-extrabold text-white">Stay organized</div>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Availability logic stays in Cal.com while profile display stays controlled in your system.</p>
+            </div>
+            <div>
+              <div class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/30 bg-white/10">
+                <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M12 3v18" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M16 7H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H8" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+              </div>
+              <div class="text-lg font-extrabold text-white">Grow affordably</div>
+              <p class="mx-auto mt-3 max-w-xs text-sm text-white/90">Cal.com’s free tier makes this a practical membership add-on instead of another fee pile your clients resent.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="membership-benefits" class="border-t border-white/10 bg-ink-950">
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">WHY THIS FITS MEMBERSHIP</p>
+          <h2 class="mt-4 text-4xl font-extrabold text-white md:text-5xl">A strong feature for service-based member profiles</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">This works especially well when your members need public-facing profiles, consultation booking, and a cleaner way to move prospects into a defined next step.</p>
+        </div>
+
+        <div class="mt-14 grid gap-8 md:grid-cols-3">
+          <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="#FFA500" stroke-width="2"/><path d="M3 21a9 9 0 0 1 18 0" stroke="#FFA500" stroke-width="2"/></svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Solo professionals</h3>
+            <p class="mt-3 text-sm text-white/70">Give individual members a clean booking surface without making them learn technical embed setup.</p>
+          </div>
+          <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="#FFA500" stroke-width="2"/><path d="M7 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#FFA500" stroke-width="2"/><path d="M17 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3z" stroke="#FFA500" stroke-width="2"/></svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Growing networks</h3>
+            <p class="mt-3 text-sm text-white/70">Keep the booking experience consistent even as more professionals join your program or directory.</p>
+          </div>
+          <div class="rounded-2xl border-2 border-[#FFA500] bg-[#FFA500]/10 p-8 shadow-soft backdrop-blur-sm">
+            <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-[#FFA500]/40 bg-[#FFA500]/15">
+              <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 7-7" stroke="#FFA500" stroke-width="2"/><path d="M14 8h6v6" stroke="#FFA500" stroke-width="2"/></svg>
+            </div>
+            <h3 class="text-lg font-extrabold text-white">Premium service offers</h3>
+            <p class="mt-3 text-sm text-white/70">Useful when the member profile needs to convert attention into a consultation quickly and cleanly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-white/10">
+      <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
+        <div class="grid gap-6 lg:grid-cols-2">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft md:p-8">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">DISPLAY SETTINGS</div>
+            <h3 class="mt-3 text-2xl font-extrabold">Stored in the profile record</h3>
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Booking section title</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Booking section description</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Fallback booking URL</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Managed booking mode or disabled state</span></li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft md:p-8">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">MANAGED BY CAL.COM</div>
+            <h3 class="mt-3 text-2xl font-extrabold">Scheduling logic stays out of your way</h3>
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Connected calendars</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Working hours and availability windows</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Buffer and block time rules</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Event-type scheduling behavior</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-t border-white/10">
+      <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="text-xs font-semibold tracking-widest text-brand-400">MEMBERSHIP FEATURE CTA</p>
+          <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Add cleaner booking to your member profile</h2>
+          <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">This feature complements white-labeled profile systems, service directories, and premium membership offers that need a more controlled path from profile view to booked consultation.</p>
+          <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a class="rounded-xl bg-brand-500 px-8 py-4 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Add this to your install</a>
+            <a class="rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-sm font-extrabold text-white hover:bg-white/10" href="#feature-breakdown">Review feature details</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PARTIAL:footer -->
+
+  <script>
+    (function () {
+      function boot() {
+        if (!window.gsap || !window.ScrollTrigger) return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.utils.toArray('section').forEach(function (section) {
+          gsap.from(section, {
+            opacity: 0,
+            y: 26,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 88%'
+            }
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+    })();
+  </script>
+</body>
+</html>
