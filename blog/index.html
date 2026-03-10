@@ -1,47 +1,54 @@
 <!-- /blog/index.html -->
 <!doctype html>
 <html lang="en">
- <head>
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Virtual Launch Pro Blog — Calm Delivery, Clean Onboarding & Scalable Service</title>
+  <title>Virtual Launch Pro Blog — Calm Delivery, Clean Onboarding &amp; Scalable Service</title>
   <meta name="description" content="Insights on calm delivery, white-labeled onboarding, service operations, and scalable client systems for Virtual Launch Pro.">
-  <meta property="og:title" content="Virtual Launch Pro Blog — Calm Delivery, Clean Onboarding & Scalable Service">
   <meta property="og:description" content="Read field-tested thinking on client onboarding, delivery systems, service operations, and white-labeled growth for Virtual Launch Pro.">
+  <meta property="og:title" content="Virtual Launch Pro Blog — Calm Delivery, Clean Onboarding &amp; Scalable Service">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           boxShadow: {
-            soft: "0 10px 30px rgba(0,0,0,0.12)",
-            topbar: "0 18px 50px rgba(0,0,0,0.18)"
+            soft: '0 10px 30px rgba(0,0,0,0.12)',
+            topbar: '0 18px 50px rgba(0,0,0,0.18)'
           },
           colors: {
-            brand: { 400: "#fb923c", 500: "#f97316" },
-            ink: { 700: "#152237", 800: "#111a2e", 900: "#0b1220", 950: "#070a10" }
+            brand: { 400: '#fb923c', 500: '#f97316' },
+            ink: { 700: '#152237', 800: '#111a2e', 900: '#0b1220', 950: '#070a10' }
           },
           maxWidth: {
-            "6-5xl": "77.5rem"
+            '6-5xl': '77.5rem'
           }
         }
       }
     };
   </script>
+
   <style>
     html {
-      scroll-behavior: smooth;
       height: 100%;
+      scroll-behavior: smooth;
     }
 
     body {
+      box-sizing: border-box;
       font-family: 'Raleway', sans-serif;
       height: 100%;
     }
@@ -53,16 +60,63 @@
       width: 100%;
     }
 
-    .container {
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 72rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
+    .blog-card {
+      backdrop-filter: blur(12px);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(26, 31, 53, 0.6) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+      overflow: hidden;
+      transition: all 0.3s ease;
     }
 
-    .container--wide {
-      max-width: 75rem;
+    .blog-card:hover {
+      border-color: rgba(249, 115, 22, 0.3);
+      box-shadow: 0 12px 48px rgba(249, 115, 22, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .category-badge {
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      border-radius: 999px;
+      color: #fb923c;
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+    }
+
+    .category-badge--active {
+      background: rgba(249, 115, 22, 0.25);
+      border-color: rgba(249, 115, 22, 0.5);
+    }
+
+    .newsletter-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      color: white;
+      font-size: 14px;
+      padding: 12px 16px;
+      transition: all 0.2s ease;
+    }
+
+    .newsletter-input:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(249, 115, 22, 0.4);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      outline: none;
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .render-notice {
+      background: rgba(255,255,255,0.04);
+      border: 1px dashed rgba(255,255,255,0.14);
+      border-radius: 1.25rem;
     }
 
     .vlp-grid {
@@ -77,82 +131,6 @@
       animation: gridPan 22s linear infinite;
     }
 
-    .blog-card {
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 1.5rem;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(26, 31, 53, 0.6) 100%);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
-      overflow: hidden;
-    }
-
-    .blog-card:hover {
-      border-color: rgba(249, 115, 22, 0.3);
-      box-shadow: 0 12px 48px rgba(249, 115, 22, 0.15);
-      transform: translateY(-4px);
-    }
-
-    .blog-card-featured {
-      border: 2px solid rgba(249, 115, 22, 0.5);
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
-    }
-
-    .blog-card-featured:hover {
-      border-color: rgba(249, 115, 22, 0.8);
-      box-shadow: 0 12px 48px rgba(249, 115, 22, 0.25);
-    }
-
-    .category-badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      background: rgba(249, 115, 22, 0.15);
-      border: 1px solid rgba(249, 115, 22, 0.3);
-      color: #fb923c;
-    }
-
-    .category-badge--active {
-      background: rgba(249, 115, 22, 0.25);
-      border-color: rgba(249, 115, 22, 0.5);
-    }
-
-    .author-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: white;
-      font-size: 18px;
-    }
-
-    .newsletter-input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 0.75rem;
-      padding: 12px 16px;
-      color: white;
-      font-size: 14px;
-      transition: all 0.2s ease;
-    }
-
-    .newsletter-input:focus {
-      outline: none;
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(249, 115, 22, 0.4);
-      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
-    }
-
-    .newsletter-input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-
     @keyframes gridPan {
       from {
         transform: translate3d(0,0,0);
@@ -163,112 +141,285 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .vlp-grid-pan {
-        animation: none;
-      }
       .blog-card:hover {
         transform: none;
       }
-    }
 
-    @media (max-width: 768px) {
-      .blog-card-featured {
-        grid-column: span 1;
+      .vlp-grid-pan {
+        animation: none;
       }
     }
   </style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
-  <style>body { box-sizing: border-box; }</style>
- </head>
- <body class="bg-ink-950 text-white antialiased">
+</head>
+<body class="bg-ink-950 text-white antialiased">
   <div id="app" class="flex flex-col">
-   <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
-   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
-   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div><!-- PARTIAL:header --><!-- Main Content -->
-   <main id="top" class="flex-1"><!-- Hero Section -->
-    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-24">
-     <div class="mx-auto max-w-3xl text-center">
-      <p class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">Calm delivery, white-labeled operations, and scalable client systems</p>
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">How stable service businesses install calm</h1>
-      <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto">Practical thinking on onboarding, delivery flow, client visibility, and growth systems that do not break the minute volume shows up.</p>
-     </div>
-    </section><!-- Featured Article -->
-    <section class="mx-auto max-w-6-5xl px-4 pb-12">
-      <!-- BLOG:featured -->
-      <div id="blog-featured-runtime"></div>
-    </section>
+    <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
+    <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
+    <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
 
-    <!-- Articles Grid -->
-    <section class="mx-auto max-w-6-5xl px-4 py-12 border-t border-white/10">
-      <div id="blog-list-runtime" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <!-- BLOG:list -->
-      </div>
-    </section>
+    <!-- PARTIAL:header -->
 
-    <!-- Newsletter Section -->
-    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
-     <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-white/8 to-white/5 p-8 md:p-12 text-center">
-      <div class="mx-auto max-w-2xl">
-       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Stay updated on calm delivery systems</h2>
-       <p class="text-white/70 mb-8">New articles on onboarding, white-labeled service delivery, scope control, and client systems sent to your inbox monthly.</p>
-       <form class="flex flex-col sm:flex-row gap-3"><input type="email" placeholder="your@email.com" class="newsletter-input flex-1" required> <button type="submit" class="rounded-lg bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400 transition whitespace-nowrap"> Subscribe </button>
-       </form>
-       <p class="text-xs text-white/50 mt-3">We respect your inbox. Unsubscribe anytime.</p>
-      </div>
-     </div>
-    </section><!-- Related Reading -->
-    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
-     <h2 class="text-2xl md:text-3xl font-extrabold mb-8">Explore more topics</h2>
-     <div class="grid gap-6 md:grid-cols-4">
-      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
-       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="map" class="h-6 w-6 text-brand-400"></i>
-       </div>
-       <h3 class="font-extrabold mb-2">Frameworks</h3>
-       <p class="text-sm text-white/70">Core client-journey architecture</p>
-      </div>
-      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
-       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="clipboard-list" class="h-6 w-6 text-brand-400"></i>
-       </div>
-       <h3 class="font-extrabold mb-2">Onboarding</h3>
-       <p class="text-sm text-white/70">Intake, trust, and scope control</p>
-      </div>
-      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
-       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="settings" class="h-6 w-6 text-brand-400"></i>
-       </div>
-       <h3 class="font-extrabold mb-2">Operations</h3>
-       <p class="text-sm text-white/70">Workflows, ownership, and repeatability</p>
-      </div>
-      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
-       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="panel-top" class="h-6 w-6 text-brand-400"></i>
-       </div>
-       <h3 class="font-extrabold mb-2">Portals</h3>
-       <p class="text-sm text-white/70">Client visibility without internal mess</p>
-      </div>
-     </div>
-    </section><!-- CTA -->
-    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
-     <div class="rounded-2xl bg-brand-500 px-8 py-12 text-center md:py-16 md:px-12">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mb-4">Ready to install calm into your delivery?</h2>
-      <p class="text-ink-900/80 mb-8 max-w-2xl mx-auto">Explore the installs that give you cleaner onboarding, protected scope, and a client journey that still feels controlled when volume climbs.</p><a href="/index.html#pricing" class="inline-block rounded-xl bg-ink-900 px-8 py-3 text-sm font-extrabold text-brand-500 hover:bg-ink-800 transition"> View packages </a>
-     </div>
-    </section>
-   </main><!-- PARTIAL:footer -->
+    <main id="top" class="flex-1">
+      <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-24">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">Calm delivery, white-labeled operations, and scalable client systems</p>
+          <h1 class="text-4xl font-extrabold leading-tight md:text-5xl">How stable service businesses install calm</h1>
+          <p class="mx-auto mt-6 max-w-2xl text-lg text-white/70">Practical thinking on onboarding, delivery flow, client visibility, and growth systems that do not break the minute volume shows up.</p>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-6-5xl px-4 pb-12">
+        <!-- BLOG:featured -->
+        <div id="blog-featured-runtime"></div>
+      </section>
+
+      <section class="mx-auto max-w-6-5xl border-t border-white/10 px-4 py-12">
+        <div id="blog-list-runtime" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <!-- BLOG:list -->
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-6-5xl border-t border-white/10 px-4 py-16 md:py-20">
+        <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-white/8 to-white/5 p-8 text-center md:p-12">
+          <div class="mx-auto max-w-2xl">
+            <h2 class="mb-4 text-3xl font-extrabold md:text-4xl">Stay updated on calm delivery systems</h2>
+            <p class="mb-8 text-white/70">New articles on onboarding, white-labeled service delivery, scope control, and client systems sent to your inbox monthly.</p>
+            <form class="flex flex-col gap-3 sm:flex-row">
+              <input type="email" placeholder="your@email.com" class="newsletter-input flex-1" required>
+              <button type="submit" class="whitespace-nowrap rounded-lg bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 transition hover:bg-brand-400">Subscribe</button>
+            </form>
+            <p class="mt-3 text-xs text-white/50">We respect your inbox. Unsubscribe anytime.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-6-5xl border-t border-white/10 px-4 py-16 md:py-20">
+        <h2 class="mb-8 text-2xl font-extrabold md:text-3xl">Explore more topics</h2>
+        <div class="grid gap-6 md:grid-cols-4">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center transition hover:border-brand-500/40">
+            <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="map" class="h-6 w-6 text-brand-400"></i></div>
+            <h3 class="mb-2 font-extrabold">Frameworks</h3>
+            <p class="text-sm text-white/70">Core client-journey architecture</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center transition hover:border-brand-500/40">
+            <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="clipboard-list" class="h-6 w-6 text-brand-400"></i></div>
+            <h3 class="mb-2 font-extrabold">Onboarding</h3>
+            <p class="text-sm text-white/70">Intake, trust, and scope control</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center transition hover:border-brand-500/40">
+            <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="settings" class="h-6 w-6 text-brand-400"></i></div>
+            <h3 class="mb-2 font-extrabold">Operations</h3>
+            <p class="text-sm text-white/70">Workflows, ownership, and repeatability</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center transition hover:border-brand-500/40">
+            <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="panel-top" class="h-6 w-6 text-brand-400"></i></div>
+            <h3 class="mb-2 font-extrabold">Portals</h3>
+            <p class="text-sm text-white/70">Client visibility without internal mess</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+        <div class="rounded-2xl bg-brand-500 px-8 py-12 text-center md:px-12 md:py-16">
+          <h2 class="mb-4 text-3xl font-extrabold text-ink-900 md:text-4xl">Ready to install calm into your delivery?</h2>
+          <p class="mx-auto mb-8 max-w-2xl text-ink-900/80">Explore the installs that give you cleaner onboarding, protected scope, and a client journey that still feels controlled when volume climbs.</p>
+          <a href="/index.html#pricing" class="inline-block rounded-xl bg-ink-900 px-8 py-3 text-sm font-extrabold text-brand-500 transition hover:bg-ink-800">View packages</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- PARTIAL:footer -->
   </div>
+
+  <script id="blog-posts-fallback" type="application/json">[]</script>
+
   <script>
     (function () {
-      function initFilterButtons() {
-        const filterButtons = document.querySelectorAll('[data-filter]');
-        const articleCards = document.querySelectorAll('[data-category]');
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll('&', '&amp;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;');
+      }
 
-        filterButtons.forEach(button => {
+      function normalizePosts(value) {
+        if (!Array.isArray(value)) return [];
+        return value.filter(function (post) {
+          return post && typeof post === 'object' && (post.title || post.url);
+        });
+      }
+
+      function buildCard(post) {
+        return ''
+          + '<article class="blog-card flex flex-col p-6" data-category="' + escapeHtml(post.category || '') + '">'
+          + '<div class="mb-4"><span class="category-badge">' + escapeHtml(post.category || 'Article') + '</span></div>'
+          + '<h3 class="mt-0 mb-3 flex-grow text-lg font-extrabold">'
+          + '<a class="transition hover:text-brand-300" href="' + escapeHtml(post.url || '#') + '">' + escapeHtml(post.title || 'Untitled article') + '</a>'
+          + '</h3>'
+          + '<p class="mb-4 text-sm text-white/70">' + escapeHtml(post.description || '') + '</p>'
+          + '<div class="flex items-center justify-between gap-3 border-t border-white/10 pt-4">'
+          + '<div class="min-w-0 flex items-center gap-2">'
+          + '<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-[10px] font-bold">' + escapeHtml((post.author || '?').slice(0, 2).toUpperCase()) + '</div>'
+          + '<div class="min-w-0">'
+          + '<div class="truncate text-xs font-semibold">' + escapeHtml(post.author || '') + '</div>'
+          + '<div class="text-xs text-white/50">' + escapeHtml((post.readTime || '').replace(/\s+read$/i, '')) + '</div>'
+          + '</div>'
+          + '</div>'
+          + '<a class="shrink-0 text-brand-400 hover:text-brand-300" href="' + escapeHtml(post.url || '#') + '">Read article →</a>'
+          + '</div>'
+          + '</article>';
+      }
+
+      function buildFeatured(post) {
+        var category = escapeHtml(post.category || 'Featured');
+        var title = escapeHtml(post.title || 'Latest article');
+        var description = escapeHtml(post.description || '');
+        var readTime = escapeHtml(post.readTime || '');
+        var date = escapeHtml(post.date || '');
+        var author = escapeHtml(post.author || '');
+        var authorRole = escapeHtml(post.authorRole || '');
+        var url = escapeHtml(post.url || '#');
+
+        var svg = ''
+          + '<div class="relative mx-auto w-full max-w-[360px]">'
+          + '<div class="absolute inset-0 rounded-[2rem] bg-orange-500/10 blur-3xl"></div>'
+          + '<svg viewBox="0 0 420 320" class="relative h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+          + '<defs>'
+          + '<linearGradient id="blogGlow" x1="56" y1="34" x2="344" y2="286" gradientUnits="userSpaceOnUse">'
+          + '<stop stop-color="#f59e0b"></stop>'
+          + '<stop offset="1" stop-color="#fb923c"></stop>'
+          + '</linearGradient>'
+          + '</defs>'
+          + '<rect x="58" y="42" width="304" height="224" rx="26" fill="#081120" stroke="rgba(255,255,255,0.12)"></rect>'
+          + '<rect x="82" y="70" width="180" height="16" rx="8" fill="url(#blogGlow)" opacity="0.95"></rect>'
+          + '<rect x="82" y="100" width="242" height="10" rx="5" fill="rgba(255,255,255,0.16)"></rect>'
+          + '<rect x="82" y="118" width="210" height="10" rx="5" fill="rgba(255,255,255,0.1)"></rect>'
+          + '<rect x="82" y="150" width="96" height="70" rx="16" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.35)"></rect>'
+          + '<path d="M105 198L125 174L142 188L161 164" stroke="#f59e0b" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"></path>'
+          + '<rect x="194" y="150" width="130" height="12" rx="6" fill="rgba(255,255,255,0.18)"></rect>'
+          + '<rect x="194" y="172" width="112" height="12" rx="6" fill="rgba(255,255,255,0.12)"></rect>'
+          + '<rect x="194" y="194" width="88" height="12" rx="6" fill="rgba(255,255,255,0.09)"></rect>'
+          + '<circle cx="332" cy="88" r="26" fill="rgba(245,158,11,0.16)" stroke="rgba(245,158,11,0.45)"></circle>'
+          + '<path d="M320 88H344M332 76V100" stroke="#f59e0b" stroke-linecap="round" stroke-width="5"></path>'
+          + '<rect x="124" y="246" width="170" height="10" rx="5" fill="rgba(255,255,255,0.08)"></rect>'
+          + '<path d="M38 84C38 60.804 56.804 42 80 42" stroke="rgba(245,158,11,0.55)" stroke-linecap="round" stroke-width="4"></path>'
+          + '<path d="M382 238C382 261.196 363.196 280 340 280" stroke="rgba(245,158,11,0.4)" stroke-linecap="round" stroke-width="4"></path>'
+          + '</svg>'
+          + '</div>';
+
+        return ''
+          + '<article class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">'
+          + '<div class="grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_360px] lg:items-center">'
+          + '<div>'
+          + '<div class="mb-4 flex flex-wrap items-center gap-3">'
+          + '<span class="category-badge category-badge--active">' + category + '</span>'
+          + '<span class="text-xs text-white/60">•</span>'
+          + '<span class="text-xs text-white/60">' + readTime + '</span>'
+          + '<span class="text-xs text-white/60">•</span>'
+          + '<span class="text-xs text-white/60">' + date + '</span>'
+          + '</div>'
+          + '<h2 class="text-3xl font-extrabold md:text-4xl">' + title + '</h2>'
+          + '<p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">' + description + '</p>'
+          + '<div class="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">'
+          + '<a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="' + url + '">Read article</a>'
+          + '<span class="text-sm text-white/60">' + author + (authorRole ? ' · ' + authorRole : '') + '</span>'
+          + '</div>'
+          + '</div>'
+          + '<div class="lg:justify-self-end">' + svg + '</div>'
+          + '</div>'
+          + '</article>';
+      }
+
+      function buildRenderNotice(message) {
+        return ''
+          + '<div class="col-span-full flex justify-center">'
+          + '<div class="render-notice max-w-md p-6 text-center text-sm text-white/65">'
+          + escapeHtml(message)
+          + '</div>'
+          + '</div>';
+      }
+
+      function getInlineFallbackPosts() {
+        var script = document.getElementById('blog-posts-fallback');
+        if (!script) return [];
+        try {
+          return normalizePosts(JSON.parse(script.textContent || '[]'));
+        } catch (error) {
+          console.warn('blog_inline_fallback_parse_failed', error);
+          return [];
+        }
+      }
+
+      function getGlobalFallbackPosts() {
+        return normalizePosts(window.__BLOG_POSTS__);
+      }
+
+      function hasInjectedMarkup(featuredHost, listHost) {
+        var featuredHasArticle = featuredHost.querySelector('article');
+        var listHasArticle = listHost.querySelector('article');
+        return Boolean(featuredHasArticle || listHasArticle);
+      }
+
+      async function fetchPosts() {
+        var candidates = [
+          '/blog/posts.json',
+          './posts.json',
+          '/posts.json'
+        ];
+
+        for (var i = 0; i < candidates.length; i += 1) {
+          var path = candidates[i];
+          try {
+            var response = await fetch(path, {
+              cache: 'no-store',
+              headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) continue;
+
+            var data = await response.json();
+            var posts = normalizePosts(data);
+            if (posts.length) return posts;
+          } catch (error) {
+            console.warn('blog_fetch_candidate_failed', path, error);
+          }
+        }
+
+        return [];
+      }
+
+      function renderPosts(posts) {
+        var featuredHost = document.getElementById('blog-featured-runtime');
+        var listHost = document.getElementById('blog-list-runtime');
+        if (!featuredHost || !listHost) return;
+
+        if (!posts.length) {
+          featuredHost.innerHTML = '';
+          listHost.innerHTML = buildRenderNotice('No blog articles are available yet. Please check back for future publications.');
+          return;
+        }
+
+        featuredHost.innerHTML = buildFeatured(posts[0]);
+        listHost.innerHTML = posts.map(buildCard).join('');
+      }
+
+      function initFilterButtons() {
+        var filterButtons = document.querySelectorAll('[data-filter]');
+        var articleCards = document.querySelectorAll('[data-category]');
+
+        filterButtons.forEach(function (button) {
           button.addEventListener('click', function () {
-            const filter = this.getAttribute('data-filter');
-            
-            filterButtons.forEach(btn => btn.classList.remove('category-badge--active'));
+            var filter = this.getAttribute('data-filter');
+
+            filterButtons.forEach(function (btn) {
+              btn.classList.remove('category-badge--active');
+            });
+
             this.classList.add('category-badge--active');
 
-            articleCards.forEach(card => {
+            articleCards.forEach(function (card) {
               if (filter === 'all' || card.getAttribute('data-category') === filter) {
                 card.style.display = '';
               } else {
@@ -279,7 +430,42 @@
         });
       }
 
-      function boot() {
+      function runRenderTests() {
+        var samplePosts = [{
+          author: 'Jane Lane',
+          authorRole: 'Operations Lead',
+          category: 'Onboarding',
+          date: 'Mar 10, 2026',
+          description: 'How to keep intake from becoming a swamp.',
+          readTime: '6 min read',
+          title: 'Calmer client intake',
+          url: '/blog/calmer-client-intake.html'
+        }];
+
+        console.assert(escapeHtml('<tag>') === '&lt;tag&gt;', 'escapeHtml should encode angle brackets');
+        console.assert(normalizePosts(samplePosts).length === 1, 'normalizePosts should keep valid posts');
+        console.assert(normalizePosts([null, {}]).length === 0, 'normalizePosts should drop invalid posts');
+        console.assert(buildCard(samplePosts[0]).indexOf('Calmer client intake') !== -1, 'buildCard should include the title');
+        console.assert(buildFeatured(samplePosts[0]).indexOf('Read article') !== -1, 'buildFeatured should include the CTA');
+      }
+
+      async function renderBlogPosts() {
+        var featuredHost = document.getElementById('blog-featured-runtime');
+        var listHost = document.getElementById('blog-list-runtime');
+        if (!featuredHost || !listHost) return;
+        if (hasInjectedMarkup(featuredHost, listHost)) return;
+
+        var posts = [];
+        posts = posts.concat(getGlobalFallbackPosts());
+        if (!posts.length) posts = posts.concat(getInlineFallbackPosts());
+        if (!posts.length) posts = await fetchPosts();
+
+        renderPosts(normalizePosts(posts));
+      }
+
+      async function boot() {
+        runRenderTests();
+        await renderBlogPosts();
         initFilterButtons();
         if (window.lucide && window.lucide.createIcons) {
           window.lucide.createIcons();
@@ -290,84 +476,6 @@
         document.addEventListener('DOMContentLoaded', boot);
       } else {
         boot();
-      }
-    })();
-  </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d9d20b8247f27df',t:'MTc3MzA5MTI3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>  <script>
-    (function () {
-      function escapeHtml(value) {
-        return String(value)
-          .replaceAll('&', '&amp;')
-          .replaceAll('<', '&lt;')
-          .replaceAll('>', '&gt;')
-          .replaceAll('"', '&quot;')
-          .replaceAll("'", '&#39;');
-      }
-
-      function buildCard(post) {
-        return ''
-          + '<article class="blog-card p-6 flex flex-col" data-category="' + escapeHtml(post.category || '') + '">'
-          + '<div class="mb-4"><span class="category-badge">' + escapeHtml(post.category || '') + '</span></div>'
-          + '<h3 class="mt-0 text-lg font-extrabold mb-3 flex-grow">'
-          + '<a class="hover:text-brand-300 transition" href="' + escapeHtml(post.url || '#') + '">' + escapeHtml(post.title || '') + '</a>'
-          + '</h3>'
-          + '<p class="text-white/70 text-sm mb-4">' + escapeHtml(post.description || '') + '</p>'
-          + '<div class="flex items-center justify-between pt-4 border-t border-white/10 gap-3">'
-          + '<div class="flex items-center gap-2 min-w-0">'
-          + '<div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold shrink-0">' + escapeHtml((post.author || '?').slice(0, 2).toUpperCase()) + '</div>'
-          + '<div class="min-w-0">'
-          + '<div class="text-xs font-semibold truncate">' + escapeHtml(post.author || '') + '</div>'
-          + '<div class="text-xs text-white/50">' + escapeHtml((post.readTime || '').replace(/ read/i, '')) + '</div>'
-          + '</div>'
-          + '</div>'
-          + '<a class="text-brand-400 hover:text-brand-300 shrink-0" href="' + escapeHtml(post.url || '#') + '">Read article →</a>'
-          + '</div>'
-          + '</article>';
-      }
-
-      function buildFeatured(post) {
-        return ''
-          + '<article class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">'
-          + '<div class="mb-4 flex items-center gap-3 flex-wrap">'
-          + '<span class="category-badge category-badge--active">' + escapeHtml(post.category || '') + '</span>'
-          + '<span class="text-xs text-white/60">•</span>'
-          + '<span class="text-xs text-white/60">' + escapeHtml(post.readTime || '') + '</span>'
-          + '<span class="text-xs text-white/60">•</span>'
-          + '<span class="text-xs text-white/60">' + escapeHtml(post.date || '') + '</span>'
-          + '</div>'
-          + '<h2 class="text-3xl md:text-4xl font-extrabold">' + escapeHtml(post.title || '') + '</h2>'
-          + '<p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">' + escapeHtml(post.description || '') + '</p>'
-          + '<div class="mt-8 flex flex-col items-start gap-3 sm:flex-row">'
-          + '<a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="' + escapeHtml(post.url || '#') + '">Read article</a>'
-          + '<span class="text-sm text-white/60">' + escapeHtml(post.author || '') + ' · ' + escapeHtml(post.authorRole || '') + '</span>'
-          + '</div>'
-          + '</article>';
-      }
-
-      async function renderBlogPosts() {
-        var featuredHost = document.getElementById('blog-featured-runtime');
-        var listHost = document.getElementById('blog-list-runtime');
-        if (!featuredHost || !listHost) return;
-        if (listHost.querySelector('article')) return;
-
-        try {
-          var response = await fetch('/blog/posts.json', { cache: 'no-store' });
-          if (!response.ok) throw new Error('Blog manifest request failed with ' + response.status);
-
-          var posts = await response.json();
-          if (!Array.isArray(posts) || !posts.length) return;
-
-          featuredHost.innerHTML = buildFeatured(posts[0]);
-          listHost.innerHTML = posts.map(buildCard).join('');
-        } catch (error) {
-          console.error('blog_index_render_failed', error);
-        }
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderBlogPosts);
-      } else {
-        renderBlogPosts();
       }
     })();
   </script>
