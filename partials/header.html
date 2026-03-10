@@ -166,7 +166,7 @@
       </button>
 
       <div id="mobile-resources-menu" class="hidden flex-col gap-2 pl-2">
-        <a href="https://taxmonitor.pro/resources/transcript-central"  target="_blank" rel="noopener" class="rounded-lg px-4 py-2 text-slate-300 transition hover:bg-slate-900 hover:text-white">Transcript Central</a>
+        <a href="https://taxmonitor.pro/resources/transcript-central" target="_blank" rel="noopener" class="rounded-lg px-4 py-2 text-slate-300 transition hover:bg-slate-900 hover:text-white">Transcript Central</a>
         <a href="https://transcript.taxmonitor.pro/resources/how-to-read-irs-transcripts" target="_blank" rel="noopener" class="rounded-lg px-4 py-2 text-slate-300 transition hover:bg-slate-900 hover:text-white">How to Read IRS Transcripts</a>
         <a href="https://transcript.taxmonitor.pro" target="_blank" rel="noopener" class="rounded-lg px-4 py-2 text-slate-300 transition hover:bg-slate-900 hover:text-white">Transcript Automation</a>
         <a href="https://taxtools.taxmonitor.pro" target="_blank" rel="noopener" class="rounded-lg px-4 py-2 text-slate-300 transition hover:bg-slate-900 hover:text-white">TaxTools Arcade</a>
@@ -186,153 +186,189 @@
   </div>
 
   <script>
-  (function () {
-    function initHeaderPartial() {
-      var head = document.head;
-      var mobileMenu = document.getElementById('mobile-menu');
-      var mobileResourcesMenu = document.getElementById('mobile-resources-menu');
-      var mobileResourcesToggle = document.getElementById('mobile-resources-toggle');
-      var resourcesDropdown = document.getElementById('resources-dropdown');
-      var resourcesMenu = document.getElementById('resources-menu');
-      var resourcesToggle = document.getElementById('resources-toggle');
-      var toggle = document.getElementById('menu-toggle');
+    (function () {
+      function ensureAsset(tagName, attributes) {
+        var selector = Object.keys(attributes)
+          .sort()
+          .map(function (key) {
+            return key + '="' + attributes[key] + '"';
+          })
+          .join('');
 
-      if (!resourcesToggle || !resourcesMenu || !toggle || !mobileMenu || !mobileResourcesToggle || !mobileResourcesMenu) {
-        return;
+        var existing = document.head.querySelector(tagName + '[' + selector.replace(/"/g, '\\"') + ']');
+        if (existing) return;
+
+        var el = document.createElement(tagName);
+        Object.keys(attributes)
+          .sort()
+          .forEach(function (key) {
+            el.setAttribute(key, attributes[key]);
+          });
+
+        document.head.appendChild(el);
       }
 
-      if (resourcesToggle.dataset.bound === 'true') {
-        return;
-      }
+      function initHeaderPartial() {
+        var head = document.head;
+        var mobileMenu = document.getElementById('mobile-menu');
+        var mobileResourcesMenu = document.getElementById('mobile-resources-menu');
+        var mobileResourcesToggle = document.getElementById('mobile-resources-toggle');
+        var resourcesDropdown = document.getElementById('resources-dropdown');
+        var resourcesMenu = document.getElementById('resources-menu');
+        var resourcesToggle = document.getElementById('resources-toggle');
+        var toggle = document.getElementById('menu-toggle');
 
-      resourcesToggle.dataset.bound = 'true';
-      toggle.dataset.bound = 'true';
-      mobileResourcesToggle.dataset.bound = 'true';
-
-      function closeDesktopResources() {
-        resourcesMenu.classList.add('hidden', 'invisible', 'pointer-events-none', 'opacity-0');
-        resourcesToggle.setAttribute('aria-expanded', 'false');
-
-        var icon = resourcesToggle.querySelector('svg');
-        if (icon) icon.classList.remove('rotate-180');
-      }
-
-      function openDesktopResources() {
-        resourcesMenu.classList.remove('hidden');
-        requestAnimationFrame(function () {
-          resourcesMenu.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
-        });
-
-        resourcesToggle.setAttribute('aria-expanded', 'true');
-
-        var icon = resourcesToggle.querySelector('svg');
-        if (icon) icon.classList.add('rotate-180');
-      }
-
-      function toggleDesktopResources() {
-        var isOpen = resourcesToggle.getAttribute('aria-expanded') === 'true';
-        if (isOpen) {
-          closeDesktopResources();
-        } else {
-          openDesktopResources();
-        }
-      }
-
-      function closeMobileResources() {
-        mobileResourcesMenu.classList.add('hidden');
-        mobileResourcesMenu.classList.remove('flex');
-        mobileResourcesToggle.setAttribute('aria-expanded', 'false');
-
-        var icon = mobileResourcesToggle.querySelector('svg');
-        if (icon) icon.classList.remove('rotate-180');
-      }
-
-      function closeMobileMenu() {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.classList.remove('flex');
-        toggle.setAttribute('aria-expanded', 'false');
-        closeMobileResources();
-      }
-
-      toggle.addEventListener('click', function () {
-        var isHidden = mobileMenu.classList.toggle('hidden');
-        toggle.setAttribute('aria-expanded', String(!isHidden));
-
-        if (!isHidden) {
-          mobileMenu.classList.add('flex');
-        } else {
-          mobileMenu.classList.remove('flex');
-          closeMobileResources();
-        }
-      });
-
-      mobileResourcesToggle.addEventListener('click', function () {
-        var isHidden = mobileResourcesMenu.classList.contains('hidden');
-        mobileResourcesMenu.classList.toggle('hidden', !isHidden);
-        mobileResourcesMenu.classList.toggle('flex', isHidden);
-        mobileResourcesToggle.setAttribute('aria-expanded', String(isHidden));
-
-        var icon = mobileResourcesToggle.querySelector('svg');
-        if (icon) {
-          icon.classList.toggle('rotate-180', isHidden);
-        }
-      });
-
-      resourcesToggle.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        toggleDesktopResources();
-      });
-
-      document.addEventListener('click', function (e) {
-        if (resourcesDropdown && !resourcesDropdown.contains(e.target)) {
-          closeDesktopResources();
+        if (!resourcesToggle || !resourcesMenu || !toggle || !mobileMenu || !mobileResourcesToggle || !mobileResourcesMenu) {
+          return;
         }
 
-        if (!mobileMenu.classList.contains('hidden')) {
-          var clickedInsideMobileMenu = mobileMenu.contains(e.target);
-          var clickedMobileToggle = toggle.contains(e.target);
+        if (resourcesToggle.dataset.bound === 'true') {
+          return;
+        }
 
-          if (!clickedInsideMobileMenu && !clickedMobileToggle) {
-            closeMobileMenu();
+        resourcesToggle.dataset.bound = 'true';
+        toggle.dataset.bound = 'true';
+        mobileResourcesToggle.dataset.bound = 'true';
+
+        function closeDesktopResources() {
+          resourcesMenu.classList.add('hidden', 'invisible', 'pointer-events-none', 'opacity-0');
+          resourcesToggle.setAttribute('aria-expanded', 'false');
+
+          var icon = resourcesToggle.querySelector('svg');
+          if (icon) icon.classList.remove('rotate-180');
+        }
+
+        function openDesktopResources() {
+          resourcesMenu.classList.remove('hidden');
+          requestAnimationFrame(function () {
+            resourcesMenu.classList.remove('invisible', 'pointer-events-none', 'opacity-0');
+          });
+
+          resourcesToggle.setAttribute('aria-expanded', 'true');
+
+          var icon = resourcesToggle.querySelector('svg');
+          if (icon) icon.classList.add('rotate-180');
+        }
+
+        function toggleDesktopResources() {
+          var isOpen = resourcesToggle.getAttribute('aria-expanded') === 'true';
+          if (isOpen) {
+            closeDesktopResources();
+          } else {
+            openDesktopResources();
           }
         }
-      });
 
-      document.addEventListener('keydown', function (e) {
-        if (e.key !== 'Escape') return;
-        closeDesktopResources();
-        closeMobileMenu();
-      });
+        function closeMobileResources() {
+          mobileResourcesMenu.classList.add('hidden');
+          mobileResourcesMenu.classList.remove('flex');
+          mobileResourcesToggle.setAttribute('aria-expanded', 'false');
 
-      if (!head) return;
+          var icon = mobileResourcesToggle.querySelector('svg');
+          if (icon) icon.classList.remove('rotate-180');
+        }
 
-      var icons = [
-        { rel: 'icon', href: '/assets/favicon.ico', type: 'image/x-icon' },
-        { rel: 'icon', href: '/assets/favicon.svg', type: 'image/svg+xml' }
-      ].sort(function (a, b) {
-        return String(a.href).localeCompare(String(b.href));
-      });
+        function closeMobileMenu() {
+          mobileMenu.classList.add('hidden');
+          mobileMenu.classList.remove('flex');
+          toggle.setAttribute('aria-expanded', 'false');
+          closeMobileResources();
+        }
 
-      function hasIcon(href) {
-        return !!head.querySelector('link[rel~="icon"][href="' + href + '"]');
+        toggle.addEventListener('click', function () {
+          var isHidden = mobileMenu.classList.toggle('hidden');
+          toggle.setAttribute('aria-expanded', String(!isHidden));
+
+          if (!isHidden) {
+            mobileMenu.classList.add('flex');
+          } else {
+            mobileMenu.classList.remove('flex');
+            closeMobileResources();
+          }
+        });
+
+        mobileResourcesToggle.addEventListener('click', function () {
+          var isHidden = mobileResourcesMenu.classList.contains('hidden');
+          mobileResourcesMenu.classList.toggle('hidden', !isHidden);
+          mobileResourcesMenu.classList.toggle('flex', isHidden);
+          mobileResourcesToggle.setAttribute('aria-expanded', String(isHidden));
+
+          var icon = mobileResourcesToggle.querySelector('svg');
+          if (icon) {
+            icon.classList.toggle('rotate-180', isHidden);
+          }
+        });
+
+        resourcesToggle.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleDesktopResources();
+        });
+
+        document.addEventListener('click', function (e) {
+          if (resourcesDropdown && !resourcesDropdown.contains(e.target)) {
+            closeDesktopResources();
+          }
+
+          if (!mobileMenu.classList.contains('hidden')) {
+            var clickedInsideMobileMenu = mobileMenu.contains(e.target);
+            var clickedMobileToggle = toggle.contains(e.target);
+
+            if (!clickedInsideMobileMenu && !clickedMobileToggle) {
+              closeMobileMenu();
+            }
+          }
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key !== 'Escape') return;
+          closeDesktopResources();
+          closeMobileMenu();
+        });
+
+        if (!head) return;
+
+        [
+          { href: '/assets/css/reveal.css', rel: 'stylesheet' },
+          { href: '/assets/js/reveal.js', src: '/assets/js/reveal.js', defer: '' }
+        ];
+
+        ensureAsset('link', {
+          href: '/assets/css/reveal.css',
+          rel: 'stylesheet'
+        });
+
+        ensureAsset('script', {
+          defer: '',
+          src: '/assets/js/reveal.js'
+        });
+
+        var icons = [
+          { rel: 'icon', href: '/assets/favicon.ico', type: 'image/x-icon' },
+          { rel: 'icon', href: '/assets/favicon.svg', type: 'image/svg+xml' }
+        ].sort(function (a, b) {
+          return String(a.href).localeCompare(String(b.href));
+        });
+
+        function hasIcon(href) {
+          return !!head.querySelector('link[rel~="icon"][href="' + href + '"]');
+        }
+
+        icons.forEach(function (i) {
+          if (hasIcon(i.href)) return;
+          var link = document.createElement('link');
+          link.rel = i.rel;
+          link.href = i.href;
+          link.type = i.type;
+          head.appendChild(link);
+        });
       }
 
-      icons.forEach(function (i) {
-        if (hasIcon(i.href)) return;
-        var link = document.createElement('link');
-        link.rel = i.rel;
-        link.href = i.href;
-        link.type = i.type;
-        head.appendChild(link);
-      });
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initHeaderPartial, { once: true });
-    } else {
-      initHeaderPartial();
-    }
-  })();
-</script>
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeaderPartial, { once: true });
+      } else {
+        initHeaderPartial();
+      }
+    })();
+  </script>
 </header>
