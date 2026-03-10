@@ -1,149 +1,418 @@
 <!-- /blog/index.html -->
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <title>Blog | VirtualLaunch.pro</title>
-  <meta name="description" content="Field-tested insights on onboarding, delivery systems, and white-labeled operations." />
-
-  <meta property="og:title" content="Blog | VirtualLaunch.pro" />
-  <meta property="og:description" content="Field-tested insights on onboarding, delivery systems, and white-labeled operations." />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-  <meta name="theme-color" content="#070a10" />
-
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
-
-  <link
-    rel="preload"
-    as="image"
-    href="/assets/Virtual-Launch-Pro_Logo_200x60_Black.svg"
-    type="image/svg+xml"
-  />
-
-  <script src="https://cdn.tailwindcss.com"></script>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Virtual Launch Pro Blog — Calm Delivery, Clean Onboarding & Scalable Service</title>
+  <meta name="description" content="Insights on calm delivery, white-labeled onboarding, service operations, and scalable client systems for Virtual Launch Pro.">
+  <meta property="og:title" content="Virtual Launch Pro Blog — Calm Delivery, Clean Onboarding & Scalable Service">
+  <meta property="og:description" content="Read field-tested thinking on client onboarding, delivery systems, service operations, and white-labeled growth for Virtual Launch Pro.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          maxWidth: {
-            '6-5xl': '77.5rem'
-          },
-          colors: {
-            brand: { 500: "#f97316", 400: "#fb923c" },
-            ink: { 950: "#070a10", 900: "#0b1220", 800: "#111a2e", 700: "#152237" }
-          },
           boxShadow: {
             soft: "0 10px 30px rgba(0,0,0,0.12)",
             topbar: "0 18px 50px rgba(0,0,0,0.18)"
+          },
+          colors: {
+            brand: { 400: "#fb923c", 500: "#f97316" },
+            ink: { 700: "#152237", 800: "#111a2e", 900: "#0b1220", 950: "#070a10" }
+          },
+          maxWidth: {
+            "6-5xl": "77.5rem"
           }
         }
       }
     };
   </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+      height: 100%;
+    }
 
-  <link rel="stylesheet" href="/styles.css" />
-  <link rel="stylesheet" href="/blog/blog.css" />
-</head>
+    body {
+      font-family: 'Raleway', sans-serif;
+      height: 100%;
+    }
 
-<body class="bg-ink-950 text-white antialiased">
-  <div class="pointer-events-none fixed inset-0 -z-20 lentax-grid lentax-grid-pan opacity-60"></div>
-  <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
-  <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
+    #app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      width: 100%;
+    }
 
-  <div data-include="header"></div>
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 72rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
 
-  <main class="mx-auto max-w-6-5xl px-4 pb-16 pt-12 md:pt-16">
-    <div class="mx-auto max-w-3xl text-center">
-      <p class="text-xs font-semibold tracking-widest text-brand-400">INSIGHTS</p>
-      <h1 class="mt-4 text-4xl font-extrabold md:text-5xl">How calm delivery is built</h1>
-      <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-        Field-tested thinking on onboarding, delivery systems, and white-labeled operations.
-        This is how stable agencies actually run.
-      </p>
-    </div>
+    .container--wide {
+      max-width: 75rem;
+    }
 
-    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    .vlp-grid {
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
+    }
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-        <div class="text-xs font-semibold text-white/60">Agency Systems</div>
-        <h2 class="mt-3 text-lg font-extrabold">Welcome Aboard: The Agency Builder’s Ship Sets Sail</h2>
-        <p class="mt-3 text-sm text-white/70">
-          Why every serious agency needs a predictable operating model before hiring, scaling, or selling outcomes.
-        </p>
-        <div class="mt-5 flex items-center justify-between">
-          <div class="text-xs text-white/60">November 23, 2025</div>
-          <a class="text-sm font-extrabold text-brand-400 hover:text-brand-300" href="/blog/welcome-aboard-agency-builders-tide-report/">
-            Read →
-          </a>
+    .vlp-grid-pan {
+      animation: gridPan 22s linear infinite;
+    }
+
+    .blog-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1.5rem;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(26, 31, 53, 0.6) 100%);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+      overflow: hidden;
+    }
+
+    .blog-card:hover {
+      border-color: rgba(249, 115, 22, 0.3);
+      box-shadow: 0 12px 48px rgba(249, 115, 22, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .blog-card-featured {
+      border: 2px solid rgba(249, 115, 22, 0.5);
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    }
+
+    .blog-card-featured:hover {
+      border-color: rgba(249, 115, 22, 0.8);
+      box-shadow: 0 12px 48px rgba(249, 115, 22, 0.25);
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      color: #fb923c;
+    }
+
+    .category-badge--active {
+      background: rgba(249, 115, 22, 0.25);
+      border-color: rgba(249, 115, 22, 0.5);
+    }
+
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 18px;
+    }
+
+    .newsletter-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 12px 16px;
+      color: white;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(249, 115, 22, 0.4);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    @keyframes gridPan {
+      from {
+        transform: translate3d(0,0,0);
+      }
+      to {
+        transform: translate3d(-56px,-56px,0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .vlp-grid-pan {
+        animation: none;
+      }
+      .blog-card:hover {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .blog-card-featured {
+        grid-column: span 1;
+      }
+    }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="bg-ink-950 text-white antialiased">
+  <div id="app" class="flex flex-col">
+   <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
+   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
+   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div><!-- PARTIAL:header --><!-- Main Content -->
+   <main id="top" class="flex-1"><!-- Hero Section -->
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-24">
+     <div class="mx-auto max-w-3xl text-center">
+      <p class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">Calm delivery, white-labeled operations, and scalable client systems</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">How stable service businesses install calm</h1>
+      <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto">Practical thinking on onboarding, delivery flow, client visibility, and growth systems that do not break the minute volume shows up.</p>
+     </div>
+    </section><!-- Featured Article -->
+    <section class="mx-auto max-w-6-5xl px-4 pb-12">
+     <article class="blog-card blog-card-featured p-8 md:p-10">
+      <div class="flex flex-col md:flex-row gap-8 items-start">
+       <div class="flex-1">
+        <div class="inline-flex items-center gap-2 mb-4"><span class="category-badge category-badge--active">Core framework</span> <span class="text-xs text-white/60">6 min read</span>
         </div>
-      </article>
-      <article class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-soft">
-        <div class="text-xs font-semibold text-white/60">Agency Systems</div>
-        <h2 class="mt-3 text-lg font-extrabold">The 5 Client-Journey Categories (Model A)</h2>
-        <p class="mt-3 text-sm text-white/70">
-          The five categories that define your external experience — and turn scattered touchpoints into a frictionless, scalable path.
-        </p>
-        <div class="mt-5 flex items-center justify-between">
-          <div class="text-xs text-white/60">November 24, 2025</div>
-          <a class="text-sm font-extrabold text-brand-400 hover:text-brand-300" href="/blog/the-5-client-journey-categories-model-a/">
-            Read →
-          </a>
+        <h2 class="text-3xl md:text-4xl font-extrabold mb-4">The 5 Client-Journey Categories that make delivery feel calm</h2>
+        <p class="text-white/75 mb-6 text-lg">Most service businesses do not have a delivery problem first. They have a journey problem. When clients cannot see where they are going, everything feels heavier than it should.</p>
+        <div class="flex items-center gap-4 mt-8">
+         <div class="author-avatar">
+          JLW
+         </div>
+         <div>
+          <div class="font-semibold">
+           JLW
+          </div>
+          <div class="text-sm text-white/60">
+           EA turned agency builder
+          </div>
+         </div>
         </div>
+       </div>
+       <div class="hidden md:flex items-center justify-center flex-shrink-0">
+        <div class="w-32 h-32 rounded-2xl border border-white/10 bg-gradient-to-br from-brand-500/30 to-emerald-500/30 flex items-center justify-center"><i data-lucide="map" class="w-16 h-16 text-brand-400"></i>
+        </div>
+       </div>
+      </div>
+     </article>
+    </section><!-- Filters & Sort -->
+    <section class="mx-auto max-w-6-5xl px-4 pb-12 border-b border-white/10">
+     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div>
+       <h3 class="text-sm font-semibold text-white/60 mb-3 sm:mb-0">Filter by topic</h3>
+       <div class="flex flex-wrap gap-2"><button class="category-badge category-badge--active" data-filter="all">All articles</button> <button class="category-badge" data-filter="framework">Framework</button> <button class="category-badge" data-filter="onboarding">Onboarding</button> <button class="category-badge" data-filter="operations">Operations</button> <button class="category-badge" data-filter="positioning">Positioning</button> <button class="category-badge" data-filter="scaling">Scaling</button>
+       </div>
+      </div>
+      <div class="flex items-center gap-2"><label for="sort" class="text-sm text-white/60">Sort by:</label> <select id="sort" class="bg-ink-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white"> <option value="recent">Recent</option> <option value="popular">Most read</option> </select>
+      </div>
+     </div>
+    </section><!-- Articles Grid -->
+    <section class="mx-auto max-w-6-5xl px-4 py-12">
+     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3"><article class="blog-card p-6 flex flex-col" data-category="framework">
+       <div class="mb-4"><span class="category-badge">Framework</span>
+       </div>
+       <h3 class="text-xl font-extrabold mb-3 flex-grow">The 5 Client-Journey Categories</h3>
+       <p class="text-white/70 text-sm mb-4">The categories that turn scattered touchpoints into a cleaner, more scalable path from first click to final delivery.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">6 min</div>
+         </div>
+        </div><i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
       </article>
-
-
-    </div>
-
-    <div class="mt-12 flex justify-center">
-      <a class="rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-sm font-extrabold text-white hover:bg-white/10" href="/">
-        Back to home
-      </a>
-    </div>
-  </main>
-
-  <div data-include="footer"></div>
-
+      <article class="blog-card p-6 flex flex-col" data-category="onboarding">
+       <div class="mb-4"><span class="category-badge">Onboarding</span>
+       </div>
+       <h3 class="text-xl font-extrabold mb-3 flex-grow">Why onboarding fails before delivery starts</h3>
+       <p class="text-white/70 text-sm mb-4">Most delivery pain begins before the work begins. Clean intake protects scope, timing, and trust from day one.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">5 min</div>
+         </div>
+        </div><i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+      <article class="blog-card p-6 flex flex-col" data-category="scaling">
+       <div class="mb-4"><span class="category-badge">Scaling</span>
+       </div>
+       <h3 class="text-xl font-extrabold mb-3 flex-grow">How to scale without rebuilding your process</h3>
+       <p class="text-white/70 text-sm mb-4">A practical way to layer templates, routing, and visibility without wrecking your service quality in the process.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">7 min</div>
+         </div>
+        </div><i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+      <article class="blog-card p-6 flex flex-col" data-category="positioning">
+       <div class="mb-4"><span class="category-badge">Positioning</span>
+       </div>
+       <h3 class="text-xl font-extrabold mb-3 flex-grow">Weigh anchor: the positioning step before you launch</h3>
+       <p class="text-white/70 text-sm mb-4">Before momentum comes direction. Positioning is the quiet decision that makes every later move cleaner.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">6 min</div>
+         </div>
+        </div><i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+      <article class="blog-card p-6 flex flex-col" data-category="operations">
+       <div class="mb-4"><span class="category-badge">Operations</span>
+       </div>
+       <h3 class="text-xl font-extrabold mb-3 flex-grow">Why the DOMSSS enterprise model reduces internal drag</h3>
+       <p class="text-white/70 text-sm mb-4">Structure is not bureaucracy when it removes repeated guesswork. This model turns effort into repeatable movement.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">8 min</div>
+         </div>
+        </div><i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+      <article class="blog-card p-6 flex flex-col" data-category="operations">
+       <div class="mb-4"><span class="category-badge">Operations</span>
+       </div>
+       <h3 class="text-xl font-extrabold mb-3 flex-grow">The 7-pipeline model that keeps service from spilling everywhere</h3>
+       <p class="text-white/70 text-sm mb-4">When everything lands in one stream, nothing stays clean. Separate pipelines protect visibility, ownership, and pace.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">7 min</div>
+         </div>
+        </div><i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article></div><!-- Load More -->
+     <div class="mt-12 flex justify-center"><button class="rounded-xl border border-white/20 bg-white/5 px-8 py-3 text-sm font-semibold text-white hover:bg-white/10 transition"> Load more articles </button>
+     </div>
+    </section><!-- Newsletter Section -->
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+     <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-white/8 to-white/5 p-8 md:p-12 text-center">
+      <div class="mx-auto max-w-2xl">
+       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Stay updated on calm delivery systems</h2>
+       <p class="text-white/70 mb-8">New articles on onboarding, white-labeled service delivery, scope control, and client systems sent to your inbox monthly.</p>
+       <form class="flex flex-col sm:flex-row gap-3"><input type="email" placeholder="your@email.com" class="newsletter-input flex-1" required> <button type="submit" class="rounded-lg bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400 transition whitespace-nowrap"> Subscribe </button>
+       </form>
+       <p class="text-xs text-white/50 mt-3">We respect your inbox. Unsubscribe anytime.</p>
+      </div>
+     </div>
+    </section><!-- Related Reading -->
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+     <h2 class="text-2xl md:text-3xl font-extrabold mb-8">Explore more topics</h2>
+     <div class="grid gap-6 md:grid-cols-4">
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
+       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="map" class="h-6 w-6 text-brand-400"></i>
+       </div>
+       <h3 class="font-extrabold mb-2">Frameworks</h3>
+       <p class="text-sm text-white/70">Core client-journey architecture</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
+       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="clipboard-list" class="h-6 w-6 text-brand-400"></i>
+       </div>
+       <h3 class="font-extrabold mb-2">Onboarding</h3>
+       <p class="text-sm text-white/70">Intake, trust, and scope control</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
+       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="settings" class="h-6 w-6 text-brand-400"></i>
+       </div>
+       <h3 class="font-extrabold mb-2">Operations</h3>
+       <p class="text-sm text-white/70">Workflows, ownership, and repeatability</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center hover:border-brand-500/40 transition">
+       <div class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5"><i data-lucide="panel-top" class="h-6 w-6 text-brand-400"></i>
+       </div>
+       <h3 class="font-extrabold mb-2">Portals</h3>
+       <p class="text-sm text-white/70">Client visibility without internal mess</p>
+      </div>
+     </div>
+    </section><!-- CTA -->
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+     <div class="rounded-2xl bg-brand-500 px-8 py-12 text-center md:py-16 md:px-12">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mb-4">Ready to install calm into your delivery?</h2>
+      <p class="text-ink-900/80 mb-8 max-w-2xl mx-auto">Explore the installs that give you cleaner onboarding, protected scope, and a client journey that still feels controlled when volume climbs.</p><a href="/index.html#pricing" class="inline-block rounded-xl bg-ink-900 px-8 py-3 text-sm font-extrabold text-brand-500 hover:bg-ink-800 transition"> View packages </a>
+     </div>
+    </section>
+   </main><!-- PARTIAL:footer -->
+  </div>
   <script>
     (function () {
-      function loadIncludes() {
-        var nodes = Array.prototype.slice.call(document.querySelectorAll("[data-include]"));
-        if (!nodes.length) return;
+      function initFilterButtons() {
+        const filterButtons = document.querySelectorAll('[data-filter]');
+        const articleCards = document.querySelectorAll('[data-category]');
 
-        nodes.forEach(function (node) {
-          var key = node.getAttribute("data-include");
-          var url = "/partials/" + key + ".html";
+        filterButtons.forEach(button => {
+          button.addEventListener('click', function () {
+            const filter = this.getAttribute('data-filter');
+            
+            filterButtons.forEach(btn => btn.classList.remove('category-badge--active'));
+            this.classList.add('category-badge--active');
 
-          fetch(url, { cache: "no-store" })
-            .then(function (res) {
-              if (!res.ok) throw new Error("Include failed: " + url);
-              return res.text();
-            })
-            .then(function (html) {
-              node.innerHTML = html;
-            })
-            .catch(function (err) {
-              console.error(err);
+            articleCards.forEach(card => {
+              if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                card.style.display = '';
+              } else {
+                card.style.display = 'none';
+              }
             });
+          });
         });
       }
 
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", loadIncludes);
+      function boot() {
+        initFilterButtons();
+        if (window.lucide && window.lucide.createIcons) {
+          window.lucide.createIcons();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
       } else {
-        loadIncludes();
+        boot();
       }
     })();
   </script>
-</body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d9d20b8247f27df',t:'MTc3MzA5MTI3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
