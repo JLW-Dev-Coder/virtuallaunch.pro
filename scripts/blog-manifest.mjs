@@ -3,9 +3,9 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, "blog");
-const POSTS_JSON = path.join(BLOG_DIR, "posts.json");
 const GENERATED_DIR = path.join(BLOG_DIR, ".generated");
-const ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
+const POSTS_JSON = path.join(BLOG_DIR, "posts.json");
+const ARTICLE_FILE_RE = /^(?:(\d{4}-\d{2}-\d{2})_(\d{3})_)?([a-z0-9-]+)\.html$/;
 
 const REQUIRED_FIELDS = [
   "author",
@@ -17,6 +17,10 @@ const REQUIRED_FIELDS = [
   "title",
 ];
 
+async function ensureDir(dir) {
+  await fs.mkdir(dir, { recursive: true });
+}
+
 async function exists(p) {
   try {
     await fs.access(p);
@@ -24,10 +28,6 @@ async function exists(p) {
   } catch {
     return false;
   }
-}
-
-async function ensureDir(dir) {
-  await fs.mkdir(dir, { recursive: true });
 }
 
 async function readText(p) {
@@ -54,25 +54,28 @@ function parseIsoDate(value) {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-function parseArticleFilename(file) {
+function parseArticleFilename(file, meta = null) {
   const match = file.match(ARTICLE_FILE_RE);
 
   if (!match) {
     throw new Error(
-      `Invalid blog filename "${file}". Expected YYYY-MM-DD_###_slug.html`
+      `Invalid blog filename "${file}". Expected slug.html or YYYY-MM-DD_###_slug.html`
     );
   }
 
-  const [, date, sequence, slug] = match;
+  const [, filenameDate, filenameSequence, slug] = match;
+  const resolvedDate = filenameDate || meta?.date || null;
 
-  if (!parseIsoDate(date)) {
-    throw new Error(`Invalid date in filename "${file}"`);
+  if (!resolvedDate || !parseIsoDate(resolvedDate)) {
+    throw new Error(
+      `Missing valid date for "${file}". Provide blog-meta.date in YYYY-MM-DD format.`
+    );
   }
 
   return {
-    date,
+    date: resolvedDate,
     file,
-    sequence: Number(sequence),
+    sequence: filenameSequence ? Number(filenameSequence) : 0,
     slug,
     url: `/blog/${slug}.html`,
   };
@@ -181,7 +184,7 @@ export async function generateBlogManifest() {
     const fullPath = path.join(BLOG_DIR, file);
     const html = await readText(fullPath);
     const meta = extractBlogMeta(html, file);
-    const fileMeta = parseArticleFilename(file);
+    const fileMeta = parseArticleFilename(file, meta);
 
     const headTitle = extractTitle(html);
     const headDescription = extractDescription(html);
@@ -194,15 +197,14 @@ export async function generateBlogManifest() {
       throw new Error(`Description mismatch in ${file}. meta description must match blog-meta description exactly.`);
     }
 
-    if (fileMeta.date !== meta.date) {
-      throw new Error(
-        `Date mismatch in ${file}. Filename date "${fileMeta.date}" must match blog-meta date "${meta.date}".`
-      );
-    }
+    const normalizedMeta = {
+      ...meta,
+      date: fileMeta.date,
+    };
 
     posts.push({
       ...fileMeta,
-      ...meta,
+      ...normalizedMeta,
     });
   }
 
