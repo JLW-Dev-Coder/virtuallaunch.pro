@@ -1,609 +1,837 @@
-<!-- contact.html -->
 <!doctype html>
 <html lang="en" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Support - Virtual Launch Pro</title>
-    <meta name="description" content="Contact Virtual Launch Pro support for help with memberships, profiles, partnerships, onboarding, and platform questions. Submit a ticket to get a Support ID and track updates." />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Let's Connect | Virtual Launch Pro</title>
+  <meta name="description" content="Contact Virtual Launch Pro support for help with memberships, directory profiles, partnerships, onboarding, billing, or platform questions." />
 
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f97316'/%3E%3Cpath d='M18 18h28L34 46h-6l10-22H18z' fill='white'/%3E%3C/svg%3E" type="image/svg+xml" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="/assets/favicon.svg" sizes="any">
 
-    <style>
-      html, body { height: 100%; }
-      body {
-        box-sizing: border-box;
-        font-family: 'Raleway', sans-serif;
-        overflow-x: hidden;
+  <style>
+    html, body { height: 100%; }
+    body { box-sizing: border-box; overflow-x: hidden; }
+    * { font-family: 'DM Sans', sans-serif; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    main section {
+      animation: fadeInUp 0.8s ease-out both;
+    }
+
+    main section:nth-of-type(1) { animation-delay: 0.10s; }
+    main section:nth-of-type(2) { animation-delay: 0.20s; }
+    main section:nth-of-type(3) { animation-delay: 0.30s; }
+    main section:nth-of-type(4) { animation-delay: 0.40s; }
+    main section:nth-of-type(5) { animation-delay: 0.50s; }
+    main section:nth-of-type(6) { animation-delay: 0.60s; }
+
+    .divider-line {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+      height: 1px;
+      width: 100%;
+    }
+
+    .vlp-btn-primary {
+      background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+      transition: all 0.2s ease;
+    }
+
+    .vlp-btn-primary:hover {
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.18);
+      transform: translateY(-2px);
+    }
+
+    .vlp-btn-secondary {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: all 0.2s ease;
+    }
+
+    .vlp-btn-secondary:hover {
+      background: rgba(245, 158, 11, 0.10);
+      border-color: rgba(245, 158, 11, 0.55);
+    }
+
+    .vlp-card-hover {
+      transition: all 0.25s ease;
+    }
+
+    .vlp-card-hover:hover {
+      border-color: rgba(245, 158, 11, 0.35);
+      transform: translateY(-4px);
+    }
+
+    .vlp-icon-accent {
+      color: #f59e0b;
+    }
+
+    .input {
+      width: 100%;
+      border-radius: 1rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(15, 23, 42, 0.72);
+      color: #f8fafc;
+      outline: none;
+      padding: 0.95rem 1rem;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .input::placeholder {
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .input:focus {
+      border-color: rgba(245, 158, 11, 0.55);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    select.input {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 18px;
+      padding-right: 44px;
+      cursor: pointer;
+    }
+
+    .status {
+      border-radius: 1rem;
+      border: 1px solid rgba(245, 158, 11, 0.20);
+      background: rgba(245, 158, 11, 0.08);
+      color: #fde68a;
+      padding: 0.9rem 1rem;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    .status-error {
+      border-color: rgba(239, 68, 68, 0.35);
+      background: rgba(239, 68, 68, 0.10);
+      color: #fecaca;
+    }
+
+    .status-info {
+      border-color: rgba(245, 158, 11, 0.24);
+      background: rgba(245, 158, 11, 0.10);
+      color: #fde68a;
+    }
+
+    .status-success {
+      border-color: rgba(34, 197, 94, 0.28);
+      background: rgba(34, 197, 94, 0.10);
+      color: #bbf7d0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      main section,
+      .vlp-btn-primary:hover,
+      .vlp-card-hover:hover {
+        animation: none;
+        transform: none;
       }
+    }
+  </style>
 
-      .gradient-text {
-        background: linear-gradient(135deg, #F59E0B, #D97706);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+  <style>@view-transition { navigation: auto; }</style>
+</head>
 
-      .vlp-grid {
-        background-image:
-          linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
-        background-size: 56px 56px;
-        mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
-      }
+<body class="h-full bg-slate-950 text-slate-100">
+  <div id="app" class="min-h-screen flex flex-col">
 
-      .vlp-grid-pan {
-        animation: gridPan 22s linear infinite;
-      }
+    <!-- PARTIAL:siteHeader -->
 
-      @keyframes gridPan {
-        from { transform: translate3d(0,0,0); }
-        to { transform: translate3d(-56px,-56px,0); }
-      }
+    <main class="flex-1">
 
-      .hero-grid {
-        position: relative;
-        overflow: hidden;
-        background: linear-gradient(135deg, rgba(11,18,32,0.82) 0%, rgba(17,26,46,0.76) 48%, rgba(11,18,32,0.88) 100%);
-      }
-
-      .hero-glow::before {
-        content: '';
-        position: absolute;
-        inset: -10% auto auto -12%;
-        width: 32rem;
-        height: 32rem;
-        border-radius: 9999px;
-        background: rgba(249,115,22,0.22);
-        filter: blur(80px);
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      .hero-glow::after {
-        content: '';
-        position: absolute;
-        inset: auto -12% -18% auto;
-        width: 32rem;
-        height: 32rem;
-        border-radius: 9999px;
-        background: rgba(16,185,129,0.16);
-        filter: blur(80px);
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      .hero-content { position: relative; z-index: 1; }
-
-      .orange-card {
-        background: linear-gradient(180deg, rgba(30,41,59,0.98) 0%, rgba(15,23,42,0.98) 100%);
-        border: 1px solid rgba(249,115,22,0.16);
-        box-shadow: 0 24px 60px rgba(2, 6, 23, 0.3);
-      }
-
-      .orange-glass {
-        background: rgba(255,255,255,0.08);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(249,115,22,0.2);
-      }
-
-      @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-      .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
-
-      @media (prefers-reduced-motion: reduce) {
-        .animate-slide-up,
-        .vlp-grid-pan {
-          animation: none;
-        }
-      }
-
-      .input {
-        background: rgba(255,255,255,0.96);
-        border: 1px solid rgba(249,115,22,0.14);
-        color: #2d3748;
-        border-radius: 14px;
-        padding: 12px 14px;
-        font-size: 14px;
-        line-height: 1.25rem;
-        width: 100%;
-        outline: none;
-        transition: box-shadow 0.15s ease, border-color 0.15s ease;
-      }
-
-      .input:focus {
-        border-color: rgba(249,115,22,0.58);
-        box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
-      }
-
-      select.input {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 14px center;
-        background-size: 18px;
-        padding-right: 44px;
-        cursor: pointer;
-      }
-
-      select.input option { color: #1c1917; }
-      select.input option:disabled { color: #94a3b8; }
-
-      .status {
-        border-radius: 14px;
-        border: 1px solid rgba(249,115,22,0.18);
-        background: rgba(249,115,22,0.08);
-        padding: 12px 14px;
-        font-size: 13px;
-        line-height: 1.25rem;
-      }
-
-      .status-error { border-color: rgba(239, 68, 68, 0.25); background: rgba(239, 68, 68, 0.06); color: rgb(153, 27, 27); }
-      .status-info { border-color: rgba(249,115,22,0.24); background: rgba(249,115,22,0.08); color: rgb(154, 52, 18); }
-      .status-success { border-color: rgba(249,115,22,0.24); background: rgba(249,115,22,0.08); color: rgb(154, 52, 18); }
-
-      .hero-grid .status {
-        border-color: rgba(255, 255, 255, 0.18);
-        background: rgba(255, 255, 255, 0.10);
-        color: rgba(255, 255, 255, 0.92);
-      }
-
-      .hero-grid .status-error {
-        border-color: rgba(239, 68, 68, 0.55);
-        background: rgba(239, 68, 68, 0.22);
-        color: rgba(255, 255, 255, 0.95);
-      }
-
-      .hero-grid .status-error a {
-        color: rgba(255, 255, 255, 0.95);
-        text-decoration: underline;
-      }
-    </style>
-
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              action: '#f97316',
-              charcoal: '#2d3748',
-              gold: '#fbbf24',
-              navy: '#0f2747',
-              warm: '#fb923c'
-            }
-          }
-        }
-      };
-    </script>
-  </head>
-
-  <body class="h-full bg-slate-950 text-white overflow-auto antialiased">
-    <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
-    <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-orange-500/30 blur-[80px]"></div>
-    <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/20 blur-[80px]"></div>
-
-    <div id="app" class="w-full min-h-screen flex flex-col">
-      <!-- PARTIAL:siteHeader -->
-
-      <section class="hero-grid hero-glow py-16 md:py-24 text-white">
-        <div class="max-w-6xl mx-auto px-4 hero-content">
-          <div class="grid lg:grid-cols-2 gap-10 items-center">
-            <div class="text-center lg:text-left">
-              <div class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/50 px-4 py-2 text-sm font-semibold mb-6 backdrop-blur">
-                <span class="w-2 h-2 rounded-full bg-gold"></span>
-                Virtual Launch Pro support
-              </div>
-              <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-5">Contact Support</h1>
-              <p class="text-lg text-white/80 max-w-xl mx-auto lg:mx-0">
-                Submit a ticket for help with memberships, directory profiles, partnerships, onboarding, billing, or platform questions. You’ll get a Support ID to track progress.
-              </p>
-
-              <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <a href="#support-form" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl" data-scroll>
-                  Create a ticket
-                </a>
-                <a href="/index.html#how-it-works" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-8 py-4 rounded-xl border border-orange-400/20 transition-all">
-                  See How It Works
-                </a>
-              </div>
-
-              <p class="mt-6 text-white/70 text-sm">No passwords. No taxpayer SSNs. No sensitive client documents in the message box unless we explicitly request them.</p>
-            </div>
-
-            <div class="animate-slide-up">
-              <div class="orange-glass rounded-3xl p-6 md:p-8 shadow-2xl">
-                <div class="flex items-center justify-between mb-5">
-                  <div class="inline-flex items-center gap-2 bg-white/10 text-white px-3 py-1.5 rounded-full text-xs font-semibold border border-orange-400/20">
-                    <span class="w-2 h-2 rounded-full bg-orange-400"></span>
-                    Support lookup
-                  </div>
-                  <div class="text-white/70 text-sm">Status</div>
-                </div>
-
-                <p class="text-white/80 text-sm mb-4">Already have a Support ID? Check your VLP support status here.</p>
-
-                <div class="flex flex-col sm:flex-row gap-3">
-                  <input id="support-id-lookup" type="text" class="input" placeholder="Support ID" autocomplete="off" />
-                  <button id="support-id-lookup-btn" type="button" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-5 py-3 rounded-xl border border-orange-400/20 transition-all whitespace-nowrap">
-                    Check status
-                  </button>
-                </div>
-                <div id="support-lookup-status" class="hidden status status-info mt-4" aria-live="polite"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="support-form" class="py-16 md:py-24 bg-white/5 border-t border-white/10 scroll-mt-[220px]">
-        <div class="max-w-3xl mx-auto px-4">
-          <div class="text-center mb-10">
-            <span class="inline-flex items-center gap-2 bg-orange-500/15 text-orange-200 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-orange-500/20">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-              Create a ticket
-            </span>
-            <h2 class="text-3xl md:text-4xl font-bold text-white">Tell us what you need help with</h2>
-            <p class="text-slate-300 mt-3">We’ll reply by email and include a Support ID for tracking.</p>
-          </div>
-
-          <form id="support-form-el" class="orange-card rounded-3xl p-6 md:p-8" novalidate>
-            <input type="hidden" id="eventId" name="eventId" />
-            <input type="hidden" id="sessionToken" name="sessionToken" />
-            <input type="hidden" id="utm_source" name="utm_source" />
-            <input type="hidden" id="utm_medium" name="utm_medium" />
-            <input type="hidden" id="utm_campaign" name="utm_campaign" />
-            <input type="hidden" id="utm_term" name="utm_term" />
-            <input type="hidden" id="utm_content" name="utm_content" />
-
-            <div class="grid md:grid-cols-2 gap-5">
-              <div>
-                <label for="name" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Name *</label>
-                <input id="name" name="name" class="input" placeholder="Your name" required />
-              </div>
-              <div>
-                <label for="email" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Email *</label>
-                <input id="email" name="email" class="input" placeholder="you@email.com" type="email" required />
-              </div>
-            </div>
-
-            <div class="mt-6 grid md:grid-cols-2 gap-5">
-              <div>
-                <label for="category" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Category *</label>
-                <select id="category" name="category" class="input" required>
-                  <option value="" selected disabled hidden></option>
-                  <option value="Billing / Payments">Billing / Payments</option>
-                  <option value="Directory Profile">Directory Profile</option>
-                  <option value="General">General</option>
-                  <option value="Membership / Plans">Membership / Plans</option>
-                  <option value="Onboarding">Onboarding</option>
-                  <option value="Partnerships">Partnerships</option>
-                  <option value="Platform / Access">Platform / Access</option>
-                </select>
-              </div>
-              <div>
-                <label for="issueType" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Issue Type *</label>
-                <select id="issueType" name="issueType" class="input" required>
-                  <option value="" selected disabled hidden></option>
-                  <option value="Access">Access</option>
-                  <option value="Billing">Billing</option>
-                  <option value="General Question">General Question</option>
-                  <option value="Profile Update">Profile Update</option>
-                  <option value="Technical">Technical</option>
-                  <option value="Upgrade / Downgrade">Upgrade / Downgrade</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mt-6 grid md:grid-cols-2 gap-5">
-              <div>
-                <label for="priority" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Priority *</label>
-                <select id="priority" name="priority" class="input" required>
-                  <option value="" selected disabled hidden></option>
-                  <option value="Critical">Critical</option>
-                  <option value="High">High</option>
-                  <option value="Low">Low</option>
-                  <option value="Normal">Normal</option>
-                </select>
-              </div>
-              <div>
-                <label for="urgency" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Urgency *</label>
-                <select id="urgency" name="urgency" class="input" required>
-                  <option value="" selected disabled hidden></option>
-                  <option value="Normal">Normal</option>
-                  <option value="Time-sensitive (deadline)">Time-sensitive (deadline)</option>
-                  <option value="Urgent (service blocked)">Urgent (service blocked)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="mt-6">
-              <label for="subject" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Subject *</label>
-              <input id="subject" name="subject" class="input" placeholder="e.g., Need help updating my directory profile" required />
-            </div>
-
-            <div class="mt-6">
-              <label for="message" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Message *</label>
-              <textarea id="message" name="message" rows="5" class="input" placeholder="Tell us what happened, what you need, and any relevant page, plan, or issue details" required></textarea>
-              <p class="mt-2 text-xs text-slate-400">Include the page or plan involved, what you expected, and any exact error text. Don’t include sensitive personal or taxpayer data.</p>
-            </div>
-
-            <div class="mt-6 grid md:grid-cols-2 gap-5">
-              <div>
-                <label for="memberId" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Member ID</label>
-                <input id="memberId" name="memberId" class="input" placeholder="Optional" />
-              </div>
-              <div>
-                <label for="relatedOrderId" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Related ID</label>
-                <input id="relatedOrderId" name="relatedOrderId" class="input" placeholder="Optional (Stripe ID, invoice ID, reference, etc.)" />
-              </div>
-            </div>
-
-            <div class="mt-8">
-              <button id="submit-btn" type="submit" class="bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-semibold shadow-lg transition-all w-full">
-                Submit ticket
-              </button>
-              <p class="text-xs text-slate-400 text-center mt-4">
-                By submitting, you agree to our
-                <a class="text-orange-300 hover:underline" href="/legal/terms.html">Terms</a>
-                and
-                <a class="text-orange-300 hover:underline" href="/legal/privacy.html">Privacy Policy</a>.
-              </p>
-            </div>
-
-            <div id="form-status" class="hidden status mt-4" aria-live="polite"></div>
-
-            <div id="support-id-display" class="hidden mt-6 p-6 rounded-2xl bg-orange-500/10 border border-orange-400/20">
-              <p class="text-xs text-orange-200 font-semibold uppercase tracking-wide mb-2">Your Support ID</p>
-              <div class="text-3xl font-bold text-white font-mono mb-3" id="support-id"></div>
-              <p class="text-sm text-slate-300">We’ve emailed confirmation. Keep this ID for Virtual Launch Pro support status checks.</p>
-            </div>
-          </form>
-        </div>
-      </section>
-
-      <section class="py-16 md:py-24 hero-grid border-t border-white/10 text-white">
-        <div class="max-w-4xl mx-auto px-4 text-center hero-content">
-          <div class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur border border-orange-400/20">
-            <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      <section class="w-full px-6 pt-12 pb-12 md:pt-20 md:pb-20">
+        <div class="max-w-3xl mx-auto text-center">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 mb-8">
+            <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            Virtual Launch Pro • Fast, clear support
+            <span class="text-sm text-slate-300">Virtual Launch Pro support for memberships, profiles, and platform questions.</span>
           </div>
-          <h2 class="text-3xl md:text-5xl font-bold mb-6">Want answers before opening a ticket?</h2>
-          <p class="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">Many membership and platform questions are solved faster by checking the product flow first. If the issue is still blocking you, send the ticket and we’ll handle it.</p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/index.html#how-it-works" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-10 py-4 rounded-xl text-lg transition-all shadow-lg hover:shadow-xl">See How It Works</a>
-            <a href="/index.html#pricing" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-10 py-4 rounded-xl text-lg border border-orange-400/20 transition-all">View Pricing</a>
+
+          <h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 leading-tight">Let's Connect</h1>
+
+          <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Submit a ticket for help with memberships, directory profiles, partnerships, onboarding, billing, or platform questions. You’ll get a Support ID to track progress.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <a class="vlp-btn-primary px-8 py-4 rounded-full text-lg font-semibold text-slate-950 inline-flex items-center justify-center" href="#support-ticket"><div class="mt-12"></div>
+Create a ticket</a>
+            <a class="vlp-btn-secondary px-8 py-4 rounded-full text-lg font-semibold text-white bg-transparent inline-flex items-center justify-center" href="/how-it-works.html">Book Support</a>
           </div>
-          <p class="text-white/60 text-sm mt-8">Support replies by email • Ticket tracking included • Built for professionals</p>
+
+          <p class="text-sm text-slate-500 max-w-2xl mx-auto">No passwords. No taxpayer SSNs. No sensitive client documents in the message box unless we explicitly request them.</p>
         </div>
       </section>
 
-      <div class="mt-auto">
-        <!-- PARTIAL:siteFooter -->
-      </div>
-    </div>
+      <div class="divider-line"></div>
 
-    <script>
-      (function () {
-        const API_BASE = 'https://virtuallaunch.pro';
-        const SUPPORT_POST = API_BASE + '/v1/help/tickets';
-        const SUPPORT_STATUS_GET = API_BASE + '/v1/help/status?ticket_id=';
+      <section class="w-full px-6 py-20 md:py-28" id="contact-options">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">How We Can Help</h2>
+            <p class="text-slate-400 text-lg max-w-xl mx-auto">
+              Choose a path below. We’ll route you to the right event type.
+            </p>
+          </div>
 
-        function handleAuth(res) {
-          if (res && res.status === 401) {
-            return true;
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button
+              class="text-left flex items-start gap-4 p-6 rounded-2xl bg-slate-900/40 border border-white/5 vlp-card-hover"
+              data-cal-link="tax-monitor-pro/tax-tools-tax-monitor-support"
+              data-cal-namespace="tax-tools-tax-monitor-support"
+              data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+              type="button"
+            >
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-950/40 flex items-center justify-center border border-white/5">
+                <svg class="w-6 h-6 vlp-icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-lg font-semibold mb-1">General Questions</div>
+                <div class="text-slate-400 text-sm">Ask about memberships, profiles, onboarding, or how Virtual Launch Pro fits your business.</div>
+              </div>
+            </button>
+
+            <button
+              class="text-left flex items-start gap-4 p-6 rounded-2xl bg-slate-900/40 border border-white/5 vlp-card-hover"
+              data-cal-link="tax-monitor-pro/tax-tools-tax-monitor-support"
+              data-cal-namespace="tax-tools-tax-monitor-support"
+              data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+              type="button"
+            >
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-950/40 flex items-center justify-center border border-white/5">
+                <svg class="w-6 h-6 vlp-icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-lg font-semibold mb-1">Book Support</div>
+                <div class="text-slate-400 text-sm">Schedule time for a support conversation if you want to talk through setup, billing, or platform questions live.</div>
+              </div>
+            </button>
+
+            <button
+              class="text-left flex items-start gap-4 p-6 rounded-2xl bg-slate-900/40 border border-white/5 vlp-card-hover"
+              data-cal-link="tax-monitor-pro/tax-tools-tax-monitor-support"
+              data-cal-namespace="tax-tools-tax-monitor-support"
+              data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+              type="button"
+            >
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-950/40 flex items-center justify-center border border-white/5">
+                <svg class="w-6 h-6 vlp-icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-lg font-semibold mb-1">Onboarding Help</div>
+                <div class="text-slate-400 text-sm">Use this if you are joining, setting up your profile, or getting your first platform steps sorted out.</div>
+              </div>
+            </button>
+
+            <button
+              class="text-left flex items-start gap-4 p-6 rounded-2xl bg-slate-900/40 border border-white/5 vlp-card-hover"
+              data-cal-link="tax-monitor-pro/tax-tools-tax-monitor-support"
+              data-cal-namespace="tax-tools-tax-monitor-support"
+              data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+              type="button"
+            >
+              <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-slate-950/40 flex items-center justify-center border border-white/5">
+                <svg class="w-6 h-6 vlp-icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-lg font-semibold mb-1">Client support</div>
+                <div class="text-slate-400 text-sm">For changes, transitions, account updates, or support needs that affect an active plan or member state.</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider-line"></div>
+
+      <section class="w-full px-6 py-20 md:py-28" id="support-ticket">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <div class="rounded-3xl bg-slate-900/40 border border-white/5 p-8 vlp-card-hover">
+              <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/60 border border-slate-700 mb-5">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                <span class="text-xs font-semibold text-slate-300">Support lookup</span>
+              </div>
+              <div class="flex items-center justify-between gap-4 mb-4">
+                <h2 class="text-2xl font-bold">Support lookup</h2>
+                <div class="text-sm text-slate-400">Status</div>
+              </div>
+              <p class="text-slate-400 mb-6">Already have a Support ID? Check your VLP support status here.</p>
+
+              <div class="flex flex-col sm:flex-row gap-3">
+                <input id="support-id-lookup" type="text" class="input" placeholder="Support ID" autocomplete="off" />
+                <button id="support-id-lookup-btn" type="button" class="vlp-btn-secondary px-5 py-4 rounded-2xl text-sm font-semibold text-white whitespace-nowrap">
+                  Check status
+                </button>
+              </div>
+
+              <div id="support-lookup-status" class="hidden status status-info mt-4" aria-live="polite"></div>
+            </div>
+
+            <div class="mt-30">
+              <div class="text-left mb-8">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 mb-4">
+                  <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  <span class="text-sm font-semibold text-slate-200">Create a ticket</span>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold mb-3">Tell us what you need help with</h2>
+                <p class="text-slate-400 text-lg">We’ll reply by email and include a Support ID for tracking.</p>
+              </div>
+
+              <form id="support-form-el" class="rounded-3xl bg-slate-900/40 border border-white/5 p-8" novalidate>
+                <input type="hidden" id="eventId" name="eventId" />
+                <input type="hidden" id="sessionToken" name="sessionToken" />
+                <input type="hidden" id="utm_campaign" name="utm_campaign" />
+                <input type="hidden" id="utm_content" name="utm_content" />
+                <input type="hidden" id="utm_medium" name="utm_medium" />
+                <input type="hidden" id="utm_source" name="utm_source" />
+                <input type="hidden" id="utm_term" name="utm_term" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label for="name" class="block mb-2 text-sm font-semibold text-slate-200">Name *</label>
+                    <input id="name" name="name" class="input" placeholder="Your name" required />
+                  </div>
+                  <div>
+                    <label for="email" class="block mb-2 text-sm font-semibold text-slate-200">Email *</label>
+                    <input id="email" name="email" class="input" placeholder="you@email.com" type="email" required />
+                  </div>
+                </div>
+
+                <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label for="category" class="block mb-2 text-sm font-semibold text-slate-200">Category *</label>
+                    <select id="category" name="category" class="input" required>
+                      <option value="" selected disabled hidden></option>
+                      <option value="Billing / Payments">Billing / Payments</option>
+                      <option value="Directory Profile">Directory Profile</option>
+                      <option value="General">General</option>
+                      <option value="Membership / Plans">Membership / Plans</option>
+                      <option value="Onboarding">Onboarding</option>
+                      <option value="Partnerships">Partnerships</option>
+                      <option value="Platform / Access">Platform / Access</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="issueType" class="block mb-2 text-sm font-semibold text-slate-200">Issue Type *</label>
+                    <select id="issueType" name="issueType" class="input" required>
+                      <option value="" selected disabled hidden></option>
+                      <option value="Access">Access</option>
+                      <option value="Billing">Billing</option>
+                      <option value="General Question">General Question</option>
+                      <option value="Profile Update">Profile Update</option>
+                      <option value="Technical">Technical</option>
+                      <option value="Upgrade / Downgrade">Upgrade / Downgrade</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label for="priority" class="block mb-2 text-sm font-semibold text-slate-200">Priority *</label>
+                    <select id="priority" name="priority" class="input" required>
+                      <option value="" selected disabled hidden></option>
+                      <option value="Critical">Critical</option>
+                      <option value="High">High</option>
+                      <option value="Low">Low</option>
+                      <option value="Normal">Normal</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="urgency" class="block mb-2 text-sm font-semibold text-slate-200">Urgency *</label>
+                    <select id="urgency" name="urgency" class="input" required>
+                      <option value="" selected disabled hidden></option>
+                      <option value="Normal">Normal</option>
+                      <option value="Time-sensitive (deadline)">Time-sensitive (deadline)</option>
+                      <option value="Urgent (service blocked)">Urgent (service blocked)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="mt-5">
+                  <label for="subject" class="block mb-2 text-sm font-semibold text-slate-200">Subject *</label>
+                  <input id="subject" name="subject" class="input" placeholder="e.g., Need help updating my directory profile" required />
+                </div>
+
+                <div class="mt-5">
+                  <label for="message" class="block mb-2 text-sm font-semibold text-slate-200">Message *</label>
+                  <textarea id="message" name="message" rows="5" class="input" placeholder="Tell us what happened, what you need, and any relevant page, plan, or issue details" required></textarea>
+                  <p class="mt-2 text-xs text-slate-400">Include the page or plan involved, what you expected, and any exact error text. Don’t include sensitive personal or taxpayer data.</p>
+                </div>
+
+                <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label for="memberId" class="block mb-2 text-sm font-semibold text-slate-200">Member ID</label>
+                    <input id="memberId" name="memberId" class="input" placeholder="Optional" />
+                  </div>
+                  <div>
+                    <label for="relatedOrderId" class="block mb-2 text-sm font-semibold text-slate-200">Related ID</label>
+                    <input id="relatedOrderId" name="relatedOrderId" class="input" placeholder="Optional (Stripe ID, invoice ID, reference, etc.)" />
+                  </div>
+                </div>
+
+                <div class="mt-8">
+                  <button id="submit-btn" type="submit" class="vlp-btn-primary w-full px-6 py-4 rounded-full text-base font-semibold text-slate-950">Submit ticket</button>
+                  <p class="text-xs text-slate-500 text-center mt-4">By submitting, you agree to our <a class="text-amber-300 hover:underline" href="/legal/terms.html">Terms</a> and <a class="text-amber-300 hover:underline" href="/legal/privacy.html">Privacy Policy</a>.</p>
+                </div>
+
+                <div id="form-status" class="hidden status mt-4" aria-live="polite"></div>
+
+                <div id="support-id-display" class="hidden mt-6 p-6 rounded-2xl bg-emerald-500/10 border border-emerald-400/20">
+                  <p class="text-xs text-emerald-300 font-semibold uppercase tracking-wide mb-2">Your Support ID</p>
+                  <div class="text-3xl font-bold text-white font-mono mb-3" id="support-id"></div>
+                  <p class="text-sm text-slate-300">We’ve emailed confirmation. Keep this ID for Virtual Launch Pro support status checks.</p>
+                </div>
+              </form>
+        </div>
+      </section>
+
+      <div class="divider-line"></div>
+
+      <section class="w-full px-6 py-20 md:py-28">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Choose Your Path</h2>
+            <p class="text-slate-400 text-lg">Select the option that best fits your needs.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="vlp-card-hover p-8 rounded-3xl bg-slate-900/40 border border-white/5 text-center">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center border border-white/5">
+                <svg class="w-8 h-8 vlp-icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Info & Support</h3>
+              <p class="text-slate-400 mb-8">Use the booking flow if you want to talk it through live instead of starting with a ticket.</p>
+              <button
+                class="vlp-btn-primary w-full px-6 py-4 rounded-full text-base font-semibold text-slate-950"
+                data-cal-link="tax-monitor-pro/tax-tools-tax-monitor-support"
+                data-cal-namespace="tax-tools-tax-monitor-support"
+                data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+                type="button"
+              >Book Support</button>
+            </div>
+
+            <div class="vlp-card-hover p-8 rounded-3xl bg-slate-900/40 border border-white/5 text-center">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 flex items-center justify-center border border-white/5">
+                <svg class="w-8 h-8 vlp-icon-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold mb-3">Ticket Support</h3>
+              <p class="text-slate-400 mb-8">Use the support ticket form when you need a written trail, a Support ID, or status tracking.</p>
+              <a class="vlp-btn-secondary w-full px-6 py-4 rounded-full text-base font-semibold text-white bg-transparent inline-flex items-center justify-center" href="#support-ticket">Create a Ticket</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider-line"></div>
+
+      <section class="w-full px-6 py-20 md:py-28">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">What Happens Next</h2>
+            <p class="text-slate-400 text-lg">A clear, simple process from first contact to next steps.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="text-center">
+              <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-lg font-bold text-slate-950">1</div>
+              <h3 class="text-lg font-semibold mb-2">You Reach Out</h3>
+              <p class="text-slate-400 text-sm">Book support or submit a ticket.</p>
+            </div>
+
+            <div class="text-center">
+              <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-lg font-bold text-slate-950">2</div>
+              <h3 class="text-lg font-semibold mb-2">We Review</h3>
+              <p class="text-slate-400 text-sm">We review your inquiry and route it to the right internal support path.</p>
+            </div>
+
+            <div class="text-center">
+              <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-lg font-bold text-slate-950">3</div>
+              <h3 class="text-lg font-semibold mb-2">We Respond</h3>
+              <p class="text-slate-400 text-sm">Expect a response by email with next steps or confirmation.</p>
+            </div>
+
+            <div class="text-center">
+              <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-lg font-bold text-slate-950">4</div>
+              <h3 class="text-lg font-semibold mb-2">Track Progress</h3>
+              <p class="text-slate-400 text-sm">Use your Support ID to check ticket status when needed.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider-line"></div>
+
+      <section class="w-full px-6 py-20 md:py-28 bg-slate-950/60">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Trust & Clarity</h2>
+            <p class="text-slate-400 text-lg">What you can expect from Virtual Launch Pro support.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-start gap-4 p-6 rounded-2xl bg-slate-900/30 border border-white/5">
+              <div class="flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 vlp-icon-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">Clean routing</h3>
+                <p class="text-slate-400 text-sm">Your request is routed into a real support workflow instead of disappearing into a generic inbox.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4 p-6 rounded-2xl bg-slate-900/30 border border-white/5">
+              <div class="flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 vlp-icon-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">Status tracking</h3>
+                <p class="text-slate-400 text-sm">Support tickets return a Support ID so you can check progress without emailing into the void again.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4 p-6 rounded-2xl bg-slate-900/30 border border-white/5">
+              <div class="flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 vlp-icon-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">Sensitive-data boundaries</h3>
+                <p class="text-slate-400 text-sm">Do not send passwords, SSNs, or sensitive client documents unless support explicitly asks for them.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4 p-6 rounded-2xl bg-slate-900/30 border border-white/5">
+              <div class="flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 vlp-icon-accent" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold mb-1">Business identity</h3>
+                <p class="text-slate-400 text-sm">Virtual Launch Pro is configured under Lenore, Inc. with support infrastructure routed through your Worker settings. fileciteturn1file0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider-line"></div>
+
+      <section class="w-full px-6 py-20 md:py-28">
+        <div class="max-w-2xl mx-auto text-center">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Connect?</h2>
+          <p class="text-slate-400 text-lg mb-10">Pick a path above and we’ll take it from there.</p>
+
+          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <a class="vlp-btn-primary px-8 py-4 rounded-full text-lg font-semibold text-slate-950 inline-flex items-center justify-center" href="#support-ticket">Create a Ticket</a>
+            <button
+              class="vlp-btn-secondary px-8 py-4 rounded-full text-lg font-semibold text-white bg-transparent inline-flex items-center justify-center"
+              data-cal-link="tax-monitor-pro/tax-tools-tax-monitor-support"
+              data-cal-namespace="tax-tools-tax-monitor-support"
+              data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
+              type="button"
+            >Book Support</button>
+          </div>
+
+          <p class="text-sm text-slate-500">Your inquiry is confidential. We'll respond thoughtfully and without obligation.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- PARTIAL:siteFooter -->
+
+  </div>
+
+  <script type="text/javascript">
+    (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    Cal("init", "tax-tools-tax-monitor-support", {origin:"https://app.cal.com"});
+    Cal.ns["tax-tools-tax-monitor-support"]("ui", {"cssVarsPerTheme":{"light":{"cal-brand":"#292929"},"dark":{"cal-brand":"#f97316"}},"hideEventTypeDetails":false,"layout":"month_view"});
+  </script>
+
+  <script>
+    (function () {
+      const API_BASE = 'https://virtuallaunch.pro';
+      const SUPPORT_POST = API_BASE + '/v1/help/tickets';
+      const SUPPORT_STATUS_GET = API_BASE + '/v1/help/status?ticket_id=';
+
+      function handleAuth(res) {
+        return !!(res && res.status === 401);
+      }
+
+      function getParam(name) {
+        try { return new URLSearchParams(window.location.search).get(name) || ''; } catch (_) { return ''; }
+      }
+
+      function newEventId() {
+        if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+        return 'evt_' + String(Date.now()) + '_' + Math.random().toString(16).slice(2);
+      }
+
+      function setStatus(kind, text) {
+        const el = document.getElementById('form-status');
+        if (!el) return;
+        el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
+        el.classList.add('status', kind);
+        el.textContent = String(text || '');
+      }
+
+      function setLookupStatus(kind, text) {
+        const el = document.getElementById('support-lookup-status');
+        if (!el) return;
+        el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
+        el.classList.add('status', kind);
+        el.textContent = String(text || '');
+      }
+
+      function escapeHtml(value) {
+        return String(value == null ? '' : value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function firstDefinedValue() {
+        for (let i = 0; i < arguments.length; i++) {
+          const v = arguments[i];
+          if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();
+        }
+        return '';
+      }
+
+      function formatIso(ts) {
+        if (!ts) return '';
+        const s = String(ts);
+        const d = new Date(s);
+        if (isNaN(d.getTime())) return s;
+        return d.toLocaleString();
+      }
+
+      function renderLookupStatus(kind, payload) {
+        const el = document.getElementById('support-lookup-status');
+        if (!el) return;
+
+        const supportId = firstDefinedValue(payload && payload.supportId, payload && payload.support_id, payload && payload.ticketId, payload && payload.ticket_id);
+        const source = firstDefinedValue(payload && payload.source, payload && payload.statusSource);
+        const status = firstDefinedValue(payload && payload.statusLabel, payload && payload.status_label, payload && payload.status, payload && payload.supportStatus, payload && payload.support_status);
+        const latestUpdate = firstDefinedValue(payload && payload.latestUpdate, payload && payload.latest_update, payload && payload.message, payload && payload.note);
+        const updatedAt = firstDefinedValue(payload && payload.updatedAt, payload && payload.updated_at, payload && payload.lastSyncedAt, payload && payload.last_synced_at);
+
+        const lines = [];
+        if (latestUpdate) lines.push('<div class="font-medium text-white">' + escapeHtml(latestUpdate) + '</div>');
+
+        const meta = [];
+        if (supportId) meta.push('Support ID: ' + escapeHtml(supportId));
+        if (source) meta.push('Source: ' + escapeHtml(source));
+        if (status) meta.push('Status: ' + escapeHtml(status));
+        if (updatedAt) meta.push('Updated: ' + escapeHtml(formatIso(updatedAt)));
+
+        if (!lines.length && meta.length) {
+          lines.push('<div>' + meta.join(' • ') + '</div>');
+        } else if (meta.length) {
+          lines.push('<div class="text-slate-300 text-sm mt-2">' + meta.join(' • ') + '</div>');
+        }
+
+        if (!lines.length) lines.push('<div>Your ticket is in progress. Please check back later.</div>');
+
+        el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
+        el.classList.add('status', kind);
+        el.innerHTML = lines.join('');
+      }
+
+      function disable(btn) {
+        if (!btn) return;
+        btn.disabled = true;
+        btn.classList.add('opacity-60', 'cursor-not-allowed');
+      }
+
+      function enable(btn) {
+        if (!btn) return;
+        btn.disabled = false;
+        btn.classList.remove('opacity-60', 'cursor-not-allowed');
+      }
+
+      function pickSupportId(obj) {
+        if (!obj || typeof obj !== 'object') return '';
+        const raw = obj.supportId || obj.support_id || obj.ticket_id || obj.ticketId || '';
+        return raw ? String(raw).trim() : '';
+      }
+
+      function seedHiddenFields() {
+        const eventIdEl = document.getElementById('eventId');
+        if (eventIdEl) eventIdEl.value = newEventId();
+
+        const sessionTokenEl = document.getElementById('sessionToken');
+        if (sessionTokenEl) sessionTokenEl.value = getParam('sessionToken');
+
+        ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term'].forEach(function (k) {
+          const el = document.getElementById(k);
+          if (el) el.value = getParam(k);
+        });
+
+        const memberParam = getParam('memberId') || '';
+        const memberInput = document.getElementById('memberId');
+        if (memberInput && memberParam) memberInput.value = memberParam;
+
+        const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
+        const lookup = document.getElementById('support-id-lookup');
+        if (lookup && pref) lookup.value = pref;
+      }
+
+      async function lookupSupportId() {
+        const input = document.getElementById('support-id-lookup');
+        const btn = document.getElementById('support-id-lookup-btn');
+        const supportId = input && input.value ? String(input.value).trim() : '';
+
+        if (!supportId) {
+          setLookupStatus('status-error', 'Enter a Support ID to check status.');
+          return;
+        }
+
+        disable(btn);
+        setLookupStatus('status-info', 'Checking status...');
+
+        try {
+          const res = await fetch(SUPPORT_STATUS_GET + encodeURIComponent(supportId), { method: 'GET', credentials: 'omit' });
+
+          if (handleAuth(res)) {
+            setLookupStatus('status-error', 'Support status is temporarily unavailable (401).');
+            enable(btn);
+            return;
           }
-          return false;
-        }
 
-        function getParam(name) {
-          try { return new URLSearchParams(window.location.search).get(name) || ''; } catch (_) { return ''; }
-        }
+          let json = null;
+          try { json = await res.json(); } catch (_) { json = null; }
 
-        function newEventId() {
-          if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-          return 'evt_' + String(Date.now()) + '_' + Math.random().toString(16).slice(2);
-        }
-
-        function setStatus(kind, text) {
-          const el = document.getElementById('form-status');
-          if (!el) return;
-          el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
-          el.classList.add('status', kind);
-          el.textContent = String(text || '');
-        }
-
-        function setLookupStatus(kind, text) {
-          const el = document.getElementById('support-lookup-status');
-          if (!el) return;
-          el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
-          el.classList.add('status', kind);
-          el.textContent = String(text || '');
-        }
-
-        function escapeHtml(value) {
-          return String(value == null ? '' : value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;');
-        }
-
-        function firstDefinedValue() {
-          for (let i = 0; i < arguments.length; i++) {
-            const v = arguments[i];
-            if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();
-          }
-          return '';
-        }
-
-        function renderLookupStatus(kind, payload) {
-          const el = document.getElementById('support-lookup-status');
-          if (!el) return;
-
-          const supportId = firstDefinedValue(
-            payload && payload.supportId,
-            payload && payload.support_id,
-            payload && payload.ticketId,
-            payload && payload.ticket_id
-          );
-          const status = firstDefinedValue(
-            payload && payload.statusLabel,
-            payload && payload.status_label,
-            payload && payload.status,
-            payload && payload.supportStatus,
-            payload && payload.support_status
-          );
-          const latestUpdate = firstDefinedValue(
-            payload && payload.latestUpdate,
-            payload && payload.latest_update,
-            payload && payload.message,
-            payload && payload.note
-          );
-          const updatedAt = firstDefinedValue(
-            payload && payload.updatedAt,
-            payload && payload.updated_at,
-            payload && payload.lastSyncedAt,
-            payload && payload.last_synced_at
-          );
-          const source = firstDefinedValue(payload && payload.source, payload && payload.statusSource);
-
-          const lines = [];
-          if (latestUpdate) {
-            lines.push('<div class="font-medium text-white">' + escapeHtml(latestUpdate) + '</div>');
+          if (!res.ok) {
+            const msg = json && (json.error || json.message) ? String(json.error || json.message) : 'Request failed (' + res.status + ')';
+            setLookupStatus('status-error', msg);
+            enable(btn);
+            return;
           }
 
-          const meta = [];
-          if (supportId) meta.push('Support ID: ' + escapeHtml(supportId));
-          if (source) meta.push('Source: ' + escapeHtml(source));
-          if (status) meta.push('Status: ' + escapeHtml(status));
-          if (updatedAt) meta.push('Updated: ' + escapeHtml(formatIso(updatedAt)));
-
-          if (!lines.length && meta.length) {
-            lines.push('<div>' + meta.join(' • ') + '</div>');
-          } else if (meta.length) {
-            lines.push('<div class="text-white/80 text-sm mt-2">' + meta.join(' • ') + '</div>');
-          }
-
-          if (!lines.length) {
-            lines.push('<div>Your ticket is in progress. Please check back later.</div>');
-          }
-
-          el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
-          el.classList.add('status', kind);
-          el.innerHTML = lines.join('');
+          renderLookupStatus('status-success', json || {});
+          enable(btn);
+        } catch (_) {
+          setLookupStatus('status-error', 'Network error. Please try again.');
+          enable(btn);
         }
+      }
 
-        function disable(btn) {
-          if (!btn) return;
-          btn.disabled = true;
-          btn.classList.add('opacity-60', 'cursor-not-allowed');
-        }
-
-        function enable(btn) {
-          if (!btn) return;
-          btn.disabled = false;
-          btn.classList.remove('opacity-60', 'cursor-not-allowed');
-        }
-
-        function scrollToId(id) {
-          const el = document.getElementById(id);
-          if (!el) return;
-          const offset = 200;
-          const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
-          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-        }
-
-        function initAnchorNav() {
-          document.addEventListener('click', function (e) {
-            const a = e.target && e.target.closest ? e.target.closest('a') : null;
-            if (!a) return;
-            const href = String(a.getAttribute('href') || '');
-            if (!href || href[0] !== '#') return;
-            if (!a.hasAttribute('data-scroll')) return;
-            e.preventDefault();
-            const id = href.slice(1);
-            try { history.replaceState(null, '', href); } catch (_) {}
-            scrollToId(id);
+      function initLookupHandler() {
+        const input = document.getElementById('support-id-lookup');
+        const btn = document.getElementById('support-id-lookup-btn');
+        if (btn) btn.addEventListener('click', lookupSupportId);
+        if (input) {
+          input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              lookupSupportId();
+            }
           });
-
-          if (window.location.hash) {
-            const id = window.location.hash.replace(/^#/, '');
-            if (id) setTimeout(function () { scrollToId(id); }, 0);
-          }
-
-          window.addEventListener('hashchange', function () {
-            const id = window.location.hash.replace(/^#/, '');
-            if (id) scrollToId(id);
-          });
         }
+      }
 
-        function seedHiddenFields() {
-          const eventIdEl = document.getElementById('eventId');
-          if (eventIdEl) eventIdEl.value = newEventId();
+      function initFormHandler() {
+        const form = document.getElementById('support-form-el');
+        const btn = document.getElementById('submit-btn');
+        if (!form) return;
 
-          const sessionTokenEl = document.getElementById('sessionToken');
-          if (sessionTokenEl) sessionTokenEl.value = getParam('sessionToken');
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const payload = {
+            category: (document.getElementById('category') || {}).value || '',
+            email: (document.getElementById('email') || {}).value || '',
+            eventId: (document.getElementById('eventId') || {}).value || '',
+            issueType: (document.getElementById('issueType') || {}).value || '',
+            message: (document.getElementById('message') || {}).value || '',
+            name: (document.getElementById('name') || {}).value || '',
+            priority: (document.getElementById('priority') || {}).value || '',
+            subject: (document.getElementById('subject') || {}).value || '',
+            urgency: (document.getElementById('urgency') || {}).value || ''
+          };
+
+          const memberId = (document.getElementById('memberId') || {}).value || '';
+          const relatedOrderId = (document.getElementById('relatedOrderId') || {}).value || '';
+          const sessionToken = (document.getElementById('sessionToken') || {}).value || '';
+
+          if (memberId) payload.memberId = memberId;
+          if (relatedOrderId) payload.relatedOrderId = relatedOrderId;
+          if (sessionToken) payload.sessionToken = sessionToken;
 
           ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term'].forEach(function (k) {
-            const el = document.getElementById(k);
-            if (el) el.value = getParam(k);
+            const v = (document.getElementById(k) || {}).value || '';
+            if (v) payload[k] = v;
           });
 
-          const memberParam = getParam('memberId') || '';
-          const memberInput = document.getElementById('memberId');
-          if (memberInput && memberParam) memberInput.value = memberParam;
+          const missing = [];
+          if (!payload.category) missing.push('category');
+          if (!payload.email) missing.push('email');
+          if (!payload.eventId) missing.push('eventId');
+          if (!payload.issueType) missing.push('issueType');
+          if (!payload.message) missing.push('message');
+          if (!payload.name) missing.push('name');
+          if (!payload.priority) missing.push('priority');
+          if (!payload.subject) missing.push('subject');
+          if (!payload.urgency) missing.push('urgency');
 
-          const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
-          const lookup = document.getElementById('support-id-lookup');
-          if (lookup && pref) lookup.value = pref;
-        }
-
-        function pickSupportId(obj) {
-          if (!obj || typeof obj !== 'object') return '';
-          const raw = obj.supportId || obj.support_id || obj.ticket_id || obj.ticketId || '';
-          return raw ? String(raw).trim() : '';
-        }
-
-        function formatIso(ts) {
-          if (!ts) return '';
-          const s = String(ts);
-          const d = new Date(s);
-          if (isNaN(d.getTime())) return s;
-          return d.toLocaleString();
-        }
-
-        async function lookupSupportId() {
-          const input = document.getElementById('support-id-lookup');
-          const btn = document.getElementById('support-id-lookup-btn');
-          const supportId = input && input.value ? String(input.value).trim() : '';
-
-          if (!supportId) {
-            setLookupStatus('status-error', 'Enter a Support ID to check status.');
+          if (missing.length) {
+            setStatus('status-error', 'Please fill in all required fields.');
             return;
           }
 
           disable(btn);
-          setLookupStatus('status-info', 'Checking status...');
+          setStatus('status-info', 'Submitting your ticket...');
 
           try {
-            const res = await fetch(SUPPORT_STATUS_GET + encodeURIComponent(supportId), {
-              method: 'GET',
-              credentials: 'omit'
+            const res = await fetch(SUPPORT_POST, {
+              method: 'POST',
+              credentials: 'omit',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
             });
 
             if (handleAuth(res)) {
-              setLookupStatus('status-error', 'Support status is temporarily unavailable (401).');
+              setStatus('status-error', 'Support submission is temporarily unavailable (401).');
               enable(btn);
               return;
             }
@@ -613,164 +841,62 @@
 
             if (!res.ok) {
               const msg = json && (json.error || json.message) ? String(json.error || json.message) : 'Request failed (' + res.status + ')';
-              setLookupStatus('status-error', msg);
+              setStatus('status-error', msg);
               enable(btn);
               return;
             }
 
-            renderLookupStatus('status-success', json || {});
+            const supportId = pickSupportId(json);
+
+            if (supportId) {
+              const sid = document.getElementById('support-id');
+              const display = document.getElementById('support-id-display');
+              const statusEl = document.getElementById('form-status');
+              const lookup = document.getElementById('support-id-lookup');
+              if (sid) sid.textContent = supportId;
+              if (display) display.classList.remove('hidden');
+              if (statusEl) statusEl.classList.add('hidden');
+              if (lookup) lookup.value = supportId;
+
+              try {
+                const u = new URL(window.location.href);
+                u.searchParams.set('ticket_id', supportId);
+                history.replaceState(null, '', u.toString());
+              } catch (_) {}
+
+              lookupSupportId();
+            } else {
+              setStatus('status-success', 'Ticket submitted. Check your email for your Support ID.');
+            }
+
+            form.reset();
+            form.style.display = 'none';
             enable(btn);
+
+            const eventIdEl = document.getElementById('eventId');
+            if (eventIdEl) eventIdEl.value = newEventId();
           } catch (_) {
-            setLookupStatus('status-error', 'Network error. Please try again.');
+            setStatus('status-error', 'Network error. Please try again.');
             enable(btn);
           }
-        }
+        });
+      }
 
-        function initLookupHandler() {
-          const input = document.getElementById('support-id-lookup');
-          const btn = document.getElementById('support-id-lookup-btn');
+      function init() {
+        seedHiddenFields();
+        initFormHandler();
+        initLookupHandler();
 
-          if (btn) btn.addEventListener('click', lookupSupportId);
-          if (input) {
-            input.addEventListener('keydown', function (e) {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                lookupSupportId();
-              }
-            });
-          }
-        }
+        const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
+        if (pref) lookupSupportId();
+      }
 
-        function initFormHandler() {
-          const form = document.getElementById('support-form-el');
-          const btn = document.getElementById('submit-btn');
-          if (!form) return;
-
-          form.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const payload = {
-              category: (document.getElementById('category') || {}).value || '',
-              email: (document.getElementById('email') || {}).value || '',
-              eventId: (document.getElementById('eventId') || {}).value || '',
-              issueType: (document.getElementById('issueType') || {}).value || '',
-              message: (document.getElementById('message') || {}).value || '',
-              name: (document.getElementById('name') || {}).value || '',
-              priority: (document.getElementById('priority') || {}).value || '',
-              subject: (document.getElementById('subject') || {}).value || '',
-              urgency: (document.getElementById('urgency') || {}).value || ''
-            };
-
-            const sessionToken = (document.getElementById('sessionToken') || {}).value || '';
-            if (sessionToken) payload.sessionToken = sessionToken;
-
-            const memberId = (document.getElementById('memberId') || {}).value || '';
-            if (memberId) payload.memberId = memberId;
-
-            const relatedOrderId = (document.getElementById('relatedOrderId') || {}).value || '';
-            if (relatedOrderId) payload.relatedOrderId = relatedOrderId;
-
-            ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term'].forEach(function (k) {
-              const v = (document.getElementById(k) || {}).value || '';
-              if (v) payload[k] = v;
-            });
-
-            const missing = [];
-            if (!payload.category) missing.push('category');
-            if (!payload.email) missing.push('email');
-            if (!payload.eventId) missing.push('eventId');
-            if (!payload.issueType) missing.push('issueType');
-            if (!payload.message) missing.push('message');
-            if (!payload.name) missing.push('name');
-            if (!payload.priority) missing.push('priority');
-            if (!payload.subject) missing.push('subject');
-            if (!payload.urgency) missing.push('urgency');
-
-            if (missing.length) {
-              setStatus('status-error', 'Please fill in all required fields.');
-              return;
-            }
-
-            disable(btn);
-            setStatus('status-info', 'Submitting your ticket...');
-
-            try {
-              const res = await fetch(SUPPORT_POST, {
-                method: 'POST',
-                credentials: 'omit',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-
-              if (handleAuth(res)) {
-                setStatus('status-error', 'Support submission is temporarily unavailable (401).');
-                enable(btn);
-                return;
-              }
-
-              let json = null;
-              try { json = await res.json(); } catch (_) { json = null; }
-
-              if (!res.ok) {
-                const msg = json && (json.error || json.message) ? String(json.error || json.message) : 'Request failed (' + res.status + ')';
-                setStatus('status-error', msg);
-                enable(btn);
-                return;
-              }
-
-              const supportId = pickSupportId(json);
-
-              if (supportId) {
-                const sid = document.getElementById('support-id');
-                const display = document.getElementById('support-id-display');
-                const statusEl = document.getElementById('form-status');
-                if (sid) sid.textContent = supportId;
-                if (display) display.classList.remove('hidden');
-                if (statusEl) statusEl.classList.add('hidden');
-
-                const lookup = document.getElementById('support-id-lookup');
-                if (lookup) lookup.value = supportId;
-                try {
-                  const u = new URL(window.location.href);
-                  u.searchParams.set('ticket_id', supportId);
-                  history.replaceState(null, '', u.toString());
-                } catch (_) {}
-
-                lookupSupportId();
-              } else {
-                setStatus('status-success', 'Ticket submitted. Check your email for your Support ID.');
-              }
-
-              form.reset();
-              form.style.display = 'none';
-              enable(btn);
-
-              const eventIdEl = document.getElementById('eventId');
-              if (eventIdEl) eventIdEl.value = newEventId();
-            } catch (_) {
-              setStatus('status-error', 'Network error. Please try again.');
-              enable(btn);
-            }
-          });
-        }
-
-        
-        function initAll() {
-          seedHiddenFields();
-          initAnchorNav();
-          initFormHandler();
-          initLookupHandler();
-
-          const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
-          if (pref) lookupSupportId();
-        }
-
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', initAll);
-        } else {
-          initAll();
-        }
-      })();
-    </script>
-  </body>
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
 </html>
