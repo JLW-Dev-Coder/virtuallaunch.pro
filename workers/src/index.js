@@ -1095,11 +1095,11 @@ async function handleTrafficInsights(env) {
             filter: {
               datetime_geq: $since
               datetime_lt: $until
+              requestSource: "eyeball"
             }
           ) {
             count
             sum {
-              cachedRequests
               edgeResponseBytes
               visits
             }
@@ -1120,19 +1120,21 @@ async function handleTrafficInsights(env) {
     const groups = gql?.data?.viewer?.zones?.[0]?.httpRequestsAdaptiveGroups ?? [];
 
     let edgeResponseBytes = 0;
-    let cachedRequests = 0;
     let requests = 0;
     let visits = 0;
 
     for (const group of groups) {
       const sum = group?.sum ?? {};
       edgeResponseBytes += Number(sum.edgeResponseBytes || 0);
-      cachedRequests += Number(sum.cachedRequests || 0);
       requests += Number(group?.count || 0);
       visits += Number(sum.visits || 0);
     }
 
-    const cachedPercent = requests > 0 ? (cachedRequests / requests) * 100 : 0;
+    // Cloudflare's documented httpRequestsAdaptiveGroups examples expose count,
+    // sum.edgeResponseBytes, and sum.visits for this dataset. Cache-hit request
+    // totals are not available from the current query shape, so keep the page
+    // contract stable with a temporary numeric fallback.
+    const cachedPercent = 0;
 
     return json(
       {
