@@ -1,0 +1,34 @@
+/* /assets/css/reveal.css */
+
+@keyframes revealFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-auto,
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.reveal-auto.is-visible,
+.reveal.is-visible {
+  animation: revealFadeUp 0.75s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-auto,
+  .reveal,
+  .reveal-auto.is-visible,
+  .reveal.is-visible {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
