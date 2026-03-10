@@ -7,6 +7,10 @@ binding = "R2_VIRTUAL_LAUNCH"
 bucket_name = "virtuallaunch-pro"
 
 [vars]
+
+CLOUDFLARE_ACCOUNT_ID = "b14e124b2f5dd7e86dfb1546f9ed6e91"
+CLOUDFLARE_ZONE_ID = "7b7a3d2bde921c3de1451a2315ab9242"
+
 BILLING_LINK_VA_STARTER_TRACK = "https://billing.taxmonitor.pro/b/fZu6oGcImaZk3k48z0aR206"
 
 CLICKUP_ACCOUNTS_LIST_ID = "901711473499"
