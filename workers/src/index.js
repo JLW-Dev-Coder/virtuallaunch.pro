@@ -1084,7 +1084,7 @@ async function handleTrafficInsights(env) {
   }
 
   const now = new Date();
-  const since = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
   const query = `
     query GetZoneTraffic($zoneTag: string, $since: Time!, $until: Time!) {
@@ -1145,7 +1145,7 @@ async function handleTrafficInsights(env) {
         },
         meta: {
           updatedAt: now.toISOString(),
-          windowLabel: "Last 30 days",
+          windowLabel: "Last 24 hours",
         },
         metrics: {
           cachedPercent,
