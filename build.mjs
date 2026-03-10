@@ -61,8 +61,14 @@ async function writeHtmlWithRouteVariants(dest, content) {
   }
 }
 
-async function copyDir(srcDir, destDir) {
+async function copyDir(srcDir, destDir, options = {}) {
   if (!(await exists(srcDir))) return;
+
+  const {
+    partials = null,
+    transformHtmlFiles = false,
+    wranglerVars = {},
+  } = options;
 
   await ensureDir(destDir);
   const entries = await fs.readdir(srcDir, { withFileTypes: true });
@@ -73,7 +79,14 @@ async function copyDir(srcDir, destDir) {
 
     if (ent.isDirectory()) {
       if (SKIP_DIRS.has(ent.name)) continue;
-      await copyDir(src, dest);
+      await copyDir(src, dest, options);
+      continue;
+    }
+
+    if (transformHtmlFiles && ent.name.toLowerCase().endsWith(".html")) {
+      const html = await readText(src);
+      const next = transformHtml(html, partials ?? {}, wranglerVars);
+      await writeHtmlWithRouteVariants(dest, next);
       continue;
     }
 
@@ -212,9 +225,13 @@ async function main() {
     await writeHtmlWithRouteVariants(dest, next);
   }
 
-  // 2) Copy public dirs
+  // 2) Copy public dirs, transforming HTML as we go so route files like blog/index.html survive build output cleanly.
   for (const dir of COPY_DIRS.slice().sort()) {
-    await copyDir(path.join(ROOT, dir), path.join(DIST, dir));
+    await copyDir(path.join(ROOT, dir), path.join(DIST, dir), {
+      partials,
+      transformHtmlFiles: true,
+      wranglerVars,
+    });
   }
 
   // 3) Copy _redirects if present
