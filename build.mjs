@@ -49,6 +49,16 @@ async function copyFile(src, dest) {
   await fs.copyFile(src, dest);
 }
 
+async function writeHtmlWithRouteVariants(dest, content) {
+  await writeText(dest, content);
+
+  const parsed = path.parse(dest);
+  if (parsed.base.toLowerCase() !== "index.html") {
+    const cleanRouteDest = path.join(parsed.dir, parsed.name, "index.html");
+    await writeText(cleanRouteDest, content);
+  }
+}
+
 async function copyDir(srcDir, destDir) {
   if (!(await exists(srcDir))) return;
 
@@ -140,7 +150,7 @@ async function main() {
 
     const html = await readText(src);
     const next = injectAll(html, partials);
-    await writeText(dest, next);
+    await writeHtmlWithRouteVariants(dest, next);
   }
 
   // 2) Copy public dirs
@@ -165,9 +175,22 @@ async function main() {
     const next = injectAll(html, partials);
 
     if (next !== html) {
-      await writeText(f, next);
+      await writeHtmlWithRouteVariants(f, next);
       injectedCount++;
     }
+  }
+
+  // 5) Ensure every copied HTML file also has a clean-route index.html variant
+  const finalDistFiles = await walk(DIST);
+  for (const f of finalDistFiles) {
+    if (!f.endsWith(".html")) continue;
+
+    const parsed = path.parse(f);
+    if (parsed.base.toLowerCase() === "index.html") continue;
+
+    const html = await readText(f);
+    const cleanRouteDest = path.join(parsed.dir, parsed.name, "index.html");
+    await writeText(cleanRouteDest, html);
   }
 
   const present = Object.entries(partials)
