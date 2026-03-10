@@ -300,8 +300,15 @@ async function main() {
 
   partials.appSidebar = await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR);
   partials.appTopbar = await loadPartialOrEmpty(PARTIALS_APP_TOPBAR);
+  partials.siteFooter = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html"));
+  partials.siteHeader = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html"));
   partials.taxProSidebar = await loadPartialOrEmpty(PARTIALS_TAXPRO_SIDEBAR);
   partials.taxProTopbar = await loadPartialOrEmpty(PARTIALS_TAXPRO_TOPBAR);
+
+  partials.footer = partials.siteFooter;
+  partials.header = partials.siteHeader;
+  partials.sidebar = partials.appSidebar;
+  partials.topbar = partials.appTopbar;
 
   for (const dir of COPY_DIRS) {
     const srcDir = path.join(ROOT, dir);
