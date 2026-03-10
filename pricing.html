@@ -1,3 +1,4 @@
+<!-- pricing.html -->
 <!doctype html>
 <html lang="en" class="h-full">
 <head>
@@ -5,9 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pricing | Virtual Launch Pro</title>
   <meta name="description" content="Virtual Launch Pro pricing for white-labeled onboarding and delivery installs built to help service businesses launch faster, deliver calmly, and scale without operational chaos." />
-
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -92,28 +90,35 @@
       }
     }
 
-    .reveal-text {
-      opacity: 0;
-      transform: translateY(28px);
-      will-change: transform, opacity;
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .reveal-text.is-visible {
-      opacity: 1;
-      transform: translateY(0);
+    main section {
+      animation: fadeInUp 0.8s ease-out both;
     }
+
+    main section:nth-of-type(1) { animation-delay: 0.10s; }
+    main section:nth-of-type(2) { animation-delay: 0.20s; }
+    main section:nth-of-type(3) { animation-delay: 0.30s; }
+    main section:nth-of-type(4) { animation-delay: 0.40s; }
+    main section:nth-of-type(5) { animation-delay: 0.50s; }
 
     @media (prefers-reduced-motion: reduce) {
       .vlp-grid-pan {
         animation: none;
       }
 
-      .reveal-text {
-        opacity: 1 !important;
-        transform: none !important;
-        transition: none !important;
+      main section {
+        animation: none;
       }
-    }
     }
   </style>
 
@@ -128,7 +133,7 @@
     <!-- PARTIAL:siteHeader -->
 
     <main id="top" class="flex-1">
-      <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24" data-reveal-group>
+      <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
         <div class="mx-auto max-w-5xl text-center">
           <div class="mb-8 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/50 px-4 py-2">
             <svg class="h-4 w-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
@@ -147,18 +152,18 @@
 
           <div class="flex flex-col justify-center gap-4 sm:flex-row">
             <a href="#pricing-cards" class="inline-block rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:from-amber-400 hover:to-amber-500 hover:scale-105">View packages →</a>
-            <a href="/contact.html" class="inline-block rounded-lg border border-slate-700 bg-slate-900/60 px-8 py-4 text-lg font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80">Talk to support</a>
+            <a href="/features/index.html" class="inline-block rounded-lg border border-slate-700 bg-slate-900/60 px-8 py-4 text-lg font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80">View features</a>
           </div>
         </div>
       </section>
 
-      <section id="pricing-cards" class="border-t border-white/10" data-reveal-group>
+      <section id="pricing-cards" class="border-t border-white/10">
         <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
           <div class="mx-auto max-w-3xl text-center">
             <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
-            <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the install that fits your stage</h2>
+            <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the membership that fits your stage</h2>
             <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-              Every package gives you a cleaner client journey and a more controlled delivery system. You keep your workspace, your links, and the operating structure that gets installed.
+              Choose a monthly membership based on transcript capacity, tax tool engagement capacity, and lead access inside the network. When a taxpayer converts to a paying client through the platform intake flow, a {{VLP_PLATFORM_FEE_PERCENT}}% professional platform fee is applied before the case is assigned.
             </p>
           </div>
 
@@ -166,21 +171,21 @@
             <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
               <div class="flex items-center justify-between">
                 <div class="text-lg font-extrabold">Starter</div>
-                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for solo</span>
+                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for testing</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">$497</div>
-                <div class="mt-2 text-sm text-white/70">One-time install</div>
+                <div class="text-4xl font-extrabold">${{VLP_STARTER_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">A clean intake-to-delivery path with links instead of logins. Quick to ship. Easy to operate.</p>
+              <p class="mt-5 text-sm text-white/70">Entry network membership for firms beginning with recurring monitoring and lighter monthly usage.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp lists, statuses, and core custom fields installed</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Intake link creates task automatically</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Payment link updates status</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status link gives read-only progress view</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Access to taxpayer service pool</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/contact.html">Get started</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Get started</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
@@ -191,18 +196,18 @@
                 <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">$1,497</div>
-                <div class="mt-2 text-sm text-white/70">One-time install</div>
+                <div class="text-4xl font-extrabold">${{VLP_PRO_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">Full lifecycle execution with templates, routing, and the minimum automation kernel that protects revenue.</p>
+              <p class="mt-5 text-sm text-white/70">For active firms serving multiple taxpayers each month and needing stronger network visibility and capacity.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>ClickUp task templates and checklists for your phases</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Delivery confirmation sends after status change</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Upload link marks assets received</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Workflow rules enforce lifecycle states</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Featured network listing</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Priority taxpayer pool access</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/contact.html">Start Pro</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Pro</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
@@ -210,21 +215,21 @@
             <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
               <div class="flex items-center justify-between">
                 <div class="text-lg font-extrabold">Advanced</div>
-                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For teams</span>
+                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For higher volume</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">$3,497</div>
-                <div class="mt-2 text-sm text-white/70">One-time install</div>
+                <div class="text-4xl font-extrabold">${{VLP_ADVANCED_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">Adds multi-offer routing, templated documents, and deeper automation so delivery stays stable under volume.</p>
+              <p class="mt-5 text-sm text-white/70">For firms with heavier taxpayer volume, higher transcript demand, and broader staff usage each month.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Documents with agreement and report templates plus PDF output</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Multi-offer routing sends intake to the correct pipeline</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Role mapping for coordinator and assignee logic</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Status surface gives client-ready progress labels</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Top-tier network promotion</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Early access to taxpayer cases</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/contact.html">Start Advanced</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Advanced</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
@@ -232,12 +237,12 @@
 
           <div class="mx-auto mt-10 max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white/70 shadow-soft">
             <div class="font-semibold text-white">What you keep</div>
-            <div class="mt-2">Your ClickUp workspace stays yours. Your links stay yours. Your process stays yours. If you stop, you still keep what was installed.</div>
+            <div class="mt-2">Lead with Starter so firms can test the system with real clients. Use Pro as the main offer for recurring monitoring work. Move firms into Advanced when transcript volume, staff usage, and client load outgrow the Pro token block.</div>
           </div>
         </div>
       </section>
 
-      <section id="comparison" class="border-t border-white/10" data-reveal-group>
+      <section id="comparison" class="border-t border-white/10">
         <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
           <div class="mx-auto max-w-3xl text-center">
             <p class="text-xs font-semibold tracking-widest text-brand-400">COMPARISON</p>
@@ -415,7 +420,7 @@
         </div>
       </section>
 
-      <section class="border-t border-white/10" data-reveal-group>
+      <section class="border-t border-white/10">
         <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
           <div class="rounded-2xl bg-brand-500 px-6 py-10 shadow-soft md:px-10 md:py-14">
             <div class="grid gap-10 text-center md:grid-cols-4 md:gap-8">
@@ -452,7 +457,7 @@
         </div>
       </section>
 
-      <section id="faq" class="border-t border-white/10" data-reveal-group>
+      <section id="faq" class="border-t border-white/10">
         <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
           <div class="mx-auto max-w-3xl text-center">
             <h2 class="text-3xl font-extrabold md:text-4xl">Frequently asked questions</h2>
@@ -483,7 +488,7 @@
         </div>
       </section>
 
-      <section class="border-t border-white/10" data-reveal-group>
+      <section class="border-t border-white/10">
         <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
           <div class="mx-auto max-w-3xl text-center">
             <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Ready to <span class="gradient-text">install the system?</span></h2>
@@ -508,64 +513,6 @@
     (function () {
       var y = document.getElementById('footer-year');
       if (y) y.textContent = String(new Date().getFullYear());
-
-      function initScrollTextReveal() {
-        var manual = Array.prototype.slice.call(document.querySelectorAll('.reveal-text'));
-        var sections = Array.prototype.slice.call(document.querySelectorAll('section[data-reveal-group]'));
-        var auto = [];
-
-        sections.forEach(function (section) {
-          var targets = section.querySelectorAll('h1,h2,h3,p,article,li,details,summary,.rounded-2xl,.rounded-3xl');
-          targets.forEach(function (el) {
-            if (!el.classList.contains('reveal-text') && !el.closest('[data-no-reveal]')) {
-              el.classList.add('reveal-text');
-              auto.push(el);
-            }
-          });
-        });
-
-        var seen = new Set();
-        var items = manual.concat(auto).filter(function (item) {
-          if (seen.has(item)) return false;
-          seen.add(item);
-          return true;
-        });
-
-        if (!items.length) return;
-
-        if (!window.gsap || !window.ScrollTrigger) {
-          items.forEach(function (item) {
-            item.classList.add('is-visible');
-          });
-          return;
-        }
-
-        window.gsap.registerPlugin(window.ScrollTrigger);
-
-        items.forEach(function (item, index) {
-          window.gsap.to(item, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: Math.min(index * 0.03, 0.18),
-            scrollTrigger: {
-              trigger: item,
-              start: 'top 88%',
-              once: true
-            },
-            onStart: function () {
-              item.classList.add('is-visible');
-            }
-          });
-        });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initScrollTextReveal);
-      } else {
-        initScrollTextReveal();
-      }
     })();
   </script>
 
