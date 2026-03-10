@@ -6,6 +6,24 @@ This version replaces the earlier agency‑themed spec and aligns blog productio
 
 ---
 
+# Table of Contents
+
+* [1. Purpose of the Blog](#1-purpose-of-the-blog)
+* [2. Primary Audience](#2-primary-audience)
+* [3. Core Market Problems (Content Anchors)](#3-core-market-problems-content-anchors)
+* [4. Article Structure](#4-article-structure)
+* [5. Tone & Voice](#5-tone--voice)
+* [6. Content Themes](#6-content-themes)
+* [7. Ecosystem Integration Rules](#7-ecosystem-integration-rules)
+* [7.1 Ecosystem Problem → Solution Demonstration](#71-ecosystem-problem--solution-demonstration)
+* [8. Teaser Card Specification](#8-teaser-card-specification)
+* [9. SEO Guidelines](#9-seo-guidelines)
+* [10. Sources and References](#10-sources-and-references)
+* [11. QA Checklist](#11-qa-checklist)
+* [12. Initial Canonical Article Set](#12-initial-canonical-article-set)
+
+---
+
 # 1. Purpose of the Blog
 
 The VLP blog exists to:
@@ -348,6 +366,213 @@ Guidelines:
 ---
 
 # 9. SEO Guidelines
+
+## Canonical Filename System
+
+The **filename is the source of truth** for:
+
+* **date** → `YYYY-MM-DD`
+* **order / index** → `###`
+* **slug** → everything after the second underscore and before `.html`
+
+Required filename pattern:
+
+```txt
+YYYY-MM-DD_###_slug.html
+```
+
+Example:
+
+```txt
+2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html
+```
+
+This means the manifest script must parse the filename into:
+
+* `dateFromFilename`
+* `sequence`
+* `slug`
+* `file`
+* `url`
+
+The manifest must **not** treat the entire filename stem as the slug.
+
+Incorrect:
+
+```js
+slug: path.parse(file).name
+```
+
+That would incorrectly produce a slug like:
+
+```txt
+2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth
+```
+
+Instead, the manifest must extract:
+
+* `date` from the first segment
+* `sequence` from the second segment
+* `slug` from the third segment onward
+
+Recommended parser:
+
+```js
+const ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
+```
+
+Recommended helper:
+
+```js
+function parseArticleFilename(file) {
+  const match = file.match(ARTICLE_FILE_RE);
+
+  if (!match) {
+    throw new Error(
+      `Invalid blog filename "${file}". Expected YYYY-MM-DD_###_slug.html`
+    );
+  }
+
+  const [, date, sequence, slug] = match;
+
+  return {
+    date,
+    file,
+    sequence: Number(sequence),
+    slug,
+    url: `/blog/${slug}.html`,
+  };
+}
+```
+
+## Filename Validation Rules
+
+The build system should validate:
+
+* filename must match `YYYY-MM-DD_###_slug.html`
+* filename date must match `blog-meta.date`
+* slug must come from filename, not from `path.parse(file).name`
+* slugs should remain unique across all published articles unless there is a deliberate reason to reuse one
+
+## Manifest Data Model
+
+The generated post object should look like:
+
+```json
+{
+  "author": "JLW",
+  "authorRole": "EA turned agency builder",
+  "category": "Market",
+  "date": "2026-03-18",
+  "description": "...",
+  "file": "2026-03-18_011_why-tax-professionals-struggle-with-marketing-infrastructure.html",
+  "readTime": "8 min read",
+  "sequence": 11,
+  "slug": "why-tax-professionals-struggle-with-marketing-infrastructure",
+  "title": "Why Tax Professionals Struggle With Marketing Infrastructure",
+  "url": "/blog/why-tax-professionals-struggle-with-marketing-infrastructure.html"
+}
+```
+
+## Linking Rules
+
+Generated links in:
+
+* blog cards
+* featured article cards
+* homepage recent articles
+* blog index articles
+* related reading blocks
+
+should use:
+
+```js
+post.url
+```
+
+Public URLs remain slug-based, while the repo source files remain date-sequenced and canonical.
+
+## Sorting Rules
+
+Canonical sorting should be:
+
+1. `date` descending
+2. `sequence` descending
+3. `slug` as tie-breaker
+
+Recommended sort logic:
+
+```js
+posts.sort((a, b) => {
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+  if (a.sequence !== b.sequence) return a.sequence < b.sequence ? 1 : -1;
+  return a.slug.localeCompare(b.slug);
+});
+```
+
+## Build Integration Rules
+
+### scripts/blog-manifest.mjs
+
+This file must:
+
+* parse `date`, `sequence`, and `slug` from filename
+* validate the canonical filename pattern
+* validate that filename date matches `blog-meta.date`
+* generate `file` and `url`
+* build links with `post.url`
+* sort by `date`, then `sequence`
+
+### build.mjs
+
+This file should remain the single build entrypoint.
+
+It currently:
+
+* imports `generateBlogManifest()` from `./scripts/blog-manifest.mjs`
+* runs `generateBlogManifest()` before the rest of the build
+* loads generated blog fragments from:
+
+  * `blog/.generated/featured.html`
+  * `blog/.generated/list.html`
+  * `blog/.generated/recent3.html`
+* injects blog fragments using `<!-- BLOG:featured -->`, `<!-- BLOG:list -->`, and `<!-- BLOG:recent3 -->`
+* injects site partials using `<!-- PARTIAL:... -->`
+* copies and transforms HTML across the build
+* emits public slug-based blog article aliases during build output while preserving canonical source filenames in the repo
+
+Build rules:
+
+* source filenames stay canonical and date-sequenced
+* generated article links should use `post.url`
+* public article URLs should stay slug-based for cleaner routing
+* use `post.file` for source-file operations where needed
+* use `post.url` for rendered link generation
+
+### index.html and blog/index.html
+
+These pages should consume generated blog fragments and should not hardcode blog article URLs.
+
+If they already consume generated markup, no manual card maintenance should be required.
+
+### Current blog fragment placeholders
+
+Use these exact placeholders:
+
+```html
+<!-- BLOG:featured -->
+<!-- BLOG:list -->
+<!-- BLOG:recent3 -->
+```
+
+`blog/index.html` should consume:
+
+* `<!-- BLOG:featured -->`
+* `<!-- BLOG:list -->`
+
+The main homepage should consume:
+
+* `<!-- BLOG:recent3 -->`
 
 Every article should include:
 
