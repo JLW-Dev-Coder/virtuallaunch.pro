@@ -160,20 +160,36 @@
     <!-- PARTIAL:header -->
 
     <main id="top" class="flex-1">
-      <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-24">
-        <div class="mx-auto max-w-3xl text-center">
-          <p class="mb-5 inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs text-white/80">Calm delivery, white-labeled operations, and scalable client systems</p>
-          <h1 class="text-4xl font-extrabold leading-tight md:text-5xl">How stable service businesses install calm</h1>
-          <p class="mx-auto mt-6 max-w-2xl text-lg text-white/70">Practical thinking on onboarding, delivery flow, client visibility, and growth systems that do not break the minute volume shows up.</p>
+      <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
+        <div class="mx-auto max-w-5xl text-center">
+          <div class="mb-8 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/50 px-4 py-2">
+            <svg class="h-4 w-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-sm text-slate-300">Fresh thinking on calm delivery, growth systems, and cleaner service operations.</span>
+          </div>
+
+          <h1 class="mb-6 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+            Blog <span class="gradient-text">&amp; Articles</span>
+          </h1>
+
+          <p class="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-400 md:text-2xl">
+            Read practical articles on onboarding, client visibility, service delivery, and operational structure designed to help stable businesses grow without creating internal chaos.
+          </p>
+
+          <div class="flex flex-col justify-center gap-4 sm:flex-row">
+            <a href="#featured-article" class="inline-block rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:from-amber-400 hover:to-amber-500 hover:scale-105">Read latest →</a>
+            <a href="#browse-articles" class="inline-block rounded-lg border border-slate-700 bg-slate-900/60 px-8 py-4 text-lg font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80">Browse articles</a>
+          </div>
         </div>
       </section>
 
-      <section class="mx-auto max-w-6-5xl px-4 pb-12">
+      <section id="featured-article" class="mx-auto max-w-6-5xl px-4 pb-12">
         <!-- BLOG:featured -->
         <div id="blog-featured-runtime"></div>
       </section>
 
-      <section class="mx-auto max-w-6-5xl border-t border-white/10 px-4 py-12">
+      <section id="browse-articles" class="mx-auto max-w-6-5xl border-t border-white/10 px-4 py-12">
         <div id="blog-list-runtime" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <!-- BLOG:list -->
         </div>
@@ -219,11 +235,19 @@
         </div>
       </section>
 
-      <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
-        <div class="rounded-2xl bg-brand-500 px-8 py-12 text-center md:px-12 md:py-16">
-          <h2 class="mb-4 text-3xl font-extrabold text-ink-900 md:text-4xl">Ready to install calm into your delivery?</h2>
-          <p class="mx-auto mb-8 max-w-2xl text-ink-900/80">Explore the installs that give you cleaner onboarding, protected scope, and a client journey that still feels controlled when volume climbs.</p>
-          <a href="/index.html#pricing" class="inline-block rounded-xl bg-ink-900 px-8 py-3 text-sm font-extrabold text-brand-500 transition hover:bg-ink-800">View packages</a>
+      <section class="border-t border-white/10">
+        <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+          <div class="mx-auto max-w-3xl text-center">
+            <h2 class="mb-6 text-3xl font-extrabold md:text-5xl">Ready to <span class="gradient-text">keep reading?</span></h2>
+            <p class="mx-auto max-w-xl text-base text-white/70 md:text-lg">Explore the latest article first, then browse the full collection for ideas on delivery structure, onboarding, visibility, and calm operational growth.</p>
+
+            <div class="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
+              <a href="#featured-article" class="inline-block rounded-xl bg-brand-500 px-10 py-5 text-xl font-extrabold text-ink-900 shadow-xl shadow-brand-500/30 transition-all duration-200 hover:bg-brand-400 hover:scale-105">Read latest</a>
+              <a href="#browse-articles" class="inline-block rounded-xl border border-slate-700 bg-slate-900/60 px-10 py-5 text-xl font-extrabold text-slate-100 transition-all duration-200 hover:bg-slate-800/80 hover:scale-105">Browse articles</a>
+            </div>
+
+            <p class="mt-6 text-sm text-slate-400">Virtual Launch Pro shares practical guidance for businesses that want cleaner systems, calmer delivery, and more durable growth.</p>
+          </div>
         </div>
       </section>
     </main>
@@ -251,15 +275,124 @@
         });
       }
 
+      function getCategoryKey(category) {
+        return String(category || '').trim().toLowerCase();
+      }
+
+      function getCategorySvg(category) {
+        var key = getCategoryKey(category);
+
+        if (key === 'market') {
+          return ''
+            + '<svg viewBox="0 0 64 64" class="h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            + '<rect x="10" y="14" width="44" height="36" rx="12" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.28)"></rect>'
+            + '<path d="M18 39L27 31L34 35L45 24" stroke="#fb923c" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>'
+            + '<path d="M39 24H45V30" stroke="#fb923c" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>'
+            + '<path d="M20 47H44" stroke="rgba(255,255,255,0.14)" stroke-linecap="round" stroke-width="2"></path>'
+            + '</svg>';
+        }
+
+        if (key === 'distribution') {
+          return ''
+            + '<svg viewBox="0 0 64 64" class="h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            + '<circle cx="16" cy="32" r="6" fill="rgba(249,115,22,0.16)" stroke="rgba(249,115,22,0.36)"></circle>'
+            + '<circle cx="48" cy="20" r="6" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.32)"></circle>'
+            + '<circle cx="48" cy="44" r="6" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.32)"></circle>'
+            + '<path d="M22 30L42 22" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+            + '<path d="M22 34L42 42" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+            + '</svg>';
+        }
+
+        if (key === 'operations') {
+          return ''
+            + '<svg viewBox="0 0 64 64" class="h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            + '<rect x="14" y="14" width="36" height="36" rx="10" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.28)"></rect>'
+            + '<path d="M24 24H40" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+            + '<path d="M24 32H40" stroke="rgba(255,255,255,0.5)" stroke-linecap="round" stroke-width="3"></path>'
+            + '<path d="M24 40H34" stroke="rgba(255,255,255,0.35)" stroke-linecap="round" stroke-width="3"></path>'
+            + '<circle cx="44" cy="40" r="5" fill="rgba(249,115,22,0.18)" stroke="rgba(249,115,22,0.36)"></circle>'
+            + '</svg>';
+        }
+
+        if (key === 'monitoring') {
+          return ''
+            + '<svg viewBox="0 0 64 64" class="h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            + '<rect x="12" y="16" width="40" height="32" rx="12" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.28)"></rect>'
+            + '<path d="M20 37L26 31L31 34L39 25L44 28" stroke="#fb923c" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>'
+            + '<circle cx="46" cy="18" r="6" fill="#fb923c"></circle>'
+            + '</svg>';
+        }
+
+        if (key === 'ecosystem') {
+          return ''
+            + '<svg viewBox="0 0 64 64" class="h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            + '<circle cx="32" cy="18" r="6" fill="rgba(249,115,22,0.16)" stroke="rgba(249,115,22,0.36)"></circle>'
+            + '<circle cx="18" cy="42" r="6" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.32)"></circle>'
+            + '<circle cx="46" cy="42" r="6" fill="rgba(249,115,22,0.12)" stroke="rgba(249,115,22,0.32)"></circle>'
+            + '<path d="M28 22L22 36" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+            + '<path d="M36 22L42 36" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+            + '<path d="M24 42H40" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+            + '</svg>';
+        }
+
+        return ''
+          + '<svg viewBox="0 0 64 64" class="h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+          + '<rect x="14" y="14" width="36" height="36" rx="12" fill="rgba(249,115,22,0.08)" stroke="rgba(249,115,22,0.28)"></rect>'
+          + '<path d="M22 24H42" stroke="#fb923c" stroke-linecap="round" stroke-width="3"></path>'
+          + '<path d="M22 32H42" stroke="rgba(255,255,255,0.45)" stroke-linecap="round" stroke-width="3"></path>'
+          + '<path d="M22 40H34" stroke="rgba(255,255,255,0.28)" stroke-linecap="round" stroke-width="3"></path>'
+          + '</svg>';
+      }
+
+      function getFeaturedSvg(category) {
+        var key = getCategoryKey(category);
+        var accent = '#fb923c';
+        var panel = 'rgba(249,115,22,0.12)';
+        var icon = getCategorySvg(category);
+
+        if (key === 'distribution') accent = '#f59e0b';
+        if (key === 'ecosystem') accent = '#fdba74';
+        if (key === 'market') accent = '#f97316';
+        if (key === 'monitoring') accent = '#ff9d3f';
+        if (key === 'operations') accent = '#fb923c';
+
+        return ''
+          + '<div class="relative mx-auto w-full max-w-[360px]">'
+          + '<div class="absolute inset-0 rounded-[2rem] bg-orange-500/10 blur-3xl"></div>'
+          + '<svg viewBox="0 0 420 320" class="relative h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+          + '<rect x="58" y="42" width="304" height="224" rx="26" fill="#081120" stroke="rgba(255,255,255,0.12)"></rect>'
+          + '<rect x="84" y="72" width="146" height="14" rx="7" fill="' + accent + '" opacity="0.92"></rect>'
+          + '<rect x="84" y="98" width="220" height="10" rx="5" fill="rgba(255,255,255,0.14)"></rect>'
+          + '<rect x="84" y="116" width="182" height="10" rx="5" fill="rgba(255,255,255,0.09)"></rect>'
+          + '<rect x="84" y="148" width="112" height="92" rx="18" fill="' + panel + '" stroke="rgba(249,115,22,0.28)"></rect>'
+          + '<foreignObject x="102" y="166" width="76" height="56">'
+          + '<div xmlns="http://www.w3.org/1999/xhtml" style="width:76px;height:56px;color:' + accent + ';display:flex;align-items:center;justify-content:center;">' + icon + '</div>'
+          + '</foreignObject>'
+          + '<rect x="214" y="154" width="102" height="12" rx="6" fill="rgba(255,255,255,0.18)"></rect>'
+          + '<rect x="214" y="176" width="88" height="12" rx="6" fill="rgba(255,255,255,0.12)"></rect>'
+          + '<rect x="214" y="198" width="74" height="12" rx="6" fill="rgba(255,255,255,0.09)"></rect>'
+          + '<path d="M308 84C324 84 338 98 338 114C338 130 324 144 308 144" stroke="' + accent + '" stroke-linecap="round" stroke-width="5"></path>'
+          + '<path d="M300 100L318 114L300 128" stroke="' + accent + '" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"></path>'
+          + '<rect x="126" y="252" width="162" height="8" rx="4" fill="rgba(255,255,255,0.08)"></rect>'
+          + '</svg>'
+          + '</div>';
+      }
+
       function buildCard(post) {
+        var category = escapeHtml(post.category || 'Article');
+        var categorySvg = getCategorySvg(post.category || '');
+
         return ''
           + '<article class="blog-card flex flex-col p-6" data-category="' + escapeHtml(post.category || '') + '">'
-          + '<div class="mb-4"><span class="category-badge">' + escapeHtml(post.category || 'Article') + '</span></div>'
-          + '<h3 class="mt-0 mb-3 flex-grow text-lg font-extrabold">'
+          + '<div class="mb-5 flex items-start justify-between gap-4">'
+          + '<span class="category-badge">' + category + '</span>'
+          + '<div class="w-[56px] shrink-0 text-white/70">' + categorySvg + '</div>'
+          + '</div>'
+          + '<h3 class="mt-0 mb-3 flex-grow text-lg font-extrabold leading-tight">'
           + '<a class="transition hover:text-brand-300" href="' + escapeHtml(post.url || '#') + '">' + escapeHtml(post.title || 'Untitled article') + '</a>'
           + '</h3>'
-          + '<p class="mb-4 text-sm text-white/70">' + escapeHtml(post.description || '') + '</p>'
-          + '<div class="flex items-center justify-between gap-3 border-t border-white/10 pt-4">'
+          + '<p class="mb-4 text-sm leading-7 text-white/70">' + escapeHtml(post.description || '') + '</p>'
+          + '<div class="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4">'
           + '<div class="min-w-0 flex items-center gap-2">'
           + '<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-[10px] font-bold">' + escapeHtml((post.author || '?').slice(0, 2).toUpperCase()) + '</div>'
           + '<div class="min-w-0">'
@@ -281,33 +414,7 @@
         var author = escapeHtml(post.author || '');
         var authorRole = escapeHtml(post.authorRole || '');
         var url = escapeHtml(post.url || '#');
-
-        var svg = ''
-          + '<div class="relative mx-auto w-full max-w-[360px]">'
-          + '<div class="absolute inset-0 rounded-[2rem] bg-orange-500/10 blur-3xl"></div>'
-          + '<svg viewBox="0 0 420 320" class="relative h-auto w-full" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-          + '<defs>'
-          + '<linearGradient id="blogGlow" x1="56" y1="34" x2="344" y2="286" gradientUnits="userSpaceOnUse">'
-          + '<stop stop-color="#f59e0b"></stop>'
-          + '<stop offset="1" stop-color="#fb923c"></stop>'
-          + '</linearGradient>'
-          + '</defs>'
-          + '<rect x="58" y="42" width="304" height="224" rx="26" fill="#081120" stroke="rgba(255,255,255,0.12)"></rect>'
-          + '<rect x="82" y="70" width="180" height="16" rx="8" fill="url(#blogGlow)" opacity="0.95"></rect>'
-          + '<rect x="82" y="100" width="242" height="10" rx="5" fill="rgba(255,255,255,0.16)"></rect>'
-          + '<rect x="82" y="118" width="210" height="10" rx="5" fill="rgba(255,255,255,0.1)"></rect>'
-          + '<rect x="82" y="150" width="96" height="70" rx="16" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.35)"></rect>'
-          + '<path d="M105 198L125 174L142 188L161 164" stroke="#f59e0b" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"></path>'
-          + '<rect x="194" y="150" width="130" height="12" rx="6" fill="rgba(255,255,255,0.18)"></rect>'
-          + '<rect x="194" y="172" width="112" height="12" rx="6" fill="rgba(255,255,255,0.12)"></rect>'
-          + '<rect x="194" y="194" width="88" height="12" rx="6" fill="rgba(255,255,255,0.09)"></rect>'
-          + '<circle cx="332" cy="88" r="26" fill="rgba(245,158,11,0.16)" stroke="rgba(245,158,11,0.45)"></circle>'
-          + '<path d="M320 88H344M332 76V100" stroke="#f59e0b" stroke-linecap="round" stroke-width="5"></path>'
-          + '<rect x="124" y="246" width="170" height="10" rx="5" fill="rgba(255,255,255,0.08)"></rect>'
-          + '<path d="M38 84C38 60.804 56.804 42 80 42" stroke="rgba(245,158,11,0.55)" stroke-linecap="round" stroke-width="4"></path>'
-          + '<path d="M382 238C382 261.196 363.196 280 340 280" stroke="rgba(245,158,11,0.4)" stroke-linecap="round" stroke-width="4"></path>'
-          + '</svg>'
-          + '</div>';
+        var svg = getFeaturedSvg(post.category || '');
 
         return ''
           + '<article class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">'
@@ -446,7 +553,11 @@
         console.assert(normalizePosts(samplePosts).length === 1, 'normalizePosts should keep valid posts');
         console.assert(normalizePosts([null, {}]).length === 0, 'normalizePosts should drop invalid posts');
         console.assert(buildCard(samplePosts[0]).indexOf('Calmer client intake') !== -1, 'buildCard should include the title');
+        console.assert(buildCard(samplePosts[0]).indexOf('</div></div>') !== -1, 'buildCard should close its header wrapper markup');
         console.assert(buildFeatured(samplePosts[0]).indexOf('Read article') !== -1, 'buildFeatured should include the CTA');
+        console.assert(getCategorySvg('Market').indexOf('<svg') !== -1, 'getCategorySvg should return svg markup');
+        console.assert(getFeaturedSvg('Operations').indexOf('<svg') !== -1, 'getFeaturedSvg should return svg markup');
+        console.assert(getCategoryKey(' Monitoring ') === 'monitoring', 'getCategoryKey should normalize case and whitespace');
       }
 
       async function renderBlogPosts() {
