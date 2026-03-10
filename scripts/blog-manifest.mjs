@@ -216,24 +216,34 @@ function buildCard(post) {
 
 function buildFeatured(post) {
   return `<article class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
-  <div class="mb-4 flex items-center gap-3 flex-wrap">
-    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
-      ${renderFeaturedArticleSvg()}
-      <span>Featured article</span>
-    </span>
-    <span class="category-badge category-badge--active inline-flex items-center gap-2">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span>
-    <span class="text-xs text-white/60">•</span>
-    <span class="text-xs text-white/60">${escapeHtml(post.readTime)}</span>
-    <span class="text-xs text-white/60">•</span>
-    <span class="text-xs text-white/60">${escapeHtml(formatDisplayDate(post.date))}</span>
-  </div>
-  <h2 class="text-3xl md:text-4xl font-extrabold">${escapeHtml(post.title)}</h2>
-  <p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">${escapeHtml(post.description)}</p>
-  <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="${escapeHtml(post.url)}">Read article</a>
-    <div class="text-sm text-white/70">
-      <div class="font-semibold text-white">${escapeHtml(post.author)}</div>
-      <div class="text-white/55">${escapeHtml(post.authorRole)}</div>
+  <div class="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
+    <div class="min-w-0 flex-1">
+      <div class="mb-4 flex items-center gap-3 flex-wrap">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
+          <span>Featured article</span>
+        </span>
+        <span class="category-badge category-badge--active inline-flex items-center gap-2">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span>
+        <span class="text-xs text-white/60">•</span>
+        <span class="text-xs text-white/60">${escapeHtml(post.readTime)}</span>
+        <span class="text-xs text-white/60">•</span>
+        <span class="text-xs text-white/60">${escapeHtml(formatDisplayDate(post.date))}</span>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-extrabold max-w-4xl">${escapeHtml(post.title)}</h2>
+      <p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">${escapeHtml(post.description)}</p>
+
+      <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
+        <a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="${escapeHtml(post.url)}">Read article</a>
+        <div class="text-sm text-white/70">
+          <div class="font-semibold text-white">${escapeHtml(post.author)}</div>
+          <div class="text-white/55">${escapeHtml(post.authorRole)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex shrink-0 justify-start lg:justify-end lg:pt-2">
+      <div class="inline-flex h-24 w-24 items-center justify-center rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] text-brand-400 shadow-soft md:h-28 md:w-28">
+        ${renderFeaturedArticleSvg().replace('class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-brand-400"', 'class="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-500/10 text-brand-400"').replace('class="h-4 w-4"', 'class="h-8 w-8"')}
+      </div>
     </div>
   </div>
 </article>`;
