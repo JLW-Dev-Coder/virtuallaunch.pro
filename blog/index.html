@@ -45,6 +45,7 @@
     html {
       height: 100%;
       scroll-behavior: smooth;
+      scroll-padding-top: 120px;
     }
 
     body {
@@ -255,12 +256,12 @@
         </div>
       </section>
 
-      <section id="featured-article" class="reveal-on-scroll mx-auto max-w-6-5xl px-4 pb-12" data-reveal-delay="0.14">
+      <section id="featured-article" class="reveal-on-scroll mx-auto max-w-6-5xl px-4 pb-12 scroll-mt-32 md:scroll-mt-36" data-reveal-delay="0.14">
         <!-- BLOG:featured -->
         <div id="blog-featured-runtime"></div>
       </section>
 
-      <section id="browse-articles" class="reveal-on-scroll mx-auto max-w-6-5xl border-t border-white/10 px-4 py-12" data-reveal-delay="0.2">
+      <section id="browse-articles" class="reveal-on-scroll mx-auto max-w-6-5xl border-t border-white/10 px-4 py-12 scroll-mt-32 md:scroll-mt-36" data-reveal-delay="0.2">
         <div id="blog-list-runtime" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <!-- BLOG:list -->
         </div>
@@ -770,6 +771,7 @@
         console.assert(getCategoryKey(' Monitoring ') === 'monitoring', 'getCategoryKey should normalize case and whitespace');
         console.assert(buildLoadingFeatured().indexOf('blog-loading-card') !== -1, 'buildLoadingFeatured should return loading markup');
         console.assert((buildLoadingCards(2).match(/blog-loading-card/g) || []).length === 2, 'buildLoadingCards should return requested number of cards');
+        console.assert(document.documentElement.style.scrollPaddingTop !== '0px', 'anchor navigation should reserve space for the fixed header');
       }
 
       async function renderBlogPosts() {
