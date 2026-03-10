@@ -1,0 +1,11 @@
+2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html 
+2026-03-09_002_why-tax-professionals-need-more-than-referrals-to-grow.html 
+2026-03-10_003_how-structured-onboarding-changes-the-client-experience.html 
+2026-03-11_004_why-recurring-monitoring-is-a-better-fit-than-seasonal-dependence.html 
+2026-03-12_005_why-service-packaging-matters-in-tax-practices.html 
+2026-03-13_006_why-tax-monitoring-is-becoming-a-core-tax-service.html 
+2026-03-14_007_monitoring-clients-before-tax-resolution.html 
+2026-03-15_008_how-transcript-analysis-creates-consulting-revenue.html 
+2026-03-16_009_how-tax-tools-arcade-attracts-taxpayers-before-they-hire-a-professional.html 
+2026-03-17_010_how-the-vlp-ecosystem-turns-expertise-into-recurring-tax-practice-revenue.html 
+2026-03-18_011_why-tax-professionals-struggle-with-marketing-infrastructure.html
