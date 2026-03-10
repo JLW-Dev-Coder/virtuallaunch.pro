@@ -206,49 +206,7 @@
       }
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .reveal-up {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.8s ease-out both;
-    }
-
-    .reveal-delay-1 {
-      animation-delay: 0.1s;
-    }
-
-    .reveal-delay-2 {
-      animation-delay: 0.2s;
-    }
-
-    .reveal-delay-3 {
-      animation-delay: 0.3s;
-    }
-
-    .reveal-delay-4 {
-      animation-delay: 0.4s;
-    }
-
-    .reveal-delay-5 {
-      animation-delay: 0.5s;
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      .reveal-up {
-        opacity: 1;
-        transform: none;
-        animation: none;
-      }
       .vlp-grid-pan {
         animation: none;
       }
@@ -277,11 +235,11 @@
 
    <main id="top" class="flex-1">
     <article class="mx-auto max-w-3xl px-4 py-12 md:py-16">
-     <div class="reveal-up reveal-delay-1">
+     <div class="reveal">
      <!-- PARTIAL:blogArticleHeader -->
      </div>
 
-      <div class="mb-12 md:mb-16 reveal-up reveal-delay-2">
+      <section class="mb-12 md:mb-16">
       <div class="mb-4 flex items-center gap-3 flex-wrap">
         <span class="category-badge category-badge--active">Market</span>
         <span class="text-xs text-white/60">•</span>
@@ -291,22 +249,20 @@
       </div>
       <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">Why so many tax professionals stay stuck in referral-only growth</h1>
       <p class="text-lg text-white/75 max-w-2xl">Many independent EAs, CPAs, tax attorneys, and modern virtual firms have strong technical skill but weak growth infrastructure. The problem is rarely expertise. It is usually distribution, packaging, onboarding, and recurring revenue design.</p>
-     </div>
+     </section>
 
-     <div class="flex items-center gap-4 pb-8 border-b border-white/10 mb-12 reveal-up reveal-delay-3">
+     <section class="flex items-center gap-4 pb-8 border-b border-white/10 mb-12">
       <div class="author-avatar">JLW</div>
       <div>
        <div class="font-semibold">JLW</div>
        <div class="text-sm text-white/60">EA turned agency builder</div>
       </div>
-     </div>
+     </section>
 
-     <div class="article-content reveal-up reveal-delay-4">
+     <section class="article-content">
       <p>If you're like me and a lot of tax professionals, we do excellent work but still end up with unstable growth. We rely on referrals, take whatever service shape the market throws at us, and keep rebuilding the client experience manually. We use what we have when the client calls, but that usually leads to seasonal revenue flow, improvised marketing, and scaling that feels heavier than it should.</p>
 
-      <p>Does this sound like you? Well, you are not alone. This is especially common among us independent tax professionals like Enrolled Agents, CPAs, tax attorneys, solo accounting practices, and digitally native firms who often already have the core expertise<sup><a href="#ref1" class="text-white/80 hover:text-brand-400">1</a></sup>. What we lack is the infrastructure around that expertise. We need a better way to get discovered, package offers clearly, onboard clients cleanly, and create recurring relationships before every engagement turns into reactive resolution work.
-
-</p>
+      <p>Does this sound like you? Well, you are not alone. This is especially common among us independent tax professionals like Enrolled Agents, CPAs, tax attorneys, solo accounting practices, and digitally native firms who often already have the core expertise<sup><a href="#ref1" class="text-white/80 hover:text-brand-400">1</a></sup>. What we lack is the infrastructure around that expertise. We need a better way to get discovered, package offers clearly, onboard clients cleanly, and create recurring relationships before every engagement turns into reactive resolution work.</p>
 
       <p>That is the actual market problem Virtual Launch Pro is built to solve. And because VLP works alongside Tax Monitor, Transcripts, and Tax Tools, the solution is not just internal workflow polish. It is a fuller ecosystem that helps professionals get found, diagnose issues, and convert demand into structured services.</p>
 
@@ -373,26 +329,25 @@
       <p>When client discovery improves, services are packaged clearly, onboarding becomes structured, and monitoring creates a recurring layer beyond filing season, the practice starts to behave differently. It becomes calmer, more credible, and more scalable.</p>
 
       <p style="font-size: 1.125rem; font-weight: 600; color: rgba(249, 115, 22, 0.9); margin-top: 2.5rem;">Virtual Launch Pro uses one structured offer and a reliable ecosystem to help clients discover you and your expertise. <a href="/blog/index.html" class="no-underline hover:text-brand-400">Read more about systems</a> or <a href="/how-it-works.html" class="no-underline hover:text-brand-400">see how membership works</a>.</p>
-     <h2>Sources</h2>
+      <h2>Sources</h2>
 
-<p id="ref1" class="text-sm text-white/60"><sup>1</sup>
-<a href="https://www.thomsonreuters.com/en-us/posts/tax-and-accounting/tax-professionals-report-2024/" target="_blank" class="underline hover:text-brand-400">Thomson Reuters Institute, 2024 State of Tax Professionals Report</a> — Documents structural challenges facing independent tax and accounting firms, including marketing limitations, client acquisition patterns, and operational infrastructure differences between small and large firms.
-<br><br>
-<a href="https://www.aicpa-cima.com/professional-insights/article/pcps-cpa-firm-top-issues-survey" target="_blank" class="underline hover:text-brand-400">AICPA & CIMA, CPA Firm Top Issues Survey</a> — Repeated surveys of U.S. accounting firms showing that growth, technology adoption, staffing, and firm infrastructure are persistent challenges for small and independent practices.
-<br><br>
-<a href="https://www.naea.org/how-enrolled-agents-can-thrive-in-an-uncertain-2026-economy-insights-from-the-cpa-trendlines-forecast/" target="_blank" class="underline hover:text-brand-400">National Association of Enrolled Agents (NAEA), How Enrolled Agents Can Thrive in an Uncertain Economy</a> — Discusses market pressures on independent tax professionals and the need for stronger positioning, services, and operational systems.</p>
+      <p id="ref1" class="text-sm text-white/60"><sup>1</sup>
+      <a href="https://www.thomsonreuters.com/en-us/posts/tax-and-accounting/tax-professionals-report-2024/" target="_blank" class="underline hover:text-brand-400">Thomson Reuters Institute, 2024 State of Tax Professionals Report</a> — Documents structural challenges facing independent tax and accounting firms, including marketing limitations, client acquisition patterns, and operational infrastructure differences between small and large firms.
+      <br><br>
+      <a href="https://www.aicpa-cima.com/professional-insights/article/pcps-cpa-firm-top-issues-survey" target="_blank" class="underline hover:text-brand-400">AICPA &amp; CIMA, CPA Firm Top Issues Survey</a> — Repeated surveys of U.S. accounting firms showing that growth, technology adoption, staffing, and firm infrastructure are persistent challenges for small and independent practices.
+      <br><br>
+      <a href="https://www.naea.org/how-enrolled-agents-can-thrive-in-an-uncertain-2026-economy-insights-from-the-cpa-trendlines-forecast/" target="_blank" class="underline hover:text-brand-400">National Association of Enrolled Agents (NAEA), How Enrolled Agents Can Thrive in an Uncertain Economy</a> — Discusses market pressures on independent tax professionals and the need for stronger positioning, services, and operational systems.</p>
 
-<p id="ref2" class="text-sm text-white/60"><sup>2</sup>
-<a href="https://quickbooks.intuit.com/r/small-business-data/accountant-tech-survey-2024/" target="_blank" class="underline hover:text-brand-400">Intuit QuickBooks, 2024 Accountant Technology Survey</a> — Reports that many accounting and tax professionals still struggle with technology adoption and operational modernization, which contributes to inefficiencies and growth constraints.
-<br><br>
-<a href="https://www.journalofaccountancy.com/issues/2021/dec/cas-practices-see-20-percent-growth/" target="_blank" class="underline hover:text-brand-400">Journal of Accountancy, CAS Practices See 20% Growth</a> — Highlights the increasing demand for recurring advisory and monitoring services beyond traditional seasonal tax work.
-<br><br>
-<a href="https://www.aicpa-cima.com/professional-insights/download/tackling-change-in-an-uncertain-environment" target="_blank" class="underline hover:text-brand-400">AICPA & CIMA, Tackling Change in an Uncertain Environment</a> — Commentary on structural changes affecting accounting and tax practices, including the shift toward technology-enabled and recurring services.</p>
-
-</div>
+      <p id="ref2" class="text-sm text-white/60"><sup>2</sup>
+      <a href="https://quickbooks.intuit.com/r/small-business-data/accountant-tech-survey-2024/" target="_blank" class="underline hover:text-brand-400">Intuit QuickBooks, 2024 Accountant Technology Survey</a> — Reports that many accounting and tax professionals still struggle with technology adoption and operational modernization, which contributes to inefficiencies and growth constraints.
+      <br><br>
+      <a href="https://www.journalofaccountancy.com/issues/2021/dec/cas-practices-see-20-percent-growth/" target="_blank" class="underline hover:text-brand-400">Journal of Accountancy, CAS Practices See 20% Growth</a> — Highlights the increasing demand for recurring advisory and monitoring services beyond traditional seasonal tax work.
+      <br><br>
+      <a href="https://www.aicpa-cima.com/professional-insights/download/tackling-change-in-an-uncertain-environment" target="_blank" class="underline hover:text-brand-400">AICPA &amp; CIMA, Tackling Change in an Uncertain Environment</a> — Commentary on structural changes affecting accounting and tax practices, including the shift toward technology-enabled and recurring services.</p>
+     </section>
     </article>
 
-    <div class="reveal-up reveal-delay-5">
+    <div class="reveal">
     <!-- PARTIAL:blogArticleFooter -->
     </div>
    </main>
