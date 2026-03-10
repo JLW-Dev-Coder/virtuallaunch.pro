@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Support - Virtual Launch Pro</title>
+    <meta name="description" content="Contact Virtual Launch Pro support for help with memberships, profiles, partnerships, onboarding, and platform questions. Submit a ticket to get a Support ID and track updates." />
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f97316'/%3E%3Cpath d='M18 18h28L34 46h-6l10-22H18z' fill='white'/%3E%3C/svg%3E" type="image/svg+xml" />
+
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * { font-family: 'DM Sans', system-ui, sans-serif; }
+      body { box-sizing: border-box; }
+
+      .hero-grid {
+        background:
+          radial-gradient(circle at top left, rgba(249,115,22,0.24), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(251,191,36,0.16), transparent 28%),
+          linear-gradient(135deg, #0f172a 0%, #1c1917 40%, #7c2d12 72%, #0f172a 100%);
+        background-image:
+          radial-gradient(circle at top left, rgba(249,115,22,0.24), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(251,191,36,0.16), transparent 28%),
+          linear-gradient(135deg, #0f172a 0%, #1c1917 40%, #7c2d12 72%, #0f172a 100%),
+          linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+        background-size: auto, auto, auto, 40px 40px, 40px 40px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-glow::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 920px;
+        height: 920px;
+        background: radial-gradient(circle, rgba(249,115,22,0.24) 0%, rgba(251,191,36,0.08) 32%, rgba(15,23,42,0) 72%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero-content { position: relative; z-index: 1; }
+
+      .orange-card {
+        background: linear-gradient(180deg, rgba(30,41,59,0.98) 0%, rgba(15,23,42,0.98) 100%);
+        border: 1px solid rgba(249,115,22,0.16);
+        box-shadow: 0 24px 60px rgba(2, 6, 23, 0.3);
+      }
+
+      .orange-glass {
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(249,115,22,0.2);
+      }
+
+      @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+
+      .input {
+        background: rgba(255,255,255,0.96);
+        border: 1px solid rgba(249,115,22,0.14);
+        color: #2d3748;
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 14px;
+        line-height: 1.25rem;
+        width: 100%;
+        outline: none;
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      }
+
+      .input:focus {
+        border-color: rgba(249,115,22,0.58);
+        box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+      }
+
+      select.input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23f97316' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        background-size: 18px;
+        padding-right: 44px;
+        cursor: pointer;
+      }
+
+      select.input option { color: #1c1917; }
+      select.input option:disabled { color: #94a3b8; }
+
+      .status {
+        border-radius: 14px;
+        border: 1px solid rgba(249,115,22,0.18);
+        background: rgba(249,115,22,0.08);
+        padding: 12px 14px;
+        font-size: 13px;
+        line-height: 1.25rem;
+      }
+
+      .status-error { border-color: rgba(239, 68, 68, 0.25); background: rgba(239, 68, 68, 0.06); color: rgb(153, 27, 27); }
+      .status-info { border-color: rgba(249,115,22,0.24); background: rgba(249,115,22,0.08); color: rgb(154, 52, 18); }
+      .status-success { border-color: rgba(249,115,22,0.24); background: rgba(249,115,22,0.08); color: rgb(154, 52, 18); }
+
+      .hero-grid .status {
+        border-color: rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.10);
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .hero-grid .status-error {
+        border-color: rgba(239, 68, 68, 0.55);
+        background: rgba(239, 68, 68, 0.22);
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .hero-grid .status-error a {
+        color: rgba(255, 255, 255, 0.95);
+        text-decoration: underline;
+      }
+    </style>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              action: '#f97316',
+              charcoal: '#2d3748',
+              gold: '#fbbf24',
+              navy: '#0f2747',
+              warm: '#fb923c'
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+
+  <body class="h-full bg-slate-950 text-white overflow-auto">
+    <div id="app" class="w-full min-h-screen flex flex-col">
+      <div id="header"></div>
+
+      <section class="hero-grid hero-glow py-16 md:py-24 text-white">
+        <div class="max-w-6xl mx-auto px-4 hero-content">
+          <div class="grid lg:grid-cols-2 gap-10 items-center">
+            <div class="text-center lg:text-left">
+              <div class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur border border-orange-400/20">
+                <span class="w-2 h-2 rounded-full bg-gold"></span>
+                Virtual Launch Pro support
+              </div>
+              <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-5">Contact Support</h1>
+              <p class="text-lg text-white/80 max-w-xl mx-auto lg:mx-0">
+                Submit a ticket for help with memberships, directory profiles, partnerships, onboarding, billing, or platform questions. You’ll get a Support ID to track progress.
+              </p>
+
+              <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <a href="#support-form" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-xl" data-scroll>
+                  Create a ticket
+                </a>
+                <a href="/index.html#how-it-works" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-8 py-4 rounded-xl border border-orange-400/20 transition-all">
+                  See How It Works
+                </a>
+              </div>
+
+              <p class="mt-6 text-white/70 text-sm">No passwords. No taxpayer SSNs. No sensitive client documents in the message box unless we explicitly request them.</p>
+            </div>
+
+            <div class="animate-slide-up">
+              <div class="orange-glass rounded-3xl p-6 md:p-8 shadow-2xl">
+                <div class="flex items-center justify-between mb-5">
+                  <div class="inline-flex items-center gap-2 bg-white/10 text-white px-3 py-1.5 rounded-full text-xs font-semibold border border-orange-400/20">
+                    <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                    Support lookup
+                  </div>
+                  <div class="text-white/70 text-sm">Status</div>
+                </div>
+
+                <p class="text-white/80 text-sm mb-4">Already have a Support ID? Check your VLP support status here.</p>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                  <input id="support-id-lookup" type="text" class="input" placeholder="Support ID" autocomplete="off" />
+                  <button id="support-id-lookup-btn" type="button" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-5 py-3 rounded-xl border border-orange-400/20 transition-all whitespace-nowrap">
+                    Check status
+                  </button>
+                </div>
+                <div id="support-lookup-status" class="hidden status status-info mt-4" aria-live="polite"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="support-form" class="py-16 md:py-24 bg-slate-900 scroll-mt-[220px]">
+        <div class="max-w-3xl mx-auto px-4">
+          <div class="text-center mb-10">
+            <span class="inline-flex items-center gap-2 bg-orange-500/15 text-orange-200 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-orange-500/20">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+              Create a ticket
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white">Tell us what you need help with</h2>
+            <p class="text-slate-300 mt-3">We’ll reply by email and include a Support ID for tracking.</p>
+          </div>
+
+          <form id="support-form-el" class="orange-card rounded-3xl p-6 md:p-8" novalidate>
+            <input type="hidden" id="eventId" name="eventId" />
+            <input type="hidden" id="sessionToken" name="sessionToken" />
+            <input type="hidden" id="utm_source" name="utm_source" />
+            <input type="hidden" id="utm_medium" name="utm_medium" />
+            <input type="hidden" id="utm_campaign" name="utm_campaign" />
+            <input type="hidden" id="utm_term" name="utm_term" />
+            <input type="hidden" id="utm_content" name="utm_content" />
+
+            <div class="grid md:grid-cols-2 gap-5">
+              <div>
+                <label for="name" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Name *</label>
+                <input id="name" name="name" class="input" placeholder="Your name" required />
+              </div>
+              <div>
+                <label for="email" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Email *</label>
+                <input id="email" name="email" class="input" placeholder="you@email.com" type="email" required />
+              </div>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-2 gap-5">
+              <div>
+                <label for="category" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Category *</label>
+                <select id="category" name="category" class="input" required>
+                  <option value="" selected disabled hidden></option>
+                  <option value="Billing / Payments">Billing / Payments</option>
+                  <option value="Directory Profile">Directory Profile</option>
+                  <option value="General">General</option>
+                  <option value="Membership / Plans">Membership / Plans</option>
+                  <option value="Onboarding">Onboarding</option>
+                  <option value="Partnerships">Partnerships</option>
+                  <option value="Platform / Access">Platform / Access</option>
+                </select>
+              </div>
+              <div>
+                <label for="issueType" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Issue Type *</label>
+                <select id="issueType" name="issueType" class="input" required>
+                  <option value="" selected disabled hidden></option>
+                  <option value="Access">Access</option>
+                  <option value="Billing">Billing</option>
+                  <option value="General Question">General Question</option>
+                  <option value="Profile Update">Profile Update</option>
+                  <option value="Technical">Technical</option>
+                  <option value="Upgrade / Downgrade">Upgrade / Downgrade</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-2 gap-5">
+              <div>
+                <label for="priority" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Priority *</label>
+                <select id="priority" name="priority" class="input" required>
+                  <option value="" selected disabled hidden></option>
+                  <option value="Critical">Critical</option>
+                  <option value="High">High</option>
+                  <option value="Low">Low</option>
+                  <option value="Normal">Normal</option>
+                </select>
+              </div>
+              <div>
+                <label for="urgency" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Urgency *</label>
+                <select id="urgency" name="urgency" class="input" required>
+                  <option value="" selected disabled hidden></option>
+                  <option value="Normal">Normal</option>
+                  <option value="Time-sensitive (deadline)">Time-sensitive (deadline)</option>
+                  <option value="Urgent (service blocked)">Urgent (service blocked)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <label for="subject" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Subject *</label>
+              <input id="subject" name="subject" class="input" placeholder="e.g., Need help updating my directory profile" required />
+            </div>
+
+            <div class="mt-6">
+              <label for="message" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Message *</label>
+              <textarea id="message" name="message" rows="5" class="input" placeholder="Tell us what happened, what you need, and any relevant page, plan, or issue details" required></textarea>
+              <p class="mt-2 text-xs text-slate-400">Include the page or plan involved, what you expected, and any exact error text. Don’t include sensitive personal or taxpayer data.</p>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-2 gap-5">
+              <div>
+                <label for="memberId" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Member ID</label>
+                <input id="memberId" name="memberId" class="input" placeholder="Optional" />
+              </div>
+              <div>
+                <label for="relatedOrderId" class="text-xs font-semibold text-orange-200 uppercase tracking-wide block mb-2">Related ID</label>
+                <input id="relatedOrderId" name="relatedOrderId" class="input" placeholder="Optional (Stripe ID, invoice ID, reference, etc.)" />
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <button id="submit-btn" type="submit" class="bg-orange-500 hover:bg-orange-400 text-white px-8 py-4 rounded-xl font-semibold shadow-lg transition-all w-full">
+                Submit ticket
+              </button>
+              <p class="text-xs text-slate-400 text-center mt-4">
+                By submitting, you agree to our
+                <a class="text-orange-300 hover:underline" href="/legal/terms.html">Terms</a>
+                and
+                <a class="text-orange-300 hover:underline" href="/legal/privacy.html">Privacy Policy</a>.
+              </p>
+            </div>
+
+            <div id="form-status" class="hidden status mt-4" aria-live="polite"></div>
+
+            <div id="support-id-display" class="hidden mt-6 p-6 rounded-2xl bg-orange-500/10 border border-orange-400/20">
+              <p class="text-xs text-orange-200 font-semibold uppercase tracking-wide mb-2">Your Support ID</p>
+              <div class="text-3xl font-bold text-white font-mono mb-3" id="support-id"></div>
+              <p class="text-sm text-slate-300">We’ve emailed confirmation. Keep this ID for Virtual Launch Pro support status checks.</p>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="py-16 md:py-24 hero-grid text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center hero-content">
+          <div class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur border border-orange-400/20">
+            <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+            Virtual Launch Pro • Fast, clear support
+          </div>
+          <h2 class="text-3xl md:text-5xl font-bold mb-6">Want answers before opening a ticket?</h2>
+          <p class="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto">Many membership and platform questions are solved faster by checking the product flow first. If the issue is still blocking you, send the ticket and we’ll handle it.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/index.html#how-it-works" class="bg-orange-500 hover:bg-orange-400 text-white font-bold px-10 py-4 rounded-xl text-lg transition-all shadow-lg hover:shadow-xl">See How It Works</a>
+            <a href="/index.html#pricing" class="bg-white/10 hover:bg-white/15 text-white font-semibold px-10 py-4 rounded-xl text-lg border border-orange-400/20 transition-all">View Pricing</a>
+          </div>
+          <p class="text-white/60 text-sm mt-8">Support replies by email • Ticket tracking included • Built for professionals</p>
+        </div>
+      </section>
+
+      <div class="mt-auto">
+        <div id="footer"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const API_BASE = 'https://virtuallaunch.pro';
+        const SUPPORT_POST = API_BASE + '/v1/help/tickets';
+        const SUPPORT_STATUS_GET = API_BASE + '/v1/help/status?ticket_id=';
+
+        function handleAuth(res) {
+          if (res && res.status === 401) {
+            return true;
+          }
+          return false;
+        }
+
+        function getParam(name) {
+          try { return new URLSearchParams(window.location.search).get(name) || ''; } catch (_) { return ''; }
+        }
+
+        function newEventId() {
+          if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+          return 'evt_' + String(Date.now()) + '_' + Math.random().toString(16).slice(2);
+        }
+
+        function setStatus(kind, text) {
+          const el = document.getElementById('form-status');
+          if (!el) return;
+          el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
+          el.classList.add('status', kind);
+          el.textContent = String(text || '');
+        }
+
+        function setLookupStatus(kind, text) {
+          const el = document.getElementById('support-lookup-status');
+          if (!el) return;
+          el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
+          el.classList.add('status', kind);
+          el.textContent = String(text || '');
+        }
+
+        function escapeHtml(value) {
+          return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
+
+        function firstDefinedValue() {
+          for (let i = 0; i < arguments.length; i++) {
+            const v = arguments[i];
+            if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();
+          }
+          return '';
+        }
+
+        function renderLookupStatus(kind, payload) {
+          const el = document.getElementById('support-lookup-status');
+          if (!el) return;
+
+          const supportId = firstDefinedValue(
+            payload && payload.supportId,
+            payload && payload.support_id,
+            payload && payload.ticketId,
+            payload && payload.ticket_id
+          );
+          const status = firstDefinedValue(
+            payload && payload.statusLabel,
+            payload && payload.status_label,
+            payload && payload.status,
+            payload && payload.supportStatus,
+            payload && payload.support_status
+          );
+          const latestUpdate = firstDefinedValue(
+            payload && payload.latestUpdate,
+            payload && payload.latest_update,
+            payload && payload.message,
+            payload && payload.note
+          );
+          const updatedAt = firstDefinedValue(
+            payload && payload.updatedAt,
+            payload && payload.updated_at,
+            payload && payload.lastSyncedAt,
+            payload && payload.last_synced_at
+          );
+          const source = firstDefinedValue(payload && payload.source, payload && payload.statusSource);
+
+          const lines = [];
+          if (latestUpdate) {
+            lines.push('<div class="font-medium text-white">' + escapeHtml(latestUpdate) + '</div>');
+          }
+
+          const meta = [];
+          if (supportId) meta.push('Support ID: ' + escapeHtml(supportId));
+          if (source) meta.push('Source: ' + escapeHtml(source));
+          if (status) meta.push('Status: ' + escapeHtml(status));
+          if (updatedAt) meta.push('Updated: ' + escapeHtml(formatIso(updatedAt)));
+
+          if (!lines.length && meta.length) {
+            lines.push('<div>' + meta.join(' • ') + '</div>');
+          } else if (meta.length) {
+            lines.push('<div class="text-white/80 text-sm mt-2">' + meta.join(' • ') + '</div>');
+          }
+
+          if (!lines.length) {
+            lines.push('<div>Your ticket is in progress. Please check back later.</div>');
+          }
+
+          el.classList.remove('hidden', 'status-error', 'status-info', 'status-success');
+          el.classList.add('status', kind);
+          el.innerHTML = lines.join('');
+        }
+
+        function disable(btn) {
+          if (!btn) return;
+          btn.disabled = true;
+          btn.classList.add('opacity-60', 'cursor-not-allowed');
+        }
+
+        function enable(btn) {
+          if (!btn) return;
+          btn.disabled = false;
+          btn.classList.remove('opacity-60', 'cursor-not-allowed');
+        }
+
+        function scrollToId(id) {
+          const el = document.getElementById(id);
+          if (!el) return;
+          const offset = 200;
+          const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }
+
+        function initAnchorNav() {
+          document.addEventListener('click', function (e) {
+            const a = e.target && e.target.closest ? e.target.closest('a') : null;
+            if (!a) return;
+            const href = String(a.getAttribute('href') || '');
+            if (!href || href[0] !== '#') return;
+            if (!a.hasAttribute('data-scroll')) return;
+            e.preventDefault();
+            const id = href.slice(1);
+            try { history.replaceState(null, '', href); } catch (_) {}
+            scrollToId(id);
+          });
+
+          if (window.location.hash) {
+            const id = window.location.hash.replace(/^#/, '');
+            if (id) setTimeout(function () { scrollToId(id); }, 0);
+          }
+
+          window.addEventListener('hashchange', function () {
+            const id = window.location.hash.replace(/^#/, '');
+            if (id) scrollToId(id);
+          });
+        }
+
+        function seedHiddenFields() {
+          const eventIdEl = document.getElementById('eventId');
+          if (eventIdEl) eventIdEl.value = newEventId();
+
+          const sessionTokenEl = document.getElementById('sessionToken');
+          if (sessionTokenEl) sessionTokenEl.value = getParam('sessionToken');
+
+          ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term'].forEach(function (k) {
+            const el = document.getElementById(k);
+            if (el) el.value = getParam(k);
+          });
+
+          const memberParam = getParam('memberId') || '';
+          const memberInput = document.getElementById('memberId');
+          if (memberInput && memberParam) memberInput.value = memberParam;
+
+          const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
+          const lookup = document.getElementById('support-id-lookup');
+          if (lookup && pref) lookup.value = pref;
+        }
+
+        function pickSupportId(obj) {
+          if (!obj || typeof obj !== 'object') return '';
+          const raw = obj.supportId || obj.support_id || obj.ticket_id || obj.ticketId || '';
+          return raw ? String(raw).trim() : '';
+        }
+
+        function formatIso(ts) {
+          if (!ts) return '';
+          const s = String(ts);
+          const d = new Date(s);
+          if (isNaN(d.getTime())) return s;
+          return d.toLocaleString();
+        }
+
+        async function lookupSupportId() {
+          const input = document.getElementById('support-id-lookup');
+          const btn = document.getElementById('support-id-lookup-btn');
+          const supportId = input && input.value ? String(input.value).trim() : '';
+
+          if (!supportId) {
+            setLookupStatus('status-error', 'Enter a Support ID to check status.');
+            return;
+          }
+
+          disable(btn);
+          setLookupStatus('status-info', 'Checking status...');
+
+          try {
+            const res = await fetch(SUPPORT_STATUS_GET + encodeURIComponent(supportId), {
+              method: 'GET',
+              credentials: 'omit'
+            });
+
+            if (handleAuth(res)) {
+              setLookupStatus('status-error', 'Support status is temporarily unavailable (401).');
+              enable(btn);
+              return;
+            }
+
+            let json = null;
+            try { json = await res.json(); } catch (_) { json = null; }
+
+            if (!res.ok) {
+              const msg = json && (json.error || json.message) ? String(json.error || json.message) : 'Request failed (' + res.status + ')';
+              setLookupStatus('status-error', msg);
+              enable(btn);
+              return;
+            }
+
+            renderLookupStatus('status-success', json || {});
+            enable(btn);
+          } catch (_) {
+            setLookupStatus('status-error', 'Network error. Please try again.');
+            enable(btn);
+          }
+        }
+
+        function initLookupHandler() {
+          const input = document.getElementById('support-id-lookup');
+          const btn = document.getElementById('support-id-lookup-btn');
+
+          if (btn) btn.addEventListener('click', lookupSupportId);
+          if (input) {
+            input.addEventListener('keydown', function (e) {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                lookupSupportId();
+              }
+            });
+          }
+        }
+
+        function initFormHandler() {
+          const form = document.getElementById('support-form-el');
+          const btn = document.getElementById('submit-btn');
+          if (!form) return;
+
+          form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const payload = {
+              category: (document.getElementById('category') || {}).value || '',
+              email: (document.getElementById('email') || {}).value || '',
+              eventId: (document.getElementById('eventId') || {}).value || '',
+              issueType: (document.getElementById('issueType') || {}).value || '',
+              message: (document.getElementById('message') || {}).value || '',
+              name: (document.getElementById('name') || {}).value || '',
+              priority: (document.getElementById('priority') || {}).value || '',
+              subject: (document.getElementById('subject') || {}).value || '',
+              urgency: (document.getElementById('urgency') || {}).value || ''
+            };
+
+            const sessionToken = (document.getElementById('sessionToken') || {}).value || '';
+            if (sessionToken) payload.sessionToken = sessionToken;
+
+            const memberId = (document.getElementById('memberId') || {}).value || '';
+            if (memberId) payload.memberId = memberId;
+
+            const relatedOrderId = (document.getElementById('relatedOrderId') || {}).value || '';
+            if (relatedOrderId) payload.relatedOrderId = relatedOrderId;
+
+            ['utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term'].forEach(function (k) {
+              const v = (document.getElementById(k) || {}).value || '';
+              if (v) payload[k] = v;
+            });
+
+            const missing = [];
+            if (!payload.category) missing.push('category');
+            if (!payload.email) missing.push('email');
+            if (!payload.eventId) missing.push('eventId');
+            if (!payload.issueType) missing.push('issueType');
+            if (!payload.message) missing.push('message');
+            if (!payload.name) missing.push('name');
+            if (!payload.priority) missing.push('priority');
+            if (!payload.subject) missing.push('subject');
+            if (!payload.urgency) missing.push('urgency');
+
+            if (missing.length) {
+              setStatus('status-error', 'Please fill in all required fields.');
+              return;
+            }
+
+            disable(btn);
+            setStatus('status-info', 'Submitting your ticket...');
+
+            try {
+              const res = await fetch(SUPPORT_POST, {
+                method: 'POST',
+                credentials: 'omit',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+
+              if (handleAuth(res)) {
+                setStatus('status-error', 'Support submission is temporarily unavailable (401).');
+                enable(btn);
+                return;
+              }
+
+              let json = null;
+              try { json = await res.json(); } catch (_) { json = null; }
+
+              if (!res.ok) {
+                const msg = json && (json.error || json.message) ? String(json.error || json.message) : 'Request failed (' + res.status + ')';
+                setStatus('status-error', msg);
+                enable(btn);
+                return;
+              }
+
+              const supportId = pickSupportId(json);
+
+              if (supportId) {
+                const sid = document.getElementById('support-id');
+                const display = document.getElementById('support-id-display');
+                const statusEl = document.getElementById('form-status');
+                if (sid) sid.textContent = supportId;
+                if (display) display.classList.remove('hidden');
+                if (statusEl) statusEl.classList.add('hidden');
+
+                const lookup = document.getElementById('support-id-lookup');
+                if (lookup) lookup.value = supportId;
+                try {
+                  const u = new URL(window.location.href);
+                  u.searchParams.set('ticket_id', supportId);
+                  history.replaceState(null, '', u.toString());
+                } catch (_) {}
+
+                lookupSupportId();
+              } else {
+                setStatus('status-success', 'Ticket submitted. Check your email for your Support ID.');
+              }
+
+              form.reset();
+              form.style.display = 'none';
+              enable(btn);
+
+              const eventIdEl = document.getElementById('eventId');
+              if (eventIdEl) eventIdEl.value = newEventId();
+            } catch (_) {
+              setStatus('status-error', 'Network error. Please try again.');
+              enable(btn);
+            }
+          });
+        }
+
+        async function loadPartial(id, path) {
+          const el = document.getElementById(id);
+          if (!el) return;
+          try {
+            const res = await fetch(path, { cache: 'no-store' });
+            if (!res.ok) {
+              el.innerHTML = '';
+              return;
+            }
+            const text = await res.text();
+            if (typeof text === 'string' && text.trim()) {
+              el.innerHTML = text;
+            } else {
+              el.innerHTML = '';
+            }
+          } catch (_) {
+            el.innerHTML = '';
+          }
+        }
+
+        function initAll() {
+          seedHiddenFields();
+          initAnchorNav();
+          initFormHandler();
+          initLookupHandler();
+          loadPartial('header', '/partials/header.html');
+          loadPartial('footer', '/partials/footer.html');
+
+          const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
+          if (pref) lookupSupportId();
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAll);
+        } else {
+          initAll();
+        }
+      })();
+    </script>
+  </body>
+</html>
