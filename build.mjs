@@ -1,9 +1,14 @@
+import { generateBlogManifest } from "./scripts/blog-manifest.mjs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
 const WRANGLER_TOML = path.join(ROOT, "wrangler.toml");
+const BLOG_GENERATED_DIR = path.join(ROOT, "blog", ".generated");
+const BLOG_FEATURED_HTML = path.join(BLOG_GENERATED_DIR, "featured.html");
+const BLOG_LIST_HTML = path.join(BLOG_GENERATED_DIR, "list.html");
+const BLOG_RECENT3_HTML = path.join(BLOG_GENERATED_DIR, "recent3.html");
 
 // Public directories to copy as-is
 const COPY_DIRS = ["_sdk", "assets", "blog", "features", "legal", "lp", "magnets", "scripts", "styles", "va", "workers"];
@@ -65,6 +70,7 @@ async function copyDir(srcDir, destDir, options = {}) {
   if (!(await exists(srcDir))) return;
 
   const {
+    blogFragments = {},
     partials = null,
     transformHtmlFiles = false,
     wranglerVars = {},
@@ -85,7 +91,7 @@ async function copyDir(srcDir, destDir, options = {}) {
 
     if (transformHtmlFiles && ent.name.toLowerCase().endsWith(".html")) {
       const html = await readText(src);
-      const next = transformHtml(html, partials ?? {}, wranglerVars);
+      const next = transformHtml(html, partials ?? {}, wranglerVars, blogFragments);
       await writeHtmlWithRouteVariants(dest, next);
       continue;
     }
@@ -122,6 +128,17 @@ function injectPartials(html, partials) {
 
   for (const [key, value] of Object.entries(partials)) {
     const re = new RegExp(`<!--\\s*PARTIAL:${escapeRegExp(key)}\\s*-->`, "g");
+    next = next.replace(re, value);
+  }
+
+  return next;
+}
+
+function injectBlogFragments(html, blogFragments) {
+  let next = html;
+
+  for (const [key, value] of Object.entries(blogFragments)) {
+    const re = new RegExp(`<!--\s*BLOG:${escapeRegExp(key)}\s*-->`, "g");
     next = next.replace(re, value);
   }
 
@@ -182,14 +199,17 @@ async function loadWranglerVars() {
   return parseWranglerVarsToml(toml);
 }
 
-function transformHtml(html, partials, wranglerVars) {
+function transformHtml(html, partials, wranglerVars, blogFragments = {}) {
   let next = html;
   next = injectPartials(next, partials);
+  next = injectBlogFragments(next, blogFragments);
   next = replaceBuildPlaceholders(next, wranglerVars);
   return next;
 }
 
 async function main() {
+  await generateBlogManifest();
+
   await rmDir(DIST);
   await ensureDir(DIST);
 
@@ -211,6 +231,12 @@ async function main() {
     topbar: await loadPartialOrEmpty(PARTIALS_APP_TOPBAR),
   };
 
+  const blogFragments = {
+    featured: await loadPartialOrEmpty(BLOG_FEATURED_HTML),
+    list: await loadPartialOrEmpty(BLOG_LIST_HTML),
+    recent3: await loadPartialOrEmpty(BLOG_RECENT3_HTML),
+  };
+
   // 1) Copy root-level HTML files with partial injection + build-time placeholder replacement
   const rootEntries = await fs.readdir(ROOT, { withFileTypes: true });
   for (const ent of rootEntries) {
@@ -221,13 +247,14 @@ async function main() {
     const dest = path.join(DIST, ent.name);
 
     const html = await readText(src);
-    const next = transformHtml(html, partials, wranglerVars);
+    const next = transformHtml(html, partials, wranglerVars, blogFragments);
     await writeHtmlWithRouteVariants(dest, next);
   }
 
   // 2) Copy public dirs, transforming HTML as we go so route files like blog/index.html survive build output cleanly.
   for (const dir of COPY_DIRS.slice().sort()) {
     await copyDir(path.join(ROOT, dir), path.join(DIST, dir), {
+      blogFragments,
       partials,
       transformHtmlFiles: true,
       wranglerVars,
@@ -248,7 +275,7 @@ async function main() {
     if (!f.endsWith(".html")) continue;
 
     const html = await readText(f);
-    const next = transformHtml(html, partials, wranglerVars);
+    const next = transformHtml(html, partials, wranglerVars, blogFragments);
 
     if (next !== html) {
       await writeHtmlWithRouteVariants(f, next);
