@@ -164,7 +164,7 @@ function injectBlogFragments(html, blogFragments) {
   let next = html;
 
   for (const [key, value] of Object.entries(blogFragments)) {
-    const re = new RegExp(`<!--\s*BLOG:${escapeRegExp(key)}\s*-->`, "g");
+    const re = new RegExp(`<!--\\s*BLOG:${escapeRegExp(key)}\\s*-->`, "g");
     next = next.replace(re, value);
   }
 
@@ -328,7 +328,7 @@ async function main() {
     .join(" ");
 
   const usedBuildVars = Object.keys(wranglerVars)
-    .filter((key) => key.startsWith("VLP_") || key.startsWith("STRIPE_") || key.startsWith("BILLING_"))
+    .filter((key) => key.startsWith("BILLING_") || key.startsWith("STRIPE_") || key.startsWith("VLP_"))
     .sort();
 
   console.log("build_ok", {
