@@ -8,6 +8,24 @@
   <meta name="description" content="Contact Virtual Launch Pro support for help with memberships, directory profiles, partnerships, onboarding, billing, or platform questions." />
 
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: '0 10px 30px rgba(0,0,0,0.12)'
+          },
+          colors: {
+            brand: { 400: '#fb923c', 500: '#f97316' },
+            ink: { 700: '#152237', 800: '#111a2e', 900: '#0b1220', 950: '#070a10' }
+          },
+          maxWidth: {
+            '6-5xl': '77.5rem'
+          }
+        }
+      }
+    };
+  </script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 
@@ -62,9 +80,6 @@
     }
 
     .vlp-btn-primary {
-      background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
-      border-radius: 0.5rem;
-      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25);
       transition: all 0.2s ease;
     }
 
@@ -74,9 +89,6 @@
     }
 
     .vlp-btn-secondary {
-      background: rgba(15, 23, 42, 0.60);
-      border: 1px solid rgba(51, 65, 85, 1);
-      border-radius: 0.5rem;
       transition: all 0.2s ease;
     }
 
@@ -187,8 +199,8 @@
 
     <main class="flex-1">
 
-      <section class="w-full px-6 pt-12 pb-12 md:pt-20 md:pb-20">
-        <div class="max-w-3xl mx-auto text-center">
+      <section class="mx-auto max-w-6-5xl px-4 pb-10 pt-16 md:pb-14 md:pt-24">
+        <div class="mx-auto max-w-5xl text-center">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 mb-8">
             <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -202,9 +214,9 @@
             Choose your path for help with memberships, directory profiles, partnerships, onboarding, billing, or platform questions.
           </p>
 
-          <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a class="vlp-btn-primary px-8 py-4 rounded-lg text-lg font-semibold text-slate-950 inline-flex items-center justify-center" href="#support-ticket">Create a ticket</a>
-            <a class="vlp-btn-secondary px-8 py-4 rounded-lg text-lg font-semibold text-slate-100 inline-flex items-center justify-center" href="#contact-options">Book a call</a>
+          <div class="flex flex-col items-center justify-center gap-4 sm:flex-row mb-8">
+            <a class="vlp-btn-primary inline-block rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:scale-105 hover:from-amber-400 hover:to-amber-500" href="#support-ticket">Create a ticket</a>
+            <a class="vlp-btn-secondary inline-block rounded-lg border border-slate-700 bg-slate-900/60 px-8 py-4 text-lg font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80" href="#contact-options">Book a call</a>
           </div>
 
           <p class="text-sm text-slate-500 max-w-2xl mx-auto">No passwords. No taxpayer SSNs. No sensitive client documents in the message box unless we explicitly request them.</p>
@@ -315,7 +327,7 @@
 
               <div class="flex flex-col sm:flex-row gap-3">
                 <input id="support-id-lookup" type="text" class="input" placeholder="Support ID" autocomplete="off" />
-                <button id="support-id-lookup-btn" type="button" class="vlp-btn-secondary px-5 py-4 rounded-lg text-sm font-semibold text-slate-100 whitespace-nowrap">
+                <button id="support-id-lookup-btn" type="button" class="vlp-btn-secondary inline-block rounded-lg border border-slate-700 bg-slate-900/60 px-5 py-4 text-sm font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80 whitespace-nowrap">
                   Check status
                 </button>
               </div>
@@ -428,7 +440,7 @@
                 </div>
 
                 <div class="mt-8">
-                  <button id="submit-btn" type="submit" class="vlp-btn-primary w-full px-8 py-4 rounded-lg text-lg font-semibold text-slate-950">Submit ticket</button>
+                  <button id="submit-btn" type="submit" class="vlp-btn-primary w-full rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:scale-105 hover:from-amber-400 hover:to-amber-500">Submit ticket</button>
                   <p class="text-xs text-slate-500 text-center mt-4">By submitting, you agree to our <a class="text-amber-300 hover:underline" href="/legal/terms.html">Terms</a> and <a class="text-amber-300 hover:underline" href="/legal/privacy.html">Privacy Policy</a>.</p>
                 </div>
 
@@ -462,7 +474,7 @@
               <h3 class="text-2xl font-bold mb-3">Info & Support</h3>
               <p class="text-slate-400 mb-8">Use the booking flow if you want to talk it through live instead of starting with a ticket.</p>
               <button
-                class="vlp-btn-primary w-full px-8 py-4 rounded-lg text-lg font-semibold text-slate-950"
+                class="vlp-btn-primary w-full rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:scale-105 hover:from-amber-400 hover:to-amber-500"
                 data-cal-link="tax-monitor-pro/virtual-launch-pro-support"
                 data-cal-namespace="virtual-launch-pro-support"
                 data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
@@ -478,7 +490,7 @@
               </div>
               <h3 class="text-2xl font-bold mb-3">Ticket Support</h3>
               <p class="text-slate-400 mb-8">Use the support ticket form when you need a written trail, a Support ID, or status tracking.</p>
-              <a class="vlp-btn-secondary w-full px-8 py-4 rounded-lg text-lg font-semibold text-slate-100 inline-flex items-center justify-center" href="#support-ticket">Create a Ticket</a>
+              <a class="vlp-btn-secondary inline-flex w-full items-center justify-center rounded-lg border border-slate-700 bg-slate-900/60 px-8 py-4 text-lg font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80" href="#support-ticket">Create a Ticket</a>
             </div>
           </div>
         </div>
@@ -590,9 +602,9 @@
           <p class="text-slate-400 text-lg mb-10">Pick a path above and we’ll take it from there.</p>
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a class="vlp-btn-primary px-8 py-4 rounded-lg text-lg font-semibold text-slate-950 inline-flex items-center justify-center" href="#support-ticket">Create a Ticket</a>
+            <a class="vlp-btn-primary inline-block rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:scale-105 hover:from-amber-400 hover:to-amber-500" href="#support-ticket">Create a Ticket</a>
             <button
-              class="vlp-btn-secondary px-8 py-4 rounded-lg text-lg font-semibold text-slate-100 inline-flex items-center justify-center"
+              class="vlp-btn-secondary inline-block rounded-lg border border-slate-700 bg-slate-900/60 px-8 py-4 text-lg font-semibold text-slate-100 transition-all duration-200 hover:bg-slate-800/80"
               data-cal-link="tax-monitor-pro/virtual-launch-pro-support"
               data-cal-namespace="virtual-launch-pro-support"
               data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'
