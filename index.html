@@ -91,6 +91,132 @@
       color: rgba(255,255,255,1);
     }
 
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at top, rgba(249,115,22,0.14), transparent 36%),
+        radial-gradient(circle at bottom, rgba(16,185,129,0.10), transparent 34%),
+        rgba(7,10,16,0.96);
+      backdrop-filter: blur(10px);
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+
+    .page-loader.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .page-loader__panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 2rem 2.25rem;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 1.5rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      box-shadow: 0 18px 50px rgba(0,0,0,0.22);
+    }
+
+    .page-loader__mark {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .page-loader__mark::before,
+    .page-loader__mark::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+    }
+
+    .page-loader__mark::before {
+      inset: 0.4rem;
+      border: 2px solid rgba(255,255,255,0.08);
+    }
+
+    .page-loader__mark::after {
+      inset: 0.2rem;
+      border: 2px solid transparent;
+      border-top-color: rgba(251,146,60,0.95);
+      border-right-color: rgba(16,185,129,0.8);
+      animation: loaderSpin 1.25s linear infinite;
+    }
+
+    .page-loader__glyph {
+      position: relative;
+      z-index: 1;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: white;
+      letter-spacing: 0.08em;
+    }
+
+    .page-loader__title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .page-loader__subtitle {
+      max-width: 18rem;
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.62);
+    }
+
+    .page-loader__bar {
+      width: 12rem;
+      height: 0.35rem;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .page-loader__bar span {
+      display: block;
+      width: 45%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, rgba(249,115,22,0.95), rgba(16,185,129,0.9));
+      animation: loaderSweep 1.5s ease-in-out infinite;
+    }
+
+    @keyframes loaderSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes loaderSweep {
+      0% {
+        transform: translateX(-140%);
+      }
+      50% {
+        transform: translateX(150%);
+      }
+      100% {
+        transform: translateX(320%);
+      }
+    }
+
     @keyframes gridPan {
       from {
         transform: translate3d(0,0,0);
@@ -104,12 +230,30 @@
       .vlp-grid-pan {
         animation: none;
       }
+
+      .page-loader,
+      .page-loader__mark::after,
+      .page-loader__bar span {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
 <body class="bg-ink-950 text-white antialiased">
+  <div id="page-loader" class="page-loader" aria-hidden="true">
+    <div class="page-loader__panel">
+      <div class="page-loader__mark">
+        <span class="page-loader__glyph">V</span>
+      </div>
+      <div class="page-loader__title">Virtual Launch Pro</div>
+      <div class="page-loader__subtitle">Loading a calmer client journey.</div>
+      <div class="page-loader__bar"><span></span></div>
+    </div>
+  </div>
+
   <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
@@ -580,8 +724,20 @@
 
   <script>
     (function () {
+      function hidePageLoader() {
+        var loader = document.getElementById('page-loader');
+        if (!loader) return;
+        loader.classList.add('is-hidden');
+        window.setTimeout(function () {
+          if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 650);
+      }
+
       function boot() {
         initArtifacts();
+        window.setTimeout(hidePageLoader, 220);
       }
 
       function initArtifacts() {
@@ -617,6 +773,8 @@
 
         setActive('starter');
       }
+
+      window.addEventListener('load', hidePageLoader);
 
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);
