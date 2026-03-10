@@ -14,40 +14,68 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 
     <style>
-      * { font-family: 'DM Sans', system-ui, sans-serif; }
-      body { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        box-sizing: border-box;
+        font-family: 'Raleway', sans-serif;
+        overflow-x: hidden;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #F59E0B, #D97706);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .vlp-grid {
+        background-image:
+          linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
+      }
+
+      .vlp-grid-pan {
+        animation: gridPan 22s linear infinite;
+      }
+
+      @keyframes gridPan {
+        from { transform: translate3d(0,0,0); }
+        to { transform: translate3d(-56px,-56px,0); }
+      }
 
       .hero-grid {
-        background:
-          radial-gradient(circle at top left, rgba(249,115,22,0.24), transparent 34%),
-          radial-gradient(circle at bottom right, rgba(251,191,36,0.16), transparent 28%),
-          linear-gradient(135deg, #0f172a 0%, #1c1917 40%, #7c2d12 72%, #0f172a 100%);
-        background-image:
-          radial-gradient(circle at top left, rgba(249,115,22,0.24), transparent 34%),
-          radial-gradient(circle at bottom right, rgba(251,191,36,0.16), transparent 28%),
-          linear-gradient(135deg, #0f172a 0%, #1c1917 40%, #7c2d12 72%, #0f172a 100%),
-          linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-        background-size: auto, auto, auto, 40px 40px, 40px 40px;
         position: relative;
         overflow: hidden;
+        background: linear-gradient(135deg, rgba(11,18,32,0.82) 0%, rgba(17,26,46,0.76) 48%, rgba(11,18,32,0.88) 100%);
       }
 
       .hero-glow::before {
         content: '';
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 920px;
-        height: 920px;
-        background: radial-gradient(circle, rgba(249,115,22,0.24) 0%, rgba(251,191,36,0.08) 32%, rgba(15,23,42,0) 72%);
+        inset: -10% auto auto -12%;
+        width: 32rem;
+        height: 32rem;
+        border-radius: 9999px;
+        background: rgba(249,115,22,0.22);
+        filter: blur(80px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .hero-glow::after {
+        content: '';
+        position: absolute;
+        inset: auto -12% -18% auto;
+        width: 32rem;
+        height: 32rem;
+        border-radius: 9999px;
+        background: rgba(16,185,129,0.16);
+        filter: blur(80px);
         pointer-events: none;
         z-index: 0;
       }
@@ -68,6 +96,13 @@
 
       @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
       .animate-slide-up { animation: slideUp 0.5s ease-out forwards; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .animate-slide-up,
+        .vlp-grid-pan {
+          animation: none;
+        }
+      }
 
       .input {
         background: rgba(255,255,255,0.96);
@@ -150,16 +185,19 @@
     </script>
   </head>
 
-  <body class="h-full bg-slate-950 text-white overflow-auto">
+  <body class="h-full bg-slate-950 text-white overflow-auto antialiased">
+    <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
+    <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-orange-500/30 blur-[80px]"></div>
+    <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/20 blur-[80px]"></div>
+
     <div id="app" class="w-full min-h-screen flex flex-col">
-      
       <!-- PARTIAL:siteHeader -->
 
       <section class="hero-grid hero-glow py-16 md:py-24 text-white">
         <div class="max-w-6xl mx-auto px-4 hero-content">
           <div class="grid lg:grid-cols-2 gap-10 items-center">
             <div class="text-center lg:text-left">
-              <div class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur border border-orange-400/20">
+              <div class="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/50 px-4 py-2 text-sm font-semibold mb-6 backdrop-blur">
                 <span class="w-2 h-2 rounded-full bg-gold"></span>
                 Virtual Launch Pro support
               </div>
@@ -205,7 +243,7 @@
         </div>
       </section>
 
-      <section id="support-form" class="py-16 md:py-24 bg-slate-900 scroll-mt-[220px]">
+      <section id="support-form" class="py-16 md:py-24 bg-white/5 border-t border-white/10 scroll-mt-[220px]">
         <div class="max-w-3xl mx-auto px-4">
           <div class="text-center mb-10">
             <span class="inline-flex items-center gap-2 bg-orange-500/15 text-orange-200 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-orange-500/20">
@@ -331,7 +369,7 @@
         </div>
       </section>
 
-      <section class="py-16 md:py-24 hero-grid text-white">
+      <section class="py-16 md:py-24 hero-grid border-t border-white/10 text-white">
         <div class="max-w-4xl mx-auto px-4 text-center hero-content">
           <div class="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur border border-orange-400/20">
             <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -349,8 +387,8 @@
         </div>
       </section>
 
-      <div class="mt-auto">        
-        <!-- PARTIAL:siteFooter -->        
+      <div class="mt-auto">
+        <!-- PARTIAL:siteFooter -->
       </div>
     </div>
 
