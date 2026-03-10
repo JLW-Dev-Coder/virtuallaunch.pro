@@ -5,6 +5,7 @@ const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, "blog");
 const POSTS_JSON = path.join(BLOG_DIR, "posts.json");
 const GENERATED_DIR = path.join(BLOG_DIR, ".generated");
+const ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
 
 const REQUIRED_FIELDS = [
   "author",
@@ -51,6 +52,30 @@ function parseIsoDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
   const d = new Date(`${value}T00:00:00Z`);
   return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function parseArticleFilename(file) {
+  const match = file.match(ARTICLE_FILE_RE);
+
+  if (!match) {
+    throw new Error(
+      `Invalid blog filename "${file}". Expected YYYY-MM-DD_###_slug.html`
+    );
+  }
+
+  const [, date, sequence, slug] = match;
+
+  if (!parseIsoDate(date)) {
+    throw new Error(`Invalid date in filename "${file}"`);
+  }
+
+  return {
+    date,
+    file,
+    sequence: Number(sequence),
+    slug,
+    url: `/blog/${slug}.html`,
+  };
 }
 
 function validateMeta(meta, file) {
@@ -103,7 +128,7 @@ function buildCard(post) {
   return `<article class="blog-card p-6 flex flex-col">
   <div class="mb-4"><span class="category-badge">${escapeHtml(post.category)}</span></div>
   <h3 class="mt-0 text-lg font-extrabold mb-3 flex-grow">
-    <a class="hover:text-brand-300 transition" href="/blog/${escapeHtml(post.slug)}.html">${escapeHtml(post.title)}</a>
+    <a class="hover:text-brand-300 transition" href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>
   </h3>
   <p class="text-white/70 text-sm mb-4">${escapeHtml(post.description)}</p>
   <div class="flex items-center justify-between pt-4 border-t border-white/10">
@@ -114,7 +139,7 @@ function buildCard(post) {
         <div class="text-xs text-white/50">${escapeHtml(post.readTime.replace(/\s+read$/i, ""))}</div>
       </div>
     </div>
-    <a class="text-brand-400 hover:text-brand-300" href="/blog/${escapeHtml(post.slug)}.html">Read article →</a>
+    <a class="text-brand-400 hover:text-brand-300" href="${escapeHtml(post.url)}">Read article →</a>
   </div>
 </article>`;
 }
@@ -131,7 +156,7 @@ function buildFeatured(post) {
   <h2 class="text-3xl md:text-4xl font-extrabold">${escapeHtml(post.title)}</h2>
   <p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">${escapeHtml(post.description)}</p>
   <div class="mt-8 flex flex-col items-start gap-3 sm:flex-row">
-    <a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="/blog/${escapeHtml(post.slug)}.html">Read article</a>
+    <a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="${escapeHtml(post.url)}">Read article</a>
     <span class="text-sm text-white/60">${escapeHtml(post.author)} · ${escapeHtml(post.authorRole)}</span>
   </div>
 </article>`;
@@ -156,6 +181,7 @@ export async function generateBlogManifest() {
     const fullPath = path.join(BLOG_DIR, file);
     const html = await readText(fullPath);
     const meta = extractBlogMeta(html, file);
+    const fileMeta = parseArticleFilename(file);
 
     const headTitle = extractTitle(html);
     const headDescription = extractDescription(html);
@@ -168,22 +194,36 @@ export async function generateBlogManifest() {
       throw new Error(`Description mismatch in ${file}. meta description must match blog-meta description exactly.`);
     }
 
+    if (fileMeta.date !== meta.date) {
+      throw new Error(
+        `Date mismatch in ${file}. Filename date "${fileMeta.date}" must match blog-meta date "${meta.date}".`
+      );
+    }
+
     posts.push({
-      slug: path.parse(file).name,
+      ...fileMeta,
       ...meta,
     });
   }
 
-  const seen = new Set();
+  const seenFiles = new Set();
+  const seenSlugs = new Set();
+
   for (const post of posts) {
-    if (seen.has(post.slug)) {
+    if (seenFiles.has(post.file)) {
+      throw new Error(`Duplicate file detected: ${post.file}`);
+    }
+    seenFiles.add(post.file);
+
+    if (seenSlugs.has(post.slug)) {
       throw new Error(`Duplicate slug detected: ${post.slug}`);
     }
-    seen.add(post.slug);
+    seenSlugs.add(post.slug);
   }
 
   posts.sort((a, b) => {
     if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    if (a.sequence !== b.sequence) return a.sequence < b.sequence ? 1 : -1;
     return a.slug.localeCompare(b.slug);
   });
 
