@@ -1,3 +1,4 @@
+// BUILD.MJS
 import { generateBlogManifest } from "./scripts/blog-manifest.mjs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
@@ -6,6 +7,7 @@ const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
 const WRANGLER_TOML = path.join(ROOT, "wrangler.toml");
 const BLOG_GENERATED_DIR = path.join(ROOT, "blog", ".generated");
+const BLOG_FOOTERS_DIR = path.join(BLOG_GENERATED_DIR, "footers");
 const BLOG_FEATURED_HTML = path.join(BLOG_GENERATED_DIR, "featured.html");
 const BLOG_LIST_HTML = path.join(BLOG_GENERATED_DIR, "list.html");
 const BLOG_RECENT3_HTML = path.join(BLOG_GENERATED_DIR, "recent3.html");
@@ -60,6 +62,22 @@ async function copyFile(src, dest) {
 function getPublicBlogArticleName(filename) {
   const match = filename.match(BLOG_ARTICLE_FILE_RE);
   return match ? `${match[3]}.html` : null;
+}
+
+function getBlogArticleSlug(filename) {
+  const datedMatch = filename.match(BLOG_ARTICLE_FILE_RE);
+  if (datedMatch) return datedMatch[3];
+
+  const simpleMatch = filename.match(/^([a-z0-9-]+)\.html$/);
+  if (!simpleMatch) return null;
+  if (simpleMatch[1].toLowerCase() === "index") return null;
+  return simpleMatch[1];
+}
+
+function isBlogArticleFile(srcPath) {
+  const parentDir = path.basename(path.dirname(srcPath));
+  if (parentDir !== "blog") return false;
+  return getBlogArticleSlug(path.basename(srcPath)) !== null;
 }
 
 async function writeHtmlWithRouteVariants(dest, content) {
@@ -117,7 +135,8 @@ async function copyDir(srcDir, destDir, options = {}) {
 
     if (transformHtmlFiles && ent.name.toLowerCase().endsWith(".html")) {
       const html = await readText(src);
-      const next = transformHtml(html, partials ?? {}, wranglerVars, blogFragments);
+      const articleSlug = isBlogArticleFile(src) ? getBlogArticleSlug(ent.name) : null;
+      const next = transformHtml(html, partials ?? {}, wranglerVars, blogFragments, articleSlug);
       await writeHtmlWithRouteVariants(dest, next);
       continue;
     }
@@ -160,13 +179,19 @@ function injectPartials(html, partials) {
   return next;
 }
 
-function injectBlogFragments(html, blogFragments) {
+function injectBlogFragments(html, blogFragments, articleSlug = null) {
   let next = html;
 
-  for (const [key, value] of Object.entries(blogFragments)) {
+  for (const [key, value] of Object.entries(blogFragments.global ?? {})) {
     const re = new RegExp(`<!--\\s*BLOG:${escapeRegExp(key)}\\s*-->`, "g");
     next = next.replace(re, value);
   }
+
+  const articleFooter = articleSlug
+    ? (blogFragments.footers?.[articleSlug] ?? "")
+    : "";
+
+  next = next.replace(/<!--\s*BLOG:articleFooter\s*-->/g, articleFooter);
 
   return next;
 }
@@ -225,12 +250,34 @@ async function loadWranglerVars() {
   return parseWranglerVarsToml(toml);
 }
 
-function transformHtml(html, partials, wranglerVars, blogFragments = {}) {
+function transformHtml(html, partials, wranglerVars, blogFragments = {}, articleSlug = null) {
   let next = html;
   next = injectPartials(next, partials);
-  next = injectBlogFragments(next, blogFragments);
+  next = injectBlogFragments(next, blogFragments, articleSlug);
   next = replaceBuildPlaceholders(next, wranglerVars);
   return next;
+}
+
+async function loadBlogFragments() {
+  const global = {
+    featured: await loadPartialOrEmpty(BLOG_FEATURED_HTML),
+    list: await loadPartialOrEmpty(BLOG_LIST_HTML),
+    recent3: await loadPartialOrEmpty(BLOG_RECENT3_HTML),
+  };
+
+  const footers = {};
+
+  if (await exists(BLOG_FOOTERS_DIR)) {
+    const footerEntries = await fs.readdir(BLOG_FOOTERS_DIR, { withFileTypes: true });
+
+    for (const ent of footerEntries) {
+      if (!ent.isFile() || !ent.name.toLowerCase().endsWith(".html")) continue;
+      const slug = ent.name.replace(/\.html$/i, "");
+      footers[slug] = await readText(path.join(BLOG_FOOTERS_DIR, ent.name));
+    }
+  }
+
+  return { footers, global };
 }
 
 async function main() {
@@ -240,46 +287,26 @@ async function main() {
   await ensureDir(DIST);
 
   const wranglerVars = await loadWranglerVars();
+  const blogFragments = await loadBlogFragments();
 
-  const partials = {
-    // Current tokens
-    appSidebar: await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR),
-    appTopbar: await loadPartialOrEmpty(PARTIALS_APP_TOPBAR),
-    siteFooter: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html")),
-    siteHeader: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html")),
-    taxProSidebar: await loadPartialOrEmpty(PARTIALS_TAXPRO_SIDEBAR),
-    taxProTopbar: await loadPartialOrEmpty(PARTIALS_TAXPRO_TOPBAR),
+  const partialFiles = await walk(PARTIALS_ROOT).catch(() => []);
+  const partials = {};
 
-    // Legacy tokens kept for compatibility because apparently pages love drifting.
-    footer: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html")),
-    header: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html")),
-    sidebar: await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR),
-    topbar: await loadPartialOrEmpty(PARTIALS_APP_TOPBAR),
-  };
-
-  const blogFragments = {
-    featured: await loadPartialOrEmpty(BLOG_FEATURED_HTML),
-    list: await loadPartialOrEmpty(BLOG_LIST_HTML),
-    recent3: await loadPartialOrEmpty(BLOG_RECENT3_HTML),
-  };
-
-  // 1) Copy root-level HTML files with partial injection + build-time placeholder replacement
-  const rootEntries = await fs.readdir(ROOT, { withFileTypes: true });
-  for (const ent of rootEntries) {
-    if (!ent.isFile()) continue;
-    if (!ent.name.endsWith(".html")) continue;
-
-    const src = path.join(ROOT, ent.name);
-    const dest = path.join(DIST, ent.name);
-
-    const html = await readText(src);
-    const next = transformHtml(html, partials, wranglerVars, blogFragments);
-    await writeHtmlWithRouteVariants(dest, next);
+  for (const file of partialFiles) {
+    if (!file.toLowerCase().endsWith(".html")) continue;
+    const key = path.basename(file, ".html");
+    partials[key] = await readText(file);
   }
 
-  // 2) Copy public dirs, transforming HTML as we go so route files like blog/index.html survive build output cleanly.
-  for (const dir of COPY_DIRS.slice().sort()) {
-    await copyDir(path.join(ROOT, dir), path.join(DIST, dir), {
+  partials.appSidebar = await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR);
+  partials.appTopbar = await loadPartialOrEmpty(PARTIALS_APP_TOPBAR);
+  partials.taxProSidebar = await loadPartialOrEmpty(PARTIALS_TAXPRO_SIDEBAR);
+  partials.taxProTopbar = await loadPartialOrEmpty(PARTIALS_TAXPRO_TOPBAR);
+
+  for (const dir of COPY_DIRS) {
+    const srcDir = path.join(ROOT, dir);
+    const destDir = path.join(DIST, dir);
+    await copyDir(srcDir, destDir, {
       blogFragments,
       partials,
       transformHtmlFiles: true,
@@ -287,61 +314,21 @@ async function main() {
     });
   }
 
-  // 3) Copy _redirects if present
-  const redirects = path.join(ROOT, "_redirects");
-  if (await exists(redirects)) {
-    await copyFile(redirects, path.join(DIST, "_redirects"));
+  const rootEntries = await fs.readdir(ROOT, { withFileTypes: true });
+
+  for (const ent of rootEntries) {
+    if (!ent.isFile()) continue;
+    if (!ent.name.toLowerCase().endsWith(".html")) continue;
+
+    const src = path.join(ROOT, ent.name);
+    const dest = path.join(DIST, ent.name);
+    const html = await readText(src);
+    const next = transformHtml(html, partials, wranglerVars, blogFragments, null);
+    await writeHtmlWithRouteVariants(dest, next);
   }
-
-  // 4) Inject partials and replace placeholders into any HTML inside dist
-  const distFiles = await walk(DIST);
-  let transformedHtmlFiles = 0;
-
-  for (const f of distFiles) {
-    if (!f.endsWith(".html")) continue;
-
-    const html = await readText(f);
-    const next = transformHtml(html, partials, wranglerVars, blogFragments);
-
-    if (next !== html) {
-      await writeHtmlWithRouteVariants(f, next);
-      transformedHtmlFiles++;
-    }
-  }
-
-  // 5) Ensure every copied HTML file also has a clean-route index.html variant
-  const finalDistFiles = await walk(DIST);
-  for (const f of finalDistFiles) {
-    if (!f.endsWith(".html")) continue;
-
-    const parsed = path.parse(f);
-    if (parsed.base.toLowerCase() === "index.html") continue;
-
-    const html = await readText(f);
-    const cleanRouteDest = path.join(parsed.dir, parsed.name, "index.html");
-    await writeText(cleanRouteDest, html);
-  }
-
-  const presentPartials = Object.entries(partials)
-    .map(([k, v]) => `${k}:${v ? "yes" : "no"}`)
-    .sort()
-    .join(" ");
-
-  const usedBuildVars = Object.keys(wranglerVars)
-    .filter((key) => key.startsWith("BILLING_") || key.startsWith("STRIPE_") || key.startsWith("VLP_"))
-    .sort();
-
-  console.log("build_ok", {
-    copiedDirs: COPY_DIRS.slice().sort(),
-    dist: "dist",
-    partials: presentPartials,
-    transformedHtmlFiles,
-    wranglerVarCount: Object.keys(wranglerVars).length,
-    wranglerVarsSample: usedBuildVars.slice(0, 20),
-  });
 }
 
 main().catch((err) => {
-  console.error("build_failed", err);
+  console.error(err);
   process.exit(1);
 });
