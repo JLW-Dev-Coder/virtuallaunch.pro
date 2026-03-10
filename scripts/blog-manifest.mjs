@@ -1,9 +1,11 @@
+// scripts/blog-manifest.mjs
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
 const BLOG_DIR = path.join(ROOT, "blog");
 const GENERATED_DIR = path.join(BLOG_DIR, ".generated");
+const FOOTERS_DIR = path.join(GENERATED_DIR, "footers");
 const POSTS_JSON = path.join(BLOG_DIR, "posts.json");
 const ARTICLE_FILE_RE = /^(?:(\d{4}-\d{2}-\d{2})_(\d{3})_)?([a-z0-9-]+)\.html$/;
 
@@ -127,22 +129,87 @@ function extractDescription(html) {
   return match ? match[1].trim() : "";
 }
 
+function formatDisplayDate(isoDate) {
+  const parsed = parseIsoDate(isoDate);
+  if (!parsed) return isoDate;
+
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+    year: "numeric",
+  }).format(parsed);
+}
+
+function getAuthorInitials(author) {
+  return String(author)
+    .trim()
+    .split(/\s+/)
+    .map((part) => part[0] || "")
+    .join("")
+    .slice(0, 3)
+    .toUpperCase();
+}
+
+function normalizeCategory(category) {
+  return String(category || "").trim().toLowerCase();
+}
+
+function renderFeaturedArticleSvg() {
+  return `<span aria-hidden="true" class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-brand-400">
+    <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 3l2.4 4.86 5.36.78-3.88 3.78.92 5.34L12 15.84 7.2 17.76l.92-5.34-3.88-3.78 5.36-.78L12 3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>`;
+}
+
+function renderCategorySvg(category) {
+  const key = normalizeCategory(category);
+
+  if (key === "market") {
+    return `<span aria-hidden="true" class="inline-flex h-4 w-4 items-center justify-center text-brand-400">
+      <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 16l4-4 3 3 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 8h4v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>`;
+  }
+
+  if (key === "systems") {
+    return `<span aria-hidden="true" class="inline-flex h-4 w-4 items-center justify-center text-brand-400">
+      <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
+        <rect x="14" y="4" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
+        <rect x="9" y="14" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M10 7h4M12 10v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </span>`;
+  }
+
+  return `<span aria-hidden="true" class="inline-flex h-4 w-4 items-center justify-center text-brand-400">
+    <svg viewBox="0 0 24 24" fill="none" class="h-4 w-4" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>`;
+}
+
 function buildCard(post) {
   return `<article class="blog-card p-6 flex flex-col">
-  <div class="mb-4"><span class="category-badge">${escapeHtml(post.category)}</span></div>
+  <div class="mb-4"><span class="category-badge inline-flex items-center gap-2">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span></div>
   <h3 class="mt-0 text-lg font-extrabold mb-3 flex-grow">
     <a class="hover:text-brand-300 transition" href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>
   </h3>
   <p class="text-white/70 text-sm mb-4">${escapeHtml(post.description)}</p>
-  <div class="flex items-center justify-between pt-4 border-t border-white/10">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold">${escapeHtml(post.author)}</div>
-      <div>
-        <div class="text-xs font-semibold">${escapeHtml(post.author)}</div>
+  <div class="flex items-center justify-between pt-4 border-t border-white/10 gap-4">
+    <div class="flex items-center gap-2 min-w-0">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold shrink-0">${escapeHtml(getAuthorInitials(post.author))}</div>
+      <div class="min-w-0">
+        <div class="text-xs font-semibold truncate">${escapeHtml(post.author)}</div>
         <div class="text-xs text-white/50">${escapeHtml(post.readTime.replace(/\s+read$/i, ""))}</div>
       </div>
     </div>
-    <a class="text-brand-400 hover:text-brand-300" href="${escapeHtml(post.url)}">Read article →</a>
+    <a class="text-brand-400 hover:text-brand-300 shrink-0" href="${escapeHtml(post.url)}">Read article →</a>
   </div>
 </article>`;
 }
@@ -150,19 +217,98 @@ function buildCard(post) {
 function buildFeatured(post) {
   return `<article class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
   <div class="mb-4 flex items-center gap-3 flex-wrap">
-    <span class="category-badge category-badge--active">${escapeHtml(post.category)}</span>
+    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
+      ${renderFeaturedArticleSvg()}
+      <span>Featured article</span>
+    </span>
+    <span class="category-badge category-badge--active inline-flex items-center gap-2">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span>
     <span class="text-xs text-white/60">•</span>
     <span class="text-xs text-white/60">${escapeHtml(post.readTime)}</span>
     <span class="text-xs text-white/60">•</span>
-    <span class="text-xs text-white/60">${escapeHtml(post.date)}</span>
+    <span class="text-xs text-white/60">${escapeHtml(formatDisplayDate(post.date))}</span>
   </div>
   <h2 class="text-3xl md:text-4xl font-extrabold">${escapeHtml(post.title)}</h2>
   <p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">${escapeHtml(post.description)}</p>
-  <div class="mt-8 flex flex-col items-start gap-3 sm:flex-row">
+  <div class="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
     <a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="${escapeHtml(post.url)}">Read article</a>
-    <span class="text-sm text-white/60">${escapeHtml(post.author)} · ${escapeHtml(post.authorRole)}</span>
+    <div class="text-sm text-white/70">
+      <div class="font-semibold text-white">${escapeHtml(post.author)}</div>
+      <div class="text-white/55">${escapeHtml(post.authorRole)}</div>
+    </div>
   </div>
 </article>`;
+}
+
+function buildRelatedPosts(currentPost, posts) {
+  const currentCategory = normalizeCategory(currentPost.category);
+
+  return posts
+    .filter((post) => post.slug !== currentPost.slug)
+    .map((post) => ({
+      post,
+      sameCategory: normalizeCategory(post.category) === currentCategory ? 1 : 0,
+    }))
+    .sort((a, b) => {
+      if (a.sameCategory !== b.sameCategory) return b.sameCategory - a.sameCategory;
+      if (a.post.date !== b.post.date) return a.post.date < b.post.date ? 1 : -1;
+      if (a.post.sequence !== b.post.sequence) return a.post.sequence < b.post.sequence ? 1 : -1;
+      return a.post.slug.localeCompare(b.post.slug);
+    })
+    .slice(0, 3)
+    .map((entry) => entry.post);
+}
+
+function buildArticleFooter(post, posts) {
+  const relatedPosts = buildRelatedPosts(post, posts);
+  const relatedCards = relatedPosts.map(buildCard).join("\n");
+
+  return `<section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+  <div class="mb-8 md:mb-10 flex items-end justify-between gap-6 flex-col sm:flex-row sm:items-center">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90 mb-3">Related articles</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Keep reading</h2>
+      <p class="mt-3 max-w-2xl text-sm md:text-base text-white/65">More writing on structured offers, recurring revenue, onboarding systems, and modern tax practice growth.</p>
+    </div>
+    <a href="/blog.html" class="rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-brand-400/40 hover:text-white">Browse all articles</a>
+  </div>
+
+  <div class="grid gap-6 md:grid-cols-3">
+    ${relatedCards}
+  </div>
+</section>
+
+<section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+  <div class="rounded-[28px] border border-white/10 bg-white/5 p-8 md:p-10 shadow-soft">
+    <div class="max-w-3xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90 mb-3">Newsletter</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Get insights like this delivered</h2>
+      <p class="mt-4 text-base md:text-lg leading-8 text-white/70">New articles on recurring monitoring, tax practice growth, structured onboarding, and professional discovery sent monthly.</p>
+    </div>
+
+    <form class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" action="#" method="post">
+      <label class="sr-only" for="newsletter-email-${escapeHtml(post.slug)}">Email address</label>
+      <input id="newsletter-email-${escapeHtml(post.slug)}" name="email" type="email" inputmode="email" autocomplete="email" placeholder="your@email.com" class="newsletter-input w-full sm:max-w-md" />
+      <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 transition hover:bg-brand-400">Subscribe</button>
+    </form>
+
+    <p class="mt-3 text-sm text-white/45">We respect your inbox. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+  <div class="rounded-[28px] border border-white/10 bg-gradient-to-br from-white/6 to-white/[0.03] p-8 md:p-10 shadow-soft">
+    <div class="max-w-3xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90 mb-3">Membership</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">See how membership supports practice growth</h2>
+      <p class="mt-4 text-base md:text-lg leading-8 text-white/70">Virtual Launch Pro uses one structured offer and a reliable ecosystem to help clients discover you and your expertise.</p>
+    </div>
+
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <a href="/how-it-works.html" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 transition hover:bg-brand-400">See how membership works</a>
+      <a href="/blog.html" class="inline-flex items-center justify-center rounded-xl border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition hover:border-brand-400/40 hover:text-white">Read more about systems</a>
+    </div>
+  </div>
+</section>`;
 }
 
 export async function generateBlogManifest() {
@@ -231,6 +377,7 @@ export async function generateBlogManifest() {
 
   await writeText(POSTS_JSON, JSON.stringify(posts, null, 2));
   await ensureDir(GENERATED_DIR);
+  await ensureDir(FOOTERS_DIR);
 
   const featured = posts[0] ? buildFeatured(posts[0]) : "";
   const list = posts.map(buildCard).join("\n");
@@ -239,6 +386,11 @@ export async function generateBlogManifest() {
   await writeText(path.join(GENERATED_DIR, "featured.html"), featured);
   await writeText(path.join(GENERATED_DIR, "list.html"), list);
   await writeText(path.join(GENERATED_DIR, "recent3.html"), recent3);
+
+  for (const post of posts) {
+    const footerHtml = buildArticleFooter(post, posts);
+    await writeText(path.join(FOOTERS_DIR, `${post.slug}.html`), footerHtml);
+  }
 
   return {
     count: posts.length,
