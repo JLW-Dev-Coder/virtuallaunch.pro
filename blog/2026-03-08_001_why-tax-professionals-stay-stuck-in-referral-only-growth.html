@@ -1,1 +1,456 @@
 <!-- 2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html -->
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Why So Many Tax Professionals Stay Stuck in Referral-Only Growth | Virtual Launch Pro</title>
+  <meta name="description" content="Why independent tax professionals struggle with referrals, seasonal revenue, weak onboarding, and unstructured offers, and how Virtual Launch Pro with Tax Monitor helps turn expertise into recurring revenue.">
+  <meta property="og:title" content="Why So Many Tax Professionals Stay Stuck in Referral-Only Growth | Virtual Launch Pro">
+  <meta property="og:description" content="A practical look at the structural problems facing EAs, CPAs, tax attorneys, and modern virtual firms, and how VLP helps solve them with distribution, packaging, and recurring monitoring infrastructure.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/json" id="blog-meta">
+    {
+      "title": "Why so many tax professionals stay stuck in referral-only growth",
+      "description": "Why independent tax professionals struggle with referrals, seasonal revenue, weak onboarding, and unstructured offers, and how Virtual Launch Pro with Tax Monitor helps turn expertise into recurring revenue.",
+      "category": "Market",
+      "date": "2026-03-09",
+      "readTime": "8 min read",
+      "author": "JLW",
+      "authorRole": "EA turned agency builder"
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: "0 10px 30px rgba(0,0,0,0.12)",
+            topbar: "0 18px 50px rgba(0,0,0,0.18)"
+          },
+          colors: {
+            brand: { 400: "#fb923c", 500: "#f97316" },
+            ink: { 700: "#152237", 800: "#111a2e", 900: "#0b1220", 950: "#070a10" }
+          },
+          maxWidth: {
+            "6-5xl": "77.5rem"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Raleway', sans-serif;
+      height: 100%;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      width: 100%;
+    }
+
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 72rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .container--wide {
+      max-width: 75rem;
+    }
+
+    .vlp-grid {
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(circle at 50% 18%, rgba(0,0,0,1), rgba(0,0,0,0) 58%);
+    }
+
+    .vlp-grid-pan {
+      animation: gridPan 22s linear infinite;
+    }
+
+    .blog-card {
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1.5rem;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(26, 31, 53, 0.6) 100%);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+      overflow: hidden;
+    }
+
+    .blog-card:hover {
+      border-color: rgba(249, 115, 22, 0.3);
+      box-shadow: 0 12px 48px rgba(249, 115, 22, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      color: #fb923c;
+    }
+
+    .category-badge--active {
+      background: rgba(249, 115, 22, 0.25);
+      border-color: rgba(249, 115, 22, 0.5);
+    }
+
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 18px;
+    }
+
+    .newsletter-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 12px 16px;
+      color: white;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(249, 115, 22, 0.4);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+    }
+
+    .newsletter-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .article-content h2 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .article-content p {
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .article-content strong {
+      color: white;
+      font-weight: 600;
+    }
+
+    .article-content ul, .article-content ol {
+      margin-bottom: 1.5rem;
+      margin-left: 1.5rem;
+    }
+
+    .article-content li {
+      margin-bottom: 0.75rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .article-content ul li {
+      list-style: disc;
+    }
+
+    .article-content ol li {
+      list-style: decimal;
+    }
+
+    .article-content em {
+      color: rgba(249, 115, 22, 0.9);
+      font-style: italic;
+    }
+
+    @keyframes gridPan {
+      from {
+        transform: translate3d(0,0,0);
+      }
+      to {
+        transform: translate3d(-56px,-56px,0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .vlp-grid-pan {
+        animation: none;
+      }
+      .blog-card:hover {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .article-content h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="bg-ink-950 text-white antialiased">
+  <div id="app" class="flex flex-col">
+   <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
+   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
+   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
+
+   <!-- PARTIAL:siteHeader -->
+
+   <main id="top" class="flex-1">
+    <article class="mx-auto max-w-3xl px-4 py-12 md:py-16">
+     <div class="mb-12 md:mb-16">
+      <div class="mb-4 flex items-center gap-3 flex-wrap">
+        <span class="category-badge category-badge--active">Market</span>
+        <span class="text-xs text-white/60">•</span>
+        <span class="text-xs text-white/60">8 min read</span>
+        <span class="text-xs text-white/60">•</span>
+        <time class="text-xs text-white/60">Mar 9, 2026</time>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">Why so many tax professionals stay stuck in referral-only growth</h1>
+      <p class="text-lg text-white/75 max-w-2xl">Many independent EAs, CPAs, tax attorneys, and modern virtual firms have strong technical skill but weak growth infrastructure. The problem is rarely expertise. It is usually distribution, packaging, onboarding, and recurring revenue design.</p>
+     </div>
+
+     <div class="flex items-center gap-4 pb-8 border-b border-white/10 mb-12">
+      <div class="author-avatar">JLW</div>
+      <div>
+       <div class="font-semibold">JLW</div>
+       <div class="text-sm text-white/60">EA turned agency builder</div>
+      </div>
+     </div>
+
+     <div class="article-content">
+      <p>If you're like me and a lot of tax professionals, we do excellent work but still end up with unstable growth. We rely on referrals, take whatever service shape the market throws at us, and keep rebuilding the client experience manually. We use what we have when the client calls, but that usually leads to seasonal revenue flow, improvised marketing, and scaling that feels heavier than it should.</p>
+
+      <p>Does this sound like you? Well, you are not alone. This is especially common among us independent tax professionals like Enrolled Agents, CPAs, tax attorneys, solo accounting practices, and digitally native firms who often already have the core expertise<sup><a href="#ref1" class="text-white/80 hover:text-brand-400">1</a></sup>. What we lack is the infrastructure around that expertise. We need a better way to get discovered, package offers clearly, onboard clients cleanly, and create recurring relationships before every engagement turns into reactive resolution work.
+
+</p>
+
+      <p>That is the actual market problem Virtual Launch Pro is built to solve. And because VLP works alongside Tax Monitor, Transcripts, and Tax Tools, the solution is not just internal workflow polish. It is a fuller ecosystem that helps professionals get found, diagnose issues, and convert demand into structured services.</p>
+
+      <h2>Pain point one: client acquisition depends too heavily on referrals</h2>
+
+      <p>Many small tax practices grow through referrals almost by default. Referrals are useful, but they are not a dependable growth engine when they are the only real distribution channel. You cannot forecast them well. You cannot tune them much. And when they slow down, the pipeline goes strangely quiet.</p>
+
+      <p>This leaves good practitioners in a weak position. They may know how to represent taxpayers, review transcripts, and solve complicated IRS problems, but they still do not have a repeatable way for the right prospects to discover them.</p>
+
+      <p>Virtual Launch Pro addresses that by pairing launch infrastructure with distribution through the Tax Monitor network. Professionals are not left to rely only on a generic website, a listing buried somewhere online, or a vague hope that someone remembers to refer them. The broader ecosystem can route attention from taxpayer-facing tools and educational content toward professional profiles and services.</p>
+
+      <h2>Pain point two: service offers are often strong in substance but weak in packaging</h2>
+
+      <p>A common problem in tax and accounting practices is that the work is real, but the offer is blurry. There is no clean service endpoint. No clear explanation of what happens before, during, and after engagement. No visible journey that helps a client understand what they are buying.</p>
+
+      <p>When that happens, the service starts to feel custom by accident rather than structured by design. Sales conversations get slower. Scope gets looser. The firm ends up selling technical effort instead of a defined service model.</p>
+
+      <p>VLP is meant to fix that by helping professionals package services with clearer endpoints and cleaner delivery flow. Instead of defaulting to vague promises or broad reactive help, firms can build structured pathways around monitoring, diagnostics, consultations, compliance support, or representation work. That makes the service easier to explain, easier to sell, and easier to deliver consistently.</p>
+
+      <h2>Pain point three: onboarding still depends on manual coordination</h2>
+
+      <p>Tax professionals often lose momentum at the exact moment a client says yes. Intake forms, follow-up messages, payment links, file requests, scheduling steps, and status updates end up scattered across disconnected tools. Staff members become the glue holding together a journey that should already have shape.</p>
+
+      <p>This does not just create admin work. It lowers confidence. Clients feel friction immediately. Internal coordination becomes repetitive. The business spends energy moving information around instead of moving the client forward.</p>
+
+      <p>Virtual Launch Pro solves this with structured onboarding systems designed for calm delivery. Intake, payment, uploads, progress, and next steps can be organized into one cleaner path. The result is not just efficiency. It is a more credible client experience for firms that want to look established and operate with less drag.</p>
+
+      <h2>Pain point four: seasonal tax preparation keeps dominating the revenue model</h2>
+
+      <p>Many skilled practitioners are trapped in a seasonal rhythm<sup><a href="#ref2" class="text-white/80 hover:text-brand-400">2</a></sup>. Filing season swells the workload, and then the rest of the year becomes a scramble to stabilize cash flow. That pattern is familiar, but it is also limiting. It makes it harder to invest in better systems, stronger positioning, and proactive client relationships.</p>
+
+      <p>The deeper issue is not seasonality itself. It is the lack of recurring services built around the firm’s expertise.</p>
+
+      <p>That is where Tax Monitor becomes strategically important. VLP is not just about cleaner onboarding. It is about helping firms move from one-off work into structured recurring monitoring relationships. Monitoring creates an earlier engagement point, a steadier revenue layer, and a way to serve clients before every issue becomes a full tax resolution event.</p>
+
+      <h2>Pain point five: tax resolution becomes the default offer instead of proactive monitoring</h2>
+
+      <p>Too many practices meet clients only after the problem is already painful. That tends to push firms into a reactive posture where tax resolution becomes the main visible offer, even when the smarter long-term opportunity would be earlier diagnosis, monitoring, and proactive service.</p>
+
+      <p>That reactive pattern is expensive for both sides. The client arrives later, under more stress, and often with fewer clean options. The firm does important work, but the relationship starts in crisis instead of control.</p>
+
+      <p>VLP, together with transcript and monitoring capabilities across the ecosystem, creates a better path. A taxpayer may discover a problem through Tax Tools, use Transcripts for analysis or diagnostics, and then connect with a professional who can offer monitoring, compliance help, or representation. That gives the firm more than a one-time issue to solve. It creates a pathway into recurring revenue and earlier trust.</p>
+
+      <h2>This matters across several kinds of firms</h2>
+
+      <p>The market is not just one type of practitioner. Independent EAs may want cleaner offer packaging and more reliable discovery. Tax resolution specialists may want earlier monitoring clients before problems escalate. Modern virtual firms may care most about structured onboarding, automation, and scalable delivery. Bookkeepers and fractional finance professionals moving closer to tax work may need a more professionalized front end and a stronger service path.</p>
+
+      <p>Different firms enter from different angles, but the structural issues are remarkably similar. Weak positioning. Weak packaging. Weak distribution. Manual onboarding. Too much dependency on referrals or seasonal work.</p>
+
+      <p>That is why the platform model matters. VLP does not try to be just one more isolated tool. It sits between distribution, service packaging, and delivery infrastructure. That is a much more useful place to be when the real market problem is fragmentation.</p>
+
+      <h2>The ecosystem effect is the bigger advantage</h2>
+
+      <p>Virtual Launch Pro becomes more valuable because it does not operate alone. Tax Tools can attract taxpayers searching for answers. Transcripts can turn uncertainty into diagnostics and reports. Tax Monitor can support recurring monitoring and professional discovery. VLP gives the professional the infrastructure to turn that attention and utility into a working service model.</p>
+
+      <p>That combination matters because most alternatives solve only one layer. A generic website may help with visibility. Practice software may help manage internal work. Lead marketplaces may create traffic. But those options usually do not connect discovery, diagnostics, recurring monitoring, and structured delivery into one believable system.</p>
+
+      <p>VLP through TM is more useful because it helps convert expertise into a repeatable business model instead of leaving tax professionals to assemble one from scattered parts.</p>
+
+      <h2>The real shift</h2>
+
+      <p>The strongest tax professionals should not have to choose between technical excellence and modern growth infrastructure. They should be able to do both.</p>
+
+      <p>When client discovery improves, services are packaged clearly, onboarding becomes structured, and monitoring creates a recurring layer beyond filing season, the practice starts to behave differently. It becomes calmer, more credible, and more scalable.</p>
+
+      <p style="font-size: 1.125rem; font-weight: 600; color: rgba(249, 115, 22, 0.9); margin-top: 2.5rem;">Virtual Launch Pro exists to help tax professionals turn real expertise into structured offers, recurring revenue, and a cleaner client journey inside an ecosystem built to support discovery and delivery.</p>
+     <h2>Sources</h2>
+
+<p id="ref1" class="text-sm text-white/60"><sup>1</sup>
+<a href="https://www.thomsonreuters.com/en-us/posts/tax-and-accounting/tax-professionals-report-2024/" target="_blank" class="underline hover:text-brand-400">Thomson Reuters Institute, 2024 State of Tax Professionals Report</a> — Documents structural challenges facing independent tax and accounting firms, including marketing limitations, client acquisition patterns, and operational infrastructure differences between small and large firms.
+<br><br>
+<a href="https://www.aicpa-cima.com/professional-insights/article/pcps-cpa-firm-top-issues-survey" target="_blank" class="underline hover:text-brand-400">AICPA & CIMA, CPA Firm Top Issues Survey</a> — Repeated surveys of U.S. accounting firms showing that growth, technology adoption, staffing, and firm infrastructure are persistent challenges for small and independent practices.
+<br><br>
+<a href="https://www.naea.org/how-enrolled-agents-can-thrive-in-an-uncertain-2026-economy-insights-from-the-cpa-trendlines-forecast/" target="_blank" class="underline hover:text-brand-400">National Association of Enrolled Agents (NAEA), How Enrolled Agents Can Thrive in an Uncertain Economy</a> — Discusses market pressures on independent tax professionals and the need for stronger positioning, services, and operational systems.</p>
+
+<p id="ref2" class="text-sm text-white/60"><sup>2</sup>
+<a href="https://quickbooks.intuit.com/r/small-business-data/accountant-tech-survey-2024/" target="_blank" class="underline hover:text-brand-400">Intuit QuickBooks, 2024 Accountant Technology Survey</a> — Reports that many accounting and tax professionals still struggle with technology adoption and operational modernization, which contributes to inefficiencies and growth constraints.
+<br><br>
+<a href="https://www.journalofaccountancy.com/issues/2021/dec/cas-practices-see-20-percent-growth/" target="_blank" class="underline hover:text-brand-400">Journal of Accountancy, CAS Practices See 20% Growth</a> — Highlights the increasing demand for recurring advisory and monitoring services beyond traditional seasonal tax work.
+<br><br>
+<a href="https://www.aicpa-cima.com/professional-insights/download/tackling-change-in-an-uncertain-environment" target="_blank" class="underline hover:text-brand-400">AICPA & CIMA, Tackling Change in an Uncertain Environment</a> — Commentary on structural changes affecting accounting and tax practices, including the shift toward technology-enabled and recurring services.</p>
+
+</div>
+
+<div class="mt-12 pt-8 border-t border-white/10">
+      <div class="flex items-center justify-between gap-4 flex-col sm:flex-row">
+       <div class="flex items-center gap-4">
+        <div class="author-avatar">JLW</div>
+        <div>
+         <div class="font-semibold">JLW</div>
+         <div class="text-sm text-white/60">EA turned agency builder</div>
+        </div>
+       </div>
+       <a href="/pricing.html" class="rounded-lg border border-white/20 px-4 py-2 text-sm font-semibold text-white hover:bg-white/5 transition">Explore packages</a>
+      </div>
+     </div>
+    </article>
+
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+     <h2 class="text-2xl md:text-3xl font-extrabold mb-8">Related reading</h2>
+     <div class="grid gap-6 md:grid-cols-3">
+      <article class="blog-card p-6 flex flex-col">
+       <div class="mb-4"><span class="category-badge">Market</span></div>
+       <h3 class="text-lg font-extrabold mb-3 flex-grow">Why recurring monitoring is a better fit than seasonal dependence</h3>
+       <p class="text-white/70 text-sm mb-4">A calmer revenue model starts when firms stop relying entirely on filing season and start building proactive recurring relationships.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">6 min</div>
+         </div>
+        </div>
+        <i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+
+      <article class="blog-card p-6 flex flex-col">
+       <div class="mb-4"><span class="category-badge">Distribution</span></div>
+       <h3 class="text-lg font-extrabold mb-3 flex-grow">Why tax professionals need more than referrals to grow</h3>
+       <p class="text-white/70 text-sm mb-4">Referrals are useful, but they are not a complete growth system when you want predictable client discovery.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">7 min</div>
+         </div>
+        </div>
+        <i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+
+      <article class="blog-card p-6 flex flex-col">
+       <div class="mb-4"><span class="category-badge">Operations</span></div>
+       <h3 class="text-lg font-extrabold mb-3 flex-grow">How structured onboarding changes the client experience</h3>
+       <p class="text-white/70 text-sm mb-4">A cleaner intake and delivery path makes firms look more credible while reducing internal admin drag.</p>
+       <div class="flex items-center justify-between pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2">
+         <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-cyan-600 flex items-center justify-center text-[10px] font-bold">JLW</div>
+         <div>
+          <div class="text-xs font-semibold">JLW</div>
+          <div class="text-xs text-white/50">5 min</div>
+         </div>
+        </div>
+        <i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+       </div>
+      </article>
+     </div>
+    </section>
+
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+     <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-white/8 to-white/5 p-8 md:p-12 text-center">
+      <div class="mx-auto max-w-2xl">
+       <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Get insights like this delivered</h2>
+       <p class="text-white/70 mb-8">New articles on recurring monitoring, tax practice growth, structured onboarding, and professional discovery sent monthly.</p>
+       <form class="flex flex-col sm:flex-row gap-3">
+        <input type="email" placeholder="your@email.com" class="newsletter-input flex-1" required>
+        <button type="submit" class="rounded-lg bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400 transition whitespace-nowrap">Subscribe</button>
+       </form>
+       <p class="text-xs text-white/50 mt-3">We respect your inbox. Unsubscribe anytime.</p>
+      </div>
+     </div>
+    </section>
+
+    <section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+     <div class="rounded-2xl bg-brand-500 px-8 py-12 text-center md:py-16 md:px-12">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-ink-900 mb-4">Ready to build a stronger tax practice model?</h2>
+      <p class="text-ink-900/80 mb-8 max-w-2xl mx-auto">Explore the installs that help tax professionals improve discovery, package services more clearly, onboard clients with less friction, and build recurring revenue beyond filing season.</p>
+      <a href="/index.html#pricing" class="inline-block rounded-xl bg-ink-900 px-8 py-3 text-sm font-extrabold text-brand-500 hover:bg-ink-800 transition">View packages</a>
+     </div>
+    </section>
+   </main>
+
+   <!-- PARTIAL:siteFooter -->
+  </div>
+  <script>
+    (function () {
+      function boot() {
+        if (window.lucide && window.lucide.createIcons) {
+          window.lucide.createIcons();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
+    })();
+  </script>
+ </body>
+</html>
