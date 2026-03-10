@@ -6,11 +6,14 @@ const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
 
 // Public directories to copy as-is
-const COPY_DIRS = ["_sdk", "assets", "blog", "legal", "lp", "magnets", "scripts", "styles", "va", "workers"];
+const COPY_DIRS = ["_sdk", "assets", "blog", "features", "legal", "lp", "magnets", "scripts", "styles", "va", "workers"];
 
 // Where partial sources live
 const PARTIALS_ROOT = path.join(ROOT, "partials");
-const PARTIALS_DASHBOARD = path.join(ROOT, "va", "dashboard", "partials");
+const PARTIALS_APP_SIDEBAR = path.join(ROOT, "partials", "appSidebar.html");
+const PARTIALS_APP_TOPBAR = path.join(ROOT, "partials", "appTopbar.html");
+const PARTIALS_TAXPRO_SIDEBAR = path.join(ROOT, "partials", "taxProSidebar.html");
+const PARTIALS_TAXPRO_TOPBAR = path.join(ROOT, "partials", "taxProTopbar.html");
 
 // Avoid walking into these (source tree)
 const SKIP_DIRS = new Set([".git", "dist", "node_modules"]);
@@ -100,16 +103,30 @@ async function loadPartialOrEmpty(p) {
   return (await exists(p)) ? await readText(p) : "";
 }
 
+
+
 async function main() {
   await rmDir(DIST);
   await ensureDir(DIST);
 
-  // Load partials (missing files become empty strings)
+    // Load partials (missing files become empty strings)
+  const appSidebar = await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR);
+  const appTopbar = await loadPartialOrEmpty(PARTIALS_APP_TOPBAR);
+
+  // Partial tokens used by pages:
+  // <!-- PARTIAL:siteHeader -->
+  // <!-- PARTIAL:siteFooter -->
+  // <!-- PARTIAL:appSidebar -->
+  // <!-- PARTIAL:appTopbar -->
+  // <!-- PARTIAL:taxProSidebar -->
+  // <!-- PARTIAL:taxProTopbar -->
   const partials = {
-    footer: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html")),
-    header: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html")),
-    sidebar: await loadPartialOrEmpty(path.join(PARTIALS_DASHBOARD, "sidebar.html")),
-    topbar: await loadPartialOrEmpty(path.join(PARTIALS_DASHBOARD, "topbar.html")),
+    appSidebar,
+    appTopbar,
+    siteFooter: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html")),
+    siteHeader: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html")),
+    taxProSidebar: await loadPartialOrEmpty(PARTIALS_TAXPRO_SIDEBAR),
+    taxProTopbar: await loadPartialOrEmpty(PARTIALS_TAXPRO_TOPBAR),
   };
 
   // 1) Copy root-level HTML files (index.html, pricing.html, etc.) with injection
