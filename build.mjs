@@ -1,9 +1,9 @@
-// build.mjs
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, "dist");
+const WRANGLER_TOML = path.join(ROOT, "wrangler.toml");
 
 // Public directories to copy as-is
 const COPY_DIRS = ["_sdk", "assets", "blog", "features", "legal", "lp", "magnets", "scripts", "styles", "va", "workers"];
@@ -32,7 +32,9 @@ async function ensureDir(dir) {
 }
 
 async function rmDir(dir) {
-  if (await exists(dir)) await fs.rm(dir, { recursive: true, force: true });
+  if (await exists(dir)) {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
 }
 
 async function readText(p) {
@@ -98,48 +100,105 @@ async function walk(dir) {
   return out;
 }
 
-function injectAll(html, partials) {
+async function loadPartialOrEmpty(p) {
+  return (await exists(p)) ? await readText(p) : "";
+}
+
+function injectPartials(html, partials) {
   let next = html;
 
   for (const [key, value] of Object.entries(partials)) {
-    const re = new RegExp(`<!--\\s*PARTIAL:${key}\\s*-->`, "g");
+    const re = new RegExp(`<!--\\s*PARTIAL:${escapeRegExp(key)}\\s*-->`, "g");
     next = next.replace(re, value);
   }
 
   return next;
 }
 
-async function loadPartialOrEmpty(p) {
-  return (await exists(p)) ? await readText(p) : "";
+function replaceBuildPlaceholders(html, vars) {
+  return html.replace(/\{\{([A-Z0-9_]+)\}\}/g, (fullMatch, key) => {
+    if (Object.prototype.hasOwnProperty.call(vars, key)) {
+      return String(vars[key]);
+    }
+    return fullMatch;
+  });
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
+function parseWranglerVarsToml(tomlText) {
+  const vars = {};
+  const lines = tomlText.split(/\r?\n/);
+  let inVarsSection = false;
+
+  for (const rawLine of lines) {
+    const trimmed = rawLine.trim();
+
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
+    if (/^\[[^\]]+\]$/.test(trimmed)) {
+      inVarsSection = trimmed === "[vars]";
+      continue;
+    }
+
+    if (!inVarsSection) continue;
+
+    const match = trimmed.match(/^([A-Z0-9_]+)\s*=\s*"([\s\S]*)"$/);
+    if (!match) continue;
+
+    const [, key, rawValue] = match;
+    vars[key] = rawValue
+      .replace(/\\"/g, '"')
+      .replace(/\\n/g, "\n")
+      .replace(/\\r/g, "\r")
+      .replace(/\\t/g, "\t")
+      .replace(/\\\\/g, "\\");
+  }
+
+  return vars;
+}
+
+async function loadWranglerVars() {
+  if (!(await exists(WRANGLER_TOML))) {
+    return {};
+  }
+
+  const toml = await readText(WRANGLER_TOML);
+  return parseWranglerVarsToml(toml);
+}
+
+function transformHtml(html, partials, wranglerVars) {
+  let next = html;
+  next = injectPartials(next, partials);
+  next = replaceBuildPlaceholders(next, wranglerVars);
+  return next;
+}
 
 async function main() {
   await rmDir(DIST);
   await ensureDir(DIST);
 
-    // Load partials (missing files become empty strings)
-  const appSidebar = await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR);
-  const appTopbar = await loadPartialOrEmpty(PARTIALS_APP_TOPBAR);
+  const wranglerVars = await loadWranglerVars();
 
-  // Partial tokens used by pages:
-  // <!-- PARTIAL:siteHeader -->
-  // <!-- PARTIAL:siteFooter -->
-  // <!-- PARTIAL:appSidebar -->
-  // <!-- PARTIAL:appTopbar -->
-  // <!-- PARTIAL:taxProSidebar -->
-  // <!-- PARTIAL:taxProTopbar -->
   const partials = {
-    appSidebar,
-    appTopbar,
+    // Current tokens
+    appSidebar: await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR),
+    appTopbar: await loadPartialOrEmpty(PARTIALS_APP_TOPBAR),
     siteFooter: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html")),
     siteHeader: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html")),
     taxProSidebar: await loadPartialOrEmpty(PARTIALS_TAXPRO_SIDEBAR),
     taxProTopbar: await loadPartialOrEmpty(PARTIALS_TAXPRO_TOPBAR),
+
+    // Legacy tokens kept for compatibility because apparently pages love drifting.
+    footer: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html")),
+    header: await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html")),
+    sidebar: await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR),
+    topbar: await loadPartialOrEmpty(PARTIALS_APP_TOPBAR),
   };
 
-  // 1) Copy root-level HTML files (index.html, pricing.html, etc.) with injection
+  // 1) Copy root-level HTML files with partial injection + build-time placeholder replacement
   const rootEntries = await fs.readdir(ROOT, { withFileTypes: true });
   for (const ent of rootEntries) {
     if (!ent.isFile()) continue;
@@ -149,12 +208,12 @@ async function main() {
     const dest = path.join(DIST, ent.name);
 
     const html = await readText(src);
-    const next = injectAll(html, partials);
+    const next = transformHtml(html, partials, wranglerVars);
     await writeHtmlWithRouteVariants(dest, next);
   }
 
   // 2) Copy public dirs
-  for (const dir of COPY_DIRS.sort()) {
+  for (const dir of COPY_DIRS.slice().sort()) {
     await copyDir(path.join(ROOT, dir), path.join(DIST, dir));
   }
 
@@ -164,19 +223,19 @@ async function main() {
     await copyFile(redirects, path.join(DIST, "_redirects"));
   }
 
-  // 4) Inject partials into any HTML inside dist (includes /va/** pages)
+  // 4) Inject partials and replace placeholders into any HTML inside dist
   const distFiles = await walk(DIST);
-  let injectedCount = 0;
+  let transformedHtmlFiles = 0;
 
   for (const f of distFiles) {
     if (!f.endsWith(".html")) continue;
 
     const html = await readText(f);
-    const next = injectAll(html, partials);
+    const next = transformHtml(html, partials, wranglerVars);
 
     if (next !== html) {
       await writeHtmlWithRouteVariants(f, next);
-      injectedCount++;
+      transformedHtmlFiles++;
     }
   }
 
@@ -193,16 +252,22 @@ async function main() {
     await writeText(cleanRouteDest, html);
   }
 
-  const present = Object.entries(partials)
+  const presentPartials = Object.entries(partials)
     .map(([k, v]) => `${k}:${v ? "yes" : "no"}`)
     .sort()
     .join(" ");
 
+  const usedBuildVars = Object.keys(wranglerVars)
+    .filter((key) => key.startsWith("VLP_") || key.startsWith("STRIPE_") || key.startsWith("BILLING_"))
+    .sort();
+
   console.log("build_ok", {
     copiedDirs: COPY_DIRS.slice().sort(),
     dist: "dist",
-    injectedHtmlFiles: injectedCount,
-    partials: present,
+    partials: presentPartials,
+    transformedHtmlFiles,
+    wranglerVarCount: Object.keys(wranglerVars).length,
+    wranglerVarsSample: usedBuildVars.slice(0, 20),
   });
 }
 
