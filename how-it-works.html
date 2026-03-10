@@ -409,6 +409,79 @@
         </div>
       </section>
 
+      <section class="border-t border-white/10" id="membership-levels">
+        <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+          <div class="mx-auto max-w-3xl text-center">
+            <p class="text-xs font-semibold tracking-widest text-brand-400">MEMBERSHIP LEVELS</p>
+            <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pricing and token placeholders</h2>
+            <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
+              These placeholders mirror the pricing page so this page can explain the model without hardcoding live plan values into the layout like an invitation to future inconsistency.
+            </p>
+          </div>
+
+          <div class="mt-12 grid gap-6 lg:grid-cols-3">
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+              <div class="flex items-center justify-between">
+                <div class="text-lg font-extrabold">Starter</div>
+                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for testing</span>
+              </div>
+              <div class="mt-4">
+                <div class="text-4xl font-extrabold">${{VLP_STARTER_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
+              </div>
+              <p class="mt-5 text-sm text-white/70">Entry network membership for firms beginning with recurring monitoring and lighter monthly usage.</p>
+              <ul class="mt-6 space-y-3 text-sm text-white/75">
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Payment link updates status</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Access to taxpayer service pool</span></li>
+              </ul>
+            </article>
+
+            <article class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft">
+              <div class="flex items-center justify-between">
+                <div class="text-lg font-extrabold">Pro</div>
+                <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
+              </div>
+              <div class="mt-4">
+                <div class="text-4xl font-extrabold">${{VLP_PRO_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
+              </div>
+              <p class="mt-5 text-sm text-white/70">For active firms serving multiple taxpayers each month and needing stronger network visibility and capacity.</p>
+              <ul class="mt-6 space-y-3 text-sm text-white/75">
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Featured network listing</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Priority taxpayer pool access</span></li>
+              </ul>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+              <div class="flex items-center justify-between">
+                <div class="text-lg font-extrabold">Advanced</div>
+                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For higher volume</span>
+              </div>
+              <div class="mt-4">
+                <div class="text-4xl font-extrabold">${{VLP_ADVANCED_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
+              </div>
+              <p class="mt-5 text-sm text-white/70">For firms with heavier taxpayer volume, higher transcript demand, and broader staff usage each month.</p>
+              <ul class="mt-6 space-y-3 text-sm text-white/75">
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Early access to taxpayer cases</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Top-tier network promotion</span></li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="mx-auto mt-10 max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-6 text-sm text-white/70 shadow-soft">
+            <div class="font-semibold text-white">Platform fee placeholder</div>
+            <div class="mt-2">When a taxpayer converts to a paying client through the platform intake flow, a {{VLP_PLATFORM_FEE_PERCENT}}% professional platform fee is applied before the case is assigned.</div>
+          </div>
+        </div>
+      </section>
+
       <section class="border-t border-white/10" id="inside-system">
         <div class="mx-auto max-w-6xl px-4 py-16 md:py-20">
           <div class="mb-16 text-center">
@@ -559,6 +632,12 @@
               <div>
                 <h3 class="mb-2 font-semibold text-slate-100">Start with structure</h3>
                 <p class="text-sm text-slate-300">The pro joins with a package, a profile, and a cleaner operating layer instead of trying to invent credibility from scratch every week.</p>
+              </div>
+              <div class="rounded border border-slate-700/50 bg-slate-900/40 p-3">
+                <div class="mb-2 text-xs uppercase tracking-wide text-slate-500">Placeholder tiers</div>
+                <p class="text-sm text-slate-300">Starter: ${{VLP_STARTER_MONTHLY_COST}} with {{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens and {{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens.</p>
+                <p class="mt-2 text-sm text-slate-300">Pro: ${{VLP_PRO_MONTHLY_COST}} with {{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens and {{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens.</p>
+                <p class="mt-2 text-sm text-slate-300">Advanced: ${{VLP_ADVANCED_MONTHLY_COST}} with {{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens and {{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens.</p>
               </div>
               <div class="rounded border border-slate-700/50 bg-slate-900/40 p-3">
                 <div class="mb-2 text-xs uppercase tracking-wide text-slate-500">Outcome</div>
@@ -786,6 +865,16 @@
             actual: tabData.visibility.title,
             expected: 'Visibility with proof',
             name: 'tabData visibility title is present'
+          },
+          {
+            actual: '{{VLP_PRO_MONTHLY_COST}}',
+            expected: '{{VLP_PRO_MONTHLY_COST}}',
+            name: 'pro pricing placeholder remains intact'
+          },
+          {
+            actual: '{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}',
+            expected: '{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}',
+            name: 'starter transcript placeholder remains intact'
           }
         ];
 
