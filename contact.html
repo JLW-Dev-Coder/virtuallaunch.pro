@@ -151,7 +151,7 @@
 
   <body class="h-full bg-slate-950 text-white overflow-auto">
     <div id="app" class="w-full min-h-screen flex flex-col">
-      <div id="header"></div>
+      <!-- PARTIAL:siteHeader -->
 
       <section class="hero-grid hero-glow py-16 md:py-24 text-white">
         <div class="max-w-6xl mx-auto px-4 hero-content">
@@ -348,7 +348,7 @@
       </section>
 
       <div class="mt-auto">
-        <div id="footer"></div>
+        <!-- PARTIAL:siteFooter -->
       </div>
     </div>
 
@@ -714,33 +714,12 @@
           });
         }
 
-        async function loadPartial(id, path) {
-          const el = document.getElementById(id);
-          if (!el) return;
-          try {
-            const res = await fetch(path, { cache: 'no-store' });
-            if (!res.ok) {
-              el.innerHTML = '';
-              return;
-            }
-            const text = await res.text();
-            if (typeof text === 'string' && text.trim()) {
-              el.innerHTML = text;
-            } else {
-              el.innerHTML = '';
-            }
-          } catch (_) {
-            el.innerHTML = '';
-          }
-        }
-
+        
         function initAll() {
           seedHiddenFields();
           initAnchorNav();
           initFormHandler();
           initLookupHandler();
-          loadPartial('header', '/partials/header.html');
-          loadPartial('footer', '/partials/footer.html');
 
           const pref = getParam('ticket_id') || getParam('supportId') || getParam('support_id') || '';
           if (pref) lookupSupportId();
