@@ -16,6 +16,7 @@
  * - GET /cal/oauth/status
  * - GET /cal/oauth/start
  * - GET /directory
+ * - GET /api/traffic-insights
  * - GET /health
  * - GET /r2/object
  * - GET /support/status
@@ -33,12 +34,15 @@
  * Optional env:
  * - Plaintext: CAL_OAUTH_CLIENT_ID
  * - Plaintext: CAL_OAUTH_REDIRECT_URI
- * - Secret: CAL_OAUTH_CLIENT_SECRET
- * - Secret: CAL_WEBHOOK_SECRET
- * - Secret: CLICKUP_API_KEY
  * - Plaintext: CLICKUP_ACCOUNTS_LIST_ID
  * - Plaintext: CLICKUP_PROJECTION_ENABLED ("true" enables)
  * - Plaintext: CLICKUP_SUPPORT_LIST_ID
+ * - Plaintext: CLOUDFLARE_ACCOUNT_ID
+ * - Plaintext: CLOUDFLARE_ZONE_ID
+ * - Secret: CAL_OAUTH_CLIENT_SECRET
+ * - Secret: CAL_WEBHOOK_SECRET
+ * - Secret: CLICKUP_API_KEY
+ * - Secret: CLOUDFLARE_API_TOKEN
  * - Secret: STRIPE_WEBHOOK_SECRET
  *
  * Compatibility Date: set in wrangler.toml (required)
@@ -82,6 +86,15 @@ export default {
     // ------------------------------------------------------------
     if (request.method === "GET" && url.pathname === "/health") {
       return withCors(request, json({ ok: true, route: "health" }, 200));
+    }
+
+    // ------------------------------------------------------------
+    // GET /api/traffic-insights
+    // - Returns Cloudflare zone traffic metrics in the exact shape
+    //   expected by the page contract.
+    // ------------------------------------------------------------
+    if (request.method === "GET" && url.pathname === "/api/traffic-insights") {
+      return withCors(request, await handleTrafficInsights(env));
     }
 
     // ------------------------------------------------------------
@@ -1061,6 +1074,98 @@ async function hmacSha256B64({ secret, message }) {
   return base64url(new Uint8Array(sigBuf));
 }
 
+async function handleTrafficInsights(env) {
+  if (!env.CLOUDFLARE_API_TOKEN) {
+    return json({ ok: false, error: "Missing CLOUDFLARE_API_TOKEN" }, 500);
+  }
+
+  if (!env.CLOUDFLARE_ZONE_ID) {
+    return json({ ok: false, error: "Missing CLOUDFLARE_ZONE_ID" }, 500);
+  }
+
+  const now = new Date();
+  const since = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  const query = `
+    query GetZoneTraffic($zoneTag: string, $since: Time!, $until: Time!) {
+      viewer {
+        zones(filter: { zoneTag: $zoneTag }) {
+          httpRequestsAdaptiveGroups(
+            limit: 1000
+            filter: {
+              datetime_geq: $since
+              datetime_lt: $until
+            }
+          ) {
+            sum {
+              bytes
+              cachedBytes
+              cachedRequests
+              requests
+              visits
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    since: since.toISOString(),
+    until: now.toISOString(),
+    zoneTag: env.CLOUDFLARE_ZONE_ID,
+  };
+
+  try {
+    const gql = await cfGraphqlFetch({ env, query, variables });
+    const groups = gql?.data?.viewer?.zones?.[0]?.httpRequestsAdaptiveGroups ?? [];
+
+    let bytes = 0;
+    let cachedRequests = 0;
+    let requests = 0;
+    let visits = 0;
+
+    for (const group of groups) {
+      const sum = group?.sum ?? {};
+      bytes += Number(sum.bytes || 0);
+      cachedRequests += Number(sum.cachedRequests || 0);
+      requests += Number(sum.requests || 0);
+      visits += Number(sum.visits || 0);
+    }
+
+    const cachedPercent = requests > 0 ? (cachedRequests / requests) * 100 : 0;
+
+    return json(
+      {
+        ok: true,
+        highlights: {
+          reliability: "Cloudflare-backed routing for public traffic",
+          source: "Source: GraphQL Analytics API",
+        },
+        meta: {
+          updatedAt: now.toISOString(),
+          windowLabel: "Last 30 days",
+        },
+        metrics: {
+          cachedPercent,
+          edgeResponseBytes: bytes,
+          requests,
+          uniqueVisitors: visits,
+        },
+      },
+      200
+    );
+  } catch (err) {
+    return json(
+      {
+        ok: false,
+        error: String(err?.message || err || "Traffic insights failed"),
+      },
+      502
+    );
+  }
+}
+
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -1276,6 +1381,38 @@ async function upsertDirectoryIndex({ env, accountId, slug, updatedAt }) {
 // ============================================================
 // ClickUp (Common)
 // ============================================================
+
+async function cfGraphqlFetch({ env, query, variables }) {
+  if (!env.CLOUDFLARE_API_TOKEN) throw new Error("Missing CLOUDFLARE_API_TOKEN");
+  if (!env.CLOUDFLARE_ZONE_ID) throw new Error("Missing CLOUDFLARE_ZONE_ID");
+
+  const res = await fetch("https://api.cloudflare.com/client/v4/graphql", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.CLOUDFLARE_API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  const text = await res.text();
+  let jsonBody = null;
+  try {
+    jsonBody = text ? JSON.parse(text) : null;
+  } catch {
+    jsonBody = { raw: text };
+  }
+
+  if (!res.ok) {
+    throw new Error(`Cloudflare GraphQL failed: ${res.status} ${JSON.stringify(jsonBody)}`);
+  }
+
+  if (Array.isArray(jsonBody?.errors) && jsonBody.errors.length) {
+    throw new Error(`Cloudflare GraphQL returned errors: ${JSON.stringify(jsonBody.errors)}`);
+  }
+
+  return jsonBody;
+}
 
 async function clickupCreateTaskComment({ env, taskId, text }) {
   if (!env.CLICKUP_API_KEY) throw new Error("Missing CLICKUP_API_KEY");
