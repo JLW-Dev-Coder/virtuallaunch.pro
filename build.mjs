@@ -9,6 +9,7 @@ const BLOG_GENERATED_DIR = path.join(ROOT, "blog", ".generated");
 const BLOG_FEATURED_HTML = path.join(BLOG_GENERATED_DIR, "featured.html");
 const BLOG_LIST_HTML = path.join(BLOG_GENERATED_DIR, "list.html");
 const BLOG_RECENT3_HTML = path.join(BLOG_GENERATED_DIR, "recent3.html");
+const BLOG_ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
 
 // Public directories to copy as-is
 const COPY_DIRS = ["_sdk", "assets", "blog", "features", "legal", "lp", "magnets", "scripts", "styles", "va", "workers"];
@@ -56,6 +57,11 @@ async function copyFile(src, dest) {
   await fs.copyFile(src, dest);
 }
 
+function getPublicBlogArticleName(filename) {
+  const match = filename.match(BLOG_ARTICLE_FILE_RE);
+  return match ? `${match[3]}.html` : null;
+}
+
 async function writeHtmlWithRouteVariants(dest, content) {
   await writeText(dest, content);
 
@@ -63,6 +69,26 @@ async function writeHtmlWithRouteVariants(dest, content) {
   if (parsed.base.toLowerCase() !== "index.html") {
     const cleanRouteDest = path.join(parsed.dir, parsed.name, "index.html");
     await writeText(cleanRouteDest, content);
+  }
+
+  if (path.basename(parsed.dir) === "blog") {
+    const publicBlogArticleName = getPublicBlogArticleName(parsed.base);
+
+    if (publicBlogArticleName) {
+      const publicBlogArticleDest = path.join(parsed.dir, publicBlogArticleName);
+      const publicBlogArticleParsed = path.parse(publicBlogArticleDest);
+
+      if (publicBlogArticleDest !== dest) {
+        await writeText(publicBlogArticleDest, content);
+      }
+
+      const publicCleanRouteDest = path.join(
+        publicBlogArticleParsed.dir,
+        publicBlogArticleParsed.name,
+        "index.html"
+      );
+      await writeText(publicCleanRouteDest, content);
+    }
   }
 }
 
