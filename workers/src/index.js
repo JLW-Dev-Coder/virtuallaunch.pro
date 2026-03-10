@@ -1097,11 +1097,10 @@ async function handleTrafficInsights(env) {
               datetime_lt: $until
             }
           ) {
+            count
             sum {
-              bytes
-              cachedBytes
               cachedRequests
-              requests
+              edgeResponseBytes
               visits
             }
           }
@@ -1120,16 +1119,16 @@ async function handleTrafficInsights(env) {
     const gql = await cfGraphqlFetch({ env, query, variables });
     const groups = gql?.data?.viewer?.zones?.[0]?.httpRequestsAdaptiveGroups ?? [];
 
-    let bytes = 0;
+    let edgeResponseBytes = 0;
     let cachedRequests = 0;
     let requests = 0;
     let visits = 0;
 
     for (const group of groups) {
       const sum = group?.sum ?? {};
-      bytes += Number(sum.bytes || 0);
+      edgeResponseBytes += Number(sum.edgeResponseBytes || 0);
       cachedRequests += Number(sum.cachedRequests || 0);
-      requests += Number(sum.requests || 0);
+      requests += Number(group?.count || 0);
       visits += Number(sum.visits || 0);
     }
 
@@ -1148,7 +1147,7 @@ async function handleTrafficInsights(env) {
         },
         metrics: {
           cachedPercent,
-          edgeResponseBytes: bytes,
+          edgeResponseBytes,
           requests,
           uniqueVisitors: visits,
         },
