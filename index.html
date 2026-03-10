@@ -91,130 +91,15 @@
       color: rgba(255,255,255,1);
     }
 
-    .page-loader {
-      position: fixed;
-      inset: 0;
-      z-index: 80;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background:
-        radial-gradient(circle at top, rgba(249,115,22,0.14), transparent 36%),
-        radial-gradient(circle at bottom, rgba(16,185,129,0.10), transparent 34%),
-        rgba(7,10,16,0.96);
-      backdrop-filter: blur(10px);
-      transition: opacity 0.55s ease, visibility 0.55s ease;
-    }
-
-    .page-loader.is-hidden {
+    .reveal-text {
       opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
+      transform: translateY(28px);
+      will-change: transform, opacity;
     }
 
-    .page-loader__panel {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      padding: 2rem 2.25rem;
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 1.5rem;
-      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      box-shadow: 0 18px 50px rgba(0,0,0,0.22);
-    }
-
-    .page-loader__mark {
-      position: relative;
-      display: grid;
-      place-items: center;
-      width: 5rem;
-      height: 5rem;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .page-loader__mark::before,
-    .page-loader__mark::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-    }
-
-    .page-loader__mark::before {
-      inset: 0.4rem;
-      border: 2px solid rgba(255,255,255,0.08);
-    }
-
-    .page-loader__mark::after {
-      inset: 0.2rem;
-      border: 2px solid transparent;
-      border-top-color: rgba(251,146,60,0.95);
-      border-right-color: rgba(16,185,129,0.8);
-      animation: loaderSpin 1.25s linear infinite;
-    }
-
-    .page-loader__glyph {
-      position: relative;
-      z-index: 1;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: 0.08em;
-    }
-
-    .page-loader__title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .page-loader__subtitle {
-      max-width: 18rem;
-      text-align: center;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: rgba(255,255,255,0.62);
-    }
-
-    .page-loader__bar {
-      width: 12rem;
-      height: 0.35rem;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .page-loader__bar span {
-      display: block;
-      width: 45%;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, rgba(249,115,22,0.95), rgba(16,185,129,0.9));
-      animation: loaderSweep 1.5s ease-in-out infinite;
-    }
-
-    @keyframes loaderSpin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes loaderSweep {
-      0% {
-        transform: translateX(-140%);
-      }
-      50% {
-        transform: translateX(150%);
-      }
-      100% {
-        transform: translateX(320%);
-      }
+    .reveal-text.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     @keyframes gridPan {
@@ -231,10 +116,10 @@
         animation: none;
       }
 
-      .page-loader,
-      .page-loader__mark::after,
-      .page-loader__bar span {
-        animation: none !important;
+      .reveal-text {
+        opacity: 1 !important;
+        transform: none !important;
+        
         transition: none !important;
       }
     }
@@ -243,17 +128,6 @@
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
 </head>
 <body class="bg-ink-950 text-white antialiased">
-  <div id="page-loader" class="page-loader" aria-hidden="true">
-    <div class="page-loader__panel">
-      <div class="page-loader__mark">
-        <span class="page-loader__glyph">V</span>
-      </div>
-      <div class="page-loader__title">Virtual Launch Pro</div>
-      <div class="page-loader__subtitle">Loading a calmer client journey.</div>
-      <div class="page-loader__bar"><span></span></div>
-    </div>
-  </div>
-
   <div class="pointer-events-none fixed inset-0 -z-20 vlp-grid vlp-grid-pan opacity-60"></div>
   <div class="pointer-events-none fixed -left-40 -top-40 h-[520px] w-[520px] -z-10 rounded-full bg-brand-500/35 blur-[80px]"></div>
   <div class="pointer-events-none fixed -right-40 -bottom-40 h-[520px] w-[520px] -z-10 rounded-full bg-emerald-300/25 blur-[80px]"></div>
@@ -313,19 +187,19 @@
     <section class="border-t border-white/10">
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-4xl text-center">
-          <p class="text-xs font-semibold tracking-widest text-brand-400">WHY VIRTUAL LAUNCH PRO WORKS</p>
-          <h2 class="mt-3 text-4xl font-extrabold md:text-5xl">Predictable delivery, built for calm</h2>
-          <p class="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">
+          <p class="reveal-text text-xs font-semibold tracking-widest text-brand-400">WHY VIRTUAL LAUNCH PRO WORKS</p>
+          <h2 class="reveal-text mt-3 text-4xl font-extrabold md:text-5xl">Predictable delivery, built for calm</h2>
+          <p class="reveal-text mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">
             Service delivery breaks down when clients cannot see what happens next and your team has to answer the same questions repeatedly.
             Virtual Launch Pro fixes that with visible steps, defined deliverables, and automations that reduce noise.
           </p>
-          <p class="mx-auto mt-4 max-w-3xl text-base text-white/70 md:text-lg">
+          <p class="reveal-text mx-auto mt-4 max-w-3xl text-base text-white/70 md:text-lg">
             Install once, then stack add-ons only when you are ready. You stay in control of scope, timelines, and client expectations without rebuilding your process every season.
           </p>
         </div>
 
         <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-6">
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
+          <div class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
               <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path d="M9 12l2 2 4-5" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
@@ -339,7 +213,7 @@
             </ul>
           </div>
 
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
+          <div class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
               <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path d="M12 22s8-3 8-10V6l-8-3-8 3v6c0 7 8 10 8 10z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
@@ -353,7 +227,7 @@
             </ul>
           </div>
 
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
+          <div class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-2">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
               <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
@@ -367,7 +241,7 @@
             </ul>
           </div>
 
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-3">
+          <div class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-3">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
               <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path d="M7 7h10M7 12h10M7 17h6" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
@@ -381,7 +255,7 @@
             </ul>
           </div>
 
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-3">
+          <div class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft lg:col-span-3">
             <div class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5">
               <svg aria-hidden="true" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path d="M12 2l3 7h7l-5.5 4 2.5 7-7-4.5L5 20l2.5-7L2 9h7l3-7z" stroke="#FFA500" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
@@ -403,7 +277,7 @@
       </div>
     </section>
 
-    <section id="offers" class="border-t border-white/10">
+    <section id="offers" class="border-t border-white/10" data-reveal-group>
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">OFFERS</p>
@@ -414,7 +288,7 @@
         </div>
 
         <div class="mt-12 grid gap-6 lg:grid-cols-3">
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+          <article class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
             <div class="text-sm font-semibold tracking-widest text-brand-400">STARTER</div>
             <h3 class="mt-3 text-2xl font-extrabold">Clean links, calm handoff</h3>
             <p class="mt-4 text-sm text-white/70">Built for solo operators or new service offers that need a credible intake-to-delivery path fast.</p>
@@ -436,7 +310,7 @@
             </ul>
           </article>
 
-          <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+          <article class="reveal-text rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
             <div class="text-sm font-semibold tracking-widest text-brand-400">ADVANCED</div>
             <h3 class="mt-3 text-2xl font-extrabold">Multi-offer system control</h3>
             <p class="mt-4 text-sm text-white/70">For growing teams that need routing, role logic, templated documents, and client-facing status at scale.</p>
@@ -450,7 +324,7 @@
       </div>
     </section>
 
-    <section id="pricing" class="border-t border-white/10">
+    <section id="pricing" class="border-t border-white/10" data-reveal-group>
       <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
@@ -667,7 +541,7 @@
       </div>
     </section>
 
-    <section id="faq" class="border-t border-white/10">
+    <section id="faq" class="border-t border-white/10" data-reveal-group>
       <div class="mx-auto max-w-6-5xl px-4 py-14 md:py-16">
         <div class="mx-auto max-w-3xl text-center">
           <h2 class="text-3xl font-extrabold md:text-4xl">Frequently asked questions</h2>
@@ -724,20 +598,57 @@
 
   <script>
     (function () {
-      function hidePageLoader() {
-        var loader = document.getElementById('page-loader');
-        if (!loader) return;
-        loader.classList.add('is-hidden');
-        window.setTimeout(function () {
-          if (loader && loader.parentNode) {
-            loader.parentNode.removeChild(loader);
-          }
-        }, 650);
+      function initScrollTextReveal() {
+        var manual = Array.prototype.slice.call(document.querySelectorAll('.reveal-text'));
+
+        var sections = Array.prototype.slice.call(document.querySelectorAll('section'));
+        var auto = [];
+
+        sections.forEach(function(section){
+          var targets = section.querySelectorAll('h1,h2,h3,p,article,li,details,summary,div.rounded-2xl');
+          targets.forEach(function(el){
+            if(!el.classList.contains('reveal-text')){
+              el.classList.add('reveal-text');
+              auto.push(el);
+            }
+          });
+        });
+
+        var items = manual.concat(auto);
+        if (!items.length) return;
+
+        if (!window.gsap || !window.ScrollTrigger) {
+          items.forEach(function (item) {
+            item.classList.add('is-visible');
+          });
+          return;
+        }
+
+        window.gsap.registerPlugin(window.ScrollTrigger);
+
+        items.forEach(function (item, index) {
+          window.gsap.to(item, {
+            opacity: 1,
+            y: 0,
+            
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: Math.min(index * 0.03, 0.18),
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 88%',
+              once: true
+            },
+            onStart: function () {
+              item.classList.add('is-visible');
+            }
+          });
+        });
       }
 
       function boot() {
         initArtifacts();
-        window.setTimeout(hidePageLoader, 220);
+        initScrollTextReveal();
       }
 
       function initArtifacts() {
@@ -773,8 +684,6 @@
 
         setActive('starter');
       }
-
-      window.addEventListener('load', hidePageLoader);
 
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);
