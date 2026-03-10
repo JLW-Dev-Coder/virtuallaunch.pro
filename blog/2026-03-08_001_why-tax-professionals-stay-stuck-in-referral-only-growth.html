@@ -1,4 +1,4 @@
-<!-- blog/2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html -->
+<!-- 2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html -->
 <!doctype html>
 <html lang="en">
  <head>
@@ -206,7 +206,49 @@
       }
     }
 
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease-out both;
+    }
+
+    .reveal-delay-1 {
+      animation-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      animation-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      animation-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      animation-delay: 0.4s;
+    }
+
+    .reveal-delay-5 {
+      animation-delay: 0.5s;
+    }
+
     @media (prefers-reduced-motion: reduce) {
+      .reveal-up {
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
       .vlp-grid-pan {
         animation: none;
       }
@@ -235,9 +277,11 @@
 
    <main id="top" class="flex-1">
     <article class="mx-auto max-w-3xl px-4 py-12 md:py-16">
+     <div class="reveal-up reveal-delay-1">
      <!-- PARTIAL:blogArticleHeader -->
+     </div>
 
-      <div class="mb-12 md:mb-16">
+      <div class="mb-12 md:mb-16 reveal-up reveal-delay-2">
       <div class="mb-4 flex items-center gap-3 flex-wrap">
         <span class="category-badge category-badge--active">Market</span>
         <span class="text-xs text-white/60">•</span>
@@ -249,7 +293,7 @@
       <p class="text-lg text-white/75 max-w-2xl">Many independent EAs, CPAs, tax attorneys, and modern virtual firms have strong technical skill but weak growth infrastructure. The problem is rarely expertise. It is usually distribution, packaging, onboarding, and recurring revenue design.</p>
      </div>
 
-     <div class="flex items-center gap-4 pb-8 border-b border-white/10 mb-12">
+     <div class="flex items-center gap-4 pb-8 border-b border-white/10 mb-12 reveal-up reveal-delay-3">
       <div class="author-avatar">JLW</div>
       <div>
        <div class="font-semibold">JLW</div>
@@ -257,7 +301,7 @@
       </div>
      </div>
 
-     <div class="article-content">
+     <div class="article-content reveal-up reveal-delay-4">
       <p>If you're like me and a lot of tax professionals, we do excellent work but still end up with unstable growth. We rely on referrals, take whatever service shape the market throws at us, and keep rebuilding the client experience manually. We use what we have when the client calls, but that usually leads to seasonal revenue flow, improvised marketing, and scaling that feels heavier than it should.</p>
 
       <p>Does this sound like you? Well, you are not alone. This is especially common among us independent tax professionals like Enrolled Agents, CPAs, tax attorneys, solo accounting practices, and digitally native firms who often already have the core expertise<sup><a href="#ref1" class="text-white/80 hover:text-brand-400">1</a></sup>. What we lack is the infrastructure around that expertise. We need a better way to get discovered, package offers clearly, onboard clients cleanly, and create recurring relationships before every engagement turns into reactive resolution work.
@@ -348,7 +392,9 @@
 </div>
     </article>
 
+    <div class="reveal-up reveal-delay-5">
     <!-- PARTIAL:blogArticleFooter -->
+    </div>
    </main>
 
    <!-- PARTIAL:siteFooter -->
