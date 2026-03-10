@@ -195,13 +195,14 @@
      </div>
     </section><!-- Featured Article -->
     <section class="mx-auto max-w-6-5xl px-4 pb-12">
-      <!-- BLOG_FEATURED -->
+      <!-- BLOG:featured -->
+      <div id="blog-featured-runtime"></div>
     </section>
 
     <!-- Articles Grid -->
     <section class="mx-auto max-w-6-5xl px-4 py-12 border-t border-white/10">
-      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <!-- BLOG_LIST -->
+      <div id="blog-list-runtime" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <!-- BLOG:list -->
       </div>
     </section>
 
@@ -292,5 +293,83 @@
       }
     })();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d9d20b8247f27df',t:'MTc3MzA5MTI3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d9d20b8247f27df',t:'MTc3MzA5MTI3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>  <script>
+    (function () {
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#39;');
+      }
+
+      function buildCard(post) {
+        return ''
+          + '<article class="blog-card p-6 flex flex-col" data-category="' + escapeHtml(post.category || '') + '">'
+          + '<div class="mb-4"><span class="category-badge">' + escapeHtml(post.category || '') + '</span></div>'
+          + '<h3 class="mt-0 text-lg font-extrabold mb-3 flex-grow">'
+          + '<a class="hover:text-brand-300 transition" href="' + escapeHtml(post.url || '#') + '">' + escapeHtml(post.title || '') + '</a>'
+          + '</h3>'
+          + '<p class="text-white/70 text-sm mb-4">' + escapeHtml(post.description || '') + '</p>'
+          + '<div class="flex items-center justify-between pt-4 border-t border-white/10 gap-3">'
+          + '<div class="flex items-center gap-2 min-w-0">'
+          + '<div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold shrink-0">' + escapeHtml((post.author || '?').slice(0, 2).toUpperCase()) + '</div>'
+          + '<div class="min-w-0">'
+          + '<div class="text-xs font-semibold truncate">' + escapeHtml(post.author || '') + '</div>'
+          + '<div class="text-xs text-white/50">' + escapeHtml((post.readTime || '').replace(/ read/i, '')) + '</div>'
+          + '</div>'
+          + '</div>'
+          + '<a class="text-brand-400 hover:text-brand-300 shrink-0" href="' + escapeHtml(post.url || '#') + '">Read article →</a>'
+          + '</div>'
+          + '</article>';
+      }
+
+      function buildFeatured(post) {
+        return ''
+          + '<article class="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">'
+          + '<div class="mb-4 flex items-center gap-3 flex-wrap">'
+          + '<span class="category-badge category-badge--active">' + escapeHtml(post.category || '') + '</span>'
+          + '<span class="text-xs text-white/60">•</span>'
+          + '<span class="text-xs text-white/60">' + escapeHtml(post.readTime || '') + '</span>'
+          + '<span class="text-xs text-white/60">•</span>'
+          + '<span class="text-xs text-white/60">' + escapeHtml(post.date || '') + '</span>'
+          + '</div>'
+          + '<h2 class="text-3xl md:text-4xl font-extrabold">' + escapeHtml(post.title || '') + '</h2>'
+          + '<p class="mt-5 max-w-3xl text-base text-white/70 md:text-lg">' + escapeHtml(post.description || '') + '</p>'
+          + '<div class="mt-8 flex flex-col items-start gap-3 sm:flex-row">'
+          + '<a class="rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="' + escapeHtml(post.url || '#') + '">Read article</a>'
+          + '<span class="text-sm text-white/60">' + escapeHtml(post.author || '') + ' · ' + escapeHtml(post.authorRole || '') + '</span>'
+          + '</div>'
+          + '</article>';
+      }
+
+      async function renderBlogPosts() {
+        var featuredHost = document.getElementById('blog-featured-runtime');
+        var listHost = document.getElementById('blog-list-runtime');
+        if (!featuredHost || !listHost) return;
+        if (listHost.querySelector('article')) return;
+
+        try {
+          var response = await fetch('/blog/posts.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error('Blog manifest request failed with ' + response.status);
+
+          var posts = await response.json();
+          if (!Array.isArray(posts) || !posts.length) return;
+
+          featuredHost.innerHTML = buildFeatured(posts[0]);
+          listHost.innerHTML = posts.map(buildCard).join('');
+        } catch (error) {
+          console.error('blog_index_render_failed', error);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderBlogPosts);
+      } else {
+        renderBlogPosts();
+      }
+    })();
+  </script>
+</body>
 </html>
