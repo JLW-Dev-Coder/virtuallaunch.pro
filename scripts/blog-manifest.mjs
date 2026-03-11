@@ -151,30 +151,40 @@ function getAuthorInitials(author) {
     .toUpperCase();
 }
 
-function getAuthorAvatarClasses(category) {
-  const key = normalizeCategory(category);
-
-  if (key === "market") {
-    return "bg-gradient-to-br from-orange-500 to-orange-600";
-  }
-
-  if (key === "monitoring") {
-    return "bg-gradient-to-br from-cyan-500 to-cyan-600";
-  }
-
-  if (key === "operations") {
-    return "bg-gradient-to-br from-emerald-500 to-emerald-600";
-  }
-
-  if (key === "systems") {
-    return "bg-gradient-to-br from-violet-500 to-violet-600";
-  }
-
+function getAuthorAvatarClasses() {
   return "bg-gradient-to-br from-brand-500 to-brand-600";
 }
 
 function normalizeCategory(category) {
   return String(category || "").trim().toLowerCase();
+}
+
+function getCategoryBadgeClasses(category, { active = false } = {}) {
+  const key = normalizeCategory(category);
+  const base = "category-badge inline-flex items-center gap-2";
+  const activeClass = active ? " category-badge--active" : "";
+
+  if (key === "distribution") {
+    return `${base}${activeClass} border-amber-400/25 bg-amber-500/10 text-amber-200`;
+  }
+
+  if (key === "market") {
+    return `${base}${activeClass} border-orange-400/25 bg-orange-500/10 text-orange-200`;
+  }
+
+  if (key === "monitoring") {
+    return `${base}${activeClass} border-cyan-400/25 bg-cyan-500/10 text-cyan-200`;
+  }
+
+  if (key === "operations") {
+    return `${base}${activeClass} border-emerald-400/25 bg-emerald-500/10 text-emerald-200`;
+  }
+
+  if (key === "systems") {
+    return `${base}${activeClass} border-violet-400/25 bg-violet-500/10 text-violet-200`;
+  }
+
+  return `${base}${activeClass}`;
 }
 
 function renderFeaturedArticleSvg() {
@@ -217,28 +227,29 @@ function renderCategorySvg(category) {
 }
 
 function buildCard(post) {
-  const avatarClasses = getAuthorAvatarClasses(post.category);
+  const avatarClasses = getAuthorAvatarClasses();
+  const badgeClasses = getCategoryBadgeClasses(post.category);
   const authorInitials = getAuthorInitials(post.author);
   const readTimeShort = post.readTime.replace(/\s+read$/i, "");
 
-  return `<article class="blog-card p-6 flex flex-col">
-  <div class="mb-4"><span class="category-badge">${escapeHtml(post.category)}</span></div>
-  <h3 class="text-lg font-extrabold mb-3 flex-grow">
-    <a href="${escapeHtml(post.url)}" class="hover:text-brand-300 transition">${escapeHtml(post.title)}</a>
-  </h3>
-  <p class="text-white/70 text-sm mb-4">${escapeHtml(post.description)}</p>
-  <div class="flex items-center justify-between pt-4 border-t border-white/10">
-    <div class="flex items-center gap-2 min-w-0">
-      <div class="w-8 h-8 rounded-full ${avatarClasses} flex items-center justify-center text-[10px] font-bold shrink-0">${escapeHtml(authorInitials)}</div>
-      <div class="min-w-0">
-        <div class="text-xs font-semibold truncate">${escapeHtml(post.author)}</div>
-        <div class="text-xs text-white/50">${escapeHtml(readTimeShort)}</div>
+  return `<article class="blog-card group flex flex-col overflow-hidden">
+  <a href="${escapeHtml(post.url)}" class="flex h-full flex-col p-6" aria-label="Read ${escapeHtml(post.title)}">
+    <div class="mb-4"><span class="${badgeClasses}">${escapeHtml(post.category)}</span></div>
+    <h3 class="mb-3 flex-grow text-lg font-extrabold transition group-hover:text-brand-300">${escapeHtml(post.title)}</h3>
+    <p class="mb-4 text-sm text-white/70">${escapeHtml(post.description)}</p>
+    <div class="flex items-center justify-between border-t border-white/10 pt-4">
+      <div class="flex min-w-0 items-center gap-2">
+        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${avatarClasses} text-[10px] font-bold">${escapeHtml(authorInitials)}</div>
+        <div class="min-w-0">
+          <div class="truncate text-xs font-semibold">${escapeHtml(post.author)}</div>
+          <div class="text-xs text-white/50">${escapeHtml(readTimeShort)}</div>
+        </div>
       </div>
+      <span class="shrink-0 text-brand-400 transition group-hover:text-brand-300" aria-hidden="true">
+        <i data-lucide="arrow-right" class="h-4 w-4 text-white/40 transition group-hover:text-brand-300"></i>
+      </span>
     </div>
-    <a href="${escapeHtml(post.url)}" class="text-brand-400 hover:text-brand-300 shrink-0" aria-label="Read ${escapeHtml(post.title)}">
-      <i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
-    </a>
-  </div>
+  </a>
 </article>`;
 }
 
@@ -250,7 +261,7 @@ function buildFeatured(post) {
         <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
           <span>Featured article</span>
         </span>
-        <span class="category-badge category-badge--active inline-flex items-center gap-2">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span>
+        <span class="${getCategoryBadgeClasses(post.category, { active: true })}">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span>
         <span class="text-xs text-white/60">•</span>
         <span class="text-xs text-white/60">${escapeHtml(post.readTime)}</span>
         <span class="text-xs text-white/60">•</span>
