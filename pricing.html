@@ -251,56 +251,62 @@
 
           <div class="mt-12 overflow-x-auto rounded-3xl border border-white/10 bg-white/5 shadow-soft">
             <table class="min-w-full table-fixed border-collapse text-sm text-white/75">
+              <colgroup>
+                <col class="w-[42%]" />
+                <col class="w-[19.33%]" />
+                <col class="w-[19.33%]" />
+                <col class="w-[19.33%]" />
+              </colgroup>
               <thead>
                 <tr class="border-b border-white/10 bg-white/5 text-white">
-                  <th class="w-1/4 p-4 font-semibold uppercase text-left">FEATURES</th>
-                  <th class="w-1/4 p-4 font-semibold uppercase text-center">STARTER</th>
-                  <th class="w-1/4 p-4 font-semibold uppercase text-center">PRO</th>
-                  <th class="w-1/4 p-4 font-semibold uppercase text-center">ADVANCED</th>
+                  <th class="p-4 font-semibold uppercase text-left">FEATURES</th>
+                  <th class="p-4 font-semibold uppercase text-center">STARTER</th>
+                  <th class="p-4 font-semibold uppercase text-center">PRO</th>
+                  <th class="p-4 font-semibold uppercase text-center">ADVANCED</th>
                 </tr>
               </thead>
               <tbody>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Monthly transcript tokens</td>
-                  <td class="p-4">{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}</td>
-                  <td class="p-4">{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}}</td>
-                  <td class="p-4">{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}}</td>
+                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}</td>
+                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}}</td>
+                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}}</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Monthly tax tool game tokens</td>
-                  <td class="p-4">{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}}</td>
-                  <td class="p-4">{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}}</td>
-                  <td class="p-4">{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}}</td>
+                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}}</td>
+                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}}</td>
+                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}}</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Access to taxpayer service pool</td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Featured network listing</td>
-                  <td class="p-4 text-slate-500">—</td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center text-slate-500">—</td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Priority taxpayer pool access</td>
-                  <td class="p-4 text-slate-500">—</td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center text-slate-500">—</td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Top-tier network promotion</td>
-                  <td class="p-4 text-slate-500">—</td>
-                  <td class="p-4 text-slate-500">—</td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center text-slate-500">—</td>
+                  <td class="p-4 text-center text-slate-500">—</td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
                 </tr>
                 <tr class="align-middle">
                   <td class="p-4 font-medium text-white">Early access to taxpayer cases</td>
-                  <td class="p-4 text-slate-500">—</td>
-                  <td class="p-4 text-slate-500">—</td>
-                  <td class="p-4"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 text-center text-slate-500">—</td>
+                  <td class="p-4 text-center text-slate-500">—</td>
+                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
                 </tr>
               </tbody>
             </table>
