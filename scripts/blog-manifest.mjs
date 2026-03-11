@@ -151,6 +151,28 @@ function getAuthorInitials(author) {
     .toUpperCase();
 }
 
+function getAuthorAvatarClasses(category) {
+  const key = normalizeCategory(category);
+
+  if (key === "market") {
+    return "bg-gradient-to-br from-orange-500 to-orange-600";
+  }
+
+  if (key === "monitoring") {
+    return "bg-gradient-to-br from-cyan-500 to-cyan-600";
+  }
+
+  if (key === "operations") {
+    return "bg-gradient-to-br from-emerald-500 to-emerald-600";
+  }
+
+  if (key === "systems") {
+    return "bg-gradient-to-br from-violet-500 to-violet-600";
+  }
+
+  return "bg-gradient-to-br from-brand-500 to-brand-600";
+}
+
 function normalizeCategory(category) {
   return String(category || "").trim().toLowerCase();
 }
@@ -195,21 +217,27 @@ function renderCategorySvg(category) {
 }
 
 function buildCard(post) {
+  const avatarClasses = getAuthorAvatarClasses(post.category);
+  const authorInitials = getAuthorInitials(post.author);
+  const readTimeShort = post.readTime.replace(/\s+read$/i, "");
+
   return `<article class="blog-card p-6 flex flex-col">
-  <div class="mb-4"><span class="category-badge inline-flex items-center gap-2">${renderCategorySvg(post.category)}<span>${escapeHtml(post.category)}</span></span></div>
-  <h3 class="mt-0 text-lg font-extrabold mb-3 flex-grow">
-    <a class="hover:text-brand-300 transition" href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a>
+  <div class="mb-4"><span class="category-badge">${escapeHtml(post.category)}</span></div>
+  <h3 class="text-lg font-extrabold mb-3 flex-grow">
+    <a href="${escapeHtml(post.url)}" class="hover:text-brand-300 transition">${escapeHtml(post.title)}</a>
   </h3>
   <p class="text-white/70 text-sm mb-4">${escapeHtml(post.description)}</p>
-  <div class="flex items-center justify-between pt-4 border-t border-white/10 gap-4">
+  <div class="flex items-center justify-between pt-4 border-t border-white/10">
     <div class="flex items-center gap-2 min-w-0">
-      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center text-[10px] font-bold shrink-0">${escapeHtml(getAuthorInitials(post.author))}</div>
+      <div class="w-8 h-8 rounded-full ${avatarClasses} flex items-center justify-center text-[10px] font-bold shrink-0">${escapeHtml(authorInitials)}</div>
       <div class="min-w-0">
         <div class="text-xs font-semibold truncate">${escapeHtml(post.author)}</div>
-        <div class="text-xs text-white/50">${escapeHtml(post.readTime.replace(/\s+read$/i, ""))}</div>
+        <div class="text-xs text-white/50">${escapeHtml(readTimeShort)}</div>
       </div>
     </div>
-    <a class="text-brand-400 hover:text-brand-300 shrink-0" href="${escapeHtml(post.url)}">Read article →</a>
+    <a href="${escapeHtml(post.url)}" class="text-brand-400 hover:text-brand-300 shrink-0" aria-label="Read ${escapeHtml(post.title)}">
+      <i data-lucide="arrow-right" class="w-4 h-4 text-white/40"></i>
+    </a>
   </div>
 </article>`;
 }
@@ -242,7 +270,12 @@ function buildFeatured(post) {
 
     <div class="flex shrink-0 justify-start lg:justify-end lg:pt-2">
       <div class="inline-flex h-24 w-24 items-center justify-center rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.03] text-brand-400 shadow-soft md:h-28 md:w-28">
-        ${renderFeaturedArticleSvg().replace('class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-brand-400"', 'class="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-500/10 text-brand-400"').replace('class="h-4 w-4"', 'class="h-8 w-8"')}
+        ${renderFeaturedArticleSvg()
+          .replace(
+            'class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-brand-400"',
+            'class="inline-flex h-16 w-16 items-center justify-center rounded-2xl border border-brand-400/20 bg-brand-500/10 text-brand-400"'
+          )
+          .replace('class="h-4 w-4"', 'class="h-8 w-8"')}
       </div>
     </div>
   </div>
@@ -270,16 +303,16 @@ function buildRelatedPosts(currentPost, posts) {
 
 function buildArticleFooter(post, posts) {
   const relatedPosts = buildRelatedPosts(post, posts);
-  const relatedCards = relatedPosts.map(buildCard).join("\n");
+  const relatedCards = relatedPosts.map(buildCard).join("\n    ");
 
   return `<section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
-  <div class="mb-8 md:mb-10 flex items-end justify-between gap-6 flex-col sm:flex-row sm:items-center">
+  <div class="mb-8 flex flex-col gap-6 md:mb-10 sm:flex-row sm:items-end sm:justify-between">
     <div>
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90 mb-3">Related articles</p>
-      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Keep reading</h2>
-      <p class="mt-3 max-w-2xl text-sm md:text-base text-white/65">More writing on structured offers, recurring revenue, onboarding systems, and modern tax practice growth.</p>
+      <p class="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90">Related articles</p>
+      <h2 class="text-3xl font-extrabold tracking-tight text-white md:text-4xl">Keep reading</h2>
+      <p class="mt-3 max-w-2xl text-sm text-white/65 md:text-base">More writing on structured offers, recurring revenue, onboarding systems, and modern tax practice growth.</p>
     </div>
-    <a href="/blog.html" class="rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-brand-400/40 hover:text-white">Browse all articles</a>
+    <a href="/blog/index.html" class="inline-flex items-center justify-center rounded-xl border border-white/15 px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-brand-400/40 hover:text-white">Browse all articles</a>
   </div>
 
   <div class="grid gap-6 md:grid-cols-3">
@@ -287,17 +320,17 @@ function buildArticleFooter(post, posts) {
   </div>
 </section>
 
-<section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
-  <div class="rounded-[28px] border border-white/10 bg-white/5 p-8 md:p-10 shadow-soft">
+<section id="newsletter" class="mx-auto max-w-6-5xl px-4 py-16 md:py-20 border-t border-white/10">
+  <div class="rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-soft md:p-10">
     <div class="max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90 mb-3">Newsletter</p>
-      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Get insights like this delivered</h2>
-      <p class="mt-4 text-base md:text-lg leading-8 text-white/70">New articles on recurring monitoring, tax practice growth, structured onboarding, and professional discovery sent monthly.</p>
+      <p class="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90">Newsletter</p>
+      <h2 class="text-3xl font-extrabold tracking-tight text-white md:text-4xl">Get insights like this delivered</h2>
+      <p class="mt-4 text-base leading-8 text-white/70 md:text-lg">New articles on recurring monitoring, tax practice growth, structured onboarding, and professional discovery sent monthly.</p>
     </div>
 
     <form class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center" action="#" method="post">
-      <label class="sr-only" for="newsletter-email-${escapeHtml(post.slug)}">Email address</label>
-      <input id="newsletter-email-${escapeHtml(post.slug)}" name="email" type="email" inputmode="email" autocomplete="email" placeholder="your@email.com" class="newsletter-input w-full sm:max-w-md" />
+      <label class="sr-only" for="blog-newsletter-email-${escapeHtml(post.slug)}">Email address</label>
+      <input id="blog-newsletter-email-${escapeHtml(post.slug)}" name="email" type="email" inputmode="email" autocomplete="email" placeholder="your@email.com" class="newsletter-input w-full sm:max-w-md" />
       <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 transition hover:bg-brand-400">Subscribe</button>
     </form>
 
@@ -305,17 +338,18 @@ function buildArticleFooter(post, posts) {
   </div>
 </section>
 
-<section class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
-  <div class="rounded-[28px] border border-white/10 bg-gradient-to-br from-white/6 to-white/[0.03] p-8 md:p-10 shadow-soft">
-    <div class="max-w-3xl">
-      <p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-400/90 mb-3">Membership</p>
-      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">See how membership supports practice growth</h2>
-      <p class="mt-4 text-base md:text-lg leading-8 text-white/70">Virtual Launch Pro uses one structured offer and a reliable ecosystem to help clients discover you and your expertise.</p>
-    </div>
+<section class="border-t border-white/10">
+  <div class="mx-auto max-w-6-5xl px-4 py-16 md:py-20">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="mb-6 text-3xl font-extrabold md:text-5xl">Enjoy <span class="bg-gradient-to-r from-brand-400 to-brand-500 bg-clip-text text-transparent">modern tax practice</span> growth ideas?</h2>
+      <p class="mx-auto max-w-xl text-base text-white/70 md:text-lg">Subscribe to receive new articles on recurring monitoring, structured onboarding, and practice growth. Or explore how the ecosystem works to gain you more clients.</p>
 
-    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-      <a href="/how-it-works.html" class="inline-flex items-center justify-center rounded-xl bg-brand-500 px-6 py-3 text-sm font-extrabold text-ink-900 transition hover:bg-brand-400">See how membership works</a>
-      <a href="/blog.html" class="inline-flex items-center justify-center rounded-xl border border-white/15 px-6 py-3 text-sm font-semibold text-white/80 transition hover:border-brand-400/40 hover:text-white">Read more about systems</a>
+      <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <a href="#newsletter" class="inline-block rounded-xl bg-brand-500 px-10 py-5 text-xl font-extrabold text-ink-900 shadow-xl shadow-brand-500/30 transition-all duration-200 hover:scale-105 hover:bg-brand-400">Subscribe for more</a>
+        <a href="/how-it-works.html" class="inline-block rounded-xl border border-white/20 bg-white/5 px-8 py-4 text-lg font-semibold text-white transition-all duration-200 hover:bg-white/10">See how it works</a>
+      </div>
+
+      <p class="text-white/60 text-sm mt-8">Become a member • Deliver calmly • Repeat</p>
     </div>
   </div>
 </section>`;
