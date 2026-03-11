@@ -453,18 +453,18 @@
       function buildCard(post) {
         var category = escapeHtml(post.category || 'Article');
         var categorySvg = getCategorySvg(post.category || '');
+        var url = escapeHtml(post.url || '#');
 
         return ''
-          + '<article class="blog-card flex flex-col p-6" data-category="' + escapeHtml(post.category || '') + '">'
-          + '<div class="mb-5 flex items-start justify-between gap-4">'
+          + '<article class="blog-card group relative flex flex-col p-6" data-category="' + escapeHtml(post.category || '') + '">'
+          + '<a class="absolute inset-0 z-10 rounded-[inherit]" href="' + url + '" aria-label="Read ' + escapeHtml(post.title || 'Untitled article') + '"></a>'
+          + '<div class="relative mb-5 flex items-start justify-between gap-4">'
           + '<span class="category-badge">' + category + '</span>'
           + '<div class="w-[56px] shrink-0 text-white/70">' + categorySvg + '</div>'
           + '</div>'
-          + '<h3 class="mt-0 mb-3 flex-grow text-lg font-extrabold leading-tight">'
-          + '<a class="transition hover:text-brand-300" href="' + escapeHtml(post.url || '#') + '">' + escapeHtml(post.title || 'Untitled article') + '</a>'
-          + '</h3>'
-          + '<p class="mb-4 text-sm leading-7 text-white/70">' + escapeHtml(post.description || '') + '</p>'
-          + '<div class="mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4">'
+          + '<h3 class="relative mt-0 mb-3 flex-grow text-lg font-extrabold leading-tight text-white transition group-hover:text-brand-300">' + escapeHtml(post.title || 'Untitled article') + '</h3>'
+          + '<p class="relative mb-4 text-sm leading-7 text-white/70">' + escapeHtml(post.description || '') + '</p>'
+          + '<div class="relative mt-auto flex items-center justify-between gap-3 border-t border-white/10 pt-4">'
           + '<div class="min-w-0 flex items-center gap-2">'
           + '<div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-[10px] font-bold">' + escapeHtml((post.author || '?').slice(0, 2).toUpperCase()) + '</div>'
           + '<div class="min-w-0">'
@@ -472,7 +472,7 @@
           + '<div class="text-xs text-white/50">' + escapeHtml((post.readTime || '').replace(/\s+read$/i, '')) + '</div>'
           + '</div>'
           + '</div>'
-          + '<a class="shrink-0 text-brand-400 hover:text-brand-300" href="' + escapeHtml(post.url || '#') + '">Read article →</a>'
+          + '<span class="shrink-0 text-brand-400 transition group-hover:text-brand-300">Read article →</span>'
           + '</div>'
           + '</article>';
       }
