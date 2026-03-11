@@ -1,26 +1,48 @@
-# BLOG.md - Virtual Launch Pro
+Your existing spec drifted away from the **actual article template** you’re using (the canvas file). It still required newsletter blocks, CTAs, and related reading that now live in **partials**. Humans invent duplication faster than they remove it.
 
-This document defines the structure, tone, targeting, and technical rules for every article published on the Virtual Launch Pro blog.
+Below is a **clean, non-redundant full replacement for `BLOG.md`** aligned with:
 
-This version replaces the earlier agency‑themed spec and aligns blog production with the **VLP market thesis and Tax Monitor ecosystem**.
+* your **canvas article template**
+* your **build system**
+* your **manifest generator**
+* your **partials architecture**
+
+Nothing in here asks authors to create content that the build system already injects.
+
+---
+
+# BLOG.md — Virtual Launch Pro
+
+Defines the structure, rules, and publishing workflow for all Virtual Launch Pro blog articles.
+
+The goal is consistency across:
+
+* article layout
+* SEO structure
+* ecosystem messaging
+* build integration
+* manifest generation
+
+This document reflects the **current canonical article template** used by the site build system.
 
 ---
 
 # Table of Contents
 
-* [1. Purpose of the Blog](#1-purpose-of-the-blog)
-* [2. Primary Audience](#2-primary-audience)
-* [3. Core Market Problems (Content Anchors)](#3-core-market-problems-content-anchors)
-* [4. Article Structure](#4-article-structure)
-* [5. Tone & Voice](#5-tone--voice)
-* [6. Content Themes](#6-content-themes)
-* [7. Ecosystem Integration Rules](#7-ecosystem-integration-rules)
-* [7.1 Ecosystem Problem → Solution Demonstration](#71-ecosystem-problem--solution-demonstration)
-* [8. Teaser Card Specification](#8-teaser-card-specification)
-* [9. SEO Guidelines](#9-seo-guidelines)
-* [10. Sources and References](#10-sources-and-references)
-* [11. QA Checklist](#11-qa-checklist)
-* [12. Initial Canonical Article Set](#12-initial-canonical-article-set)
+1. Purpose of the Blog
+2. Audience
+3. Core Market Problems
+4. Canonical Article Structure
+5. Required HTML Template
+6. Article Writing Structure
+7. Tone and Voice
+8. Ecosystem Integration
+9. Sources and Citation Rules
+10. SEO and Filename Rules
+11. Manifest Integration
+12. Build Integration
+13. QA Checklist
+14. Canonical Initial Article Set
 
 ---
 
@@ -28,656 +50,449 @@ This version replaces the earlier agency‑themed spec and aligns blog productio
 
 The VLP blog exists to:
 
-* Educate **tax professionals** about structural problems in modern tax practices
-* Demonstrate how **Virtual Launch Pro + Tax Monitor ecosystem** solves those problems
-* Attract professionals researching:
+* educate tax professionals about structural problems in modern tax practices
+* demonstrate how the **VLP ecosystem** solves those problems
+* attract professionals researching
 
   * tax practice growth
   * recurring revenue models
   * IRS monitoring services
-  * transcript analysis
+  * transcript diagnostics
   * modern virtual tax practices
 
-Articles should move readers toward understanding that:
+The blog should gradually lead readers to understand:
 
-**expertise alone does not create growth infrastructure.**
+**Expertise alone does not create growth infrastructure.**
 
 Virtual Launch Pro provides that infrastructure.
 
 ---
 
-# 2. Primary Audience
+# 2. Audience
 
-Every article must assume the reader is one of the following:
+Articles assume readers are professionals.
 
-Primary professionals:
+Primary:
 
 * Certified Public Accountants (CPAs)
 * Enrolled Agents (EAs)
 * Tax attorneys
 
-Secondary professionals:
+Secondary:
 
-* Bookkeepers expanding into tax services
+* Bookkeepers expanding into tax
 * Fractional finance professionals
-* Solo accounting practice owners
-* Modern virtual accounting firms
+* Solo accounting firms
+* Virtual tax practices
 
-These readers typically:
+Typical characteristics:
 
-* understand tax law
-* struggle with marketing infrastructure
-* rely heavily on referrals
-* operate small or solo practices
+* technically strong
+* infrastructure weak
+* referral dependent
+* small firm operators
 
-The blog should speak **to professionals, not beginners**.
+The blog speaks to **professionals, not beginners**.
 
 ---
 
-# 3. Core Market Problems (Content Anchors)
+# 3. Core Market Problems
 
-Most articles should connect to one or more of the following structural problems:
+Articles should connect to one or more structural issues.
 
-* Client acquisition dependent on referrals
-* Fragmented marketing systems
-* Manual onboarding workflows
-* Weak service packaging
-* Seasonal tax preparation revenue
-* Tax resolution becoming the default offer
+Examples:
+
+* fragmented marketing systems
+* manual onboarding workflows
+* reactive tax resolution work
+* referral-only client acquisition
+* seasonal revenue dependence
+* weak service packaging
 
 Articles should explain:
 
-1. Why the problem exists
-2. Why most solutions fail
-3. How VLP + TM ecosystem solves it
+1. why the problem exists
+2. why common solutions fail
+3. how the ecosystem solves it
 
 ---
 
-# 4. Article Structure
+# 4. Canonical Article Structure
 
-Articles must follow the **canonical VLP article file structure**. The canonical HTML article is the source of truth for layout, metadata, references, related reading, newsletter, CTA, and partial usage.
+The **HTML article template is the source of truth**.
 
-Every article must include a machine-readable **`blog-meta`** script inside the `<head>` so `blog-manifest.mjs` can parse the article automatically.
+Every article must match the structure used by the canvas article page.
 
-Articles should follow a clean teaching structure.
+Articles must **not embed layout components** that are provided by site partials.
 
-```
-Title
-Subtitle
-Intro
-Problem explanation
-Market insight
-Solution explanation
-Ecosystem explanation
-Conclusion
-CTA
-```
+---
 
-### HTML Structure
+## Layout responsibility
+
+| Component      | Source                      |
+| -------------- | --------------------------- |
+| Header         | `siteHeader` partial        |
+| Article intro  | `blogArticleHeader` partial |
+| Article body   | article HTML                |
+| Article footer | `blogArticleFooter` partial |
+| Site footer    | `siteFooter` partial        |
+
+Articles should contain **content only**.
+
+---
+
+# 5. Required HTML Template
+
+All articles must follow this structure.
 
 ```html
 <!doctype html>
 <html lang="en">
- <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>[Article Title] | Virtual Launch Pro</title>
-  <meta name="description" content="[Article description]">
-  <meta property="og:title" content="[Article Title] | Virtual Launch Pro">
-  <meta property="og:description" content="[Open Graph description]">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <script type="application/json" id="blog-meta">
-    {
-      "title": "[Article title]",
-      "description": "[Article description]",
-      "category": "[Market | Distribution | Operations | Monitoring | Ecosystem]",
-      "date": "YYYY-MM-DD",
-      "readTime": "X min read",
-      "author": "JLW",
-      "authorRole": "EA turned agency builder"
-    }
-  </script>
- </head>
- <body>
-  <!-- PARTIAL:siteHeader -->
-  <main id="top" class="flex-1">
-    <article>
-      [Article header]
-      [Article body]
-      [Sources]
-      [Author footer]
-    </article>
-    [Related reading]
-    [Newsletter]
-    [CTA]
-  </main>
-  <!-- PARTIAL:siteFooter -->
- </body>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link rel="icon" href="/assets/favicon.svg" sizes="any">
+
+<title>[Article Title] | Virtual Launch Pro</title>
+
+<meta name="description" content="[Article description]">
+
+<meta property="og:title" content="[Article Title] | Virtual Launch Pro">
+<meta property="og:description" content="[Open Graph description]">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/json" id="blog-meta">
+{
+"title": "...",
+"description": "...",
+"category": "...",
+"date": "YYYY-MM-DD",
+"readTime": "X min read",
+"author": "JLW",
+"authorRole": "EA turned agency builder"
+}
+</script>
+
+<link rel="stylesheet" href="/assets/blog/css/blog-article.css">
+
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="app">
+
+<!-- PARTIAL:siteHeader -->
+
+<main id="top">
+
+<article>
+
+<div class="reveal">
+<!-- PARTIAL:blogArticleHeader -->
+</div>
+
+[article body]
+
+[Sources section]
+
+</article>
+
+<div class="reveal">
+<!-- PARTIAL:blogArticleFooter -->
+</div>
+
+</main>
+
+<!-- PARTIAL:siteFooter -->
+
+</div>
+
+</body>
 </html>
 ```
 
-Rules:
+---
 
-* Every article must include a valid `<script type="application/json" id="blog-meta">` block in the `<head>`
-* `blog-meta` is required for manifest generation and blog indexing
-* Use **paragraph based teaching**
-* Avoid long bullet lists
-* Maintain clear section headers
-* Include a **Sources** section at the bottom of the article body
-* Include **Related reading**, **Newsletter**, and **CTA** sections after the main article
-* Use `<!-- PARTIAL:siteHeader -->` and `<!-- PARTIAL:siteFooter -->` in every article file
+# 6. Article Writing Structure
+
+The body should follow a clear teaching format.
+
+Typical flow:
+
+1. introduction
+2. problem explanation
+3. market insight
+4. solution explanation
+5. ecosystem explanation
+6. strategic takeaway
+
+Paragraphs should do most of the work.
+
+Avoid:
+
+* excessive bullet lists
+* marketing language
+* hype tone
 
 ---
 
-# 5. Tone & Voice
+# 7. Tone and Voice
 
-Voice should reflect:
+Tone should feel like:
 
-**Experienced tax professional building modern infrastructure.**
+**a tax professional explaining industry mechanics.**
 
-Tone characteristics:
+Characteristics:
 
+* analytical
 * calm
 * credible
-* analytical
 * practical
 
 Avoid:
 
-* hype language
-* aggressive marketing tone
-* exaggerated promises
+* aggressive marketing
+* exaggerated claims
+* startup hype language
 
-Readers should feel they are reading **strategic insight from someone who understands the tax industry**.
-
----
-
-# 6. Content Themes
-
-Blog topics should fall into these categories:
-
-## Market
-
-Industry analysis and structural problems.
-
-Examples:
-
-* why tax professionals rely on referrals
-* why seasonal revenue limits growth
-
-## Distribution
-
-How professionals get discovered by clients.
-
-Examples:
-
-* professional directories
-* ecosystem discovery
-
-## Operations
-
-Workflow, onboarding, and delivery systems.
-
-Examples:
-
-* structured onboarding
-* packaging services
-
-## Monitoring
-
-Recurring services built around IRS monitoring.
-
-Examples:
-
-* proactive monitoring
-* transcript diagnostics
-
-## Ecosystem
-
-How the three platforms work together:
-
-* Virtual Launch Pro
-* Tax Monitor
-* Transcripts
-* Tax Tools
+Readers should feel they are reading **industry insight**, not marketing copy.
 
 ---
 
-# 7. Ecosystem Integration Rules
+# 8. Ecosystem Integration
 
-Articles should reinforce how the **four components of the ecosystem work together** to solve the structural problems facing tax professionals.
+Articles should reinforce the **four-platform ecosystem**.
 
 Alphabetical platform roles:
 
-* Tax Monitor → monitoring services and professional discovery
-* Tax Tools Arcade → taxpayer education and discovery traffic
-* Transcripts → transcript diagnostics and reports
-* Virtual Launch Pro → professional infrastructure and service delivery
+| Platform           | Role                                           |
+| ------------------ | ---------------------------------------------- |
+| Tax Monitor        | monitoring services and professional discovery |
+| Tax Tools Arcade   | taxpayer education and discovery traffic       |
+| Transcripts        | transcript diagnostics                         |
+| Virtual Launch Pro | professional infrastructure                    |
 
-These components should be explained as a **single system**, not as isolated tools.
+The system works as a loop:
 
----
+```
+Tax Tools Arcade
+→ Transcripts
+→ Tax Monitor
+→ Virtual Launch Pro
+```
 
-# 7.1 Ecosystem Problem → Solution Demonstration
-
-Articles should demonstrate the full ecosystem flow whenever possible.
-
-Typical market problem:
-
-* Professionals rely on referrals
-* Clients arrive late with IRS problems
-* Services are reactive instead of proactive
-* Revenue is seasonal
-
-The ecosystem solves this through a structured path.
-
-### Discovery Layer
-
-Tax Tools Arcade attracts taxpayers researching IRS issues and tax questions.
-
-Examples:
-
-* transcript curiosity
-* tax problem research
-* interactive tax tools
-
-These tools generate **organic discovery traffic** from taxpayers looking for answers.
+Articles should help readers understand this **gradually through examples**.
 
 ---
 
-### Diagnosis Layer
+# 9. Sources and Citation Rules
 
-The Transcripts platform converts curiosity into **diagnostic insight**.
+Each article must include **2–3 credible sources**.
 
-Professionals can:
+Preferred sources:
 
-* analyze IRS transcripts
-* generate client reports
-* identify compliance issues earlier
+* AICPA
+* GAO
+* IRS
+* Journal of Accountancy
+* NAEA
+* Thomson Reuters Institute
 
-This creates a natural service entry point such as:
+Sources must support:
 
-* transcript review consultation
-* diagnostic report
-* compliance discussion
-
----
-
-### Service Layer
-
-Tax Monitor enables **recurring monitoring relationships**.
-
-Instead of waiting for a tax crisis, professionals can offer:
-
-* ongoing IRS monitoring
-* compliance tracking
-* proactive tax oversight
-
-This transforms one‑time engagements into **recurring service revenue**.
+* industry trends
+* firm operations
+* technology adoption
+* practitioner behavior
 
 ---
 
-### Infrastructure Layer
+## Citation format
 
-Virtual Launch Pro provides the operational infrastructure for the professional.
+Inline citation:
 
-VLP enables firms to:
+```
+sentence text<sup><a href="#ref1">1</a></sup>
+```
 
-* package services
-* onboard clients cleanly
-* present professional profiles
-* manage service delivery
+Sources section:
 
-This layer converts discovery and diagnostics into **structured client relationships**.
+```
+<h2>Sources</h2>
 
----
+<p id="ref1"><sup>1</sup> Source text.</p>
+<p id="ref2"><sup>2</sup> Source text.</p>
+<p id="ref3"><sup>3</sup> Source text.</p>
+```
 
-### Ecosystem Loop
+Sources must include:
 
-The ecosystem works as a continuous loop:
-
-Tax Tools Arcade → taxpayer discovery
-Transcripts → diagnosis and insight
-Tax Monitor → monitoring services
-Virtual Launch Pro → professional infrastructure
-
-This structure turns **software engagement into professional client acquisition**.
-
-Articles should help readers understand this system gradually through examples and explanations.
+* organization
+* publication
+* year when available
 
 ---
 
-# 8. Teaser Card Specification
+# 10. SEO and Filename Rules
 
-Each article should have a blog card version containing:
+Source files must follow the canonical filename pattern.
 
-* title
-* short summary
-* category
-* read time
-
-Guidelines:
-
-* keep summaries under 200 characters
-* avoid clickbait
-* emphasize professional insight
-
----
-
-# 9. SEO Guidelines
-
-## Canonical Filename System
-
-The **filename is the source of truth** for:
-
-* **date** → `YYYY-MM-DD`
-* **order / index** → `###`
-* **slug** → everything after the second underscore and before `.html`
-
-Required filename pattern:
-
-```txt
+```
 YYYY-MM-DD_###_slug.html
 ```
 
 Example:
 
-```txt
-2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html
+```
+2026-03-09_002_why-tax-professionals-need-more-than-referrals-to-grow.html
 ```
 
-This means the manifest script must parse the filename into:
+---
 
-* `dateFromFilename`
-* `sequence`
-* `slug`
-* `file`
-* `url`
+## Filename components
 
-The manifest must **not** treat the entire filename stem as the slug.
+| Segment    | Meaning          |
+| ---------- | ---------------- |
+| YYYY-MM-DD | publication date |
+| ###        | sequence number  |
+| slug       | article slug     |
 
-Incorrect:
+---
 
-```js
-slug: path.parse(file).name
-```
+## Slug rules
 
-That would incorrectly produce a slug like:
+Slugs must be:
 
-```txt
-2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth
-```
+* lowercase
+* hyphen separated
+* descriptive
 
-Instead, the manifest must extract:
-
-* `date` from the first segment
-* `sequence` from the second segment
-* `slug` from the third segment onward
-
-Recommended parser:
-
-```js
-const ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
-```
-
-Recommended helper:
-
-```js
-function parseArticleFilename(file) {
-  const match = file.match(ARTICLE_FILE_RE);
-
-  if (!match) {
-    throw new Error(
-      `Invalid blog filename "${file}". Expected YYYY-MM-DD_###_slug.html`
-    );
-  }
-
-  const [, date, sequence, slug] = match;
-
-  return {
-    date,
-    file,
-    sequence: Number(sequence),
-    slug,
-    url: `/blog/${slug}.html`,
-  };
-}
-```
-
-## Filename Validation Rules
-
-The build system should validate:
-
-* filename must match `YYYY-MM-DD_###_slug.html`
-* filename date must match `blog-meta.date`
-* slug must come from filename, not from `path.parse(file).name`
-* slugs should remain unique across all published articles unless there is a deliberate reason to reuse one
-
-## Manifest Data Model
-
-The generated post object should look like:
-
-```json
-{
-  "author": "JLW",
-  "authorRole": "EA turned agency builder",
-  "category": "Market",
-  "date": "2026-03-18",
-  "description": "...",
-  "file": "2026-03-18_011_why-tax-professionals-struggle-with-marketing-infrastructure.html",
-  "readTime": "8 min read",
-  "sequence": 11,
-  "slug": "why-tax-professionals-struggle-with-marketing-infrastructure",
-  "title": "Why Tax Professionals Struggle With Marketing Infrastructure",
-  "url": "/blog/why-tax-professionals-struggle-with-marketing-infrastructure.html"
-}
-```
-
-## Linking Rules
-
-Generated links in:
-
-* blog cards
-* featured article cards
-* homepage recent articles
-* blog index articles
-* related reading blocks
-
-should use:
-
-```js
-post.url
-```
-
-Public URLs remain slug-based, while the repo source files remain date-sequenced and canonical.
-
-## Sorting Rules
-
-Canonical sorting should be:
-
-1. `date` descending
-2. `sequence` descending
-3. `slug` as tie-breaker
-
-Recommended sort logic:
-
-```js
-posts.sort((a, b) => {
-  if (a.date !== b.date) return a.date < b.date ? 1 : -1;
-  if (a.sequence !== b.sequence) return a.sequence < b.sequence ? 1 : -1;
-  return a.slug.localeCompare(b.slug);
-});
-```
-
-## Build Integration Rules
-
-### scripts/blog-manifest.mjs
-
-This file must:
-
-* parse `date`, `sequence`, and `slug` from filename
-* validate the canonical filename pattern
-* validate that filename date matches `blog-meta.date`
-* generate `file` and `url`
-* build links with `post.url`
-* sort by `date`, then `sequence`
-
-### build.mjs
-
-This file should remain the single build entrypoint.
-
-It currently:
-
-* imports `generateBlogManifest()` from `./scripts/blog-manifest.mjs`
-* runs `generateBlogManifest()` before the rest of the build
-* loads generated blog fragments from:
-
-  * `blog/.generated/featured.html`
-  * `blog/.generated/list.html`
-  * `blog/.generated/recent3.html`
-* injects blog fragments using `<!-- BLOG:featured -->`, `<!-- BLOG:list -->`, and `<!-- BLOG:recent3 -->`
-* injects site partials using `<!-- PARTIAL:... -->`
-* copies and transforms HTML across the build
-* emits public slug-based blog article aliases during build output while preserving canonical source filenames in the repo
-
-Build rules:
-
-* source filenames stay canonical and date-sequenced
-* generated article links should use `post.url`
-* public article URLs should stay slug-based for cleaner routing
-* use `post.file` for source-file operations where needed
-* use `post.url` for rendered link generation
-
-### index.html and blog/index.html
-
-These pages should consume generated blog fragments and should not hardcode blog article URLs.
-
-If they already consume generated markup, no manual card maintenance should be required.
-
-### Current blog fragment placeholders
-
-Use these exact placeholders:
-
-```html
-<!-- BLOG:featured -->
-<!-- BLOG:list -->
-<!-- BLOG:recent3 -->
-```
-
-`blog/index.html` should consume:
-
-* `<!-- BLOG:featured -->`
-* `<!-- BLOG:list -->`
-
-The main homepage should consume:
-
-* `<!-- BLOG:recent3 -->`
-
-Every article should include:
-
-* clear keyword topic
-* structured headings
-* clean slug
-
-Example slug:
+Example:
 
 ```
 why-tax-professionals-rely-on-referrals
 ```
 
-Example title:
+---
+
+# 11. Manifest Integration
+
+`scripts/blog-manifest.mjs` must:
+
+* parse date from filename
+* parse sequence from filename
+* parse slug from filename
+* validate filename pattern
+* validate `blog-meta.date`
+* generate `post.url`
+
+Parser regex:
 
 ```
-Why Tax Professionals Stay Stuck in Referral‑Only Growth
+^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$
 ```
+
+Manifest object example:
+
+```
+{
+"title": "...",
+"description": "...",
+"category": "...",
+"date": "2026-03-18",
+"sequence": 11,
+"slug": "why-tax-professionals-struggle-with-marketing-infrastructure",
+"file": "2026-03-18_011_why-tax-professionals-struggle-with-marketing-infrastructure.html",
+"url": "/blog/why-tax-professionals-struggle-with-marketing-infrastructure.html"
+}
+```
+
+Sorting order:
+
+1. date descending
+2. sequence descending
+3. slug alphabetical
 
 ---
 
-# 10. Sources and References
+# 12. Build Integration
 
-Every article must include **at least 2 to 3 credible references** that support the claims made in the article.
+`build.mjs` performs:
 
-Preferred sources for this blog include:
+* blog manifest generation
+* blog fragment injection
+* partial injection
+* HTML build output
 
-* AICPA & CIMA, 2022 CPA Firm Top Issues Survey results and analysis
-* AICPA & CIMA, Tackling change in an uncertain environment, 2024 PCPS commentary
-* GAO, Tax Gap: IRS Should Take Steps to Ensure Continued Improvement in Estimates, 2024
-* Intuit QuickBooks, 2024 Accountant Technology Survey
-* Intuit, Failure to Keep Pace with Technology Seen as Biggest Risk to Accounting Professionals, 2024
-* IRS, Office of Professional Responsibility and Circular 230
-* IRS, Transcript Delivery System (TDS)
-* Journal of Accountancy, CAS practices see 20% growth
-* Journal of Accountancy, Tips for providing the CAS services clients want
-* Journal of Accountancy, Building a better CPA firm: Stepping up service offerings
-* NAEA, How Enrolled Agents Can Thrive in an Uncertain 2026 Economy
-* NAEA EA Journal, The Evolving Tax Profession: Technology, Artificial Intelligence, and the Future of Enrolled Agents
-* Thomson Reuters Institute, 2024 State of Tax Professionals Report
-
-### Citation Rules
-
-Articles should reference sources using **superscript reference markers** placed directly after the relevant sentence.
-
-Example:
+Generated blog fragments:
 
 ```
-Many independent tax professionals rely heavily on referrals for new business<sup><a href="#ref1">1</a></sup>.
+blog/.generated/featured.html
+blog/.generated/list.html
+blog/.generated/recent3.html
 ```
 
-The reference markers must link to a **Sources section at the bottom of the article**.
-
-Example reference block:
+Fragment placeholders:
 
 ```
-<h2>Sources</h2>
-<p id="ref1"><sup>1</sup> AICPA & CIMA, 2022 CPA Firm Top Issues Survey results and analysis.</p>
-<p id="ref2"><sup>2</sup> Thomson Reuters Institute, 2024 State of Tax Professionals Report.</p>
-<p id="ref3"><sup>3</sup> IRS, Transcript Delivery System (TDS).</p>
+<!-- BLOG:featured -->
+<!-- BLOG:list -->
+<!-- BLOG:recent3 -->
 ```
 
-Rules:
+Used by:
 
-* Minimum **2 sources**, preferred **3 sources** per article
-* References must be **clickable** and jump to the bottom reference section
-* Sources should support **industry structure, practitioner statistics, operations, technology adoption, or market behavior**
-* Use sources from the approved list above whenever possible
-* Avoid weak or generic sources such as random blogs, opinion posts, or unverified commentary
-* Every source entry should identify the **organization/publication name**, the **report or article title**, and preferably the **year**
+| Page       | Fragment      |
+| ---------- | ------------- |
+| homepage   | BLOG:recent3  |
+| blog index | BLOG:featured |
+| blog index | BLOG:list     |
+
+Article pages themselves **do not render cards**.
 
 ---
 
-# 11. QA Checklist
+# 13. QA Checklist
 
-Before publishing confirm:
+Before publishing verify:
 
-* article addresses a real market problem
-* VLP ecosystem explanation exists
-* tone is professional
-* sections are clearly structured
-* title aligns with tax professional audience
+* article solves a real industry problem
+* ecosystem explanation exists
+* citations present
+* `blog-meta` block valid
+* filename matches pattern
+* filename date matches metadata date
+* article renders correctly with partials
+* no inline CSS blocks exist
 
 ---
 
-# 12. Initial Canonical Article Set
+# 14. Canonical Initial Article Set
 
-The first articles should use the **date + sequence + slug** file naming system:
-
-```txt
-YYYY-MM-DD_###_slug.html
+```
+2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html
+2026-03-09_002_why-tax-professionals-need-more-than-referrals-to-grow.html
+2026-03-10_003_how-structured-onboarding-changes-the-client-experience.html
+2026-03-11_004_why-recurring-monitoring-is-a-better-fit-than-seasonal-dependence.html
+2026-03-12_005_why-service-packaging-matters-in-tax-practices.html
+2026-03-13_006_why-tax-monitoring-is-becoming-a-core-tax-service.html
+2026-03-14_007_monitoring-clients-before-tax-resolution.html
+2026-03-15_008_how-transcript-analysis-creates-consulting-revenue.html
+2026-03-16_009_how-tax-tools-arcade-attracts-taxpayers-before-they-hire-a-professional.html
+2026-03-17_010_how-the-vlp-ecosystem-turns-expertise-into-recurring-tax-practice-revenue.html
+2026-03-18_011_why-tax-professionals-struggle-with-marketing-infrastructure.html
 ```
 
-Initial article files:
+These establish the initial **VLP narrative arc** and publishing pattern.
 
-* 2026-03-08_001_why-tax-professionals-stay-stuck-in-referral-only-growth.html
-* 2026-03-09_002_why-tax-professionals-need-more-than-referrals-to-grow.html
-* 2026-03-10_003_how-structured-onboarding-changes-the-client-experience.html
-* 2026-03-11_004_why-recurring-monitoring-is-a-better-fit-than-seasonal-dependence.html
-* 2026-03-12_005_why-service-packaging-matters-in-tax-practices.html
-* 2026-03-13_006_why-tax-monitoring-is-becoming-a-core-tax-service.html
-* 2026-03-14_007_monitoring-clients-before-tax-resolution.html
-* 2026-03-15_008_how-transcript-analysis-creates-consulting-revenue.html
-* 2026-03-16_009_how-tax-tools-arcade-attracts-taxpayers-before-they-hire-a-professional.html
-* 2026-03-17_010_how-the-vlp-ecosystem-turns-expertise-into-recurring-tax-practice-revenue.html
-* 2026-03-18_011_why-tax-professionals-struggle-with-marketing-infrastructure.html
+---
 
-These articles establish the **core VLP narrative** and the canonical publishing pattern for future posts.
+If you want, I can also produce a **10-line “new article starter template”** writers can paste into a new file so nobody accidentally breaks your build system again.
