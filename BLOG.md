@@ -1,16 +1,3 @@
-Your existing spec drifted away from the **actual article template** you’re using (the canvas file). It still required newsletter blocks, CTAs, and related reading that now live in **partials**. Humans invent duplication faster than they remove it.
-
-Below is a **clean, non-redundant full replacement for `BLOG.md`** aligned with:
-
-* your **canvas article template**
-* your **build system**
-* your **manifest generator**
-* your **partials architecture**
-
-Nothing in here asks authors to create content that the build system already injects.
-
----
-
 # BLOG.md — Virtual Launch Pro
 
 Defines the structure, rules, and publishing workflow for all Virtual Launch Pro blog articles.
