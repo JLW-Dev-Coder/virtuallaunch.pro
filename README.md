@@ -97,11 +97,23 @@ All write operations are validated through contracts before canonical storage is
 
 # 4. Ecosystem Overview
 
-Virtual Launch Pro operates as the infrastructure layer for several connected products.
+Virtual Launch Pro operates as the **infrastructure layer** for several connected products that together provide professional infrastructure, taxpayer discovery, monitoring services, and diagnostic tools.
 
-### Virtual Launch Pro (VLP)
+Each platform performs a specific role in the ecosystem while interacting through **Cloudflare Worker APIs**.
 
-Responsibilities:
+Canonical records are stored in **R2**, while **D1** is used as a query and indexing layer to support fast filtering, searching, and dashboard queries.
+
+The ecosystem consists of four primary platforms.
+
+---
+
+# Virtual Launch Pro (VLP)
+
+Virtual Launch Pro is the **infrastructure and membership platform** for professionals participating in the ecosystem.
+
+It manages professional accounts, memberships, profiles, tokens, support, and booking infrastructure used by the other platforms.
+
+## Responsibilities
 
 * canonical professional records
 * membership management
@@ -109,31 +121,415 @@ Responsibilities:
 * professional dashboards
 * profile builder
 * token balances
+* support infrastructure
+* booking infrastructure
 
-### TaxMonitor.pro (TM)
+## Canonical Storage
 
-Responsibilities:
+Examples of canonical records stored in VLP R2:
+
+```
+/r2/professionals/{professional_id}.json
+/r2/memberships/{membership_id}.json
+/r2/profiles/{professional_id}.json
+/r2/tokens/{account_id}.json
+/r2/support_tickets/{ticket_id}.json
+/r2/bookings/{booking_id}.json
+```
+
+---
+
+## VLP Worker Routes
+
+### Account Routes
+
+```
+GET   /v1/accounts/{account_id}
+POST  /v1/accounts
+PATCH /v1/accounts/{account_id}
+```
+
+Purpose
+
+* create professional accounts
+* retrieve account details
+* update account status
+
+---
+
+### Membership Routes
+
+```
+GET /v1/memberships/{membership_id}
+GET /v1/memberships/by-account/{account_id}
+```
+
+Purpose
+
+* verify membership status
+* expose subscription level
+* determine service access
+
+---
+
+### Profile Routes
+
+```
+GET   /v1/profiles/{professional_id}
+POST  /v1/profiles
+PATCH /v1/profiles/{professional_id}
+```
+
+Purpose
+
+* create professional profile
+* update profile information
+* expose profile data for directory display
+
+---
+
+### Token Routes
+
+```
+GET  /v1/tokens/{account_id}
+POST /v1/tokens/debit
+POST /v1/tokens/credit
+```
+
+Purpose
+
+* verify token balances
+* deduct tokens for tool usage
+* credit tokens after purchases
+
+---
+
+### Support Routes
+
+```
+GET   /v1/support/tickets/{ticket_id}
+GET   /v1/support/tickets/by-account/{account_id}
+POST  /v1/support/tickets
+PATCH /v1/support/tickets/{ticket_id}
+```
+
+Purpose
+
+* create support tickets
+* retrieve ticket history
+* update ticket status
+
+---
+
+### Booking Routes
+
+```
+GET   /v1/bookings/{booking_id}
+GET   /v1/bookings/by-account/{account_id}
+GET   /v1/bookings/by-professional/{professional_id}
+POST  /v1/bookings
+PATCH /v1/bookings/{booking_id}
+```
+
+Purpose
+
+* create booking requests
+* retrieve booking history
+* update booking status
+
+---
+
+# TaxMonitor.pro (TM)
+
+Tax Monitor Pro is the **professional discovery and monitoring platform** connecting taxpayers with professionals offering proactive monitoring services.
+
+It provides the public professional directory and client intake workflows.
+
+## Responsibilities
 
 * tax professional directory
 * public profile display
 * taxpayer discovery
 * intake and lead generation
 
-### Tax Tools Arcade (TTTM)
+Professional profiles displayed in the directory originate from **VLP canonical records**.
 
-Responsibilities:
+TMP stores discovery and monitoring workflow records locally.
+
+---
+
+## Canonical Storage
+
+Examples of TMP records stored in R2:
+
+```
+/r2/inquiries/{inquiry_id}.json
+/r2/intake/{submission_id}.json
+/r2/monitoring/{monitoring_event_id}.json
+```
+
+---
+
+## TMP Worker Routes
+
+### Directory Routes
+
+```
+GET /v1/directory/profiles
+GET /v1/directory/profiles/{professional_id}
+```
+
+Purpose
+
+* retrieve professional listings
+* support directory filtering and search
+
+---
+
+### Inquiry Routes
+
+```
+POST /v1/inquiries
+GET  /v1/inquiries/{inquiry_id}
+GET  /v1/inquiries/by-professional/{professional_id}
+```
+
+Purpose
+
+* create client inquiries
+* retrieve inquiry records
+
+---
+
+### Intake Routes
+
+```
+POST /v1/intake/submissions
+GET  /v1/intake/{submission_id}
+```
+
+Purpose
+
+* process taxpayer intake forms
+* retrieve intake submission records
+
+---
+
+### Monitoring Routes
+
+```
+POST /v1/monitoring/events
+GET  /v1/monitoring/{event_id}
+GET  /v1/monitoring/by-professional/{professional_id}
+```
+
+Purpose
+
+* store monitoring-related workflow events
+* track monitoring interactions
+
+---
+
+# Tax Tools Arcade (TTTM)
+
+Tax Tools Arcade provides **interactive tax tools** designed to educate taxpayers and generate discovery traffic.
+
+These tools help taxpayers understand tax issues before hiring a professional.
+
+## Responsibilities
 
 * interactive tax tools
 * token consumption for tools
 
-### Transcript Tax Monitor (TTM)
+---
 
-Responsibilities:
+## Canonical Storage
+
+Examples of records stored in TTTM R2:
+
+```
+/r2/tool_sessions/{session_id}.json
+/r2/tool_usage/{event_id}.json
+```
+
+---
+
+## TTTM Worker Routes
+
+### Tool Execution Routes
+
+```
+POST /v1/tools/{tool_slug}/run
+```
+
+Purpose
+
+* execute tool logic
+* return calculated results
+
+---
+
+### Tool Session Routes
+
+```
+POST /v1/tool-sessions
+GET  /v1/tool-sessions/{session_id}
+```
+
+Purpose
+
+* track tool usage sessions
+* retrieve tool session history
+
+---
+
+### Token Verification
+
+Before executing a tool requiring tokens:
+
+```
+GET /vlp/v1/tokens/{account_id}
+```
+
+The system verifies token balances through **Virtual Launch Pro APIs**.
+
+---
+
+# Transcript Tax Monitor (TTM)
+
+Transcript Tax Monitor provides **transcript analysis and diagnostic tools**.
+
+These tools analyze IRS transcripts to identify issues, patterns, and compliance risks.
+
+## Responsibilities
 
 * transcript analysis tools
 * transcript token usage
 
-Data flows between these sites through Worker APIs while canonical records remain stored in R2. D1 is used as a query and indexing layer to support fast filtering, searching, and dashboard queries across canonical records.
+---
+
+## Canonical Storage
+
+Examples of records stored in TTM R2:
+
+```
+/r2/transcript_jobs/{job_id}.json
+/r2/transcript_results/{result_id}.json
+```
+
+---
+
+## TTM Worker Routes
+
+### Transcript Job Routes
+
+```
+POST /v1/transcripts/analyze
+GET  /v1/transcripts/jobs/{job_id}
+```
+
+Purpose
+
+* submit transcript analysis jobs
+* retrieve analysis job status
+
+---
+
+### Transcript Result Routes
+
+```
+GET /v1/transcripts/results/{result_id}
+```
+
+Purpose
+
+* retrieve structured transcript analysis output
+
+---
+
+### Token Verification
+
+Before running transcript analysis:
+
+```
+GET /vlp/v1/tokens/{account_id}
+```
+
+The system verifies token balances using **Virtual Launch Pro APIs**.
+
+---
+
+# Cross-Platform Data Flow
+
+Platforms interact through Worker APIs while maintaining clear data ownership.
+
+Typical ecosystem flow:
+
+```
+Tax Tools Arcade
+→ generates discovery traffic
+
+Transcript Tax Monitor
+→ provides transcript diagnostics
+
+Tax Monitor Pro
+→ connects taxpayers with professionals
+
+Virtual Launch Pro
+→ manages professional identity and infrastructure
+```
+
+---
+
+# Data Storage Architecture
+
+## R2 (Canonical Storage)
+
+Each platform stores its authoritative records in R2.
+
+Example buckets:
+
+```
+vlp-canonical
+tm-canonical
+tttm-canonical
+ttm-canonical
+```
+
+---
+
+## D1 (Query and Index Layer)
+
+D1 is used for fast queries and filtering.
+
+Example uses:
+
+* directory filtering
+* dashboard summaries
+* membership lookups
+* analytics aggregation
+
+Canonical records remain stored in R2.
+
+---
+
+# Worker API Architecture
+
+Workers serve as the integration layer between platforms.
+
+Worker responsibilities include:
+
+* request validation
+* contract enforcement
+* canonical record writes
+* cross-platform API access
+* query index updates
+
+This architecture ensures:
+
+* clear data ownership
+* consistent contract enforcement
+* scalable cross-platform integration
 
 ---
 
