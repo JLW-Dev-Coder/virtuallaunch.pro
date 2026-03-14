@@ -265,23 +265,29 @@ Purpose
 
 ---
 
+You’re trimming this exactly the right way. Strip the fake “intake system” and “monitoring storage” and leave TMP doing what it actually does: **directory, leads, memberships**. Clean systems age better. Bloated ones become archaeological sites.
+
+Here is the **full corrected TMP section**, matching the purpose you specified and removing intake/monitoring storage.
+
+---
+
 # TaxMonitor.pro (TMP)
 
-Tax Monitor Pro is the **taxpayer discovery and monitoring platform**.
+Tax Monitor Pro is the **taxpayer discovery and membership platform**.
 
-It connects taxpayers with tax professionals and provides **consumer memberships** offering:
+It connects taxpayers with tax professionals and provides consumer memberships offering:
 
 * transcript tokens
 * Tax Tools Arcade tokens
 * access to professionals offering member discounts
 
-TMP provides the public professional directory and client intake workflows.
+TMP provides the public professional directory through an interactive lead form that matches taxpayers to professionals based on filtering selections and routes the inquiry to the appropriate professional profile.
 
 ---
 
 ## Responsibilities
 
-* intake and lead generation
+* lead generation
 * public profile display
 * tax professional directory
 * taxpayer discovery
@@ -297,30 +303,28 @@ Examples of TMP records stored in R2:
 
 ```
 /r2/inquiries/{inquiry_id}.json
-/r2/intake/{submission_id}.json
-/r2/monitoring/{monitoring_event_id}.json
 /r2/taxpayer_memberships/{membership_id}.json
 ```
 
 ---
 
-## TMP Worker Routes
+# TMP Worker Routes
 
-### Directory Routes
+## Directory Routes
 
 ```
 GET /v1/directory/profiles
 GET /v1/directory/profiles/{professional_id}
 ```
 
-Purpose
+### Purpose
 
 * retrieve professional listings
 * support directory filtering and search
 
 ---
 
-### Inquiry Routes
+## Inquiry Routes
 
 ```
 GET  /v1/inquiries/{inquiry_id}
@@ -328,54 +332,27 @@ GET  /v1/inquiries/by-professional/{professional_id}
 POST /v1/inquiries
 ```
 
-Purpose
+### Purpose
 
 * create client inquiries
 * retrieve inquiry records
+* route taxpayer lead information to the selected professional profile
+* provide inquiry data for professional dashboard analytics and reporting
 
 ---
 
-### Intake Routes
-
-```
-GET  /v1/intake/{submission_id}
-POST /v1/intake/submissions
-```
-
-Purpose
-
-* process taxpayer intake forms
-* retrieve intake submission records
-
----
-
-### Monitoring Routes
-
-```
-GET  /v1/monitoring/{event_id}
-GET  /v1/monitoring/by-professional/{professional_id}
-POST /v1/monitoring/events
-```
-
-Purpose
-
-* store monitoring-related workflow events
-* track monitoring interactions
-
----
-
-### Membership Routes
+## Membership Routes
 
 ```
 GET  /v1/memberships/{account_id}
 POST /v1/memberships
 ```
 
-Purpose
+### Purpose
 
 * create taxpayer memberships
-* verify membership status for discounts
 * determine token entitlements
+* verify membership status for discounts
 
 ---
 
