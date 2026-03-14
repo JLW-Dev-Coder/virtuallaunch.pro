@@ -175,7 +175,7 @@ GET /v1/taxpayer-memberships/by-account/{account_id}
 
 ---
 
-## Tax Tools Arcade (TTTM)
+## Tax Tools Arcade (TTTMP)
 
 Tax Tools Arcade provides **interactive tax education tools**.
 
@@ -219,7 +219,7 @@ GET /vlp/v1/tokens/{account_id}/tools
 
 ---
 
-## Transcript Tax Monitor (TTM)
+## Transcript Tax Monitor (TTMP)
 
 Transcript Tax Monitor provides **transcript diagnostics and analysis services**.
 
@@ -406,7 +406,7 @@ Example supporting records:
 
 ---
 
-# Transcript Dashboard (TTM)
+# Transcript Dashboard (TTMP)
 
 Transcript Tax Monitor includes a **shared diagnostic dashboard** used by both taxpayers and professionals.
 
