@@ -7,11 +7,13 @@
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
+
   * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
   * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
+
   * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
@@ -23,6 +25,10 @@
 * [Contracts or Data Model](#contracts-or-data-model)
 * [Development Standards](#development-standards)
 * [Integrations](#integrations)
+
+  * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
+  * [Stripe Integration](#stripe-integration)
+  * [Support Ticket System](#support-ticket-system)
 * [Security and Secrets](#security-and-secrets)
 * [Contribution Guidelines](#contribution-guidelines)
 * [License](#license)
@@ -67,7 +73,14 @@ Major capabilities include:
 * token-based tool systems
 * transcript diagnostics
 
-The ecosystem is designed to guide users from **tax education → diagnostics → professional engagement**.
+The ecosystem guides users from:
+
+```
+tax education
+→ diagnostics
+→ professional discovery
+→ professional infrastructure
+```
 
 ---
 
@@ -125,50 +138,12 @@ Responsibilities:
 * inquiry routing
 * taxpayer dashboards
 
-Professional profiles displayed in the directory originate from **VLP canonical records**.
-
----
-
-### Canonical Storage
+Canonical storage:
 
 ```
 /r2/inquiries/{inquiry_id}.json
 /r2/taxpayer_accounts/{account_id}.json
 /r2/taxpayer_memberships/{membership_id}.json
-```
-
----
-
-### Worker Routes
-
-Directory
-
-```
-GET /v1/directory/profiles
-GET /v1/directory/profiles/{professional_id}
-```
-
-Inquiries
-
-```
-GET  /v1/inquiries/{inquiry_id}
-GET  /v1/inquiries/by-professional/{professional_id}
-POST /v1/inquiries
-```
-
-Taxpayer Accounts
-
-```
-GET   /v1/taxpayers/{account_id}
-PATCH /v1/taxpayers/{account_id}
-POST  /v1/taxpayers
-```
-
-Taxpayer Membership
-
-```
-GET /v1/taxpayer-memberships/{membership_id}
-GET /v1/taxpayer-memberships/by-account/{account_id}
 ```
 
 ---
@@ -183,9 +158,7 @@ Responsibilities:
 * educational tax calculators
 * token-based tool execution
 
----
-
-### Canonical Storage
+Canonical storage:
 
 ```
 /r2/tool_sessions/{session_id}.json
@@ -194,74 +167,22 @@ Responsibilities:
 
 ---
 
-### Worker Routes
-
-Tool execution
-
-```
-POST /v1/tools/{tool_slug}/run
-```
-
-Tool sessions
-
-```
-GET  /v1/tool-sessions/{session_id}
-POST /v1/tool-sessions
-```
-
-Token verification
-
-```
-GET /vlp/v1/tokens/{account_id}/tools
-```
-
----
-
 ## Transcript Tax Monitor (TTMP)
 
 Transcript Tax Monitor provides **transcript diagnostics and analysis services**.
 
-These tools allow both taxpayers and professionals to analyze IRS transcripts to identify potential issues.
-
----
-
-### Responsibilities
+Responsibilities:
 
 * transcript diagnostics
 * transcript analysis automation
 * transcript dashboards
-* token-based transcript processing
+* transcript token processing
 
----
-
-### Canonical Storage
+Canonical storage:
 
 ```
 /r2/transcript_jobs/{job_id}.json
 /r2/transcript_results/{result_id}.json
-```
-
----
-
-### Worker Routes
-
-Transcript jobs
-
-```
-GET  /v1/transcripts/jobs/{job_id}
-POST /v1/transcripts/analyze
-```
-
-Transcript results
-
-```
-GET /v1/transcripts/results/{result_id}
-```
-
-Token verification
-
-```
-GET /vlp/v1/tokens/{account_id}/transcripts
 ```
 
 ---
@@ -272,16 +193,14 @@ Virtual Launch Pro is the **professional infrastructure platform**.
 
 Responsibilities:
 
-* booking infrastructure
-* membership management
 * professional dashboards
 * professional profiles
-* support systems
+* booking infrastructure
+* membership management
 * token balances
+* support systems
 
----
-
-### Canonical Storage
+Canonical storage:
 
 ```
 /r2/bookings/{booking_id}.json
@@ -294,155 +213,77 @@ Responsibilities:
 
 ---
 
-### Worker Routes
-
-Accounts
-
-```
-GET   /v1/accounts/{account_id}
-PATCH /v1/accounts/{account_id}
-POST  /v1/accounts
-```
-
-Bookings
-
-```
-GET   /v1/bookings/{booking_id}
-GET   /v1/bookings/by-account/{account_id}
-GET   /v1/bookings/by-professional/{professional_id}
-PATCH /v1/bookings/{booking_id}
-POST  /v1/bookings
-```
-
-Profiles
-
-```
-GET   /v1/profiles/{professional_id}
-PATCH /v1/profiles/{professional_id}
-POST  /v1/profiles
-```
-
-Support
-
-```
-GET   /v1/support/tickets/{ticket_id}
-GET   /v1/support/tickets/by-account/{account_id}
-PATCH /v1/support/tickets/{ticket_id}
-POST  /v1/support/tickets
-```
-
-Tokens
-
-```
-GET /v1/tokens/{account_id}
-GET /v1/tokens/{account_id}/tools
-GET /v1/tokens/{account_id}/transcripts
-POST /v1/tokens/tools/credit
-POST /v1/tokens/tools/debit
-POST /v1/tokens/transcripts/credit
-POST /v1/tokens/transcripts/debit
-```
-
----
-
 # Dashboards
 
-The ecosystem includes **three authenticated dashboards**.
+The ecosystem contains three authenticated dashboards.
 
 ---
 
-# Professional Dashboard (VLP)
+## Professional Dashboard (VLP)
 
-Tax professionals access their infrastructure through **Virtual Launch Pro**.
+Used by tax professionals.
 
 Capabilities include:
 
 * booking analytics
-* Cal.com scheduling integration
 * professional profile management
+* scheduling integration
 * support tickets
 * token balances
 * tool access
 
-Example canonical profile field:
+Example profile field:
 
 ```
 cal_booking_url
 ```
 
-Example record:
-
-```
-{
-  "professional_id": "pro_48321",
-  "name": "Jane Smith EA",
-  "cal_booking_url": "https://cal.com/janesmith/tax-consult"
-}
-```
-
 ---
 
-# Taxpayer Dashboard (TMP)
+## Taxpayer Dashboard (TMP)
 
-Taxpayers access their dashboard through **Tax Monitor Pro**.
+Used by taxpayers.
 
 Capabilities include:
 
 * inquiry history
-* taxpayer membership management
-* token balances
+* taxpayer memberships
 * transcript job tracking
 * tool usage history
-
-Example supporting records:
-
-```
-/r2/taxpayer_accounts/{account_id}.json
-/r2/taxpayer_memberships/{membership_id}.json
-/r2/tool_sessions/{session_id}.json
-```
+* token balances
 
 ---
 
-# Transcript Dashboard (TTMP)
+## Transcript Dashboard (TTMP)
 
-Transcript Tax Monitor includes a **shared diagnostic dashboard** used by both taxpayers and professionals.
+Shared diagnostic dashboard.
 
 Capabilities include:
 
-* transcript upload and analysis
-* transcript job history
-* transcript result viewing
+* transcript upload
+* transcript analysis
+* transcript job tracking
 * transcript token usage
-* transcript issue detection summaries
-
-Example canonical records:
-
-```
-/r2/transcript_jobs/{job_id}.json
-/r2/transcript_results/{result_id}.json
-```
-
-The dashboard allows users to monitor the status and results of transcript analysis operations.
+* issue detection summaries
 
 ---
 
 # Cross-Platform Data Flow
 
-The ecosystem functions as a discovery loop.
+The ecosystem operates as a discovery loop.
 
 ```
 Tax Tools Arcade
-→ generates discovery traffic
+→ discovery traffic
 
 Transcript Tax Monitor
-→ provides diagnostics
+→ diagnostics
 
 Tax Monitor Pro
-→ connects taxpayers with professionals
+→ professional discovery
 
 Virtual Launch Pro
-→ manages professional infrastructure
+→ professional infrastructure
 ```
 
 ---
@@ -458,7 +299,7 @@ tttm-canonical
 vlp-canonical
 ```
 
-R2 serves as the **source of truth**.
+R2 is the **source of truth**.
 
 ---
 
@@ -466,11 +307,11 @@ R2 serves as the **source of truth**.
 
 D1 supports:
 
-* analytics aggregation
+* analytics
+* directory queries
 * dashboard queries
-* directory filtering
-* membership lookups
-* search queries
+* search filtering
+* membership lookup
 
 ---
 
@@ -529,7 +370,8 @@ The `wrangler.toml` file defines:
 
 * compatibility date
 * environment variables
-* R2 bucket bindings
+* R2 bindings
+* D1 bindings
 
 ---
 
@@ -557,17 +399,97 @@ Standards include:
 * contract-first APIs
 * deny-by-default routing
 
+Workers must document inbound routes and invariants clearly.
+
 ---
 
 # Integrations
 
-External integrations include:
+Every repository in the ecosystem must implement three operational integrations.
 
-* Cal.com scheduling
-* Cloudflare infrastructure
-* Google OAuth
-* magic-link authentication
-* Stripe subscriptions
+These integrations are considered **core infrastructure responsibilities**.
+
+---
+
+## Cal.com Scheduling Integration
+
+Used for professional booking infrastructure.
+
+Responsibilities:
+
+* schedule consultation sessions
+* generate booking links
+* attach scheduling URLs to professional profiles
+* store booking events in canonical records
+
+Example profile field:
+
+```
+cal_booking_url
+```
+
+Example record:
+
+```
+{
+  "professional_id": "pro_48321",
+  "cal_booking_url": "https://cal.com/janesmith/tax-consult"
+}
+```
+
+---
+
+## Stripe Integration
+
+Stripe powers **membership billing and payments**.
+
+Capabilities include:
+
+* subscription management
+* checkout sessions
+* webhook processing
+* token purchases
+* membership upgrades
+
+Typical worker routes:
+
+```
+POST /v1/checkout/sessions
+GET  /v1/checkout/status
+POST /v1/webhooks/stripe
+```
+
+All billing events must update **canonical R2 records before projection**.
+
+---
+
+## Support Ticket System
+
+Each platform must support **support ticket creation and tracking**.
+
+Responsibilities:
+
+* ticket submission
+* ticket retrieval
+* ticket status updates
+* support dashboard visibility
+
+Canonical storage:
+
+```
+/r2/support_tickets/{ticket_id}.json
+```
+
+Typical routes:
+
+```
+GET  /v1/support/tickets/{ticket_id}
+GET  /v1/support/tickets/by-account/{account_id}
+PATCH /v1/support/tickets/{ticket_id}
+POST /v1/support/tickets
+```
+
+Support tickets allow users to request help across the ecosystem.
 
 ---
 
@@ -577,9 +499,10 @@ Secrets are managed using **Wrangler secret management**.
 
 Examples include:
 
-* OAuth secrets
-* webhook signing secrets
+* OAuth credentials
+* Stripe webhook secrets
 * API tokens
+* email service credentials
 
 Secrets must never be committed to the repository.
 
@@ -596,6 +519,12 @@ Recommended workflow:
 4 submit pull request
 ```
 
+All pull requests must respect:
+
+* contract schemas
+* worker route documentation
+* canonical storage rules
+
 ---
 
 # License
@@ -603,3 +532,5 @@ Recommended workflow:
 This repository is proprietary software owned and maintained by **Virtual Launch Pro**.
 
 Unauthorized redistribution or modification is prohibited.
+
+---
