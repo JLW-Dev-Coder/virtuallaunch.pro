@@ -23,7 +23,6 @@
 * [Contracts or Data Model](#contracts-or-data-model)
 * [Development Standards](#development-standards)
 * [Integrations](#integrations)
-
   * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
   * [Stripe Integration](#stripe-integration)
   * [Support Ticket System](#support-ticket-system)
