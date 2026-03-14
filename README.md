@@ -1,4 +1,4 @@
-# Virtual Launch Pro
+# Virtual Launch Pro (VLP)
 
 ## Table of Contents
 
