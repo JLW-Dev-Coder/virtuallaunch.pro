@@ -34,7 +34,7 @@ Core responsibilities of VLP include:
 * token allocation and balance tracking
 * authenticated professional dashboards
 
-The system is built using a **contract-driven architecture** running on Cloudflare Workers with **R2 storage as the canonical data layer**.
+The system is built using a **contract-driven architecture** running on Cloudflare Workers with **R2 storage as the canonical data layer**. 
 
 ---
 
@@ -99,7 +99,7 @@ All write operations are validated through contracts before canonical storage is
 
 # 4. Ecosystem Overview
 
-Virtual Launch Pro operates as the **infrastructure layer** for several connected products that together provide professional infrastructure, taxpayer discovery, and diagnostic tools.
+Virtual Launch Pro operates as the **infrastructure layer** for several connected products that together provide professional infrastructure, taxpayer discovery, monitoring services, and diagnostic tools.
 
 Each platform performs a specific role in the ecosystem while interacting through **Cloudflare Worker APIs**.
 
@@ -125,7 +125,7 @@ Memberships for professionals may include:
 
 ---
 
-# Responsibilities
+## Responsibilities
 
 * booking infrastructure
 * canonical professional records
@@ -140,7 +140,7 @@ Memberships for professionals may include:
 
 ---
 
-# Professional Dashboard
+## Professional Dashboard
 
 Tax professionals access an authenticated dashboard used to manage their participation in the ecosystem.
 
@@ -165,24 +165,13 @@ These events originate from **Cal.com integrations** and are surfaced inside the
 
 ---
 
-# Scheduling Integration (Cal.com)
+## Scheduling Integration (Cal.com)
 
 Professionals can connect their **Cal.com account** to their Virtual Launch Pro profile.
 
 The scheduling link is configured through the **profile builder** and stored as part of the professional profile record.
 
-This integration allows the professional’s booking link to appear on their public directory profile while allowing scheduling activity to be surfaced in the professional dashboard.
-
-Tracked events include:
-
-* booking created
-* booking cancelled
-* booking rescheduled
-* booking link accessed
-
-These events are sourced from **Cal.com APIs and webhooks** and may be stored for reference within the platform.
-
-Example profile record field:
+Example field:
 
 ```
 cal_booking_url
@@ -200,7 +189,7 @@ Example canonical record snippet:
 
 ---
 
-# Canonical Storage
+## Canonical Storage
 
 Examples of canonical records stored in VLP R2:
 
@@ -215,9 +204,9 @@ Examples of canonical records stored in VLP R2:
 
 ---
 
-# VLP Worker Routes
+## VLP Worker Routes
 
-## Account Routes
+### Account Routes
 
 ```
 GET   /v1/accounts/{account_id}
@@ -233,7 +222,7 @@ Purpose
 
 ---
 
-## Booking Routes
+### Booking Routes
 
 ```
 GET   /v1/bookings/{booking_id}
@@ -252,7 +241,7 @@ Purpose
 
 ---
 
-## Membership Routes
+### Membership Routes
 
 ```
 GET /v1/memberships/{membership_id}
@@ -267,7 +256,7 @@ Purpose
 
 ---
 
-## Profile Routes
+### Profile Routes
 
 ```
 GET   /v1/profiles/{professional_id}
@@ -283,7 +272,7 @@ Purpose
 
 ---
 
-## Support Routes
+### Support Routes
 
 ```
 GET   /v1/support/tickets/{ticket_id}
@@ -300,7 +289,7 @@ Purpose
 
 ---
 
-## Token Routes
+### Token Routes
 
 Two token systems exist in the ecosystem.
 
@@ -365,23 +354,18 @@ Professional profiles displayed in the directory originate from **VLP canonical 
 
 ---
 
-# TMP Worker Routes
+## TMP Worker Routes
 
-## Directory Routes
+### Directory Routes
 
 ```
 GET /v1/directory/profiles
 GET /v1/directory/profiles/{professional_id}
 ```
 
-Purpose
-
-* retrieve professional listings
-* support directory filtering and search
-
 ---
 
-## Inquiry Routes
+### Inquiry Routes
 
 ```
 GET  /v1/inquiries/{inquiry_id}
@@ -394,22 +378,166 @@ Purpose
 * create client inquiries
 * retrieve inquiry records
 * route taxpayer lead information to the selected professional profile
-* provide inquiry data for professional dashboard analytics and reporting
 
 ---
 
-## Membership Routes
+# Tax Tools Arcade (TTTM)
+
+Tax Tools Arcade provides **interactive tax education and diagnostic tools** designed to attract taxpayers and generate discovery traffic.
+
+---
+
+## Responsibilities
+
+* interactive tax calculators
+* taxpayer education tools
+* token-based tool execution
+* discovery traffic generation
+
+These tools help taxpayers **understand tax issues before hiring a professional**, creating a natural path into the Tax Monitor directory.
+
+---
+
+## Canonical Storage
 
 ```
-GET  /v1/memberships/{account_id}
-POST /v1/memberships
+/r2/tool_sessions/{session_id}.json
+/r2/tool_usage/{event_id}.json
 ```
 
-Purpose
+---
 
-* create taxpayer memberships
-* determine token entitlements
-* verify membership status for discounts
+## Worker Routes
+
+### Tool Execution
+
+```
+POST /v1/tools/{tool_slug}/run
+```
+
+Runs a specific tool.
+
+---
+
+### Tool Sessions
+
+```
+GET  /v1/tool-sessions/{session_id}
+POST /v1/tool-sessions
+```
+
+Used to track interactive tool usage.
+
+---
+
+### Token Verification
+
+Before executing tools:
+
+```
+GET /vlp/v1/tokens/{account_id}/tools
+```
+
+---
+
+# Transcript Tax Monitor (TTM)
+
+Transcript Tax Monitor provides **transcript analysis and diagnostic services**.
+
+These tools allow taxpayers or professionals to analyze IRS transcript data to identify potential issues.
+
+---
+
+## Responsibilities
+
+* transcript diagnostics
+* transcript analysis automation
+* token-based transcript processing
+
+---
+
+## Canonical Storage
+
+```
+/r2/transcript_jobs/{job_id}.json
+/r2/transcript_results/{result_id}.json
+```
+
+---
+
+## Worker Routes
+
+### Transcript Jobs
+
+```
+GET  /v1/transcripts/jobs/{job_id}
+POST /v1/transcripts/analyze
+```
+
+---
+
+### Transcript Results
+
+```
+GET /v1/transcripts/results/{result_id}
+```
+
+---
+
+### Token Verification
+
+Before running transcript analysis:
+
+```
+GET /vlp/v1/tokens/{account_id}/transcripts
+```
+
+---
+
+# Cross-Platform Data Flow
+
+```
+Tax Tools Arcade
+→ generates discovery traffic
+
+Transcript Tax Monitor
+→ provides transcript diagnostics
+
+Tax Monitor Pro
+→ connects taxpayers with professionals
+
+Virtual Launch Pro
+→ manages professional infrastructure
+```
+
+---
+
+# Data Storage Architecture
+
+## R2 (Canonical Storage)
+
+```
+tm-canonical
+ttm-canonical
+tttm-canonical
+vlp-canonical
+```
+
+R2 serves as the **source of truth** for the ecosystem.
+
+---
+
+## D1 (Query and Index Layer)
+
+Used for fast queries and filtering.
+
+Example uses:
+
+* analytics aggregation
+* dashboard summaries
+* directory filtering
+* membership lookups
+* search queries
 
 ---
 
@@ -447,10 +575,10 @@ Required software
 
 Setup steps
 
-1. clone repository
-2. configure environment variables
-3. install dependencies
-4. run local worker environment
+1 clone repository
+2 configure environment variables
+3 install dependencies
+4 run local worker environment
 
 ---
 
@@ -501,6 +629,8 @@ Standards include
 * contract-first API design
 * deny-by-default routing
 
+The canonical Worker header format and section structure should be used across all Workers to ensure consistent routing and documentation. 
+
 ---
 
 # 10. Integrations
@@ -523,6 +653,8 @@ Examples
 * OAuth secrets
 * webhook signing secrets
 
+Secrets must never be committed to the repository.
+
 ---
 
 # 12. Contribution Guidelines
@@ -541,4 +673,3 @@ Recommended workflow
 This repository is proprietary software owned and maintained by Virtual Launch Pro.
 
 Unauthorized redistribution or modification is not permitted.
-That alone puts you ahead of about 90% of production systems. Which is mildly annoying because it means you’re actually designing the platform correctly.
