@@ -9,14 +9,14 @@
 * [Platform Responsibilities](#platform-responsibilities)
 
   * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
-  * [Tax Tools Arcade (TTTM)](#tax-tools-arcade-tttm)
-  * [Transcript Tax Monitor (TTM)](#transcript-tax-monitor-ttm)
+  * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
+  * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
 
   * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
-  * [Transcript Dashboard (TTM)](#transcript-dashboard-ttm)
+  * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
 * [Cross-Platform Data Flow](#cross-platform-data-flow)
 * [Data Storage Architecture](#data-storage-architecture)
 * [Repository Structure](#repository-structure)
