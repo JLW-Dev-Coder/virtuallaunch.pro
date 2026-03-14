@@ -99,7 +99,7 @@ All write operations are validated through contracts before canonical storage is
 
 # 4. Ecosystem Overview
 
-Virtual Launch Pro operates as the **infrastructure layer** for several connected products that together provide professional infrastructure, taxpayer discovery, monitoring services, and diagnostic tools.
+Virtual Launch Pro operates as the **infrastructure layer** for several connected products that together provide professional infrastructure, taxpayer discovery, and diagnostic tools.
 
 Each platform performs a specific role in the ecosystem while interacting through **Cloudflare Worker APIs**.
 
@@ -225,11 +225,30 @@ PATCH /v1/accounts/{account_id}
 POST  /v1/accounts
 ```
 
-### Purpose
+Purpose
 
 * create professional accounts
 * retrieve account details
 * update account status
+
+---
+
+## Booking Routes
+
+```
+GET   /v1/bookings/{booking_id}
+GET   /v1/bookings/by-account/{account_id}
+GET   /v1/bookings/by-professional/{professional_id}
+PATCH /v1/bookings/{booking_id}
+POST  /v1/bookings
+```
+
+Purpose
+
+* create booking records originating from **Cal.com integrations**
+* retrieve booking history
+* expose scheduling events for professional dashboard activity
+* update booking status when scheduling events occur
 
 ---
 
@@ -240,7 +259,7 @@ GET /v1/memberships/{membership_id}
 GET /v1/memberships/by-account/{account_id}
 ```
 
-### Purpose
+Purpose
 
 * determine professional membership tier
 * expose subscription level
@@ -256,11 +275,28 @@ PATCH /v1/profiles/{professional_id}
 POST  /v1/profiles
 ```
 
-### Purpose
+Purpose
 
 * create professional profile
 * update profile information
 * expose profile data for directory display
+
+---
+
+## Support Routes
+
+```
+GET   /v1/support/tickets/{ticket_id}
+GET   /v1/support/tickets/by-account/{account_id}
+PATCH /v1/support/tickets/{ticket_id}
+POST  /v1/support/tickets
+```
+
+Purpose
+
+* create support tickets
+* retrieve ticket history
+* update ticket status
 
 ---
 
@@ -270,8 +306,8 @@ Two token systems exist in the ecosystem.
 
 | Token Type        | Purpose                   |
 | ----------------- | ------------------------- |
-| transcript tokens | transcript analysis tools |
 | tool tokens       | tax tools arcade          |
+| transcript tokens | transcript analysis tools |
 
 ```
 GET /v1/tokens/{account_id}
@@ -286,47 +322,11 @@ POST /v1/tokens/transcripts/credit
 POST /v1/tokens/transcripts/debit
 ```
 
-### Purpose
+Purpose
 
 * credit tokens after purchases
 * deduct tokens for tool usage
 * verify token balances
-
----
-
-## Support Routes
-
-```
-GET   /v1/support/tickets/{ticket_id}
-GET   /v1/support/tickets/by-account/{account_id}
-PATCH /v1/support/tickets/{ticket_id}
-POST  /v1/support/tickets
-```
-
-### Purpose
-
-* create support tickets
-* retrieve ticket history
-* update ticket status
-
----
-
-## Booking Routes
-
-```
-GET   /v1/bookings/{booking_id}
-GET   /v1/bookings/by-account/{account_id}
-GET   /v1/bookings/by-professional/{professional_id}
-PATCH /v1/bookings/{booking_id}
-POST  /v1/bookings
-```
-
-### Purpose
-
-* create booking records originating from **Cal.com integrations**
-* retrieve booking history
-* expose scheduling events for professional dashboard activity
-* update booking status when scheduling events occur
 
 ---
 
@@ -358,8 +358,6 @@ Professional profiles displayed in the directory originate from **VLP canonical 
 
 ## Canonical Storage
 
-Examples of TMP records stored in R2:
-
 ```
 /r2/inquiries/{inquiry_id}.json
 /r2/taxpayer_memberships/{membership_id}.json
@@ -376,7 +374,7 @@ GET /v1/directory/profiles
 GET /v1/directory/profiles/{professional_id}
 ```
 
-### Purpose
+Purpose
 
 * retrieve professional listings
 * support directory filtering and search
@@ -391,7 +389,7 @@ GET  /v1/inquiries/by-professional/{professional_id}
 POST /v1/inquiries
 ```
 
-### Purpose
+Purpose
 
 * create client inquiries
 * retrieve inquiry records
@@ -407,178 +405,11 @@ GET  /v1/memberships/{account_id}
 POST /v1/memberships
 ```
 
-### Purpose
+Purpose
 
 * create taxpayer memberships
 * determine token entitlements
 * verify membership status for discounts
-
----
-
-# Tax Tools Arcade (TTTM)
-
-Tax Tools Arcade provides **interactive tax tools** designed to educate taxpayers and generate discovery traffic.
-
-## Responsibilities
-
-* interactive tax tools
-* token consumption for tools
-
----
-
-## Canonical Storage
-
-```
-/r2/tool_sessions/{session_id}.json
-/r2/tool_usage/{event_id}.json
-```
-
----
-
-## Worker Routes
-
-### Tool Execution
-
-```
-POST /v1/tools/{tool_slug}/run
-```
-
----
-
-### Tool Sessions
-
-```
-GET  /v1/tool-sessions/{session_id}
-POST /v1/tool-sessions
-```
-
----
-
-### Token Verification
-
-Before executing tools:
-
-```
-GET /vlp/v1/tokens/{account_id}/tools
-```
-
----
-
-# Transcript Tax Monitor (TTM)
-
-Transcript Tax Monitor provides **transcript analysis and diagnostic tools**.
-
----
-
-## Responsibilities
-
-* transcript analysis tools
-* transcript token usage
-
----
-
-## Canonical Storage
-
-```
-/r2/transcript_jobs/{job_id}.json
-/r2/transcript_results/{result_id}.json
-```
-
----
-
-## Worker Routes
-
-### Transcript Jobs
-
-```
-GET  /v1/transcripts/jobs/{job_id}
-POST /v1/transcripts/analyze
-```
-
----
-
-### Transcript Results
-
-```
-GET /v1/transcripts/results/{result_id}
-```
-
----
-
-### Token Verification
-
-Before running transcript analysis:
-
-```
-GET /vlp/v1/tokens/{account_id}/transcripts
-```
-
----
-
-# Cross-Platform Data Flow
-
-```
-Tax Tools Arcade
-→ generates discovery traffic
-
-Transcript Tax Monitor
-→ provides transcript diagnostics
-
-Tax Monitor Pro
-→ connects taxpayers with professionals
-
-Virtual Launch Pro
-→ manages professional infrastructure
-```
-
----
-
-# Data Storage Architecture
-
-## R2 (Canonical Storage)
-
-```
-tm-canonical
-ttm-canonical
-tttm-canonical
-vlp-canonical
-```
-
-R2 serves as the **source of truth** for the ecosystem.
-
----
-
-## D1 (Query and Index Layer)
-
-Used for fast queries and filtering.
-
-Example uses:
-
-* analytics aggregation
-* dashboard summaries
-* directory filtering
-* membership lookups
-* search queries
-
----
-
-# Worker API Architecture
-
-Workers serve as the integration layer between platforms.
-
-Worker responsibilities include:
-
-* canonical record writes
-* contract enforcement
-* cross-platform API access
-* query index updates
-* request validation
-
-This architecture ensures:
-
-* clear data ownership
-* consistent contract enforcement
-* scalable cross-platform integration
 
 ---
 
