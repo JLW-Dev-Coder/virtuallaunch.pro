@@ -20,19 +20,21 @@
 
 # Virtual Launch Pro
 
-Virtual Launch Pro (VLP) is the membership and infrastructure platform that powers the Tax Monitor ecosystem. It manages professional memberships, dashboards, token systems, and profile publishing used across the network of tax‑focused tools and directories.
+Virtual Launch Pro (VLP) is the **professional membership and infrastructure platform** that powers the Tax Monitor ecosystem.
 
-The platform acts as the operational core for the ecosystem, while public discovery and tools operate on separate sites.
+It manages professional accounts, memberships, token systems, profile publishing, and shared infrastructure services used across the network of tax-focused tools and directories.
+
+The platform acts as the **operational core** for the ecosystem, while public discovery and consumer tools operate on separate sites.
 
 Core responsibilities of VLP include:
 
-* membership management
+* infrastructure for cross-site data access
+* membership management for tax professionals
 * professional profile publishing
 * token allocation and balance tracking
 * authenticated professional dashboards
-* infrastructure for cross‑site data access
 
-The system is built using a contract‑driven architecture running on Cloudflare Workers with R2 storage as the canonical data layer.
+The system is built using a **contract-driven architecture** running on Cloudflare Workers with **R2 storage as the canonical data layer**.
 
 ---
 
@@ -42,13 +44,13 @@ Virtual Launch Pro provides the operational backbone for a network of tax profes
 
 The platform enables professionals to:
 
+* access specialized tools
+* manage memberships
+* manage token usage
 * publish structured public profiles
 * receive taxpayer leads
-* access specialized tools
-* manage token usage
-* manage memberships
 
-Rather than operating as a case‑management system, the ecosystem focuses on **discovery, tooling, and infrastructure** for tax professionals.
+Rather than operating as a case-management system, the ecosystem focuses on **discovery, tooling, and infrastructure** for tax professionals.
 
 The platform separates responsibilities across several sites to keep complexity manageable while allowing shared data access.
 
@@ -59,13 +61,13 @@ The platform separates responsibilities across several sites to keep complexity 
 Major capabilities of the platform include:
 
 * authentication and session management
-* contract‑driven API architecture
+* contract-driven API architecture
 * lead generation infrastructure
 * professional network listings
 * tax tool token system
 * transcript token system
 * membership billing
-* R2‑based canonical data storage
+* R2-based canonical data storage
 
 The system enables professionals to participate in the ecosystem while maintaining clear separation between tools, directories, and membership infrastructure.
 
@@ -73,22 +75,22 @@ The system enables professionals to participate in the ecosystem while maintaini
 
 # 3. Architecture Overview
 
-Virtual Launch Pro is built around a worker‑centric architecture where API logic runs at the edge using Cloudflare Workers.
+Virtual Launch Pro is built around a **worker-centric architecture** where API logic runs at the edge using Cloudflare Workers.
 
 Core architectural principles include:
 
 * canonical storage in R2
-* deny‑by‑default API routing
-* contract‑driven request validation
+* contract-driven request validation
+* cross-site data consumption through APIs
+* deny-by-default API routing
 * stateless workers
-* cross‑site data consumption through APIs
 
 Primary components include:
 
 * Cloudflare Workers for API execution
 * D1 database for filtering and search indexes
 * R2 for canonical records
-* static front‑end applications
+* static front-end applications
 * webhook ingestion pipelines
 
 All write operations are validated through contracts before canonical storage is updated.
@@ -109,32 +111,42 @@ The ecosystem consists of four primary platforms.
 
 # Virtual Launch Pro (VLP)
 
-Virtual Launch Pro is the **infrastructure and membership platform** for professionals participating in the ecosystem.
+Virtual Launch Pro is the **tax professional membership and infrastructure platform**.
 
-It manages professional accounts, memberships, profiles, tokens, support, and booking infrastructure used by the other platforms.
+It manages professional accounts, memberships, profiles, tokens, support systems, and booking infrastructure used by the rest of the ecosystem.
+
+Memberships for professionals may include:
+
+* directory listing access
+* transcript analysis tokens
+* Tax Tools Arcade tokens
+* lead generation through TMP intake
+* promotional placement across ecosystem platforms
 
 ## Responsibilities
 
+* booking infrastructure
 * canonical professional records
 * membership management
 * operator dashboard
 * professional dashboards
 * profile builder
-* token balances
 * support infrastructure
-* booking infrastructure
+* token balances
+
+---
 
 ## Canonical Storage
 
 Examples of canonical records stored in VLP R2:
 
 ```
-/r2/professionals/{professional_id}.json
-/r2/memberships/{membership_id}.json
-/r2/profiles/{professional_id}.json
-/r2/tokens/{account_id}.json
-/r2/support_tickets/{ticket_id}.json
 /r2/bookings/{booking_id}.json
+/r2/memberships/{membership_id}.json
+/r2/professionals/{professional_id}.json
+/r2/profiles/{professional_id}.json
+/r2/support_tickets/{ticket_id}.json
+/r2/tokens/{account_id}.json
 ```
 
 ---
@@ -145,8 +157,8 @@ Examples of canonical records stored in VLP R2:
 
 ```
 GET   /v1/accounts/{account_id}
-POST  /v1/accounts
 PATCH /v1/accounts/{account_id}
+POST  /v1/accounts
 ```
 
 Purpose
@@ -166,9 +178,9 @@ GET /v1/memberships/by-account/{account_id}
 
 Purpose
 
-* verify membership status
+* determine professional membership tier
 * expose subscription level
-* determine service access
+* verify service access
 
 ---
 
@@ -176,8 +188,8 @@ Purpose
 
 ```
 GET   /v1/profiles/{professional_id}
-POST  /v1/profiles
 PATCH /v1/profiles/{professional_id}
+POST  /v1/profiles
 ```
 
 Purpose
@@ -190,17 +202,31 @@ Purpose
 
 ### Token Routes
 
+Two token systems exist in the ecosystem.
+
+| Token Type        | Purpose                   |
+| ----------------- | ------------------------- |
+| transcript tokens | transcript analysis tools |
+| tool tokens       | tax tools arcade          |
+
 ```
-GET  /v1/tokens/{account_id}
-POST /v1/tokens/debit
-POST /v1/tokens/credit
+GET /v1/tokens/{account_id}
+
+GET /v1/tokens/{account_id}/tools
+GET /v1/tokens/{account_id}/transcripts
+
+POST /v1/tokens/tools/credit
+POST /v1/tokens/tools/debit
+
+POST /v1/tokens/transcripts/credit
+POST /v1/tokens/transcripts/debit
 ```
 
 Purpose
 
-* verify token balances
-* deduct tokens for tool usage
 * credit tokens after purchases
+* deduct tokens for tool usage
+* verify token balances
 
 ---
 
@@ -209,8 +235,8 @@ Purpose
 ```
 GET   /v1/support/tickets/{ticket_id}
 GET   /v1/support/tickets/by-account/{account_id}
-POST  /v1/support/tickets
 PATCH /v1/support/tickets/{ticket_id}
+POST  /v1/support/tickets
 ```
 
 Purpose
@@ -227,8 +253,8 @@ Purpose
 GET   /v1/bookings/{booking_id}
 GET   /v1/bookings/by-account/{account_id}
 GET   /v1/bookings/by-professional/{professional_id}
-POST  /v1/bookings
 PATCH /v1/bookings/{booking_id}
+POST  /v1/bookings
 ```
 
 Purpose
@@ -239,22 +265,29 @@ Purpose
 
 ---
 
-# TaxMonitor.pro (TM)
+# TaxMonitor.pro (TMP)
 
-Tax Monitor Pro is the **professional discovery and monitoring platform** connecting taxpayers with professionals offering proactive monitoring services.
+Tax Monitor Pro is the **taxpayer discovery and monitoring platform**.
 
-It provides the public professional directory and client intake workflows.
+It connects taxpayers with tax professionals and provides **consumer memberships** offering:
+
+* transcript tokens
+* Tax Tools Arcade tokens
+* access to professionals offering member discounts
+
+TMP provides the public professional directory and client intake workflows.
+
+---
 
 ## Responsibilities
 
-* tax professional directory
-* public profile display
-* taxpayer discovery
 * intake and lead generation
+* public profile display
+* tax professional directory
+* taxpayer discovery
+* taxpayer memberships
 
 Professional profiles displayed in the directory originate from **VLP canonical records**.
-
-TMP stores discovery and monitoring workflow records locally.
 
 ---
 
@@ -266,6 +299,7 @@ Examples of TMP records stored in R2:
 /r2/inquiries/{inquiry_id}.json
 /r2/intake/{submission_id}.json
 /r2/monitoring/{monitoring_event_id}.json
+/r2/taxpayer_memberships/{membership_id}.json
 ```
 
 ---
@@ -289,9 +323,9 @@ Purpose
 ### Inquiry Routes
 
 ```
-POST /v1/inquiries
 GET  /v1/inquiries/{inquiry_id}
 GET  /v1/inquiries/by-professional/{professional_id}
+POST /v1/inquiries
 ```
 
 Purpose
@@ -304,8 +338,8 @@ Purpose
 ### Intake Routes
 
 ```
-POST /v1/intake/submissions
 GET  /v1/intake/{submission_id}
+POST /v1/intake/submissions
 ```
 
 Purpose
@@ -318,9 +352,9 @@ Purpose
 ### Monitoring Routes
 
 ```
-POST /v1/monitoring/events
 GET  /v1/monitoring/{event_id}
 GET  /v1/monitoring/by-professional/{professional_id}
+POST /v1/monitoring/events
 ```
 
 Purpose
@@ -330,11 +364,24 @@ Purpose
 
 ---
 
+### Membership Routes
+
+```
+GET  /v1/memberships/{account_id}
+POST /v1/memberships
+```
+
+Purpose
+
+* create taxpayer memberships
+* verify membership status for discounts
+* determine token entitlements
+
+---
+
 # Tax Tools Arcade (TTTM)
 
 Tax Tools Arcade provides **interactive tax tools** designed to educate taxpayers and generate discovery traffic.
-
-These tools help taxpayers understand tax issues before hiring a professional.
 
 ## Responsibilities
 
@@ -345,8 +392,6 @@ These tools help taxpayers understand tax issues before hiring a professional.
 
 ## Canonical Storage
 
-Examples of records stored in TTTM R2:
-
 ```
 /r2/tool_sessions/{session_id}.json
 /r2/tool_usage/{event_id}.json
@@ -354,44 +399,32 @@ Examples of records stored in TTTM R2:
 
 ---
 
-## TTTM Worker Routes
+## Worker Routes
 
-### Tool Execution Routes
+### Tool Execution
 
 ```
 POST /v1/tools/{tool_slug}/run
 ```
 
-Purpose
-
-* execute tool logic
-* return calculated results
-
 ---
 
-### Tool Session Routes
+### Tool Sessions
 
 ```
-POST /v1/tool-sessions
 GET  /v1/tool-sessions/{session_id}
+POST /v1/tool-sessions
 ```
-
-Purpose
-
-* track tool usage sessions
-* retrieve tool session history
 
 ---
 
 ### Token Verification
 
-Before executing a tool requiring tokens:
+Before executing tools:
 
 ```
-GET /vlp/v1/tokens/{account_id}
+GET /vlp/v1/tokens/{account_id}/tools
 ```
-
-The system verifies token balances through **Virtual Launch Pro APIs**.
 
 ---
 
@@ -399,7 +432,7 @@ The system verifies token balances through **Virtual Launch Pro APIs**.
 
 Transcript Tax Monitor provides **transcript analysis and diagnostic tools**.
 
-These tools analyze IRS transcripts to identify issues, patterns, and compliance risks.
+---
 
 ## Responsibilities
 
@@ -410,8 +443,6 @@ These tools analyze IRS transcripts to identify issues, patterns, and compliance
 
 ## Canonical Storage
 
-Examples of records stored in TTM R2:
-
 ```
 /r2/transcript_jobs/{job_id}.json
 /r2/transcript_results/{result_id}.json
@@ -419,31 +450,22 @@ Examples of records stored in TTM R2:
 
 ---
 
-## TTM Worker Routes
+## Worker Routes
 
-### Transcript Job Routes
+### Transcript Jobs
 
 ```
-POST /v1/transcripts/analyze
 GET  /v1/transcripts/jobs/{job_id}
+POST /v1/transcripts/analyze
 ```
-
-Purpose
-
-* submit transcript analysis jobs
-* retrieve analysis job status
 
 ---
 
-### Transcript Result Routes
+### Transcript Results
 
 ```
 GET /v1/transcripts/results/{result_id}
 ```
-
-Purpose
-
-* retrieve structured transcript analysis output
 
 ---
 
@@ -452,18 +474,12 @@ Purpose
 Before running transcript analysis:
 
 ```
-GET /vlp/v1/tokens/{account_id}
+GET /vlp/v1/tokens/{account_id}/transcripts
 ```
-
-The system verifies token balances using **Virtual Launch Pro APIs**.
 
 ---
 
 # Cross-Platform Data Flow
-
-Platforms interact through Worker APIs while maintaining clear data ownership.
-
-Typical ecosystem flow:
 
 ```
 Tax Tools Arcade
@@ -476,7 +492,7 @@ Tax Monitor Pro
 → connects taxpayers with professionals
 
 Virtual Launch Pro
-→ manages professional identity and infrastructure
+→ manages professional infrastructure
 ```
 
 ---
@@ -485,31 +501,28 @@ Virtual Launch Pro
 
 ## R2 (Canonical Storage)
 
-Each platform stores its authoritative records in R2.
-
-Example buckets:
-
 ```
-vlp-canonical
 tm-canonical
-tttm-canonical
 ttm-canonical
+tttm-canonical
+vlp-canonical
 ```
+
+R2 serves as the **source of truth** for the ecosystem.
 
 ---
 
 ## D1 (Query and Index Layer)
 
-D1 is used for fast queries and filtering.
+Used for fast queries and filtering.
 
 Example uses:
 
-* directory filtering
-* dashboard summaries
-* membership lookups
 * analytics aggregation
-
-Canonical records remain stored in R2.
+* dashboard summaries
+* directory filtering
+* membership lookups
+* search queries
 
 ---
 
@@ -519,11 +532,11 @@ Workers serve as the integration layer between platforms.
 
 Worker responsibilities include:
 
-* request validation
-* contract enforcement
 * canonical record writes
+* contract enforcement
 * cross-platform API access
 * query index updates
+* request validation
 
 This architecture ensures:
 
@@ -535,10 +548,6 @@ This architecture ensures:
 
 # 5. Repository Structure
 
-The repository follows a modular layout that separates application interfaces, static assets, and worker logic.
-
-Example directory structure:
-
 ```
 /app
 /assets
@@ -549,134 +558,85 @@ Example directory structure:
 /workers
 ```
 
-Directory descriptions:
+Descriptions
 
-* /app – authenticated application interfaces
-* /assets – shared visual and static resources
-* /contracts – JSON data contracts and schemas
-* /pages – onboarding and workflow page templates
-* /partials – reusable UI components
-* /site – marketing and public pages
-* /workers – Cloudflare Worker APIs
+* `/app` authenticated application interfaces
+* `/assets` shared visual resources
+* `/contracts` JSON API contracts
+* `/pages` onboarding and workflow pages
+* `/partials` reusable UI components
+* `/site` public marketing pages
+* `/workers` Cloudflare Worker APIs
 
 ---
 
 # 6. Environment Setup
 
-Local development requires several tools and dependencies.
-
-Required software:
+Required software
 
 * Git
 * Node.js
 * Wrangler CLI
 
-Basic setup process:
+Setup steps
 
-1. Clone the repository
-2. Install dependencies
-3. Configure environment variables
-4. Start the worker development environment
-
-Wrangler is used to run the worker locally and deploy updates.
+1. clone repository
+2. configure environment variables
+3. install dependencies
+4. run local worker environment
 
 ---
 
 # 7. Deployment
 
-Deployment is handled through Cloudflare Workers using Wrangler.
-
-Key deployment components include:
-
-* Cloudflare account configuration
-* R2 storage bindings
-* Wrangler configuration file
-
-The worker configuration is defined in `wrangler.toml` and includes:
-
-* compatibility date
-* environment variables
-* R2 bucket bindings
-
-Deployment command:
+Deployment occurs through **Cloudflare Workers** using Wrangler.
 
 ```
 wrangler deploy
 ```
 
+The `wrangler.toml` configuration includes:
+
+* compatibility date
+* environment variables
+* R2 bucket bindings
+
 ---
 
 # 8. Contracts or Data Model
 
-Virtual Launch Pro uses a contract‑driven architecture.
+Virtual Launch Pro uses **contract-driven APIs**.
 
-Contracts define the agreement between:
+Contracts define the relationship between:
 
-* page UI
-* Worker API
-* canonical storage (R2)
-* query and search layer (D1)
+* UI pages
+* Worker routes
+* R2 canonical storage
+* D1 query indexes
 
-Contracts specify:
+Typical write pipeline
 
-* endpoint and HTTP method
-* required payload fields
-* validation rules
-* canonical storage path
-* response structure
-
-Canonical records are written to **R2**, which serves as the authoritative data store for the ecosystem.
-
-After canonical writes occur, Workers update **D1 query indexes** used for:
-
-* directory filtering
-* search queries
-* dashboard summaries
-* analytics and aggregation
-
-Typical write pipeline:
-
-1. request received
-2. contract validation
-3. receipt stored in R2
-4. canonical record updated in R2
-5. D1 query index updated
-6. response returned to client
-
-This separation ensures:
-
-* R2 remains the **source of truth**
-* D1 provides **fast filtering and search**
-* Workers enforce **contract integrity**
-
-This approach keeps data consistent across all connected sites while allowing fast queries without scanning large JSON records.
+1 request received
+2 contract validation
+3 receipt stored in R2
+4 canonical record updated in R2
+5 D1 query index updated
+6 response returned
 
 ---
 
 # 9. Development Standards
 
-To maintain consistency across the repository, several development standards are enforced.
+Standards include
 
-Key standards include:
-
-* canonical Worker comment headers
-* contract‑first API design
-* deny‑by‑default routing
 * alphabetical route documentation
-
-Worker files should include standardized headers describing:
-
-* domain
-* supported routes
-* environment requirements
+* canonical Worker comment headers
+* contract-first API design
+* deny-by-default routing
 
 ---
 
 # 10. Integrations
-
-Virtual Launch Pro integrates with external systems required for authentication, scheduling, and billing.
-
-Primary integrations include:
 
 * Cal.com OAuth scheduling
 * Cloudflare infrastructure
@@ -684,36 +644,28 @@ Primary integrations include:
 * magic link authentication
 * Stripe subscription billing
 
-These services enable scheduling, payments, authentication, and infrastructure hosting across the ecosystem.
-
 ---
 
 # 11. Security and Secrets
 
-Sensitive configuration is handled through environment variables and Cloudflare secret storage.
+Secrets stored using Wrangler secret management.
 
-Examples include:
+Examples
 
 * API tokens
-* OAuth client secrets
+* OAuth secrets
 * webhook signing secrets
-
-Secrets are stored using Wrangler secret management and must never be committed to the repository.
 
 ---
 
 # 12. Contribution Guidelines
 
-Development within the repository should follow structured version control practices.
+Recommended workflow
 
-Recommended workflow:
-
-1. create a branch
-2. implement changes
-3. test locally
-4. submit pull request
-
-Changes should preserve architectural contracts and repository structure.
+1 create branch
+2 implement changes
+3 test locally
+4 submit pull request
 
 ---
 
@@ -722,9 +674,4 @@ Changes should preserve architectural contracts and repository structure.
 This repository is proprietary software owned and maintained by Virtual Launch Pro.
 
 Unauthorized redistribution or modification is not permitted.
-
----
-
-# Summary
-
-Virtual Launch Pro serves as the infrastructure and membership platform for a network of tax professional tools and discovery services. By combining contract‑driven APIs, Cloudflare edge infrastructure, and canonical R2 storage, the platform provides a scalable foundation for professional discovery, lead generation, and specialized tax tooling.
+That alone puts you ahead of about 90% of production systems. Which is mildly annoying because it means you’re actually designing the platform correctly.
