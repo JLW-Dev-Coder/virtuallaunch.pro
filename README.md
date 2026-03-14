@@ -120,23 +120,87 @@ Memberships for professionals may include:
 * directory listing access
 * transcript analysis tokens
 * Tax Tools Arcade tokens
-* lead generation through TMP intake
+* lead generation through TMP inquiries
 * promotional placement across ecosystem platforms
 
-## Responsibilities
+---
+
+# Responsibilities
 
 * booking infrastructure
 * canonical professional records
 * membership management
 * operator dashboard
 * professional dashboards
+* professional verification workflows
 * profile builder
+* scheduling integration
 * support infrastructure
 * token balances
 
 ---
 
-## Canonical Storage
+# Professional Dashboard
+
+Tax professionals access an authenticated dashboard used to manage their participation in the ecosystem.
+
+The professional dashboard allows professionals to:
+
+* connect their Cal.com scheduling account
+* manage their professional profile
+* update directory listing information
+* view token balances
+* access purchased tools
+* manage support requests
+* view booking activity and scheduling events
+
+Scheduling analytics visible to professionals include:
+
+* bookings
+* cancellations
+* reschedules
+* booking link clicks
+
+These events originate from **Cal.com integrations** and are surfaced inside the professional dashboard.
+
+---
+
+# Scheduling Integration (Cal.com)
+
+Professionals can connect their **Cal.com account** to their Virtual Launch Pro profile.
+
+The scheduling link is configured through the **profile builder** and stored as part of the professional profile record.
+
+This integration allows the professional’s booking link to appear on their public directory profile while allowing scheduling activity to be surfaced in the professional dashboard.
+
+Tracked events include:
+
+* booking created
+* booking cancelled
+* booking rescheduled
+* booking link accessed
+
+These events are sourced from **Cal.com APIs and webhooks** and may be stored for reference within the platform.
+
+Example profile record field:
+
+```
+cal_booking_url
+```
+
+Example canonical record snippet:
+
+```
+{
+  "professional_id": "pro_48321",
+  "name": "Jane Smith EA",
+  "cal_booking_url": "https://cal.com/janesmith/tax-consult"
+}
+```
+
+---
+
+# Canonical Storage
 
 Examples of canonical records stored in VLP R2:
 
@@ -151,9 +215,9 @@ Examples of canonical records stored in VLP R2:
 
 ---
 
-## VLP Worker Routes
+# VLP Worker Routes
 
-### Account Routes
+## Account Routes
 
 ```
 GET   /v1/accounts/{account_id}
@@ -161,7 +225,7 @@ PATCH /v1/accounts/{account_id}
 POST  /v1/accounts
 ```
 
-Purpose
+### Purpose
 
 * create professional accounts
 * retrieve account details
@@ -169,14 +233,14 @@ Purpose
 
 ---
 
-### Membership Routes
+## Membership Routes
 
 ```
 GET /v1/memberships/{membership_id}
 GET /v1/memberships/by-account/{account_id}
 ```
 
-Purpose
+### Purpose
 
 * determine professional membership tier
 * expose subscription level
@@ -184,7 +248,7 @@ Purpose
 
 ---
 
-### Profile Routes
+## Profile Routes
 
 ```
 GET   /v1/profiles/{professional_id}
@@ -192,7 +256,7 @@ PATCH /v1/profiles/{professional_id}
 POST  /v1/profiles
 ```
 
-Purpose
+### Purpose
 
 * create professional profile
 * update profile information
@@ -200,7 +264,7 @@ Purpose
 
 ---
 
-### Token Routes
+## Token Routes
 
 Two token systems exist in the ecosystem.
 
@@ -222,7 +286,7 @@ POST /v1/tokens/transcripts/credit
 POST /v1/tokens/transcripts/debit
 ```
 
-Purpose
+### Purpose
 
 * credit tokens after purchases
 * deduct tokens for tool usage
@@ -230,7 +294,7 @@ Purpose
 
 ---
 
-### Support Routes
+## Support Routes
 
 ```
 GET   /v1/support/tickets/{ticket_id}
@@ -239,7 +303,7 @@ PATCH /v1/support/tickets/{ticket_id}
 POST  /v1/support/tickets
 ```
 
-Purpose
+### Purpose
 
 * create support tickets
 * retrieve ticket history
@@ -247,7 +311,7 @@ Purpose
 
 ---
 
-### Booking Routes
+## Booking Routes
 
 ```
 GET   /v1/bookings/{booking_id}
@@ -257,17 +321,12 @@ PATCH /v1/bookings/{booking_id}
 POST  /v1/bookings
 ```
 
-Purpose
+### Purpose
 
-* create booking requests
+* create booking records originating from **Cal.com integrations**
 * retrieve booking history
-* update booking status
-
----
-
-You’re trimming this exactly the right way. Strip the fake “intake system” and “monitoring storage” and leave TMP doing what it actually does: **directory, leads, memberships**. Clean systems age better. Bloated ones become archaeological sites.
-
-Here is the **full corrected TMP section**, matching the purpose you specified and removing intake/monitoring storage.
+* expose scheduling events for professional dashboard activity
+* update booking status when scheduling events occur
 
 ---
 
