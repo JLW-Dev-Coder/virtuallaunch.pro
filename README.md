@@ -421,19 +421,19 @@ Responsibilities:
 * OAuth to allow users to book, and cancel, reschedule in-app TTTMP, TMP, and VLP
 * OAuth to allow tax pros to create or connect Cal.com to their profile
 
-Canonical events:
+### Canonical events
 
 ```
 BOOKING_*CREATED, BOOKING_CANCELLED, BOOKING*_RESCHEDULED
 ```
 
-Canonical webhook endpoint:
+### Canonical webhook endpoint
 
 ```
 https://transcript.taxmonitor.pro/transcript/stripe/webhook
 ```
 
-Canonical worker routes:
+### Canonical worker routes
 
 ```
 GET   /v1/bookings/{booking_id}
