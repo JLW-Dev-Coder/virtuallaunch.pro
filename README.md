@@ -487,6 +487,20 @@ POST /v1/checkout/sessions
 POST /v1/webhooks/stripe
 ```
 
+### Canonical Stripe price metadata sample
+
+```
+{
+  "app": "tax-monitor-pro",
+  "membership_type": "taxpayer",
+  "plan": "free",
+  "plan_slug": "free",
+  "tax_tool_tokens_monthly": "0",
+  "transcript_tokens_monthly": "0"
+}
+
+```
+
 All billing events must update **canonical R2 records before projection**.
 
 Worker should create paid memberships via Stripe Subscriptions API directly, and Free should create TMP membership state without any Stripe Elements render.
