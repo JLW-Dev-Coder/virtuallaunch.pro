@@ -422,7 +422,10 @@ Responsibilities:
 * OAuth to allow tax pros to create or connect Cal.com to their profile
 
 Canonical events:
+
+```
 BOOKING_*CREATED, BOOKING_CANCELLED, BOOKING*_RESCHEDULED
+```
 
 Canonical webhook endpoint:
 
