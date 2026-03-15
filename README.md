@@ -30,7 +30,6 @@
   * [Magic Link](#magic-link)
   * [SSO (SAML / OIDC)](#sso-saml--oidc)
 * [Notification Preferences](#notification-preferences)
-
   * [In-App Notifications](#in-app-notifications)
   * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
 * [2FA Integration](#2fa-integration)
