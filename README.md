@@ -454,6 +454,7 @@ Stripe powers **membership billing and payments**.
 
 Capabilities include:
 
+* pricing config retrieval
 * subscription management
 * checkout sessions
 * webhook processing
@@ -483,6 +484,7 @@ POST /v1/webhooks/stripe
 
 ```
 GET  /v1/checkout/status
+GET  /v1/pricing
 POST /v1/checkout/sessions
 POST /v1/webhooks/stripe
 ```
@@ -498,10 +500,11 @@ POST /v1/webhooks/stripe
   "tax_tool_tokens_monthly": "0",
   "transcript_tokens_monthly": "0"
 }
-
 ```
 
-All billing events must update **canonical R2 records before projection**.
+All billing events must update **canonical R2 records before projection**. The pricing route returns the **public pricing configuration** for TMP memberships, resolved from canonical Worker environment variables defined in `wrangler.toml`.
+
+This route is **read-only** and exists for frontend pricing display only.
 
 Worker should create paid memberships via Stripe Subscriptions API directly, and Free should create TMP membership state without any Stripe Elements render.
 
