@@ -7,13 +7,11 @@
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
-
   * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
   * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
-
   * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
