@@ -7,11 +7,13 @@
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
+
   * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
   * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
+
   * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
@@ -23,9 +25,19 @@
 * [Contracts or Data Model](#contracts-or-data-model)
 * [Development Standards](#development-standards)
 * [Integrations](#integrations)
+
   * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
   * [Stripe Integration](#stripe-integration)
-  * [Support Ticket System](#support-ticket-system)
+  * [Login Integrations](#login-integrations)
+  * [Continue with Google](#continue-with-google)
+  * [Magic Link](#magic-link)
+  * [SSO (SAML / OIDC)](#sso-saml--oidc)
+* [Notification Preferences](#notification-preferences)
+
+  * [In-App Notifications](#in-app-notifications)
+  * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
+* [2FA Integration](#2fa-integration)
+* [Support Ticket System](#support-ticket-system)
 * [Security and Secrets](#security-and-secrets)
 * [Contribution Guidelines](#contribution-guidelines)
 * [License](#license)
@@ -69,15 +81,6 @@ Major capabilities include:
 * R2 canonical data storage
 * token-based tool systems
 * transcript diagnostics
-
-The ecosystem guides users from:
-
-```
-tax education
-→ diagnostics
-→ professional discovery
-→ professional infrastructure
-```
 
 ---
 
@@ -129,10 +132,10 @@ Tax Monitor Pro is the **taxpayer discovery and membership platform**.
 
 Responsibilities:
 
-* professional directory
-* taxpayer discovery
-* taxpayer memberships
-* inquiry routing
+* professional directory on TMP
+* taxpayer discovery through intake form and app
+* taxpayer memberships (free, essential, plus, premier)
+* service inquiry routing to tax professionals
 * taxpayer dashboards
 
 Canonical storage:
@@ -152,8 +155,8 @@ Tax Tools Arcade provides **interactive tax education tools**.
 Responsibilities:
 
 * discovery traffic generation
-* educational tax calculators
-* token-based tool execution
+* educational tax games
+* token-based tool execution (10, 25, 100 packages)
 
 Canonical storage:
 
@@ -170,9 +173,9 @@ Transcript Tax Monitor provides **transcript diagnostics and analysis services**
 
 Responsibilities:
 
-* transcript diagnostics
-* transcript analysis automation
+* transcript analysis automation tool
 * transcript dashboards
+* transcript diagnostics
 * transcript token processing
 
 Canonical storage:
@@ -190,12 +193,12 @@ Virtual Launch Pro is the **professional infrastructure platform**.
 
 Responsibilities:
 
+* booking infrastructure
 * professional dashboards
 * professional profiles
-* booking infrastructure
 * membership management
+* support tickets
 * token balances
-* support systems
 
 Canonical storage:
 
@@ -223,17 +226,13 @@ Used by tax professionals.
 Capabilities include:
 
 * booking analytics
-* professional profile management
-* scheduling integration
+* Cal.com calendar/scheduling integration
+* membership management
+* profile management
 * support tickets
 * token balances
-* tool access
-
-Example profile field:
-
-```
-cal_booking_url
-```
+* tool usage history
+* transcript report history
 
 ---
 
@@ -243,11 +242,14 @@ Used by taxpayers.
 
 Capabilities include:
 
+* Cal.com calendar integration
 * inquiry history
-* taxpayer memberships
-* transcript job tracking
-* tool usage history
+* membership management
+* profile management (intake form)
+* support tickets
 * token balances
+* tool usage history
+* transcript report history
 
 ---
 
@@ -257,11 +259,13 @@ Shared diagnostic dashboard.
 
 Capabilities include:
 
-* transcript upload
-* transcript analysis
-* transcript job tracking
-* transcript token usage
-* issue detection summaries
+* Cal.com calendar integration
+* membership management
+* support tickets
+* token balances
+* transcript parser tool
+* transcript report history
+* transcript token usage history
 
 ---
 
@@ -414,24 +418,33 @@ Used for professional booking infrastructure.
 
 Responsibilities:
 
-* schedule consultation sessions
+* schedule intro and support event types
 * generate booking links
 * attach scheduling URLs to professional profiles
 * store booking events in canonical records
+* OAuth to allow users to book, and cancel, reschedule in-app TTTMP, TMP, and VLP
+* OAuth to allow tax pros to create or connect Cal.com to their profile
 
-Example profile field:
+Canonical events:
+BOOKING_*CREATED, BOOKING_CANCELLED, BOOKING*_RESCHEDULED
+
+Canonical webhook endpoint:
 
 ```
-cal_booking_url
+https://transcript.taxmonitor.pro/transcript/stripe/webhook
 ```
 
-Example record:
+Canonical worker routes:
 
 ```
-{
-  "professional_id": "pro_48321",
-  "cal_booking_url": "https://cal.com/janesmith/tax-consult"
-}
+GET   /v1/bookings/{booking_id}
+GET   /v1/bookings/by-account/{account_id}
+GET   /v1/bookings/by-professional/{professional_id}
+GET   /v1/profiles/{professional_id}
+PATCH /v1/bookings/{booking_id}
+PATCH /v1/profiles/{professional_id}
+POST  /v1/bookings
+POST  /v1/profiles
 ```
 
 ---
@@ -448,15 +461,273 @@ Capabilities include:
 * token purchases
 * membership upgrades
 
-Typical worker routes:
+### Canonical events
 
 ```
-POST /v1/checkout/sessions
+CHECKOUT_SESSION_COMPLETED
+CUSTOMER_SUBSCRIPTION_CREATED
+CUSTOMER_SUBSCRIPTION_DELETED
+CUSTOMER_SUBSCRIPTION_UPDATED
+INVOICE_PAID
+INVOICE_PAYMENT_FAILED
+PAYMENT_INTENT_PAYMENT_FAILED
+PAYMENT_INTENT_SUCCEEDED
+```
+
+### Canonical webhook endpoint
+
+```
+POST /v1/webhooks/stripe
+```
+
+### Canonical worker routes
+
+```
 GET  /v1/checkout/status
+POST /v1/checkout/sessions
 POST /v1/webhooks/stripe
 ```
 
 All billing events must update **canonical R2 records before projection**.
+
+Worker should create paid memberships via Stripe Subscriptions API directly, and Free should create TMP membership state without any Stripe Elements render.
+
+---
+
+## Login Integrations
+
+Each repository must support canonical login and session flows for:
+
+* Continue with Google
+* Magic Link
+* SSO (SAML / OIDC)
+
+---
+
+### Continue with Google
+
+Used for direct OAuth sign-in and account linking.
+
+#### Canonical events
+
+```
+AUTH_LOGIN_COMPLETED
+GOOGLE_OAUTH_CALLBACK_COMPLETED
+GOOGLE_OAUTH_STARTED
+SESSION_CREATED
+```
+
+#### Canonical endpoints
+
+```
+GET /v1/auth/google/start
+GET /v1/auth/google/callback
+```
+
+#### Canonical worker routes
+
+```
+GET  /v1/auth/session
+GET  /v1/auth/google/callback
+GET  /v1/auth/google/start
+POST /v1/auth/logout
+```
+
+---
+
+### Magic Link
+
+Used for passwordless email sign-in.
+
+#### Canonical events
+
+```
+AUTH_LOGIN_COMPLETED
+MAGIC_LINK_REQUESTED
+MAGIC_LINK_VERIFIED
+SESSION_CREATED
+```
+
+#### Canonical endpoints
+
+```
+POST /v1/auth/magic-link/request
+GET  /v1/auth/magic-link/verify
+```
+
+#### Canonical worker routes
+
+```
+GET  /v1/auth/magic-link/verify
+GET  /v1/auth/session
+POST /v1/auth/logout
+POST /v1/auth/magic-link/request
+```
+
+---
+
+### SSO (SAML / OIDC)
+
+Used for organizational sign-in and identity federation.
+
+#### Canonical events
+
+```
+AUTH_LOGIN_COMPLETED
+SESSION_CREATED
+SSO_OIDC_CALLBACK_COMPLETED
+SSO_OIDC_STARTED
+SSO_SAML_ASSERTION_CONSUMED
+SSO_SAML_STARTED
+```
+
+#### Canonical endpoints
+
+```
+GET  /v1/auth/sso/oidc/start
+GET  /v1/auth/sso/oidc/callback
+GET  /v1/auth/sso/saml/start
+POST /v1/auth/sso/saml/acs
+```
+
+#### Canonical worker routes
+
+```
+GET  /v1/auth/session
+GET  /v1/auth/sso/oidc/callback
+GET  /v1/auth/sso/oidc/start
+GET  /v1/auth/sso/saml/start
+POST /v1/auth/logout
+POST /v1/auth/sso/saml/acs
+```
+
+---
+
+## Google Email Integration
+
+Used for sending and receiving email through Google Workspace / Gmail accounts.
+
+### Canonical events
+
+```
+EMAIL_DELIVERY_FAILED
+EMAIL_RECEIVED
+EMAIL_SENT
+GMAIL_PUSH_NOTIFICATION_RECEIVED
+MAILBOX_SYNC_COMPLETED
+```
+
+### Canonical webhook endpoint
+
+```
+POST /v1/webhooks/google-email
+```
+
+### Canonical worker routes
+
+```
+GET  /v1/email/messages/{message_id}
+GET  /v1/email/messages/by-account/{account_id}
+POST /v1/email/send
+POST /v1/webhooks/google-email
+```
+
+---
+
+## Notification Preferences
+
+Each repository must allow users to manage notification delivery preferences, including the ability to turn off in-app notifications and SMS notifications.
+
+### In-App Notifications
+
+Used for native product alerts inside TMP, TTMP, and VLP dashboards.
+
+#### Canonical events
+
+```
+IN_APP_NOTIFICATION_CREATED
+IN_APP_NOTIFICATION_DELIVERED
+IN_APP_NOTIFICATION_DISMISSED
+NOTIFICATION_PREFERENCES_UPDATED
+```
+
+#### Canonical webhook endpoint
+
+```
+None. In-app notifications are internal system events.
+```
+
+#### Canonical worker routes
+
+```
+GET   /v1/notifications/in-app
+GET   /v1/notifications/preferences/{account_id}
+PATCH /v1/notifications/preferences/{account_id}
+POST  /v1/notifications/in-app
+```
+
+---
+
+### Twilio SMS Integration (Coming Soon)
+
+Used for SMS notification delivery and future account messaging workflows.
+
+#### Canonical events
+
+```
+NOTIFICATION_PREFERENCES_UPDATED
+SMS_DELIVERY_FAILED
+SMS_NOTIFICATION_QUEUED
+SMS_NOTIFICATION_SENT
+TWILIO_STATUS_CALLBACK_RECEIVED
+```
+
+#### Canonical webhook endpoint
+
+```
+POST /v1/webhooks/twilio
+```
+
+#### Canonical worker routes
+
+```
+GET   /v1/notifications/preferences/{account_id}
+PATCH /v1/notifications/preferences/{account_id}
+POST  /v1/notifications/sms/send
+POST  /v1/webhooks/twilio
+```
+
+---
+
+## 2FA Integration
+
+Used to allow users to enroll in, verify, and disable two-factor authentication.
+
+### Canonical events
+
+```
+TWO_FA_DISABLED
+TWO_FA_ENROLLMENT_STARTED
+TWO_FA_ENROLLMENT_VERIFIED
+TWO_FA_VERIFICATION_FAILED
+TWO_FA_VERIFICATION_SUCCEEDED
+```
+
+### Canonical webhook endpoint
+
+```
+None. 2FA is handled through canonical worker routes.
+```
+
+### Canonical worker routes
+
+```
+GET   /v1/auth/2fa/status/{account_id}
+POST  /v1/auth/2fa/enroll/init
+POST  /v1/auth/2fa/enroll/verify
+POST  /v1/auth/2fa/disable
+POST  /v1/auth/2fa/challenge/verify
+```
 
 ---
 
@@ -477,13 +748,29 @@ Canonical storage:
 /r2/support_tickets/{ticket_id}.json
 ```
 
-Typical routes:
+### Canonical events
 
 ```
-GET  /v1/support/tickets/{ticket_id}
-GET  /v1/support/tickets/by-account/{account_id}
+SUPPORT_TICKET_CLOSED
+SUPPORT_TICKET_CREATED
+SUPPORT_TICKET_MESSAGE_ADDED
+SUPPORT_TICKET_REOPENED
+SUPPORT_TICKET_STATUS_UPDATED
+```
+
+### Canonical webhook endpoint
+
+```
+None. Support tickets are internal system events.
+```
+
+### Canonical worker routes
+
+```
+GET   /v1/support/tickets/{ticket_id}
+GET   /v1/support/tickets/by-account/{account_id}
 PATCH /v1/support/tickets/{ticket_id}
-POST /v1/support/tickets
+POST  /v1/support/tickets
 ```
 
 Support tickets allow users to request help across the ecosystem.
