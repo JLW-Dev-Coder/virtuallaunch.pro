@@ -147,7 +147,7 @@ CAL_APP_OAUTH_REDIRECT_URI = "https://api.virtuallaunch.pro/cal/app/oauth/callba
 CAL_APP_OAUTH_TOKEN_URL = "https://api.cal.com/v2/auth/oauth2/token"
 
 CAL_PRO_OAUTH_AUTHORIZE_URL = "https://app.cal.com/auth/oauth2/authorize"
-CAL_PRO_OAUTH_CLIENT_ID = ""
+CAL_PRO_OAUTH_CLIENT_ID = "9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420"
 CAL_PRO_OAUTH_REDIRECT_URI = "https://api.virtuallaunch.pro/cal/pro/oauth/callback"
 CAL_PRO_OAUTH_TOKEN_URL = "https://api.cal.com/v2/auth/oauth2/token"
 
