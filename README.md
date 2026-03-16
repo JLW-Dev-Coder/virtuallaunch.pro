@@ -7,15 +7,17 @@
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
+
   * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
   * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
+
   * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
-* [Cross-Platform Data Flow](#cross-platform-data-flow)
+* [Cross-Platform Data Flow & IDs](#cross-platform-data-flow--ids)
 * [Data Storage Architecture](#data-storage-architecture)
 * [Repository Structure](#repository-structure)
 * [Environment Setup](#environment-setup)
@@ -23,13 +25,17 @@
 * [Contracts or Data Model](#contracts-or-data-model)
 * [Development Standards](#development-standards)
 * [Integrations](#integrations)
+
+  * [Account Integrations](#account-integrations)
   * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
-  * [Stripe Integration](#stripe-integration)
   * [Login Integrations](#login-integrations)
+
     * [Continue with Google](#continue-with-google)
     * [Magic Link](#magic-link)
     * [SSO (SAML / OIDC)](#sso-saml--oidc)
+  * [Stripe Integration](#stripe-integration)
 * [Notification Preferences](#notification-preferences)
+
   * [In-App Notifications](#in-app-notifications)
   * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
 * [2FA Integration](#2fa-integration)
@@ -129,10 +135,10 @@ Tax Monitor Pro is the **taxpayer discovery and membership platform**.
 Responsibilities:
 
 * professional directory on TMP
-* taxpayer discovery through intake form and app
-* taxpayer memberships (free, essential, plus, premier)
 * service inquiry routing to tax professionals
 * taxpayer dashboards
+* taxpayer discovery through intake form and app
+* taxpayer memberships (free, essential, plus, premier)
 
 Canonical storage:
 
@@ -189,16 +195,21 @@ Virtual Launch Pro is the **professional infrastructure platform**.
 
 Responsibilities:
 
+* account management (TMP, TTMP, TTTMP, VLP)
 * booking infrastructure
+* membership management
 * professional dashboards
 * professional profiles
-* membership management
 * support tickets
 * token balances
 
 Canonical storage:
 
 ```
+/r2/accounts_tmp/{account_tmp_id}.json
+/r2/accounts_ttmp/{account_ttmp_id}.json
+/r2/accounts_tttmp/{account_tttmp_id}.json
+/r2/accounts_vlp/{account_vlp_id}.json
 /r2/bookings/{booking_id}.json
 /r2/memberships/{membership_id}.json
 /r2/professionals/{professional_id}.json
@@ -221,9 +232,9 @@ Used by tax professionals.
 
 Capabilities include:
 
+* account / membership management
 * booking analytics
 * Cal.com calendar/scheduling integration
-* membership management
 * profile management
 * support tickets
 * token balances
@@ -238,9 +249,9 @@ Used by taxpayers.
 
 Capabilities include:
 
+* account / membership management
 * Cal.com calendar integration
 * inquiry history
-* membership management
 * profile management (intake form)
 * support tickets
 * token balances
@@ -255,8 +266,8 @@ Shared diagnostic dashboard.
 
 Capabilities include:
 
+* account / membership management
 * Cal.com calendar integration
-* membership management
 * support tickets
 * token balances
 * transcript parser tool
@@ -265,7 +276,7 @@ Capabilities include:
 
 ---
 
-# Cross-Platform Data Flow
+# Cross-Platform Data Flow & IDs
 
 The ecosystem operates as a discovery loop.
 
@@ -282,6 +293,42 @@ Tax Monitor Pro
 Virtual Launch Pro
 → professional infrastructure
 ```
+
+---
+
+## Canonical ID Reference
+
+All storage keys and worker routes reference canonical identifiers. These IDs must remain stable across APIs, storage paths, and projections.
+
+```
+account_id
+account_tmp_id
+account_ttmp_id
+account_tttmp_id
+account_vlp_id
+booking_id
+event_id
+inquiry_id
+job_id
+membership_id
+message_id
+professional_id
+result_id
+session_id
+ticket_id
+```
+
+### Purpose
+
+These identifiers are used across:
+
+* R2 canonical storage paths
+* Worker route parameters
+* contract payloads
+* D1 projection indexes
+* event receipts
+
+ID values should be globally unique and immutable once assigned.
 
 ---
 
@@ -302,37 +349,85 @@ R2 is the **source of truth**.
 
 ## D1 (Query Layer)
 
-D1 supports:
+General repository structure used across all ecosystem repositories that supports:
 
 * analytics
 * directory queries
 * dashboard queries
-* search filtering
 * membership lookup
+* search filtering
 
 ---
 
 # Repository Structure
 
+General repository structure used across all ecosystem repositories.
+
 ```
-/app
-/assets
-/contracts
-/pages
-/partials
-/site
-/workers
+app/
+  account.html
+  calendar.html
+  dashboard.html
+  receipts.html
+  other.html (e.g. reports.html - TMP, TTMP, and TTTMP)
+  support.html          (call / appointments / support tickets)
+  token-usage.html
+
+contracts/
+  account-contract.json
+  other.json*
+
+assets/
+  favicon.ico
+  logo.svg
+  payment-success.html
+
+legal/
+  privacy.html
+  refund.html
+  terms.html
+
+resources/
+  case-studies.html
+  other.html
+
+site/
+  about.html
+  contact.html          (call / appointments / support tickets)
+  features.html         or #features
+  how-it-works.html     or #how-it-works
+  index.html            (home)
+  pricing.html
+  sign-in.html
+
+scripts/
+  other.js
+  blog-manifest.mjs
+  site.js
+
+workers/
+  src/
+    index.js*
+
+wrangler.toml*
+
+MARKET.md
+README.md*
+build.mjs
+sitemap.xml
 ```
 
-Descriptions:
+### build.mjs (repo root)
 
-* `/app` authenticated dashboards
-* `/assets` shared resources
-* `/contracts` API schemas
-* `/pages` workflow pages
-* `/partials` reusable UI components
-* `/site` marketing pages
-* `/workers` Cloudflare Worker APIs
+Purpose: build `dist/` for Cloudflare Pages by:
+
+```
+1 copying static folders into dist/
+2 copying /partials into dist/ so runtime fetch("/partials/*.html") works
+3 injecting <!-- PARTIAL:name --> markers into HTML files in dist/
+```
+
+`*` indicates **canonical standard files used across repositories.**
 
 ---
 
@@ -366,9 +461,33 @@ wrangler deploy
 The `wrangler.toml` file defines:
 
 * compatibility date
+* D1 bindings
 * environment variables
 * R2 bindings
-* D1 bindings
+
+---
+
+# CloudFlare Integration
+
+General CloudFlare build settings used across all ecosystem repositories.
+
+## API
+
+```
+Build command: npx wrangler deploy
+Deploy command: npx wrangler deploy
+Root directory: workers
+Version command: npx wrangler deploy
+```
+
+## Pages
+
+```
+Build command: node build.mjs
+Build output: dist
+Build comments: Enabled
+Root directory: /
+```
 
 ---
 
@@ -378,10 +497,10 @@ All APIs use **contract-driven validation**.
 
 Contracts define relationships between:
 
+* D1 index tables
+* R2 canonical storage
 * UI pages
 * Worker routes
-* R2 canonical storage
-* D1 index tables
 
 Every request must pass validation before modifying canonical records.
 
@@ -408,23 +527,80 @@ These integrations are considered **core infrastructure responsibilities**.
 
 ---
 
+## Account Integrations
+
+Each repository must support canonical **account and membership management** across the ecosystem.
+
+Responsibilities include:
+
+* account creation
+* account retrieval
+* membership lifecycle management
+* account linking across platforms
+* plan upgrades and downgrades
+* account archival
+
+### Canonical events
+
+```
+ACCOUNT_ARCHIVED
+ACCOUNT_CREATED
+ACCOUNT_UPDATED
+MEMBERSHIP_ARCHIVED
+MEMBERSHIP_CANCELLED
+MEMBERSHIP_CREATED
+MEMBERSHIP_UPDATED
+```
+
+### Canonical worker routes
+
+```
+DELETE /v1/accounts/{account_id}
+GET    /v1/accounts/{account_id}
+GET    /v1/accounts/by-email/{email}
+GET    /v1/memberships/{membership_id}
+GET    /v1/memberships/by-account/{account_id}
+PATCH  /v1/accounts/{account_id}
+PATCH  /v1/memberships/{membership_id}
+POST   /v1/accounts
+POST   /v1/memberships
+```
+
+### Canonical storage
+
+```
+/r2/accounts_tmp/{account_tmp_id}.json
+/r2/accounts_ttmp/{account_ttmp_id}.json
+/r2/accounts_tttmp/{account_tttmp_id}.json
+/r2/accounts_vlp/{account_vlp_id}.json
+/r2/memberships/{membership_id}.json
+```
+
+Accounts are created per-platform but may reference a shared identity through authentication providers.
+
+Membership state must always be written to **R2 canonical storage first**, then projected into D1 indexes used for dashboards and analytics.
+
+---
+
 ## Cal.com Scheduling Integration
 
 Used for professional booking infrastructure.
 
 Responsibilities:
 
-* schedule intro and support event types
-* generate booking links
 * attach scheduling URLs to professional profiles
-* store booking events in canonical records
-* OAuth to allow users to book, and cancel, reschedule in-app TTTMP, TMP, and VLP
+* generate booking links
 * OAuth to allow tax pros to create or connect Cal.com to their profile
+* OAuth to allow users to book, cancel, and reschedule in-app TTTMP, TMP, and VLP
+* schedule intro and support event types
+* store booking events in canonical records
 
 ### Canonical events
 
 ```
-BOOKING_*CREATED, BOOKING_CANCELLED, BOOKING*_RESCHEDULED
+BOOKING_CANCELLED
+BOOKING_CREATED
+BOOKING_RESCHEDULED
 ```
 
 ### Canonical webhook endpoint
@@ -454,12 +630,12 @@ Stripe powers **membership billing and payments**.
 
 Capabilities include:
 
+* checkout sessions
+* membership upgrades
 * pricing config retrieval
 * subscription management
-* checkout sessions
-* webhook processing
 * token purchases
-* membership upgrades
+* webhook processing
 
 ### Canonical events
 
@@ -543,9 +719,9 @@ GET /v1/auth/google/callback
 #### Canonical worker routes
 
 ```
-GET  /v1/auth/session
 GET  /v1/auth/google/callback
 GET  /v1/auth/google/start
+GET  /v1/auth/session
 POST /v1/auth/logout
 ```
 
@@ -567,8 +743,8 @@ SESSION_CREATED
 #### Canonical endpoints
 
 ```
-POST /v1/auth/magic-link/request
 GET  /v1/auth/magic-link/verify
+POST /v1/auth/magic-link/request
 ```
 
 #### Canonical worker routes
@@ -600,8 +776,8 @@ SSO_SAML_STARTED
 #### Canonical endpoints
 
 ```
-GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/oidc/callback
+GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/saml/start
 POST /v1/auth/sso/saml/acs
 ```
@@ -615,37 +791,6 @@ GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/saml/start
 POST /v1/auth/logout
 POST /v1/auth/sso/saml/acs
-```
-
----
-
-## Google Email Integration
-
-Used for sending and receiving email through Google Workspace / Gmail accounts.
-
-### Canonical events
-
-```
-EMAIL_DELIVERY_FAILED
-EMAIL_RECEIVED
-EMAIL_SENT
-GMAIL_PUSH_NOTIFICATION_RECEIVED
-MAILBOX_SYNC_COMPLETED
-```
-
-### Canonical webhook endpoint
-
-```
-POST /v1/webhooks/google-email
-```
-
-### Canonical worker routes
-
-```
-GET  /v1/email/messages/{message_id}
-GET  /v1/email/messages/by-account/{account_id}
-POST /v1/email/send
-POST /v1/webhooks/google-email
 ```
 
 ---
@@ -739,23 +884,23 @@ None. 2FA is handled through canonical worker routes.
 
 ```
 GET   /v1/auth/2fa/status/{account_id}
+POST  /v1/auth/2fa/challenge/verify
+POST  /v1/auth/2fa/disable
 POST  /v1/auth/2fa/enroll/init
 POST  /v1/auth/2fa/enroll/verify
-POST  /v1/auth/2fa/disable
-POST  /v1/auth/2fa/challenge/verify
 ```
 
 ---
 
 ## Support Ticket System
 
-Each platform must support **support ticket creation and tracking**.
+Each repo must support **support ticket creation and tracking**.
 
 Responsibilities:
 
-* ticket submission
 * ticket retrieval
 * ticket status updates
+* ticket submission
 * support dashboard visibility
 
 Canonical storage:
@@ -799,10 +944,10 @@ Secrets are managed using **Wrangler secret management**.
 
 Examples include:
 
-* OAuth credentials
-* Stripe webhook secrets
 * API tokens
 * email service credentials
+* OAuth credentials
+* Stripe webhook secrets
 
 Secrets must never be committed to the repository.
 
@@ -821,9 +966,9 @@ Recommended workflow:
 
 All pull requests must respect:
 
+* canonical storage rules
 * contract schemas
 * worker route documentation
-* canonical storage rules
 
 ---
 
