@@ -357,7 +357,7 @@ account_tttmp_id  = TTTMP_ACCT_{account_id}
 account_vlp_id    = VLP_ACCT_{account_id}
 booking_id        = BOOK_YYYYMMDD_RANDOM
 
-event_id         = EVT_UUID
+event_id          = EVT_UUID
 inquiry_id        = INQ_UUID
 job_id            = JOB_UUID
 membership_id     = MEM_UUID
