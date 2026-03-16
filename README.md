@@ -1,3 +1,6 @@
+Below is the full README with the billing upgrade kept **only inside the VLP platform responsibility section**, not expanded into a separate advanced billing architecture section. I also updated the VLP responsibility block so it reflects the more customizable Stripe path without inventing a second architecture document and turning the README into a billing cult manifesto.
+
+````markdown
 # Virtual Launch Pro (VLP)
 
 ## Table of Contents
@@ -12,7 +15,7 @@
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
-  * [Virtual Launch Pro Dashboard (VLP)](#professional-dashboard-vlp)
+  * [Virtual Launch Pro Dashboard (VLP)](#virtual-launch-pro-dashboard-vlp)
   * [Tax Tools Dashboard (TTTMP)](#tax-tools-dashboard-tttmp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
@@ -104,15 +107,14 @@ Major components:
 
 Write pipeline:
 
-```
+```txt
 1 request received
 2 contract validation
 3 receipt stored in R2
 4 canonical record updated
 5 D1 index updated
 6 response returned
-
-```
+````
 
 ---
 
@@ -152,19 +154,18 @@ Responsibilities:
 
 * intake experience for taxpayers
 * tax pro directory discovery
-* taxpayer dashboard 
+* taxpayer dashboard
 * taxpayer inquiry capture and routing
-* taxpayer discount/entitelments
+* taxpayer discount/entitlements
 
 TMP should handle canonical records such as:
 
-```
-/r2/tmp_inquiries/{inquiry_id}.json
+```txt
 /r2/tmp_activity/{event_id}.json
+/r2/tmp_entitlements/{account_id}.json
+/r2/tmp_inquiries/{inquiry_id}.json
 /r2/tmp_intake_sessions/{session_id}.json
 /r2/tmp_preferences/{account_id}.json
-/r2/tmp_entitlements/{account_id}.json
-
 ```
 
 ---
@@ -184,12 +185,11 @@ Responsibilities:
 
 TTTMP should handle canonical records such as:
 
-```
+```txt
 /r2/tttmp_activity/{event_id}.json
 /r2/tttmp_preferences/{account_id}.json
 /r2/tttmp_tool_sessions/{session_id}.json
 /r2/tttmp_tool_usage/{event_id}.json
-
 ```
 
 ---
@@ -209,13 +209,12 @@ Responsibilities:
 
 TTMP should handle canonical records such as:
 
-```
+```txt
 /r2/ttmp_activity/{event_id}.json
 /r2/ttmp_preferences/{account_id}.json
 /r2/ttmp_tool_usage/{event_id}.json
 /r2/ttmp_transcript_jobs/{job_id}.json
 /r2/ttmp_transcript_results/{result_id}.json
-
 ```
 
 ---
@@ -227,20 +226,49 @@ Virtual Launch Pro is the **professional infrastructure platform** and the **can
 Responsibilities:
 
 * account management
+* billing configuration retrieval
 * booking infrastructure
+* checkout session orchestration
+* customer portal session orchestration
 * membership management
-* professional dashboard 
+* professional dashboard
 * professional profiles
+* saved payment method coordination
+* stripe customer lifecycle coordination
+* stripe subscription lifecycle coordination
 * support tickets
 * token balances
+* token purchase orchestration
+* custom embedded billing orchestration
+* hosted Stripe checkout orchestration
+* webhook-driven billing state reconciliation
+
+Billing responsibility rule:
+
+VLP is the governing platform for ecosystem billing behavior tied to shared operational records. That includes memberships, token balances, subscription status, paid plan transitions, failed payment handling, and Stripe-backed customer state. Other platforms may display pricing, launch platform-specific purchase UX, or read membership status, but shared billing writes must flow through **VLP contracts and VLP API routes**.
+
+Billing model:
+
+VLP supports two Stripe billing patterns under the same contract-driven worker architecture:
+
+* **hosted checkout** using Stripe Checkout Sessions
+* **custom embedded checkout** using Stripe customer orchestration, saved payment methods, SetupIntents, PaymentIntents, and subscription creation/update flows
+
+This allows frontends to keep a branded UI while preserving canonical billing ownership in VLP.
 
 Canonical storage:
 
-```
+```txt
 /r2/accounts_tmp/{account_tmp_id}.json
 /r2/accounts_ttmp/{account_ttmp_id}.json
 /r2/accounts_tttmp/{account_tttmp_id}.json
 /r2/accounts_vlp/{account_vlp_id}.json
+/r2/billing_customers/{account_id}.json
+/r2/billing_invoices/{invoice_id}.json
+/r2/billing_payment_intents/{event_id}.json
+/r2/billing_payment_methods/{account_id}.json
+/r2/billing_setup_intents/{event_id}.json
+/r2/billing_subscriptions/{membership_id}.json
 /r2/bookings/{booking_id}.json
 /r2/memberships/{membership_id}.json
 /r2/professionals/{professional_id}.json
@@ -248,8 +276,56 @@ Canonical storage:
 /r2/support_tickets/{ticket_id}.json
 /r2/tokens/{account_id}.json
 /r2/vlp_preferences/{account_id}.json
-
 ```
+
+Canonical VLP billing routes:
+
+```txt
+GET    /v1/billing/config
+GET    /v1/billing/payment-methods/{account_id}
+GET    /v1/checkout/status
+GET    /v1/pricing
+PATCH  /v1/billing/subscriptions/{membership_id}
+POST   /v1/billing/customers
+POST   /v1/billing/payment-intents
+POST   /v1/billing/payment-methods/attach
+POST   /v1/billing/portal/sessions
+POST   /v1/billing/setup-intents
+POST   /v1/billing/subscriptions
+POST   /v1/billing/subscriptions/{membership_id}/cancel
+POST   /v1/billing/tokens/purchase
+POST   /v1/checkout/sessions
+POST   /v1/webhooks/stripe
+```
+
+Canonical VLP billing contracts:
+
+```txt
+/contracts/billing.config.get.v1.json
+/contracts/billing.customer.create.v1.json
+/contracts/billing.payment-intent.create.v1.json
+/contracts/billing.payment-method.attach.v1.json
+/contracts/billing.payment-method.list.v1.json
+/contracts/billing.portal-session.create.v1.json
+/contracts/billing.setup-intent.create.v1.json
+/contracts/billing.subscription.cancel.v1.json
+/contracts/billing.subscription.create.v1.json
+/contracts/billing.subscription.update.v1.json
+/contracts/billing.tokens.purchase.v1.json
+/contracts/checkout.session.create.v1.json
+/contracts/checkout.status.get.v1.json
+/contracts/stripe.webhook.v1.json
+```
+
+Billing operational rules:
+
+* all billing writes are contract-validated
+* receipt is written first
+* canonical R2 object is updated second
+* D1 projection is updated last
+* frontend pages must submit exactly the contract payload
+* hosted checkout and embedded checkout must resolve back to the same canonical membership and token records
+* webhook reconciliation must never bypass canonical R2 writes
 
 ---
 
@@ -267,7 +343,7 @@ Capabilities include:
 
 * account / membership management
 * booking analytics
-* Cal.com calendar/scheduling integration
+* Cal.com calendar / scheduling integration
 * profile management
 * support tickets
 * token balances
@@ -328,7 +404,7 @@ Capabilities include:
 
 The ecosystem operates as a discovery loop.
 
-```
+```txt
 Tax Tools Arcade
 → discovery traffic
 
@@ -340,7 +416,6 @@ Tax Monitor Pro
 
 Virtual Launch Pro
 → professional infrastructure
-
 ```
 
 ---
@@ -349,7 +424,7 @@ Virtual Launch Pro
 
 All storage keys and worker routes reference canonical identifiers. These IDs must remain stable across APIs, storage paths, and projections.
 
-```
+```txt
 account_id        = ACCT_UUID
 account_tmp_id    = TMP_ACCT_{account_id}
 account_ttmp_id   = TTMP_ACCT_{account_id}
@@ -359,6 +434,7 @@ booking_id        = BOOK_YYYYMMDD_RANDOM
 
 event_id          = EVT_UUID
 inquiry_id        = INQ_UUID
+invoice_id        = INV_UUID
 job_id            = JOB_UUID
 membership_id     = MEM_UUID
 message_id        = MSG_UUID
@@ -366,18 +442,17 @@ professional_id   = PRO_UUID
 result_id         = RES_UUID
 session_id        = SES_UUID
 ticket_id         = TKT_UUID
-
 ```
 
 ### Purpose
 
 These identifiers are used across:
 
-* R2 canonical storage paths
-* Worker route parameters
 * contract payloads
 * D1 projection indexes
 * event receipts
+* R2 canonical storage paths
+* Worker route parameters
 
 ID values should be globally unique and immutable once assigned.
 
@@ -387,12 +462,11 @@ ID values should be globally unique and immutable once assigned.
 
 ## R2 (Canonical Storage)
 
-```
+```txt
 tm-canonical
 ttm-canonical
 tttm-canonical
 vlp-canonical
-
 ```
 
 R2 is the **source of truth**.
@@ -404,8 +478,8 @@ R2 is the **source of truth**.
 General repository structure used across all ecosystem repositories that supports:
 
 * analytics
-* directory queries
 * dashboard queries
+* directory queries
 * membership lookup
 * search filtering
 
@@ -415,7 +489,7 @@ General repository structure used across all ecosystem repositories that support
 
 See `other.json` — canonical reference in the **Repository Structure** section.
 
-```
+```json
 {
   "auth": {},
   "contract": {},
@@ -425,19 +499,18 @@ See `other.json` — canonical reference in the **Repository Structure** section
   "response": {},
   "schema": {}
 }
-
 ```
 
 ### Operational rules
 
 * R2 is authoritative
-* contract writes receipt first
 * canonical object second
+* contract writes receipt first
 * D1 projection last
 
 ### Contract ownership
 
-Contracts must be **repo‑local**.
+Contracts must be **repo-local**.
 
 * TMP contracts live in TMP repo
 * TTMP contracts live in TTMP repo
@@ -450,11 +523,17 @@ Shared operational records are governed by **VLP contracts and VLP API routes**,
 
 The shared VLP-governed record set is:
 
-```
+```txt
 /r2/accounts_tmp/{account_tmp_id}.json
 /r2/accounts_ttmp/{account_ttmp_id}.json
 /r2/accounts_tttmp/{account_tttmp_id}.json
 /r2/accounts_vlp/{account_vlp_id}.json
+/r2/billing_customers/{account_id}.json
+/r2/billing_invoices/{invoice_id}.json
+/r2/billing_payment_intents/{event_id}.json
+/r2/billing_payment_methods/{account_id}.json
+/r2/billing_setup_intents/{event_id}.json
+/r2/billing_subscriptions/{membership_id}.json
 /r2/bookings/{booking_id}.json
 /r2/memberships/{membership_id}.json
 /r2/professionals/{professional_id}.json
@@ -462,20 +541,19 @@ The shared VLP-governed record set is:
 /r2/support_tickets/{ticket_id}.json
 /r2/tokens/{account_id}.json
 /r2/vlp_preferences/{account_id}.json
-
 ```
 
 TMP, TTMP, and TTTMP may read these records, reference them, and project them into platform-specific UX, but they should use **VLP API routes** for shared operational writes.
 
-### Cross‑platform contract rules
+### Cross-platform contract rules
 
-Cross‑platform systems do not duplicate ownership.
+Cross-platform systems do not duplicate ownership.
 
-* structure is shared through VLP-governed API behavior
 * naming is shared across routes, payloads, and storage
 * ownership stays with the platform that governs the record
-* shared operational writes go through VLP for VLP-governed records
 * platform-local contracts remain local to each repo
+* shared operational writes go through VLP for VLP-governed records
+* structure is shared through VLP-governed API behavior
 
 ### Contract versioning
 
@@ -483,18 +561,17 @@ Every contract must be versioned.
 
 Examples:
 
-```
+```txt
 /contracts/account.create.v1.json
 /contracts/membership.update.v1.json
-
 ```
 
 ### Frontend contract rule
 
 Frontend code must not invent payloads.
 
-* page JS should submit exactly what the contract expects
 * no optional fields unless the contract explicitly declares them
+* page JS should submit exactly what the contract expects
 
 ---
 
@@ -502,14 +579,14 @@ Frontend code must not invent payloads.
 
 General repository structure used across all ecosystem repositories.
 
-```
+```txt
 app/
   account.html
   calendar.html
   dashboard.html
+  other.html          (e.g. reports.html - TMP, TTMP, and TTTMP)
   receipts.html
-  other.html (e.g. reports.html - TMP, TTMP, and TTTMP)
-  support.html          (call / appointments / support tickets)
+  support.html        (call / appointments / support tickets)
   token-usage.html
 
 contracts/
@@ -532,16 +609,16 @@ resources/
 
 site/
   about.html
-  contact.html          (call / appointments / support tickets)
-  features.html         or #features
-  how-it-works.html     or #how-it-works
-  index.html            (home)
+  contact.html        (call / appointments / support tickets)
+  features.html       or #features
+  how-it-works.html   or #how-it-works
+  index.html          (home)
   pricing.html
   sign-in.html
 
 scripts/
-  other.js
   blog-manifest.mjs
+  other.js
   site.js
 
 workers/
@@ -554,18 +631,16 @@ MARKET.md
 README.md*
 build.mjs
 sitemap.xml
-
 ```
 
 ### build.mjs (repo root)
 
 Purpose: build `dist/` for CloudFlare Pages by:
 
-```
+```txt
 1 copying static folders into dist/
 2 copying /partials into dist/ so runtime fetch("/partials/*.html") works
 3 injecting <!-- PARTIAL:name --> markers into HTML files in dist/
-
 ```
 
 `*` indicates **canonical standard files used across repositories.**
@@ -582,12 +657,11 @@ Required software:
 
 Setup steps:
 
-```
+```txt
 1 clone repository
 2 configure environment variables
 3 install dependencies
 4 run local worker environment
-
 ```
 
 ---
@@ -596,9 +670,8 @@ Setup steps:
 
 Deployment occurs through **CloudFlare Workers**.
 
-```
+```bash
 wrangler deploy
-
 ```
 
 The `wrangler.toml` file defines:
@@ -616,22 +689,20 @@ General CloudFlare build settings used across all ecosystem repositories.
 
 ## API
 
-```
+```txt
 Build command: npx wrangler deploy
 Deploy command: npx wrangler deploy
 Root directory: workers
 Version command: npx wrangler deploy
-
 ```
 
 ## Pages
 
-```
+```txt
 Build command: node build.mjs
-Build output: dist
 Build comments: Enabled
+Build output: dist
 Root directory: /
-
 ```
 
 ---
@@ -670,36 +741,32 @@ Integration routes defined in this document (authentication, accounts, membershi
 
 Key rule:
 
-```
+```txt
 Shared route surface
-Platform‑owned storage
-
+Platform-owned storage
 ```
 
 This means multiple repositories may expose the **same route paths**, but the platform that governs the canonical record performs the write.
 
 Example:
 
-```
+```txt
 POST /v1/memberships
-
 ```
 
 TMP Worker writes:
 
-```
+```txt
 /r2/memberships/{membership_id}.json
-
 ```
 
 VLP Worker writes:
 
-```
+```txt
 /r2/memberships/{membership_id}.json
-
 ```
 
-The route surface remains consistent across TMP, TTMP, TTTMP, and VLP, while canonical storage ownership remains platform‑specific.
+The route surface remains consistent across TMP, TTMP, TTTMP, and VLP, while canonical storage ownership remains platform-specific.
 
 This architecture allows frontends to interact with a **unified API design across the ecosystem** while preserving clear data ownership boundaries.
 
@@ -719,16 +786,16 @@ Each repository must support canonical **account and membership management** acr
 
 Responsibilities include:
 
+* account archival
 * account creation
+* account linking across platforms
 * account retrieval
 * membership lifecycle management
-* account linking across platforms
 * plan upgrades and downgrades
-* account archival
 
 ### Canonical events
 
-```
+```txt
 ACCOUNT_ARCHIVED
 ACCOUNT_CREATED
 ACCOUNT_UPDATED
@@ -736,33 +803,30 @@ MEMBERSHIP_ARCHIVED
 MEMBERSHIP_CANCELLED
 MEMBERSHIP_CREATED
 MEMBERSHIP_UPDATED
-
 ```
 
 ### Canonical worker routes
 
-```
+```txt
 DELETE /v1/accounts/{account_id}
 GET    /v1/accounts/{account_id}
 GET    /v1/accounts/by-email/{email}
-GET    /v1/memberships/{membership_id}
 GET    /v1/memberships/by-account/{account_id}
+GET    /v1/memberships/{membership_id}
 PATCH  /v1/accounts/{account_id}
 PATCH  /v1/memberships/{membership_id}
 POST   /v1/accounts
 POST   /v1/memberships
-
 ```
 
 ### Canonical storage
 
-```
+```txt
 /r2/accounts_tmp/{account_tmp_id}.json
 /r2/accounts_ttmp/{account_ttmp_id}.json
 /r2/accounts_tttmp/{account_tttmp_id}.json
 /r2/accounts_vlp/{account_vlp_id}.json
 /r2/memberships/{membership_id}.json
-
 ```
 
 Accounts are created per-platform but may reference a shared identity through authentication providers.
@@ -786,32 +850,29 @@ Responsibilities:
 
 ### Canonical events
 
-```
+```txt
 BOOKING_CANCELLED
 BOOKING_CREATED
 BOOKING_RESCHEDULED
-
 ```
 
 ### Canonical webhook endpoint
 
-```
+```txt
 https://transcript.taxmonitor.pro/transcript/cal/webhook
-
 ```
 
 ### Canonical worker routes
 
-```
-GET   /v1/bookings/{booking_id}
+```txt
 GET   /v1/bookings/by-account/{account_id}
 GET   /v1/bookings/by-professional/{professional_id}
+GET   /v1/bookings/{booking_id}
 GET   /v1/profiles/{professional_id}
 PATCH /v1/bookings/{booking_id}
 PATCH /v1/profiles/{professional_id}
 POST  /v1/bookings
 POST  /v1/profiles
-
 ```
 
 ---
@@ -831,7 +892,7 @@ Capabilities include:
 
 ### Canonical events
 
-```
+```txt
 CHECKOUT_SESSION_COMPLETED
 CUSTOMER_SUBSCRIPTION_CREATED
 CUSTOMER_SUBSCRIPTION_DELETED
@@ -840,29 +901,26 @@ INVOICE_PAID
 INVOICE_PAYMENT_FAILED
 PAYMENT_INTENT_PAYMENT_FAILED
 PAYMENT_INTENT_SUCCEEDED
-
 ```
 
 ### Canonical webhook endpoint
 
-```
+```txt
 POST /v1/webhooks/stripe
-
 ```
 
 ### Canonical worker routes
 
-```
+```txt
 GET  /v1/checkout/status
 GET  /v1/pricing
 POST /v1/checkout/sessions
 POST /v1/webhooks/stripe
-
 ```
 
 ### Canonical Stripe price metadata sample
 
-```
+```json
 {
   "app": "tax-monitor-pro",
   "membership_type": "taxpayer",
@@ -871,7 +929,6 @@ POST /v1/webhooks/stripe
   "tax_tool_tokens_monthly": "0",
   "transcript_tokens_monthly": "0"
 }
-
 ```
 
 All billing events must update **canonical R2 records before projection**. The pricing route returns the **public pricing configuration** for TMP memberships, resolved from canonical Worker environment variables defined in `wrangler.toml`.
@@ -898,30 +955,27 @@ Used for direct OAuth sign-in and account linking.
 
 #### Canonical events
 
-```
+```txt
 AUTH_LOGIN_COMPLETED
 GOOGLE_OAUTH_CALLBACK_COMPLETED
 GOOGLE_OAUTH_STARTED
 SESSION_CREATED
-
 ```
 
 #### Canonical endpoints
 
-```
-GET /v1/auth/google/start
+```txt
 GET /v1/auth/google/callback
-
+GET /v1/auth/google/start
 ```
 
 #### Canonical worker routes
 
-```
+```txt
 GET  /v1/auth/google/callback
 GET  /v1/auth/google/start
 GET  /v1/auth/session
 POST /v1/auth/logout
-
 ```
 
 ---
@@ -932,30 +986,27 @@ Used for passwordless email sign-in.
 
 #### Canonical events
 
-```
+```txt
 AUTH_LOGIN_COMPLETED
 MAGIC_LINK_REQUESTED
 MAGIC_LINK_VERIFIED
 SESSION_CREATED
-
 ```
 
 #### Canonical endpoints
 
-```
+```txt
 GET  /v1/auth/magic-link/verify
 POST /v1/auth/magic-link/request
-
 ```
 
 #### Canonical worker routes
 
-```
+```txt
 GET  /v1/auth/magic-link/verify
 GET  /v1/auth/session
 POST /v1/auth/logout
 POST /v1/auth/magic-link/request
-
 ```
 
 ---
@@ -966,36 +1017,33 @@ Used for organizational sign-in and identity federation.
 
 #### Canonical events
 
-```
+```txt
 AUTH_LOGIN_COMPLETED
 SESSION_CREATED
 SSO_OIDC_CALLBACK_COMPLETED
 SSO_OIDC_STARTED
 SSO_SAML_ASSERTION_CONSUMED
 SSO_SAML_STARTED
-
 ```
 
 #### Canonical endpoints
 
-```
+```txt
 GET  /v1/auth/sso/oidc/callback
 GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/saml/start
 POST /v1/auth/sso/saml/acs
-
 ```
 
 #### Canonical worker routes
 
-```
+```txt
 GET  /v1/auth/session
 GET  /v1/auth/sso/oidc/callback
 GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/saml/start
 POST /v1/auth/logout
 POST /v1/auth/sso/saml/acs
-
 ```
 
 ---
@@ -1010,29 +1058,26 @@ Used for native product alerts inside TMP, TTMP, and VLP dashboards.
 
 #### Canonical events
 
-```
+```txt
 IN_APP_NOTIFICATION_CREATED
 IN_APP_NOTIFICATION_DELIVERED
 IN_APP_NOTIFICATION_DISMISSED
 NOTIFICATION_PREFERENCES_UPDATED
-
 ```
 
 #### Canonical webhook endpoint
 
-```
+```txt
 None. In-app notifications are internal system events.
-
 ```
 
 #### Canonical worker routes
 
-```
+```txt
 GET   /v1/notifications/in-app
 GET   /v1/notifications/preferences/{account_id}
 PATCH /v1/notifications/preferences/{account_id}
 POST  /v1/notifications/in-app
-
 ```
 
 ---
@@ -1043,30 +1088,27 @@ Used for SMS notification delivery and future account messaging workflows.
 
 #### Canonical events
 
-```
+```txt
 NOTIFICATION_PREFERENCES_UPDATED
 SMS_DELIVERY_FAILED
 SMS_NOTIFICATION_QUEUED
 SMS_NOTIFICATION_SENT
 TWILIO_STATUS_CALLBACK_RECEIVED
-
 ```
 
 #### Canonical webhook endpoint
 
-```
+```txt
 POST /v1/webhooks/twilio
-
 ```
 
 #### Canonical worker routes
 
-```
+```txt
 GET   /v1/notifications/preferences/{account_id}
 PATCH /v1/notifications/preferences/{account_id}
 POST  /v1/notifications/sms/send
 POST  /v1/webhooks/twilio
-
 ```
 
 ---
@@ -1077,31 +1119,28 @@ Used to allow users to enroll in, verify, and disable two-factor authentication.
 
 ### Canonical events
 
-```
+```txt
 TWO_FA_DISABLED
 TWO_FA_ENROLLMENT_STARTED
 TWO_FA_ENROLLMENT_VERIFIED
 TWO_FA_VERIFICATION_FAILED
 TWO_FA_VERIFICATION_SUCCEEDED
-
 ```
 
 ### Canonical webhook endpoint
 
-```
+```txt
 None. 2FA is handled through canonical worker routes.
-
 ```
 
 ### Canonical worker routes
 
-```
+```txt
 GET   /v1/auth/2fa/status/{account_id}
 POST  /v1/auth/2fa/challenge/verify
 POST  /v1/auth/2fa/disable
 POST  /v1/auth/2fa/enroll/init
 POST  /v1/auth/2fa/enroll/verify
-
 ```
 
 ---
@@ -1112,44 +1151,40 @@ Each repo must support **support ticket creation and tracking**.
 
 Responsibilities:
 
+* support dashboard visibility
 * ticket retrieval
 * ticket status updates
 * ticket submission
-* support dashboard visibility
 
 Canonical storage:
 
-```
+```txt
 /r2/support_tickets/{ticket_id}.json
-
 ```
 
 ### Canonical events
 
-```
+```txt
 SUPPORT_TICKET_CLOSED
 SUPPORT_TICKET_CREATED
 SUPPORT_TICKET_MESSAGE_ADDED
 SUPPORT_TICKET_REOPENED
 SUPPORT_TICKET_STATUS_UPDATED
-
 ```
 
 ### Canonical webhook endpoint
 
-```
+```txt
 None. Support tickets are internal system events.
-
 ```
 
 ### Canonical worker routes
 
-```
-GET   /v1/support/tickets/{ticket_id}
+```txt
 GET   /v1/support/tickets/by-account/{account_id}
+GET   /v1/support/tickets/{ticket_id}
 PATCH /v1/support/tickets/{ticket_id}
 POST  /v1/support/tickets
-
 ```
 
 Support tickets allow users to request help across the ecosystem.
@@ -1175,12 +1210,11 @@ Secrets must never be committed to the repository.
 
 Recommended workflow:
 
-```
+```txt
 1 create branch
 2 implement changes
 3 test locally
 4 submit pull request
-
 ```
 
 All pull requests must respect:
@@ -1196,5 +1230,3 @@ All pull requests must respect:
 This repository is proprietary software owned and maintained by **Virtual Launch Pro**.
 
 Unauthorized redistribution or modification is prohibited.
-
----
