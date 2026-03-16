@@ -2,42 +2,43 @@
 
 ## Table of Contents
 
-* [Overview](#overview)
-* [Key Features](#key-features)
-* [Architecture Overview](#architecture-overview)
-* [Ecosystem Overview](#ecosystem-overview)
-* [Platform Responsibilities](#platform-responsibilities)
-  * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
-  * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
-  * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
-  * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
-* [Dashboards](#dashboards)
-  * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
-  * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
-  * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
-* [Cross-Platform Data Flow & IDs](#cross-platform-data-flow--ids)
-* [Data Storage Architecture](#data-storage-architecture)
-* [Repository Structure](#repository-structure)
-* [Environment Setup](#environment-setup)
-* [Deployment](#deployment)
-* [Contracts or Data Model](#contracts-or-data-model)
-* [Development Standards](#development-standards)
-* [Integrations](#integrations)
-  * [Account Integrations](#account-integrations)
-  * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
-  * [Login Integrations](#login-integrations)
-    * [Continue with Google](#continue-with-google)
-    * [Magic Link](#magic-link)
-    * [SSO (SAML / OIDC)](#sso-saml--oidc)
-  * [Stripe Integration](#stripe-integration)
-* [Notification Preferences](#notification-preferences)
-  * [In-App Notifications](#in-app-notifications)
-  * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
-* [2FA Integration](#2fa-integration)
-* [Support Ticket System](#support-ticket-system)
-* [Security and Secrets](#security-and-secrets)
-* [Contribution Guidelines](#contribution-guidelines)
-* [License](#license)
+* [Overview](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#overview)
+* [Key Features](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#key-features)
+* [Architecture Overview](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#architecture-overview)
+* [Ecosystem Overview](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#ecosystem-overview)
+* [Platform Responsibilities](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#platform-responsibilities)
+  * [Tax Monitor Pro (TMP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#tax-monitor-pro-tmp)
+  * [Tax Tools Arcade (TTTMP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#tax-tools-arcade-tttmp)
+  * [Transcript Tax Monitor (TTMP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#transcript-tax-monitor-ttmp)
+  * [Virtual Launch Pro (VLP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#virtual-launch-pro-vlp)
+* [Dashboards](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#dashboards)
+  * [Professional Dashboard (VLP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#professional-dashboard-vlp)
+  * [Taxpayer Dashboard (TMP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#taxpayer-dashboard-tmp)
+  * [Tax Tools Dashboard (TTTMP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#tax-tools-dashboard-tttmp)
+  * [Transcript Dashboard (TTMP)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#transcript-dashboard-ttmp)
+* [Cross-Platform Data Flow & IDs](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#cross-platform-data-flow--ids)
+* [Data Storage Architecture](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#data-storage-architecture)
+* [Repository Structure](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#repository-structure)
+* [Environment Setup](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#environment-setup)
+* [Deployment](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#deployment)
+* [Contracts or Data Model](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#contracts-or-data-model)
+* [Development Standards](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#development-standards)
+* [Integrations](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#integrations)
+  * [Account Integrations](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#account-integrations)
+  * [Cal.com Scheduling Integration](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#calcom-scheduling-integration)
+  * [Login Integrations](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#login-integrations)
+    * [Continue with Google](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#continue-with-google)
+    * [Magic Link](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#magic-link)
+    * [SSO (SAML / OIDC)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#sso-saml--oidc)
+  * [Stripe Integration](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#stripe-integration)
+* [Notification Preferences](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#notification-preferences)
+  * [In-App Notifications](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#in-app-notifications)
+  * [Twilio SMS Integration (Coming Soon)](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#twilio-sms-integration-coming-soon)
+* [2FA Integration](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#2fa-integration)
+* [Support Ticket System](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#support-ticket-system)
+* [Security and Secrets](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#security-and-secrets)
+* [Contribution Guidelines](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#contribution-guidelines)
+* [License](https://chatgpt.com/g/g-p-69ae4ab565c8819195e6f5c07f0963aa-virtual-launch-pro/c/69b81f7d-0e80-8326-ab07-895b2b964b75#license)
 
 ---
 
@@ -83,7 +84,7 @@ Major capabilities include:
 
 # Architecture Overview
 
-The system runs on **Cloudflare edge infrastructure**.
+The system runs on **CloudFlare edge infrastructure**.
 
 Core principles:
 
@@ -94,7 +95,7 @@ Core principles:
 
 Major components:
 
-* Cloudflare Workers
+* CloudFlare Workers
 * D1 query database
 * R2 canonical storage
 * static frontend applications
@@ -109,6 +110,7 @@ Write pipeline:
 4 canonical record updated
 5 D1 index updated
 6 response returned
+
 ```
 
 ---
@@ -123,43 +125,70 @@ Each platform performs a specific role.
 
 # Platform Responsibilities
 
+## Ownership rule
+
+VLP owns all **shared operational records** across the ecosystem.
+
+That includes:
+
+* account records
+* bookings
+* memberships
+* tax pro dashboard
+* profiles
+* support tickets
+* token balances
+
+Other platforms may **read** these records, reference them, and project them into platform-specific UX, but they should not be the canonical writer unless the governing contract explicitly says otherwise. Because apparently letting four platforms fight over the same record was never going to age well.
+
+---
+
 ## Tax Monitor Pro (TMP)
 
-Tax Monitor Pro is the **taxpayer discovery and membership platform**.
+Tax Monitor Pro is the **taxpayer discovery and membership experience platform**.
 
 Responsibilities:
 
-* professional directory on TMP
-* service inquiry routing to tax professionals
-* taxpayer dashboards
-* taxpayer discovery through intake form and app
-* taxpayer memberships (free, essential, plus, premier)
+* intake experience for taxpayers
+* tax pro directory discovery
+* taxpayer dashboard 
+* taxpayer inquiry capture and routing
+* taxpayer discount/entitelments
 
-Canonical storage:
+TMP should handle canonical records such as:
 
 ```
-/r2/inquiries/{inquiry_id}.json
-/r2/taxpayer_accounts/{account_id}.json
-/r2/taxpayer_memberships/{membership_id}.json
+/r2/tmp_inquiries/{inquiry_id}.json
+/r2/tmp_activity/{event_id}.json
+/r2/tmp_intake_sessions/{session_id}.json
+/r2/tmp_preferences/{account_id}.json
+/r2/tmp_entitlements/{account_id}.json
+
 ```
 
 ---
 
 ## Tax Tools Arcade (TTTMP)
 
-Tax Tools Arcade provides **interactive tax education tools**.
+Tax Tools Arcade provides **interactive tax education and tool execution**.
 
 Responsibilities:
 
-* discovery traffic generation
+* dashboard for users
+* discovery traffic generation (for tax pros)
 * educational tax games
-* token-based tool execution (10, 25, 100 packages)
+* tool execution state
+* tool package consumption history
+* tool-specific usage telemetry
 
-Canonical storage:
+TTTMP should handle canonical records such as:
 
 ```
-/r2/tool_sessions/{session_id}.json
-/r2/tool_usage/{event_id}.json
+/r2/tttmp_activity/{event_id}.json
+/r2/tttmp_preferences/{account_id}.json
+/r2/tttmp_tool_sessions/{session_id}.json
+/r2/tttmp_tool_usage/{event_id}.json
+
 ```
 
 ---
@@ -170,30 +199,36 @@ Transcript Tax Monitor provides **transcript diagnostics and analysis services**
 
 Responsibilities:
 
-* transcript analysis automation tool
-* transcript dashboards
-* transcript diagnostics
-* transcript token processing
+* dashboard for users
+* discovery traffic generation (for tax pros)
+* tool execution state
+* tool package consumption history
+* tool-specific usage telemetry
+* transcript analysis automation
 
-Canonical storage:
+TTMP should handle canonical records such as:
 
 ```
-/r2/transcript_jobs/{job_id}.json
-/r2/transcript_results/{result_id}.json
+/r2/ttmp_activity/{event_id}.json
+/r2/ttmp_preferences/{account_id}.json
+/r2/ttmp_tool_usage/{event_id}.json
+/r2/ttmp_transcript_jobs/{job_id}.json
+/r2/ttmp_transcript_results/{result_id}.json
+
 ```
 
 ---
 
 ## Virtual Launch Pro (VLP)
 
-Virtual Launch Pro is the **professional infrastructure platform**.
+Virtual Launch Pro is the **professional infrastructure platform** and the **canonical owner of shared operational records**.
 
 Responsibilities:
 
-* account management (TMP, TTMP, TTTMP, VLP)
+* account management
 * booking infrastructure
 * membership management
-* professional dashboards
+* professional dashboard 
 * professional profiles
 * support tickets
 * token balances
@@ -211,6 +246,8 @@ Canonical storage:
 /r2/profiles/{professional_id}.json
 /r2/support_tickets/{ticket_id}.json
 /r2/tokens/{account_id}.json
+/r2/vlp_preferences/{account_id}.json
+
 ```
 
 ---
@@ -255,6 +292,21 @@ Capabilities include:
 
 ---
 
+## Tax Tools Dashboard (TTTMP)
+
+Shared game analytics dashboard.
+
+Capabilities include:
+
+* account / membership management
+* Cal.com calendar integration
+* game analytics (wins / loss / score)
+* support tickets
+* token balances
+* token usage history
+
+---
+
 ## Transcript Dashboard (TTMP)
 
 Shared diagnostic dashboard.
@@ -287,6 +339,7 @@ Tax Monitor Pro
 
 Virtual Launch Pro
 → professional infrastructure
+
 ```
 
 ---
@@ -303,7 +356,7 @@ account_tttmp_id  = TTTMP_ACCT_{account_id}
 account_vlp_id    = VLP_ACCT_{account_id}
 booking_id        = BOOK_YYYYMMDD_RANDOM
 
- event_id         = EVT_UUID
+event_id         = EVT_UUID
 inquiry_id        = INQ_UUID
 job_id            = JOB_UUID
 membership_id     = MEM_UUID
@@ -312,6 +365,7 @@ professional_id   = PRO_UUID
 result_id         = RES_UUID
 session_id        = SES_UUID
 ticket_id         = TKT_UUID
+
 ```
 
 ### Purpose
@@ -337,6 +391,7 @@ tm-canonical
 ttm-canonical
 tttm-canonical
 vlp-canonical
+
 ```
 
 R2 is the **source of truth**.
@@ -369,6 +424,7 @@ See `other.json` — canonical reference in the **Repository Structure** section
   "response": {},
   "schema": {}
 }
+
 ```
 
 ### Operational rules
@@ -387,13 +443,38 @@ Contracts must be **repo‑local**.
 * TTTMP contracts live in TTTMP repo
 * VLP contracts live in VLP repo
 
+### Shared operational contract rule
+
+Shared operational records are governed by **VLP contracts and VLP API routes**, not duplicated contract files across every repository.
+
+The shared VLP-governed record set is:
+
+```
+/r2/accounts_tmp/{account_tmp_id}.json
+/r2/accounts_ttmp/{account_ttmp_id}.json
+/r2/accounts_tttmp/{account_tttmp_id}.json
+/r2/accounts_vlp/{account_vlp_id}.json
+/r2/bookings/{booking_id}.json
+/r2/memberships/{membership_id}.json
+/r2/professionals/{professional_id}.json
+/r2/profiles/{professional_id}.json
+/r2/support_tickets/{ticket_id}.json
+/r2/tokens/{account_id}.json
+/r2/vlp_preferences/{account_id}.json
+
+```
+
+TMP, TTMP, and TTTMP may read these records, reference them, and project them into platform-specific UX, but they should use **VLP API routes** for shared operational writes.
+
 ### Cross‑platform contract rules
 
-Cross‑platform systems share **patterns**, not ownership.
+Cross‑platform systems do not duplicate ownership.
 
-* structure is shared
-* naming is shared
+* structure is shared through VLP-governed API behavior
+* naming is shared across routes, payloads, and storage
 * ownership stays with the platform that governs the record
+* shared operational writes go through VLP for VLP-governed records
+* platform-local contracts remain local to each repo
 
 ### Contract versioning
 
@@ -404,6 +485,7 @@ Examples:
 ```
 /contracts/account.create.v1.json
 /contracts/membership.update.v1.json
+
 ```
 
 ### Frontend contract rule
@@ -471,16 +553,18 @@ MARKET.md
 README.md*
 build.mjs
 sitemap.xml
+
 ```
 
 ### build.mjs (repo root)
 
-Purpose: build `dist/` for Cloudflare Pages by:
+Purpose: build `dist/` for CloudFlare Pages by:
 
 ```
 1 copying static folders into dist/
 2 copying /partials into dist/ so runtime fetch("/partials/*.html") works
 3 injecting <!-- PARTIAL:name --> markers into HTML files in dist/
+
 ```
 
 `*` indicates **canonical standard files used across repositories.**
@@ -502,16 +586,18 @@ Setup steps:
 2 configure environment variables
 3 install dependencies
 4 run local worker environment
+
 ```
 
 ---
 
 # Deployment
 
-Deployment occurs through **Cloudflare Workers**.
+Deployment occurs through **CloudFlare Workers**.
 
 ```
 wrangler deploy
+
 ```
 
 The `wrangler.toml` file defines:
@@ -534,6 +620,7 @@ Build command: npx wrangler deploy
 Deploy command: npx wrangler deploy
 Root directory: workers
 Version command: npx wrangler deploy
+
 ```
 
 ## Pages
@@ -543,6 +630,7 @@ Build command: node build.mjs
 Build output: dist
 Build comments: Enabled
 Root directory: /
+
 ```
 
 ---
@@ -584,6 +672,7 @@ Key rule:
 ```
 Shared route surface
 Platform‑owned storage
+
 ```
 
 This means multiple repositories may expose the **same route paths**, but the platform that governs the canonical record performs the write.
@@ -592,18 +681,21 @@ Example:
 
 ```
 POST /v1/memberships
+
 ```
 
 TMP Worker writes:
 
 ```
-/r2/taxpayer_memberships/{membership_id}.json
+/r2/memberships/{membership_id}.json
+
 ```
 
 VLP Worker writes:
 
 ```
 /r2/memberships/{membership_id}.json
+
 ```
 
 The route surface remains consistent across TMP, TTMP, TTTMP, and VLP, while canonical storage ownership remains platform‑specific.
@@ -643,6 +735,7 @@ MEMBERSHIP_ARCHIVED
 MEMBERSHIP_CANCELLED
 MEMBERSHIP_CREATED
 MEMBERSHIP_UPDATED
+
 ```
 
 ### Canonical worker routes
@@ -657,6 +750,7 @@ PATCH  /v1/accounts/{account_id}
 PATCH  /v1/memberships/{membership_id}
 POST   /v1/accounts
 POST   /v1/memberships
+
 ```
 
 ### Canonical storage
@@ -667,6 +761,7 @@ POST   /v1/memberships
 /r2/accounts_tttmp/{account_tttmp_id}.json
 /r2/accounts_vlp/{account_vlp_id}.json
 /r2/memberships/{membership_id}.json
+
 ```
 
 Accounts are created per-platform but may reference a shared identity through authentication providers.
@@ -694,12 +789,14 @@ Responsibilities:
 BOOKING_CANCELLED
 BOOKING_CREATED
 BOOKING_RESCHEDULED
+
 ```
 
 ### Canonical webhook endpoint
 
 ```
-https://transcript.taxmonitor.pro/transcript/stripe/webhook
+https://transcript.taxmonitor.pro/transcript/cal/webhook
+
 ```
 
 ### Canonical worker routes
@@ -713,6 +810,7 @@ PATCH /v1/bookings/{booking_id}
 PATCH /v1/profiles/{professional_id}
 POST  /v1/bookings
 POST  /v1/profiles
+
 ```
 
 ---
@@ -741,12 +839,14 @@ INVOICE_PAID
 INVOICE_PAYMENT_FAILED
 PAYMENT_INTENT_PAYMENT_FAILED
 PAYMENT_INTENT_SUCCEEDED
+
 ```
 
 ### Canonical webhook endpoint
 
 ```
 POST /v1/webhooks/stripe
+
 ```
 
 ### Canonical worker routes
@@ -756,6 +856,7 @@ GET  /v1/checkout/status
 GET  /v1/pricing
 POST /v1/checkout/sessions
 POST /v1/webhooks/stripe
+
 ```
 
 ### Canonical Stripe price metadata sample
@@ -769,6 +870,7 @@ POST /v1/webhooks/stripe
   "tax_tool_tokens_monthly": "0",
   "transcript_tokens_monthly": "0"
 }
+
 ```
 
 All billing events must update **canonical R2 records before projection**. The pricing route returns the **public pricing configuration** for TMP memberships, resolved from canonical Worker environment variables defined in `wrangler.toml`.
@@ -800,6 +902,7 @@ AUTH_LOGIN_COMPLETED
 GOOGLE_OAUTH_CALLBACK_COMPLETED
 GOOGLE_OAUTH_STARTED
 SESSION_CREATED
+
 ```
 
 #### Canonical endpoints
@@ -807,6 +910,7 @@ SESSION_CREATED
 ```
 GET /v1/auth/google/start
 GET /v1/auth/google/callback
+
 ```
 
 #### Canonical worker routes
@@ -816,6 +920,7 @@ GET  /v1/auth/google/callback
 GET  /v1/auth/google/start
 GET  /v1/auth/session
 POST /v1/auth/logout
+
 ```
 
 ---
@@ -831,6 +936,7 @@ AUTH_LOGIN_COMPLETED
 MAGIC_LINK_REQUESTED
 MAGIC_LINK_VERIFIED
 SESSION_CREATED
+
 ```
 
 #### Canonical endpoints
@@ -838,6 +944,7 @@ SESSION_CREATED
 ```
 GET  /v1/auth/magic-link/verify
 POST /v1/auth/magic-link/request
+
 ```
 
 #### Canonical worker routes
@@ -847,6 +954,7 @@ GET  /v1/auth/magic-link/verify
 GET  /v1/auth/session
 POST /v1/auth/logout
 POST /v1/auth/magic-link/request
+
 ```
 
 ---
@@ -864,6 +972,7 @@ SSO_OIDC_CALLBACK_COMPLETED
 SSO_OIDC_STARTED
 SSO_SAML_ASSERTION_CONSUMED
 SSO_SAML_STARTED
+
 ```
 
 #### Canonical endpoints
@@ -873,6 +982,7 @@ GET  /v1/auth/sso/oidc/callback
 GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/saml/start
 POST /v1/auth/sso/saml/acs
+
 ```
 
 #### Canonical worker routes
@@ -884,6 +994,7 @@ GET  /v1/auth/sso/oidc/start
 GET  /v1/auth/sso/saml/start
 POST /v1/auth/logout
 POST /v1/auth/sso/saml/acs
+
 ```
 
 ---
@@ -903,12 +1014,14 @@ IN_APP_NOTIFICATION_CREATED
 IN_APP_NOTIFICATION_DELIVERED
 IN_APP_NOTIFICATION_DISMISSED
 NOTIFICATION_PREFERENCES_UPDATED
+
 ```
 
 #### Canonical webhook endpoint
 
 ```
 None. In-app notifications are internal system events.
+
 ```
 
 #### Canonical worker routes
@@ -918,6 +1031,7 @@ GET   /v1/notifications/in-app
 GET   /v1/notifications/preferences/{account_id}
 PATCH /v1/notifications/preferences/{account_id}
 POST  /v1/notifications/in-app
+
 ```
 
 ---
@@ -934,12 +1048,14 @@ SMS_DELIVERY_FAILED
 SMS_NOTIFICATION_QUEUED
 SMS_NOTIFICATION_SENT
 TWILIO_STATUS_CALLBACK_RECEIVED
+
 ```
 
 #### Canonical webhook endpoint
 
 ```
 POST /v1/webhooks/twilio
+
 ```
 
 #### Canonical worker routes
@@ -949,6 +1065,7 @@ GET   /v1/notifications/preferences/{account_id}
 PATCH /v1/notifications/preferences/{account_id}
 POST  /v1/notifications/sms/send
 POST  /v1/webhooks/twilio
+
 ```
 
 ---
@@ -965,12 +1082,14 @@ TWO_FA_ENROLLMENT_STARTED
 TWO_FA_ENROLLMENT_VERIFIED
 TWO_FA_VERIFICATION_FAILED
 TWO_FA_VERIFICATION_SUCCEEDED
+
 ```
 
 ### Canonical webhook endpoint
 
 ```
 None. 2FA is handled through canonical worker routes.
+
 ```
 
 ### Canonical worker routes
@@ -981,6 +1100,7 @@ POST  /v1/auth/2fa/challenge/verify
 POST  /v1/auth/2fa/disable
 POST  /v1/auth/2fa/enroll/init
 POST  /v1/auth/2fa/enroll/verify
+
 ```
 
 ---
@@ -1000,6 +1120,7 @@ Canonical storage:
 
 ```
 /r2/support_tickets/{ticket_id}.json
+
 ```
 
 ### Canonical events
@@ -1010,12 +1131,14 @@ SUPPORT_TICKET_CREATED
 SUPPORT_TICKET_MESSAGE_ADDED
 SUPPORT_TICKET_REOPENED
 SUPPORT_TICKET_STATUS_UPDATED
+
 ```
 
 ### Canonical webhook endpoint
 
 ```
 None. Support tickets are internal system events.
+
 ```
 
 ### Canonical worker routes
@@ -1025,6 +1148,7 @@ GET   /v1/support/tickets/{ticket_id}
 GET   /v1/support/tickets/by-account/{account_id}
 PATCH /v1/support/tickets/{ticket_id}
 POST  /v1/support/tickets
+
 ```
 
 Support tickets allow users to request help across the ecosystem.
@@ -1055,6 +1179,7 @@ Recommended workflow:
 2 implement changes
 3 test locally
 4 submit pull request
+
 ```
 
 All pull requests must respect:
