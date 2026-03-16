@@ -259,7 +259,7 @@ The ecosystem contains three authenticated dashboards.
 
 ---
 
-## Professional Dashboard (VLP)
+## Virtual Launch Pro Dashboard (VLP)
 
 Used by tax professionals.
 
