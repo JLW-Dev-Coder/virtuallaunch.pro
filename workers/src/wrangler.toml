@@ -121,9 +121,7 @@ GOOGLE_WORKSPACE_USER_INFO = "info@virtuallaunch.pro"
 GOOGLE_WORKSPACE_USER_NO_REPLY = "no-reply@virtuallaunch.pro"
 GOOGLE_WORKSPACE_USER_SUPPORT = "support@virtuallaunch.pro"
 
-TWILIO_ACCOUNT_SID = "AC77185668d5e07fa30648385ef8e6b3b8"
-TWILIO_PHONE_NUMBER = "+18339175819"
-TWILIO_VERIFY_SERVICE_SID = "VAad781f3b1955240a573785f4194bda54"
+
 
 # =================================================
 # Organization
@@ -178,6 +176,9 @@ WEBHOOK_REGISTRY_PATH = "/contracts/webhook-registry.json"
 # =================================================
 
 # GOOGLE_PRIVATE_KEY
+# TWILIO_ACCOUNT_SID
+# TWILIO_PHONE_NUMBER
+# TWILIO_VERIFY_SERVICE_SID
 # TWILIO_AUTH_TOKEN
 # TWILIO_WEBHOOK_SECRET
 
