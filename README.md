@@ -7,13 +7,11 @@
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
-
   * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
   * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
-
   * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
@@ -25,17 +23,14 @@
 * [Contracts or Data Model](#contracts-or-data-model)
 * [Development Standards](#development-standards)
 * [Integrations](#integrations)
-
   * [Account Integrations](#account-integrations)
   * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
   * [Login Integrations](#login-integrations)
-
     * [Continue with Google](#continue-with-google)
     * [Magic Link](#magic-link)
     * [SSO (SAML / OIDC)](#sso-saml--oidc)
   * [Stripe Integration](#stripe-integration)
 * [Notification Preferences](#notification-preferences)
-
   * [In-App Notifications](#in-app-notifications)
   * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
 * [2FA Integration](#2fa-integration)
@@ -301,21 +296,22 @@ Virtual Launch Pro
 All storage keys and worker routes reference canonical identifiers. These IDs must remain stable across APIs, storage paths, and projections.
 
 ```
-account_id
-account_tmp_id
-account_ttmp_id
-account_tttmp_id
-account_vlp_id
-booking_id
-event_id
-inquiry_id
-job_id
-membership_id
-message_id
-professional_id
-result_id
-session_id
-ticket_id
+account_id        = ACCT_UUID
+account_tmp_id    = TMP_ACCT_{account_id}
+account_ttmp_id   = TTMP_ACCT_{account_id}
+account_tttmp_id  = TTTMP_ACCT_{account_id}
+account_vlp_id    = VLP_ACCT_{account_id}
+booking_id        = BOOK_YYYYMMDD_RANDOM
+
+ event_id         = EVT_UUID
+inquiry_id        = INQ_UUID
+job_id            = JOB_UUID
+membership_id     = MEM_UUID
+message_id        = MSG_UUID
+professional_id   = PRO_UUID
+result_id         = RES_UUID
+session_id        = SES_UUID
+ticket_id         = TKT_UUID
 ```
 
 ### Purpose
@@ -356,6 +352,66 @@ General repository structure used across all ecosystem repositories that support
 * dashboard queries
 * membership lookup
 * search filtering
+
+---
+
+## Contract Data Reference
+
+See `other.json` — canonical reference in the **Repository Structure** section.
+
+```
+{
+  "auth": {},
+  "contract": {},
+  "delivery": {},
+  "effects": {},
+  "payload": {},
+  "response": {},
+  "schema": {}
+}
+```
+
+### Operational rules
+
+* R2 is authoritative
+* contract writes receipt first
+* canonical object second
+* D1 projection last
+
+### Contract ownership
+
+Contracts must be **repo‑local**.
+
+* TMP contracts live in TMP repo
+* TTMP contracts live in TTMP repo
+* TTTMP contracts live in TTTMP repo
+* VLP contracts live in VLP repo
+
+### Cross‑platform contract rules
+
+Cross‑platform systems share **patterns**, not ownership.
+
+* structure is shared
+* naming is shared
+* ownership stays with the platform that governs the record
+
+### Contract versioning
+
+Every contract must be versioned.
+
+Examples:
+
+```
+/contracts/account.create.v1.json
+/contracts/membership.update.v1.json
+```
+
+### Frontend contract rule
+
+Frontend code must not invent payloads.
+
+* page JS should submit exactly what the contract expects
+* no optional fields unless the contract explicitly declares them
 
 ---
 
