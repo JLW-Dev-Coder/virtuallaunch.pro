@@ -1,4 +1,4 @@
-# README.md — Virtual Launch Pro (VLP)
+# Virtual Launch Pro (VLP)
 
 ## Table of Contents
 
@@ -425,8 +425,8 @@ app/
   calendar.html
   dashboard.html
   receipts.html
-  other.html —  e.g. reports.html - TMP, TTMP, and TTTMP
-  support.html — call / appointments / support tickets
+  other.html (e.g. reports.html - TMP, TTMP, and TTTMP)
+  support.html          (call / appointments / support tickets)
   token-usage.html
 
 contracts/
@@ -449,10 +449,10 @@ resources/
 
 site/
   about.html
-  contact.html — call / appointments / support tickets
-  features.html — or #features
-  how-it-works.html — or #how-it-works
-  index.html — home
+  contact.html          (call / appointments / support tickets)
+  features.html         or #features
+  how-it-works.html     or #how-it-works
+  index.html            (home)
   pricing.html
   sign-in.html
 
@@ -572,6 +572,43 @@ Standards include:
 * deny-by-default routing
 
 Workers must document inbound routes and invariants clearly.
+
+### Shared Worker Route Surface
+
+The ecosystem maintains a **shared integration route surface** across all platform Workers.
+
+Integration routes defined in this document (authentication, accounts, memberships, notifications, billing, support, etc.) are expected to exist in every platform Worker so the ecosystem behaves consistently.
+
+Key rule:
+
+```
+Shared route surface
+Platform‑owned storage
+```
+
+This means multiple repositories may expose the **same route paths**, but the platform that governs the canonical record performs the write.
+
+Example:
+
+```
+POST /v1/memberships
+```
+
+TMP Worker writes:
+
+```
+/r2/taxpayer_memberships/{membership_id}.json
+```
+
+VLP Worker writes:
+
+```
+/r2/memberships/{membership_id}.json
+```
+
+The route surface remains consistent across TMP, TTMP, TTTMP, and VLP, while canonical storage ownership remains platform‑specific.
+
+This architecture allows frontends to interact with a **unified API design across the ecosystem** while preserving clear data ownership boundaries.
 
 ---
 
