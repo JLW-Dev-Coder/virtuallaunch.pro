@@ -14,14 +14,13 @@ const BLOG_RECENT3_HTML = path.join(BLOG_GENERATED_DIR, "recent3.html");
 const BLOG_ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
 
 // Public directories to copy as-is
-const COPY_DIRS = ["_sdk", "assets", "blog", "features", "legal", "lp", "magnets", "scripts", "styles", "va", "workers"];
+const COPY_DIRS = ["assets", "blog", "features", "legal", "scripts", "site", "workers"];
+
+// Public root files to copy as-is
+const COPY_FILES = ["BLOG.md", "MARKET.md", "README.md", "styles.css"];
 
 // Where partial sources live
 const PARTIALS_ROOT = path.join(ROOT, "partials");
-const PARTIALS_APP_SIDEBAR = path.join(ROOT, "partials", "appSidebar.html");
-const PARTIALS_APP_TOPBAR = path.join(ROOT, "partials", "appTopbar.html");
-const PARTIALS_TAXPRO_SIDEBAR = path.join(ROOT, "partials", "taxProSidebar.html");
-const PARTIALS_TAXPRO_TOPBAR = path.join(ROOT, "partials", "taxProTopbar.html");
 
 // Avoid walking into these (source tree)
 const SKIP_DIRS = new Set([".git", "dist", "node_modules"]);
@@ -115,7 +114,7 @@ async function copyDir(srcDir, destDir, options = {}) {
 
   const {
     blogFragments = {},
-    partials = null,
+    partials = {},
     transformHtmlFiles = false,
     wranglerVars = {},
   } = options;
@@ -136,7 +135,7 @@ async function copyDir(srcDir, destDir, options = {}) {
     if (transformHtmlFiles && ent.name.toLowerCase().endsWith(".html")) {
       const html = await readText(src);
       const articleSlug = isBlogArticleFile(src) ? getBlogArticleSlug(ent.name) : null;
-      const next = transformHtml(html, partials ?? {}, wranglerVars, blogFragments, articleSlug);
+      const next = transformHtml(html, partials, wranglerVars, blogFragments, articleSlug);
       await writeHtmlWithRouteVariants(dest, next);
       continue;
     }
@@ -280,15 +279,7 @@ async function loadBlogFragments() {
   return { footers, global };
 }
 
-async function main() {
-  await generateBlogManifest();
-
-  await rmDir(DIST);
-  await ensureDir(DIST);
-
-  const wranglerVars = await loadWranglerVars();
-  const blogFragments = await loadBlogFragments();
-
+async function loadPartials() {
   const partialFiles = await walk(PARTIALS_ROOT).catch(() => []);
   const partials = {};
 
@@ -298,17 +289,31 @@ async function main() {
     partials[key] = await readText(file);
   }
 
-  partials.appSidebar = await loadPartialOrEmpty(PARTIALS_APP_SIDEBAR);
-  partials.appTopbar = await loadPartialOrEmpty(PARTIALS_APP_TOPBAR);
-  partials.siteFooter = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html"));
-  partials.siteHeader = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html"));
-  partials.taxProSidebar = await loadPartialOrEmpty(PARTIALS_TAXPRO_SIDEBAR);
-  partials.taxProTopbar = await loadPartialOrEmpty(PARTIALS_TAXPRO_TOPBAR);
+  partials.footer = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html"));
+  partials.header = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html"));
 
-  partials.footer = partials.siteFooter;
-  partials.header = partials.siteHeader;
-  partials.sidebar = partials.appSidebar;
-  partials.topbar = partials.appTopbar;
+  return partials;
+}
+
+async function copyRootFiles() {
+  for (const file of COPY_FILES) {
+    const src = path.join(ROOT, file);
+    const dest = path.join(DIST, file);
+
+    if (!(await exists(src))) continue;
+    await copyFile(src, dest);
+  }
+}
+
+async function main() {
+  await generateBlogManifest();
+
+  await rmDir(DIST);
+  await ensureDir(DIST);
+
+  const blogFragments = await loadBlogFragments();
+  const partials = await loadPartials();
+  const wranglerVars = await loadWranglerVars();
 
   for (const dir of COPY_DIRS) {
     const srcDir = path.join(ROOT, dir);
@@ -320,6 +325,8 @@ async function main() {
       wranglerVars,
     });
   }
+
+  await copyRootFiles();
 
   const rootEntries = await fs.readdir(ROOT, { withFileTypes: true });
 
@@ -339,5 +346,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
-
