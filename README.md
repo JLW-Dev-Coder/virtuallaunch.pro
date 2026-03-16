@@ -1,6 +1,3 @@
-Below is the full README with the billing upgrade kept **only inside the VLP platform responsibility section**, not expanded into a separate advanced billing architecture section. I also updated the VLP responsibility block so it reflects the more customizable Stripe path without inventing a second architecture document and turning the README into a billing cult manifesto.
-
-````markdown
 # Virtual Launch Pro (VLP)
 
 ## Table of Contents
