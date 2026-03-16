@@ -12,7 +12,7 @@
   * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
   * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
 * [Dashboards](#dashboards)
-  * [Professional Dashboard (VLP)](#professional-dashboard-vlp)
+  * [Virtual Launch Pro Dashboard (VLP)](#professional-dashboard-vlp)
   * [Tax Tools Dashboard (TTTMP)](#tax-tools-dashboard-tttmp)
   * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
   * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
