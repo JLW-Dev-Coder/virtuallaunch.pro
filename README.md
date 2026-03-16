@@ -1,4 +1,4 @@
-# Virtual Launch Pro (VLP)
+# README.md — Virtual Launch Pro (VLP)
 
 ## Table of Contents
 
@@ -425,8 +425,8 @@ app/
   calendar.html
   dashboard.html
   receipts.html
-  other.html (e.g. reports.html - TMP, TTMP, and TTTMP)
-  support.html          (call / appointments / support tickets)
+  other.html —  e.g. reports.html - TMP, TTMP, and TTTMP
+  support.html — call / appointments / support tickets
   token-usage.html
 
 contracts/
@@ -449,10 +449,10 @@ resources/
 
 site/
   about.html
-  contact.html          (call / appointments / support tickets)
-  features.html         or #features
-  how-it-works.html     or #how-it-works
-  index.html            (home)
+  contact.html — call / appointments / support tickets
+  features.html — or #features
+  how-it-works.html — or #how-it-works
+  index.html — home
   pricing.html
   sign-in.html
 
