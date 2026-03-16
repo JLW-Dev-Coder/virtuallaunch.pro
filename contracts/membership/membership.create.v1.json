@@ -1,0 +1,116 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP membership creation",
+    "path": "/contracts/membership.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Membership Create",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/memberships",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/memberships/create/{membershipId}.json",
+    "receiptSource": "membership_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "memberships/{membershipId}.json"
+    },
+    "dedupeKey": "payload.membershipId",
+    "eventIdFrom": "payload.membershipId",
+    "receiptAppend": {
+      "to": "receipts/vlp/memberships/create/{membershipId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "memberships"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "membershipId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "planKey": {
+        "enum": [
+          "vlp_advanced_monthly",
+          "vlp_advanced_yearly",
+          "vlp_pro_monthly",
+          "vlp_pro_yearly",
+          "vlp_starter_monthly",
+          "vlp_starter_yearly"
+        ],
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "active",
+          "cancelled",
+          "past_due",
+          "pending",
+          "trialing"
+        ],
+        "type": "string"
+      },
+      "stripeCustomerId": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "membershipId",
+      "planKey",
+      "status"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "membershipId": "{payload.membershipId}",
+      "ok": true,
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "membership_create",
+    "version": 1
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP two-factor authentication challenge verification",
+    "path": "/contracts/auth.2fa.verify-challenge.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Auth 2Fa Verify Challenge",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/auth/2fa/challenge/verify",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/auth/2fa/challenge-verify/{accountId}.json",
+    "receiptSource": "auth_2fa_verify_challenge",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "accounts_vlp/VLP_ACCT_{accountId}.json"
+    },
+    "dedupeKey": "payload.sessionToken",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/auth/2fa/challenge-verify/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "accounts_vlp"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "otpCode": {
+        "maxLength": 6,
+        "minLength": 6,
+        "type": "string"
+      },
+      "sessionToken": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "otpCode",
+      "sessionToken"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "verified"
+    }
+  },
+  "schema": {
+    "name": "auth_2fa_verify_challenge",
+    "version": 1
+  }
+}

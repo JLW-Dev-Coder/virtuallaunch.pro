@@ -1,0 +1,114 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Stripe checkout session creation",
+    "path": "/contracts/checkout.create-session.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Checkout Create Session",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/checkout/sessions",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/checkout/sessions/{accountId}.json",
+    "receiptSource": "checkout_create_session",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "memberships/{recordId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/checkout/sessions/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "memberships"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "billingInterval": {
+        "enum": [
+          "monthly",
+          "yearly"
+        ],
+        "type": "string"
+      },
+      "cancelUrl": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "planKey": {
+        "enum": [
+          "vlp_advanced_monthly",
+          "vlp_advanced_yearly",
+          "vlp_pro_monthly",
+          "vlp_pro_yearly",
+          "vlp_starter_monthly",
+          "vlp_starter_yearly"
+        ],
+        "type": "string"
+      },
+      "successUrl": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "billingInterval",
+      "planKey",
+      "successUrl",
+      "cancelUrl"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "checkoutSessionId": "{stripe.checkoutSessionId}",
+      "ok": true,
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "checkout_create_session",
+    "version": 1
+  }
+}

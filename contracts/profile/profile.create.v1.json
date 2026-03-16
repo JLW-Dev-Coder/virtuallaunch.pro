@@ -1,0 +1,113 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP professional profile creation",
+    "path": "/contracts/profile.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Profile Create",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/profiles",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/profiles/create/{professionalId}.json",
+    "receiptSource": "profile_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "profiles/{professionalId}.json"
+    },
+    "dedupeKey": "payload.professionalId",
+    "eventIdFrom": "payload.professionalId",
+    "receiptAppend": {
+      "to": "receipts/vlp/profiles/create/{professionalId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "profiles"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "bio": {
+        "maxLength": 5000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "calBookingUrl": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "displayName": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "professionalId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "specialties": {
+        "items": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "minItems": 1,
+        "type": "array"
+      }
+    },
+    "required": [
+      "accountId",
+      "bio",
+      "displayName",
+      "professionalId",
+      "specialties"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "ok": true,
+      "professionalId": "{payload.professionalId}",
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "profile_create",
+    "version": 1
+  }
+}

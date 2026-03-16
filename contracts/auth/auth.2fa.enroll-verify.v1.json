@@ -1,0 +1,90 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP two-factor authentication enrollment verification",
+    "path": "/contracts/auth.2fa.enroll-verify.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Auth 2Fa Enroll Verify",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/auth/2fa/enroll/verify",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/auth/2fa/enroll-verify/{accountId}.json",
+    "receiptSource": "auth_2fa_enroll_verify",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "accounts_vlp/VLP_ACCT_{accountId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/auth/2fa/enroll-verify/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "accounts_vlp"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "otpCode": {
+        "maxLength": 6,
+        "minLength": 6,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "otpCode"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "enrollment_verified"
+    }
+  },
+  "schema": {
+    "name": "auth_2fa_enroll_verify",
+    "version": 1
+  }
+}

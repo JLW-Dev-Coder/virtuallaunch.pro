@@ -1,0 +1,89 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP two-factor authentication disable",
+    "path": "/contracts/auth.2fa.disable.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Auth 2Fa Disable",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/auth/2fa/disable",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/auth/2fa/disable/{accountId}.json",
+    "receiptSource": "auth_2fa_disable",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "accounts_vlp/VLP_ACCT_{accountId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/auth/2fa/disable/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "accounts_vlp"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "challengeToken": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "challengeToken"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "disabled"
+    }
+  },
+  "schema": {
+    "name": "auth_2fa_disable",
+    "version": 1
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP booking update",
+    "path": "/contracts/booking.update.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Booking Update",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/bookings/{bookingId}",
+    "method": "PATCH",
+    "receiptKeyPattern": "receipts/vlp/bookings/update/{bookingId}.json",
+    "receiptSource": "booking_update",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "bookings/{bookingId}.json"
+    },
+    "dedupeKey": "payload.bookingId",
+    "eventIdFrom": "payload.bookingId",
+    "receiptAppend": {
+      "to": "receipts/vlp/bookings/update/{bookingId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "bookings"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "bookingId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "scheduledAt": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "cancelled",
+          "completed",
+          "confirmed",
+          "pending",
+          "rescheduled"
+        ],
+        "type": "string"
+      },
+      "timezone": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "bookingId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "bookingId": "{payload.bookingId}",
+      "ok": true,
+      "status": "updated"
+    }
+  },
+  "schema": {
+    "name": "booking_update",
+    "version": 1
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP preferences update",
+    "path": "/contracts/vlp-preferences.update.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Vlp Preferences Update",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/vlp/preferences/{accountId}",
+    "method": "PATCH",
+    "receiptKeyPattern": "receipts/vlp/preferences/{accountId}.json",
+    "receiptSource": "vlp_preferences_update",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "vlp_preferences/{accountId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/preferences/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "vlp_preferences"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accentColor": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "appearance": {
+        "enum": [
+          "dark",
+          "light",
+          "system"
+        ],
+        "type": "string"
+      },
+      "defaultDashboard": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "timezone": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "updated"
+    }
+  },
+  "schema": {
+    "name": "vlp_preferences_update",
+    "version": 1
+  }
+}

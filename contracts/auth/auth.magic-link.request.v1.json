@@ -1,0 +1,83 @@
+{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP magic link request",
+    "path": "/contracts/auth.magic-link.request.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Auth Magic Link Request",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/auth/magic-link/request",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/auth/magic-link/request/{email}.json",
+    "receiptSource": "auth_magic_link_request",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.email",
+    "eventIdFrom": "payload.email",
+    "receiptAppend": {
+      "to": "receipts/vlp/auth/magic-link/request/{email}.json"
+    },
+    "writeOrder": [
+      "receiptAppend"
+    ],
+    "writes": []
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "email": {
+        "format": "email",
+        "type": "string"
+      },
+      "redirectUri": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "email",
+      "redirectUri"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "email": "{payload.email}",
+      "ok": true,
+      "status": "requested"
+    }
+  },
+  "schema": {
+    "name": "auth_magic_link_request",
+    "version": 1
+  }
+}

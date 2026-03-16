@@ -1,0 +1,99 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP support ticket update",
+    "path": "/contracts/support-ticket.update.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Support Ticket Update",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/support/tickets/{ticketId}",
+    "method": "PATCH",
+    "receiptKeyPattern": "receipts/vlp/support-tickets/update/{ticketId}.json",
+    "receiptSource": "support_ticket_update",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "support_tickets/{ticketId}.json"
+    },
+    "dedupeKey": "payload.ticketId",
+    "eventIdFrom": "payload.ticketId",
+    "receiptAppend": {
+      "to": "receipts/vlp/support-tickets/update/{ticketId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "support_tickets"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "message": {
+        "maxLength": 5000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "closed",
+          "in_progress",
+          "open",
+          "reopened",
+          "resolved"
+        ],
+        "type": "string"
+      },
+      "ticketId": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "ticketId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "ok": true,
+      "status": "updated",
+      "ticketId": "{payload.ticketId}"
+    }
+  },
+  "schema": {
+    "name": "support_ticket_update",
+    "version": 1
+  }
+}

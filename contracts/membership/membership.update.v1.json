@@ -1,0 +1,109 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP membership update",
+    "path": "/contracts/membership.update.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Membership Update",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/memberships/{membershipId}",
+    "method": "PATCH",
+    "receiptKeyPattern": "receipts/vlp/memberships/update/{membershipId}.json",
+    "receiptSource": "membership_update",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "memberships/{membershipId}.json"
+    },
+    "dedupeKey": "payload.membershipId",
+    "eventIdFrom": "payload.membershipId",
+    "receiptAppend": {
+      "to": "receipts/vlp/memberships/update/{membershipId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "memberships"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "membershipId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "planKey": {
+        "enum": [
+          "vlp_advanced_monthly",
+          "vlp_advanced_yearly",
+          "vlp_pro_monthly",
+          "vlp_pro_yearly",
+          "vlp_starter_monthly",
+          "vlp_starter_yearly"
+        ],
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "active",
+          "cancelled",
+          "past_due",
+          "pending",
+          "trialing"
+        ],
+        "type": "string"
+      },
+      "stripeSubscriptionId": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "membershipId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "membershipId": "{payload.membershipId}",
+      "ok": true,
+      "status": "updated"
+    }
+  },
+  "schema": {
+    "name": "membership_update",
+    "version": 1
+  }
+}

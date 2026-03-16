@@ -1,0 +1,112 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP booking creation",
+    "path": "/contracts/booking.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Booking Create",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/bookings",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/bookings/create/{bookingId}.json",
+    "receiptSource": "booking_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "bookings/{bookingId}.json"
+    },
+    "dedupeKey": "payload.bookingId",
+    "eventIdFrom": "payload.bookingId",
+    "receiptAppend": {
+      "to": "receipts/vlp/bookings/create/{bookingId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "bookings"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "bookingId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "bookingType": {
+        "enum": [
+          "demo_intro",
+          "support"
+        ],
+        "type": "string"
+      },
+      "professionalId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "scheduledAt": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "timezone": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "bookingId",
+      "bookingType",
+      "professionalId",
+      "scheduledAt",
+      "timezone"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "bookingId": "{payload.bookingId}",
+      "ok": true,
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "booking_create",
+    "version": 1
+  }
+}

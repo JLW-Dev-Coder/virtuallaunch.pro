@@ -1,0 +1,88 @@
+{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP SAML assertion consumer service",
+    "path": "/contracts/auth.sso.saml.acs.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Auth Sso Saml Acs",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/auth/sso/saml/acs",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/auth/sso/saml/acs/{relayState}.json",
+    "receiptSource": "auth_sso_saml_acs",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "accounts_vlp/VLP_ACCT_{recordId}.json"
+    },
+    "dedupeKey": "payload.relayState",
+    "eventIdFrom": "payload.relayState",
+    "receiptAppend": {
+      "to": "receipts/vlp/auth/sso/saml/acs/{relayState}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "accounts_vlp"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "relayState": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "samlResponse": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "relayState",
+      "samlResponse"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "ok": true,
+      "status": "assertion_consumed"
+    }
+  },
+  "schema": {
+    "name": "auth_sso_saml_acs",
+    "version": 1
+  }
+}

@@ -1,0 +1,480 @@
+{
+  "generatedFrom": [
+    "README-VLP.txt",
+    "TOML.txt"
+  ],
+  "registry": [
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/account.create.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/accounts",
+      "name": "account_create",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Account Create",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/account.get-by-email.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/accounts/by-email/{email}",
+      "name": "account_get_by_email",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Account Get By Email",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/account.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/accounts/{accountId}",
+      "name": "account_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Account Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/account.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/accounts/{accountId}",
+      "name": "account_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Account Update",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/auth.2fa.disable.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/2fa/disable",
+      "name": "auth_2fa_disable",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth 2Fa Disable",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/auth.2fa.enroll-init.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/2fa/enroll/init",
+      "name": "auth_2fa_enroll_init",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth 2Fa Enroll Init",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/auth.2fa.enroll-verify.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/2fa/enroll/verify",
+      "name": "auth_2fa_enroll_verify",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth 2Fa Enroll Verify",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/auth.2fa.status.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/2fa/status/{accountId}",
+      "name": "auth_2fa_status",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth 2Fa Status",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.2fa.verify-challenge.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/2fa/challenge/verify",
+      "name": "auth_2fa_verify_challenge",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth 2Fa Verify Challenge",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.google.callback.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/google/callback",
+      "name": "auth_google_callback",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Google Callback",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.google.start.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/google/start",
+      "name": "auth_google_start",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Google Start",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/auth.logout.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/logout",
+      "name": "auth_logout",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Logout",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.magic-link.request.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/magic-link/request",
+      "name": "auth_magic_link_request",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Magic Link Request",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.magic-link.verify.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/magic-link/verify",
+      "name": "auth_magic_link_verify",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Magic Link Verify",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.session.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/session",
+      "name": "auth_session_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Session Get",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.sso.oidc.callback.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/sso/oidc/callback",
+      "name": "auth_sso_oidc_callback",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Sso Oidc Callback",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.sso.oidc.start.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/sso/oidc/start",
+      "name": "auth_sso_oidc_start",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Sso Oidc Start",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.sso.saml.acs.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/auth/sso/saml/acs",
+      "name": "auth_sso_saml_acs",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Sso Saml Acs",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/auth.sso.saml.start.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/auth/sso/saml/start",
+      "name": "auth_sso_saml_start",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Auth Sso Saml Start",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/booking.create.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/bookings",
+      "name": "booking_create",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Booking Create",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/booking.get-by-account.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/bookings/by-account/{accountId}",
+      "name": "booking_get_by_account",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Booking Get By Account",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/booking.get-by-professional.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/bookings/by-professional/{professionalId}",
+      "name": "booking_get_by_professional",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Booking Get By Professional",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/booking.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/bookings/{bookingId}",
+      "name": "booking_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Booking Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/booking.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/bookings/{bookingId}",
+      "name": "booking_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Booking Update",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/checkout.create-session.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/checkout/sessions",
+      "name": "checkout_create_session",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Checkout Create Session",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/checkout.get-status.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/checkout/status",
+      "name": "checkout_get_status",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Checkout Get Status",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/membership.create.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/memberships",
+      "name": "membership_create",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Membership Create",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/membership.get-by-account.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/memberships/by-account/{accountId}",
+      "name": "membership_get_by_account",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Membership Get By Account",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/membership.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/memberships/{membershipId}",
+      "name": "membership_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Membership Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/membership.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/memberships/{membershipId}",
+      "name": "membership_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Membership Update",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/notifications.in-app.create.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/notifications/in-app",
+      "name": "notifications_in_app_create",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Notifications In App Create",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/notifications.in-app.list.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/notifications/in-app",
+      "name": "notifications_in_app_list",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Notifications In App List",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/notifications.preferences.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/notifications/preferences/{accountId}",
+      "name": "notifications_preferences_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Notifications Preferences Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/notifications.preferences.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/notifications/preferences/{accountId}",
+      "name": "notifications_preferences_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Notifications Preferences Update",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/notifications.sms.send.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/notifications/sms/send",
+      "name": "notifications_sms_send",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Notifications Sms Send",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/pricing.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/pricing",
+      "name": "pricing_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Pricing Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/profile.create.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/profiles",
+      "name": "profile_create",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Profile Create",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/profile.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/profiles/{professionalId}",
+      "name": "profile_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Profile Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/profile.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/profiles/{professionalId}",
+      "name": "profile_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Profile Update",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/support-ticket.create.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/support/tickets",
+      "name": "support_ticket_create",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Support Ticket Create",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/support-ticket.get-by-account.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/support/tickets/by-account/{accountId}",
+      "name": "support_ticket_get_by_account",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Support Ticket Get By Account",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/support-ticket.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/support/tickets/{ticketId}",
+      "name": "support_ticket_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Support Ticket Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/support-ticket.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/support/tickets/{ticketId}",
+      "name": "support_ticket_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Support Ticket Update",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/vlp-preferences.get.v1.json",
+      "deliveryMethod": "GET",
+      "endpoint": "/v1/vlp/preferences/{accountId}",
+      "name": "vlp_preferences_get",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Vlp Preferences Get",
+      "version": 1
+    },
+    {
+      "authRequired": true,
+      "contractPath": "/contracts/vlp-preferences.update.v1.json",
+      "deliveryMethod": "PATCH",
+      "endpoint": "/v1/vlp/preferences/{accountId}",
+      "name": "vlp_preferences_update",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Vlp Preferences Update",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/webhooks.stripe.receive.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/webhooks/stripe",
+      "name": "webhooks_stripe_receive",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Webhooks Stripe Receive",
+      "version": 1
+    },
+    {
+      "authRequired": false,
+      "contractPath": "/contracts/webhooks.twilio.receive.v1.json",
+      "deliveryMethod": "POST",
+      "endpoint": "/v1/webhooks/twilio",
+      "name": "webhooks_twilio_receive",
+      "source": "Virtual Launch Pro",
+      "title": "Virtual Launch Pro \u2014 Webhooks Twilio Receive",
+      "version": 1
+    }
+  ],
+  "source": "Virtual Launch Pro",
+  "version": 1
+}

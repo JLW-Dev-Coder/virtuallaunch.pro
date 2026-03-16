@@ -1,0 +1,95 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP SMS notification send",
+    "path": "/contracts/notifications.sms.send.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Notifications Sms Send",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/notifications/sms/send",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/notifications/sms/{accountId}.json",
+    "receiptSource": "notification_sms_send",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "vlp_preferences/{accountId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/notifications/sms/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "vlp_preferences"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "message": {
+        "maxLength": 1600,
+        "minLength": 1,
+        "type": "string"
+      },
+      "phone": {
+        "minLength": 7,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "message",
+      "phone"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "queued"
+    }
+  },
+  "schema": {
+    "name": "notifications_sms_send",
+    "version": 1
+  }
+}

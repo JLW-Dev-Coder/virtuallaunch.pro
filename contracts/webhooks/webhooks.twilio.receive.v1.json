@@ -1,0 +1,102 @@
+{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Twilio webhook receipt",
+    "path": "/contracts/webhooks.twilio.receive.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Webhooks Twilio Receive",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/webhooks/twilio",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/webhooks/twilio/{eventId}.json",
+    "receiptSource": "twilio_webhook",
+    "signature": {
+      "header": "X-Twilio-Signature",
+      "required": true,
+      "secretEnvVar": "TWILIO_WEBHOOK_SECRET"
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "vlp_preferences/{recordId}.json"
+    },
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/webhooks/twilio/{eventId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "vlp_preferences"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "messageSid": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "messageStatus": {
+        "enum": [
+          "accepted",
+          "delivered",
+          "failed",
+          "queued",
+          "sending",
+          "sent",
+          "undelivered"
+        ],
+        "type": "string"
+      }
+    },
+    "required": [
+      "eventId",
+      "messageSid",
+      "messageStatus"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "eventId": "{payload.eventId}",
+      "ok": true,
+      "status": "received"
+    }
+  },
+  "schema": {
+    "name": "webhooks_twilio_receive",
+    "version": 1
+  }
+}

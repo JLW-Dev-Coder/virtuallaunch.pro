@@ -1,0 +1,113 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP account update",
+    "path": "/contracts/account.update.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Account Update",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/accounts/{accountId}",
+    "method": "PATCH",
+    "receiptKeyPattern": "receipts/vlp/accounts/update/{accountId}.json",
+    "receiptSource": "account_update",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "accounts_vlp/VLP_ACCT_{accountId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/accounts/update/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "accounts_vlp"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "email": {
+        "format": "email",
+        "type": "string"
+      },
+      "firstName": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "lastName": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "phone": {
+        "minLength": 7,
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "active",
+          "archived",
+          "disabled",
+          "pending"
+        ],
+        "type": "string"
+      },
+      "timezone": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "updated"
+    }
+  },
+  "schema": {
+    "name": "account_update",
+    "version": 1
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP in-app notification creation",
+    "path": "/contracts/notifications.in-app.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Notifications In App Create",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/notifications/in-app",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/notifications/in-app/{notificationId}.json",
+    "receiptSource": "notification_in_app_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "notifications/in-app/{notificationId}.json"
+    },
+    "dedupeKey": "payload.notificationId",
+    "eventIdFrom": "payload.notificationId",
+    "receiptAppend": {
+      "to": "receipts/vlp/notifications/in-app/{notificationId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "notifications_in_app"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "message": {
+        "maxLength": 5000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "notificationId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "severity": {
+        "enum": [
+          "error",
+          "info",
+          "success",
+          "warning"
+        ],
+        "type": "string"
+      },
+      "title": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "message",
+      "notificationId",
+      "severity",
+      "title"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "notificationId": "{payload.notificationId}",
+      "ok": true,
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "notifications_in_app_create",
+    "version": 1
+  }
+}

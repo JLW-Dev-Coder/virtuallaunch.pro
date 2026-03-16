@@ -1,0 +1,124 @@
+{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP account creation",
+    "path": "/contracts/account.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro \u2014 Account Create",
+    "usedOnPages": [],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/accounts",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/accounts/create/{accountId}.json",
+    "receiptSource": "account_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "canonicalUpsert": {
+      "target": "accounts_vlp/VLP_ACCT_{accountId}.json"
+    },
+    "dedupeKey": "payload.accountId",
+    "eventIdFrom": "payload.accountId",
+    "receiptAppend": {
+      "to": "receipts/vlp/accounts/create/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "accounts_vlp"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "email": {
+        "format": "email",
+        "type": "string"
+      },
+      "firstName": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "lastName": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "platform": {
+        "enum": [
+          "tmp",
+          "ttmp",
+          "tttmp",
+          "vlp"
+        ],
+        "type": "string"
+      },
+      "role": {
+        "enum": [
+          "admin",
+          "member",
+          "professional",
+          "taxpayer"
+        ],
+        "type": "string"
+      },
+      "source": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "email",
+      "firstName",
+      "lastName",
+      "platform",
+      "role",
+      "source"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "validation_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "ok": true,
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "account_create",
+    "version": 1
+  }
+}

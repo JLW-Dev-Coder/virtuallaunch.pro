@@ -1,0 +1,45 @@
+{
+  "generatedFrom": [
+    "README-VLP.txt",
+    "TOML.txt"
+  ],
+  "registry": [
+    {
+      "contractPath": "/contracts/webhooks.stripe.receive.v1.json",
+      "endpoint": "/v1/webhooks/stripe",
+      "events": [
+        "checkout.session.completed",
+        "customer.subscription.created",
+        "customer.subscription.deleted",
+        "customer.subscription.updated",
+        "invoice.paid",
+        "invoice.payment_failed",
+        "payment_intent.payment_failed",
+        "payment_intent.succeeded"
+      ],
+      "provider": "stripe",
+      "signatureHeader": "Stripe-Signature",
+      "signatureSecretEnvVar": "STRIPE_WEBHOOK_SECRET",
+      "version": 1
+    },
+    {
+      "contractPath": "/contracts/webhooks.twilio.receive.v1.json",
+      "endpoint": "/v1/webhooks/twilio",
+      "events": [
+        "accepted",
+        "delivered",
+        "failed",
+        "queued",
+        "sending",
+        "sent",
+        "undelivered"
+      ],
+      "provider": "twilio",
+      "signatureHeader": "X-Twilio-Signature",
+      "signatureSecretEnvVar": "TWILIO_WEBHOOK_SECRET",
+      "version": 1
+    }
+  ],
+  "source": "Virtual Launch Pro",
+  "version": 1
+}
