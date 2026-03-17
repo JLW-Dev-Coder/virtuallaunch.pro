@@ -184,7 +184,7 @@
                 <div class="text-4xl font-extrabold" data-price="free">$0</div>
                 <div class="mt-2 text-sm text-white/70" data-price-suffix="free">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">Entry access for getting inside the ecosystem before moving into recurring paid capacity.</p>
+              <p class="mt-5 text-sm text-white/70">For firms getting started, exploring the platform, and easing into paid usage without overbuilding too early.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="free">0 transcript tokens</span></li>
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="free">0 tax tool game tokens</span></li>
@@ -206,7 +206,7 @@
                 <div class="text-4xl font-extrabold" data-price="starter">$79</div>
                 <div class="mt-2 text-sm text-white/70" data-price-suffix="starter">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">Paid entry membership for smaller firms that need recurring usage without overcommitting on day one, a classic human pastime.</p>
+              <p class="mt-5 text-sm text-white/70">For smaller firms needing recurring usage, practical access, and enough room to build without overcommitting early.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="starter">30 transcript tokens</span></li>
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="starter">30 tax tool game tokens</span></li>
@@ -221,14 +221,14 @@
 
             <article class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft" data-plan="pro">
               <div class="flex items-center justify-between">
-                <div class="text-lg font-extrabold">Pro</div>
+                <div class="text-lg font-extrabold">Scale</div>
                 <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
               </div>
               <div class="mt-4">
                 <div class="text-4xl font-extrabold" data-price="pro">$199</div>
                 <div class="mt-2 text-sm text-white/70" data-price-suffix="pro">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">For active firms with enough client movement to justify better capacity, better visibility, and fewer operational migraines.</p>
+              <p class="mt-5 text-sm text-white/70">For active firms needing stronger capacity, better visibility, and smoother operations without constant delivery friction.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="pro">100 transcript tokens</span></li>
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="pro">120 tax tool game tokens</span></li>
@@ -236,9 +236,10 @@
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="pro">Platform fee: 12%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="pro">Start Pro</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="pro">Get started</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
+            </article>
             </article>
 
             <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft" data-plan="advanced">
@@ -258,7 +259,7 @@
                 <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="advanced">Platform fee: 12%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="advanced">Start Advanced</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="advanced">Get started</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
@@ -482,13 +483,13 @@
       function asPlanCycle(source, fallbackCycle) {
         return {
           billingObject: String(readFirst(source, ['billingObject', 'priceId', 'price_id', 'stripePriceId', 'stripe_price_id']) || ''),
-          checkoutHref: String(readFirst(source, ['checkoutHref', 'checkoutUrl', 'checkout_url', 'href']) || '#top'),
+          checkoutHref: String(readFirst(source, ['checkoutHref', 'checkoutUrl', 'checkout_url', 'href']) || ''),
           planKey: String(readFirst(source, ['planKey', 'plan_key', 'key', 'slug']) || ''),
           platformFee: String(readFirst(source, ['platformFee', 'platform_fee_percent', 'platformFeePercent', 'feePercent']) || ''),
-          price: String(readFirst(source, ['cost', 'monthlyCost', 'yearlyCost', 'price', 'priceAmount', 'price_amount']) || '0'),
+          price: String(readFirst(source, ['cost', 'monthlyCost', 'yearlyCost', 'price', 'priceAmount', 'price_amount']) || ''),
           suffix: fallbackCycle === 'yearly' ? '/yr' : '/mo',
-          taxGameTokens: String(readFirst(source, ['taxGameTokens', 'tax_tool_tokens_monthly', 'taxToolTokens', 'tax_tool_game_tokens']) || '0'),
-          transcriptTokens: String(readFirst(source, ['transcriptTokens', 'transcript_tokens_monthly', 'transcriptTokenCount']) || '0')
+          taxGameTokens: String(readFirst(source, ['taxGameTokens', 'tax_tool_tokens_monthly', 'taxToolTokens', 'tax_tool_game_tokens']) || ''),
+          transcriptTokens: String(readFirst(source, ['transcriptTokens', 'transcript_tokens_monthly', 'transcriptTokenCount']) || '')
         };
       }
 
@@ -583,25 +584,32 @@
           var comparePlanKey = document.querySelector('[data-compare-plan-key="' + plan + '"]');
           var comparePlatformFee = document.querySelector('[data-compare-platform-fee="' + plan + '"]');
           var compareBillingObject = document.querySelector('[data-compare-billing-object="' + plan + '"]');
+          var safePrice = data.price || '0';
+          var safeTranscriptTokens = data.transcriptTokens || '0';
+          var safeTaxGameTokens = data.taxGameTokens || '0';
+          var safePlanKey = data.planKey || '';
+          var safePlatformFee = data.platformFee || '0';
+          var safeBillingObject = data.billingObject || '';
+          var safeCheckoutHref = data.checkoutHref || '#top';
 
-          if (price) price.textContent = '$' + data.price;
-          if (suffix) suffix.textContent = data.suffix;
-          if (transcripts) transcripts.textContent = data.transcriptTokens + ' transcript tokens';
-          if (taxgame) taxgame.textContent = data.taxGameTokens + ' tax tool game tokens';
-          if (planKey) planKey.textContent = 'Plan key: ' + data.planKey;
-          if (platformFee) platformFee.textContent = 'Platform fee: ' + data.platformFee + '%';
+          if (price) price.textContent = '$' + safePrice;
+          if (suffix) suffix.textContent = data.suffix || (cycle === 'yearly' ? '/yr' : '/mo');
+          if (transcripts) transcripts.textContent = safeTranscriptTokens + ' transcript tokens';
+          if (taxgame) taxgame.textContent = safeTaxGameTokens + ' tax tool game tokens';
+          if (planKey) planKey.textContent = 'Plan key: ' + safePlanKey;
+          if (platformFee) platformFee.textContent = 'Platform fee: ' + safePlatformFee + '%';
           if (checkout) {
-            checkout.href = data.checkoutHref;
-            checkout.dataset.billingObject = data.billingObject;
-            checkout.dataset.planKey = data.planKey;
+            checkout.href = safeCheckoutHref;
+            checkout.dataset.billingObject = safeBillingObject;
+            checkout.dataset.planKey = safePlanKey;
             checkout.dataset.billingCycle = cycle;
           }
-          if (comparePrice) comparePrice.textContent = '$' + data.price;
-          if (compareTranscripts) compareTranscripts.textContent = data.transcriptTokens;
-          if (compareTaxgame) compareTaxgame.textContent = data.taxGameTokens;
-          if (comparePlanKey) comparePlanKey.textContent = data.planKey;
-          if (comparePlatformFee) comparePlatformFee.textContent = data.platformFee + '%';
-          if (compareBillingObject) compareBillingObject.textContent = data.billingObject;
+          if (comparePrice) comparePrice.textContent = '$' + safePrice;
+          if (compareTranscripts) compareTranscripts.textContent = safeTranscriptTokens;
+          if (compareTaxgame) compareTaxgame.textContent = safeTaxGameTokens;
+          if (comparePlanKey) comparePlanKey.textContent = safePlanKey;
+          if (comparePlatformFee) comparePlatformFee.textContent = safePlatformFee + '%';
+          if (compareBillingObject) compareBillingObject.textContent = safeBillingObject;
         });
 
         var monthlyBtn = document.getElementById('billing-monthly');
