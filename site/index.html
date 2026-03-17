@@ -349,7 +349,7 @@
           <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
           <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the membership that fits your stage</h2>
           <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-            Choose a monthly membership based on transcript capacity, tax tool engagement capacity, and lead access inside the network. When a taxpayer converts to a paying client through the platform intake flow, a {{VLP_PLATFORM_FEE_PERCENT}}% professional platform fee is applied before the case is assigned.
+            Choose a monthly membership based on transcript capacity, tax tool engagement capacity, and lead access inside the network. When a taxpayer converts to a paying client through the platform intake flow, a <span data-platform-fee-global>12%</span> professional platform fee is applied before the case is assigned.
           </p>
         </div>
 
@@ -360,18 +360,18 @@
               <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for testing</span>
             </div>
             <div class="mt-4">
-              <div class="text-4xl font-extrabold">${{VLP_STARTER_MONTHLY_COST}}</div>
-              <div class="mt-2 text-sm text-white/70">/mo</div>
+              <div class="text-4xl font-extrabold" data-price="starter">$79</div>
+              <div class="mt-2 text-sm text-white/70" data-price-suffix="starter">/mo</div>
             </div>
             <p class="mt-5 text-sm text-white/70">Entry network membership for firms beginning with recurring monitoring and lighter monthly usage.</p>
             <ul class="mt-6 space-y-3 text-sm text-white/75">
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="starter">30 transcript tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="starter">30 tax tool game tokens</span></li>
               <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Active directory listing</span></li>
               <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Access to taxpayer service pool</span></li>
             </ul>
             <div class="mt-8 flex gap-3">
-              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Get started</a>
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="starter">Get started</a>
               <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
             </div>
           </div>
@@ -382,18 +382,18 @@
               <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
             </div>
             <div class="mt-4">
-              <div class="text-4xl font-extrabold">${{VLP_PRO_MONTHLY_COST}}</div>
-              <div class="mt-2 text-sm text-white/70">/mo</div>
+              <div class="text-4xl font-extrabold" data-price="pro">$199</div>
+              <div class="mt-2 text-sm text-white/70" data-price-suffix="pro">/mo</div>
             </div>
             <p class="mt-5 text-sm text-white/70">For active firms serving multiple taxpayers each month and needing stronger network visibility and capacity.</p>
             <ul class="mt-6 space-y-3 text-sm text-white/75">
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="pro">100 transcript tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="pro">120 tax tool game tokens</span></li>
               <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Featured network listing</span></li>
               <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Priority taxpayer pool access</span></li>
             </ul>
             <div class="mt-8 flex gap-3">
-              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Pro</a>
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="pro">Start Pro</a>
               <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
             </div>
           </div>
@@ -404,18 +404,18 @@
               <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For higher volume</span>
             </div>
             <div class="mt-4">
-              <div class="text-4xl font-extrabold">${{VLP_ADVANCED_MONTHLY_COST}}</div>
-              <div class="mt-2 text-sm text-white/70">/mo</div>
+              <div class="text-4xl font-extrabold" data-price="advanced">$399</div>
+              <div class="mt-2 text-sm text-white/70" data-price-suffix="advanced">/mo</div>
             </div>
             <p class="mt-5 text-sm text-white/70">For firms with heavier taxpayer volume, higher transcript demand, and broader staff usage each month.</p>
             <ul class="mt-6 space-y-3 text-sm text-white/75">
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="advanced">250 transcript tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="advanced">300 tax tool game tokens</span></li>
               <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Top-tier network promotion</span></li>
               <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Early access to taxpayer cases</span></li>
             </ul>
             <div class="mt-8 flex gap-3">
-              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Advanced</a>
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="advanced">Start Advanced</a>
               <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
             </div>
           </div>
@@ -615,9 +615,180 @@
     (function () {
       function boot() {
         initArtifacts();
+        initPricing();
         if (window.lucide && window.lucide.createIcons) {
           window.lucide.createIcons();
         }
+      }
+
+      function initPricing() {
+        var PRICING_URL = 'https://api.virtuallaunch.pro/v1/pricing';
+        var defaults = {
+          advanced: {
+            monthly: {
+              billingObject: 'price_1T9AXX9ROeyeXOqef7Ja1Iig',
+              checkoutHref: '#top',
+              platformFee: '12',
+              price: '399',
+              suffix: '/mo',
+              taxGameTokens: '300',
+              transcriptTokens: '250'
+            }
+          },
+          pro: {
+            monthly: {
+              billingObject: 'price_1T9AUi9ROeyeXOqeqyzsSOYV',
+              checkoutHref: '#top',
+              platformFee: '12',
+              price: '199',
+              suffix: '/mo',
+              taxGameTokens: '120',
+              transcriptTokens: '100'
+            }
+          },
+          starter: {
+            monthly: {
+              billingObject: 'price_1T9APS9ROeyeXOqeOWjA4sq3',
+              checkoutHref: '#top',
+              platformFee: '12',
+              price: '79',
+              suffix: '/mo',
+              taxGameTokens: '30',
+              transcriptTokens: '30'
+            }
+          }
+        };
+
+        function readFirst(source, keys) {
+          for (var i = 0; i < keys.length; i += 1) {
+            var key = keys[i];
+            if (source && source[key] != null && source[key] !== '') return source[key];
+          }
+          return '';
+        }
+
+        function normalizePlan(value) {
+          return String(value || '')
+            .trim()
+            .toLowerCase()
+            .replace(/^vlp_/, '')
+            .replace(/[^a-z0-9]+/g, '_')
+            .replace(/_(monthly|yearly)$/, '');
+        }
+
+        function normalizeCycle(source) {
+          var raw = String(readFirst(source, ['billingCycle', 'billing_cycle', 'interval', 'frequency']) || '').toLowerCase();
+          return raw.indexOf('year') !== -1 ? 'yearly' : 'monthly';
+        }
+
+        function asPlanCycle(source) {
+          return {
+            billingObject: String(readFirst(source, ['billingObject', 'priceId', 'price_id', 'stripePriceId', 'stripe_price_id']) || ''),
+            checkoutHref: String(readFirst(source, ['checkoutHref', 'checkoutUrl', 'checkout_url', 'href']) || ''),
+            platformFee: String(readFirst(source, ['platformFee', 'platform_fee_percent', 'platformFeePercent', 'feePercent']) || ''),
+            price: String(readFirst(source, ['cost', 'monthlyCost', 'price', 'priceAmount', 'price_amount']) || ''),
+            suffix: '/mo',
+            taxGameTokens: String(readFirst(source, ['taxGameTokens', 'tax_tool_tokens_monthly', 'taxToolTokens', 'tax_tool_game_tokens']) || ''),
+            transcriptTokens: String(readFirst(source, ['transcriptTokens', 'transcript_tokens_monthly', 'transcriptTokenCount']) || '')
+          };
+        }
+
+        function mergeCycle(target, source) {
+          return {
+            billingObject: source.billingObject || target.billingObject,
+            checkoutHref: source.checkoutHref || target.checkoutHref,
+            platformFee: source.platformFee || target.platformFee,
+            price: source.price || target.price,
+            suffix: source.suffix || target.suffix,
+            taxGameTokens: source.taxGameTokens || target.taxGameTokens,
+            transcriptTokens: source.transcriptTokens || target.transcriptTokens
+          };
+        }
+
+        function mergePayload(payload) {
+          var buckets = [];
+          if (Array.isArray(payload)) buckets = payload;
+          if (payload && Array.isArray(payload.plans)) buckets = payload.plans;
+          if (payload && Array.isArray(payload.data)) buckets = payload.data;
+          if (payload && Array.isArray(payload.pricing)) buckets = payload.pricing;
+          if (!buckets.length && payload && payload.plans && typeof payload.plans === 'object') {
+            Object.keys(payload.plans).forEach(function (key) {
+              buckets.push(Object.assign({ plan: key }, payload.plans[key]));
+            });
+          }
+          if (!buckets.length && payload && payload.pricing && typeof payload.pricing === 'object') {
+            Object.keys(payload.pricing).forEach(function (key) {
+              buckets.push(Object.assign({ plan: key }, payload.pricing[key]));
+            });
+          }
+
+          buckets.forEach(function (entry) {
+            var plan = normalizePlan(readFirst(entry, ['plan', 'planKey', 'plan_key', 'slug', 'name']));
+            if (!plan || !defaults[plan]) return;
+
+            if (entry.monthly && typeof entry.monthly === 'object') {
+              defaults[plan].monthly = mergeCycle(defaults[plan].monthly, asPlanCycle(entry.monthly));
+              return;
+            }
+
+            var cycle = normalizeCycle(entry);
+            if (cycle !== 'monthly') return;
+            defaults[plan].monthly = mergeCycle(defaults[plan].monthly, asPlanCycle(entry));
+          });
+        }
+
+        function applyPlan(plan) {
+          var config = defaults[plan] && defaults[plan].monthly;
+          if (!config) return;
+
+          var priceNode = document.querySelector('[data-price="' + plan + '"]');
+          var suffixNode = document.querySelector('[data-price-suffix="' + plan + '"]');
+          var transcriptNode = document.querySelector('[data-transcripts="' + plan + '"]');
+          var taxNode = document.querySelector('[data-taxgame="' + plan + '"]');
+          var checkoutNode = document.querySelector('[data-checkout-link="' + plan + '"]');
+
+          if (priceNode) priceNode.textContent = '$' + config.price;
+          if (suffixNode) suffixNode.textContent = config.suffix;
+          if (transcriptNode) transcriptNode.textContent = config.transcriptTokens + ' transcript tokens';
+          if (taxNode) taxNode.textContent = config.taxGameTokens + ' tax tool game tokens';
+          if (checkoutNode) {
+            checkoutNode.href = config.checkoutHref || '#top';
+            checkoutNode.dataset.billingObject = config.billingObject || '';
+          }
+        }
+
+        function applyGlobalFee() {
+          var fee = defaults.starter.monthly.platformFee || defaults.pro.monthly.platformFee || defaults.advanced.monthly.platformFee || '12';
+          var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-platform-fee-global]'));
+          nodes.forEach(function (node) {
+            node.textContent = fee + '%';
+          });
+        }
+
+        function applyPricing() {
+          ['advanced', 'pro', 'starter'].forEach(applyPlan);
+          applyGlobalFee();
+        }
+
+        applyPricing();
+
+        fetch(PRICING_URL, {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+          .then(function (response) {
+            if (!response.ok) throw new Error('Pricing request failed with status ' + response.status);
+            return response.json();
+          })
+          .then(function (payload) {
+            mergePayload(payload);
+            applyPricing();
+          })
+          .catch(function (error) {
+            console.error('Failed to hydrate pricing from /v1/pricing.', error);
+          });
       }
 
       function initArtifacts() {
