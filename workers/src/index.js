@@ -100,6 +100,12 @@ const ROUTES = [
   { method: 'POST', pattern: '/v1/auth/2fa/disable',               handler: stub },
 
   // -------------------------------------------------------------------------
+  // CONTACT
+  // -------------------------------------------------------------------------
+
+  { method: 'POST', pattern: '/v1/contact/submit', handler: stub },
+
+  // -------------------------------------------------------------------------
   // ACCOUNTS
   // -------------------------------------------------------------------------
 
@@ -134,6 +140,7 @@ const ROUTES = [
   { method: 'POST',  pattern: '/v1/billing/subscriptions/:membership_id/cancel', handler: stub },
   { method: 'POST',  pattern: '/v1/billing/portal/sessions',                     handler: stub },
   { method: 'POST',  pattern: '/v1/billing/tokens/purchase',                     handler: stub },
+  { method: 'GET',   pattern: '/v1/billing/receipts/:account_id',                handler: stub },
 
   // -------------------------------------------------------------------------
   // CHECKOUT
@@ -164,9 +171,10 @@ const ROUTES = [
   // PROFILES
   // -------------------------------------------------------------------------
 
-  { method: 'POST',  pattern: '/v1/profiles',                    handler: stub },
-  { method: 'GET',   pattern: '/v1/profiles/:professional_id',   handler: stub },
-  { method: 'PATCH', pattern: '/v1/profiles/:professional_id',   handler: stub },
+  { method: 'POST',  pattern: '/v1/profiles',                           handler: stub },
+  { method: 'GET',   pattern: '/v1/profiles/public/:professional_id', handler: stub },
+  { method: 'GET',   pattern: '/v1/profiles/:professional_id',        handler: stub },
+  { method: 'PATCH', pattern: '/v1/profiles/:professional_id',        handler: stub },
 
   // -------------------------------------------------------------------------
   // SUPPORT TICKETS
@@ -191,7 +199,15 @@ const ROUTES = [
   // TOKENS
   // -------------------------------------------------------------------------
 
-  { method: 'GET', pattern: '/v1/tokens/:account_id', handler: stub },
+  { method: 'GET', pattern: '/v1/tokens/balance/:account_id', handler: stub },
+  { method: 'GET', pattern: '/v1/tokens/usage/:account_id',   handler: stub },
+
+  // -------------------------------------------------------------------------
+  // VLP PREFERENCES
+  // -------------------------------------------------------------------------
+
+  { method: 'GET',   pattern: '/v1/vlp/preferences/:account_id', handler: stub },
+  { method: 'PATCH', pattern: '/v1/vlp/preferences/:account_id', handler: stub },
 ];
 
 // ---------------------------------------------------------------------------

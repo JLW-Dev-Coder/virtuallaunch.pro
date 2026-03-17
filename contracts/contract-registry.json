@@ -245,7 +245,7 @@
       "version": 1
     },
     {
-      "authRequired": true,
+      "authRequired": false,
       "contractPath": "/contracts/membership/billing.config.get.v1.json",
       "deliveryMethod": "GET",
       "endpoint": "/v1/billing/config",
