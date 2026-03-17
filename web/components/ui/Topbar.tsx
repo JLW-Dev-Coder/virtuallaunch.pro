@@ -1,7 +1,11 @@
 // Server component — no 'use client' needed; pathname-based active state lives in Sidebar
 import Link from 'next/link'
+import { getSession } from '@/lib/auth/session'
 
-export default function Topbar() {
+export default async function Topbar() {
+  const session = await getSession()
+  const initial = session.email?.[0]?.toUpperCase() ?? 'U'
+
   return (
     <header className="flex items-center justify-between border-b border-slate-800/60 bg-slate-950/80 px-6 py-3 backdrop-blur">
       <div className="text-sm text-slate-400">
@@ -20,13 +24,14 @@ export default function Topbar() {
           </svg>
         </button>
 
-        {/* Account menu placeholder */}
+        {/* Account menu */}
         <Link
           href="/app/account"
+          title={session.email}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-xs font-bold text-slate-950 transition hover:opacity-90"
           aria-label="Account"
         >
-          U
+          {initial}
         </Link>
       </div>
     </header>
