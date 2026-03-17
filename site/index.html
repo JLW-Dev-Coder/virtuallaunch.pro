@@ -183,7 +183,12 @@
 
       <section class="mx-auto max-w-6-5xl px-4 pb-14 md:pb-20">
       <div class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-soft md:p-8">
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div class="rounded-2xl border border-white/10 bg-ink-950/60 p-6">
+            <div class="text-xs font-semibold tracking-widest text-brand-400">FREE</div>
+            <div class="mt-3 text-xl font-extrabold">Get inside the network</div>
+            <p class="mt-3 text-sm text-white/70">Best for getting started, seeing the flow, and joining the ecosystem before stepping into recurring paid usage.</p>
+          </div>
           <div class="rounded-2xl border border-white/10 bg-ink-950/60 p-6">
             <div class="text-xs font-semibold tracking-widest text-brand-400">STARTER</div>
             <div class="mt-3 text-xl font-extrabold">Fast, clean setup</div>
@@ -306,7 +311,7 @@
           </p>
         </div>
 
-        <div class="mt-12 grid gap-6 lg:grid-cols-3">
+        <div class="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
             <div class="text-sm font-semibold tracking-widest text-brand-400">STARTER</div>
             <h3 class="mt-3 text-2xl font-extrabold">Clean links, calm handoff</h3>
@@ -349,11 +354,33 @@
           <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
           <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the membership that fits your stage</h2>
           <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-            Choose a monthly membership based on transcript capacity, tax tool engagement capacity, and lead access inside the network. When a taxpayer converts to a paying client through the platform intake flow, a <span data-platform-fee-global>12%</span> professional platform fee is applied before the case is assigned.
+            Choose a membership based on transcript capacity, tax tool engagement capacity, and lead access inside the network. When a taxpayer converts to a paying client through the platform intake flow, a <span data-platform-fee-global>12%</span> professional platform fee is applied before the case is assigned.
           </p>
         </div>
 
         <div class="mt-12 grid gap-6 lg:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <div class="flex items-center justify-between">
+              <div class="text-lg font-extrabold">Free</div>
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Start here</span>
+            </div>
+            <div class="mt-4">
+              <div class="text-4xl font-extrabold" data-price="free">$0</div>
+              <div class="mt-2 text-sm text-white/70" data-price-suffix="free">/mo</div>
+            </div>
+            <p class="mt-5 text-sm text-white/70">Entry access for getting inside the platform before moving into recurring paid capacity.</p>
+            <ul class="mt-6 space-y-3 text-sm text-white/75">
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="free">0 transcript tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="free">0 tax tool game tokens</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Basic network access</span></li>
+              <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Upgrade anytime</span></li>
+            </ul>
+            <div class="mt-8 flex gap-3">
+              <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="free">Get started</a>
+              <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#offers">Details</a>
+            </div>
+          </div>
+
           <div class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
             <div class="flex items-center justify-between">
               <div class="text-lg font-extrabold">Starter</div>
@@ -624,6 +651,17 @@
       function initPricing() {
         var PRICING_URL = 'https://api.virtuallaunch.pro/v1/pricing';
         var defaults = {
+          free: {
+            monthly: {
+              billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM',
+              checkoutHref: '#top',
+              platformFee: '0',
+              price: '0',
+              suffix: '/mo',
+              taxGameTokens: '0',
+              transcriptTokens: '0'
+            }
+          },
           advanced: {
             monthly: {
               billingObject: 'price_1T9AXX9ROeyeXOqef7Ja1Iig',
@@ -758,7 +796,7 @@
         }
 
         function applyGlobalFee() {
-          var fee = defaults.starter.monthly.platformFee || defaults.pro.monthly.platformFee || defaults.advanced.monthly.platformFee || '12';
+          var fee = defaults.starter.monthly.platformFee || defaults.pro.monthly.platformFee || defaults.advanced.monthly.platformFee || defaults.free.monthly.platformFee || '12';
           var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-platform-fee-global]'));
           nodes.forEach(function (node) {
             node.textContent = fee + '%';
@@ -766,7 +804,7 @@
         }
 
         function applyPricing() {
-          ['advanced', 'pro', 'starter'].forEach(applyPlan);
+          ['advanced', 'free', 'pro', 'starter'].forEach(applyPlan);
           applyGlobalFee();
         }
 
