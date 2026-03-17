@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import SignOutButton from '@/components/auth/SignOutButton'
 
 const NAV_ITEMS = [
   {
@@ -99,12 +100,15 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="border-t border-slate-800/60 px-4 py-4">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-xs text-slate-500 transition hover:text-slate-300"
-        >
-          ← Back to site
-        </Link>
+        <div className="space-y-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xs text-slate-500 transition hover:text-slate-300"
+          >
+            ← Back to site
+          </Link>
+          <SignOutButton />
+        </div>
       </div>
     </aside>
   )
