@@ -163,7 +163,7 @@
             <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
             <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the membership that fits your stage</h2>
             <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-              Toggle monthly or yearly billing. Each paid plan carries a {{VLP_PLATFORM_FEE_PERCENT}}% platform fee, while Free stays at {{VLP_FREE_PLATFORM_FEE_PERCENT}}%. Token allocations and plan keys below match the current TOML.
+              Toggle monthly or yearly billing. Each paid plan carries a 12% platform fee, while Free stays at 0%. Token allocations and plan keys below match the current TOML.
             </p>
 
             <div class="mt-8 inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1">
@@ -179,15 +179,15 @@
                 <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Start here</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">${{VLP_FREE_COST}}</div>
+                <div class="text-4xl font-extrabold">$0</div>
                 <div class="mt-2 text-sm text-white/70">/mo</div>
               </div>
               <p class="mt-5 text-sm text-white/70">Entry access for getting inside the ecosystem before moving into recurring paid capacity.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_FREE_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_FREE_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Plan key: {{VLP_FREE_PLAN_KEY}}</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Platform fee: {{VLP_FREE_PLATFORM_FEE_PERCENT}}%</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>0 transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>0 tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Plan key: vlp_free</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Platform fee: 0%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
                 <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="free">Get started</a>
@@ -201,15 +201,15 @@
                 <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for testing</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold" data-price="starter">${{VLP_STARTER_MONTHLY_COST}}</div>
+                <div class="text-4xl font-extrabold" data-price="starter">$79</div>
                 <div class="mt-2 text-sm text-white/70" data-price-suffix="starter">/mo</div>
               </div>
               <p class="mt-5 text-sm text-white/70">Paid entry membership for smaller firms that need recurring usage without overcommitting on day one, a classic human pastime.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="starter">{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="starter">{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="starter">Plan key: {{VLP_STARTER_MONTHLY_PLAN_KEY}}</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="starter">Platform fee: {{VLP_STARTER_MONTHLY_PLATFORM_FEE_PERCENT}}%</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="starter">30 transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="starter">30 tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="starter">Plan key: vlp_starter_monthly</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="starter">Platform fee: 12%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
                 <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="starter">Get started</a>
@@ -223,15 +223,15 @@
                 <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold" data-price="pro">${{VLP_PRO_MONTHLY_COST}}</div>
+                <div class="text-4xl font-extrabold" data-price="pro">$199</div>
                 <div class="mt-2 text-sm text-white/70" data-price-suffix="pro">/mo</div>
               </div>
               <p class="mt-5 text-sm text-white/70">For active firms with enough client movement to justify better capacity, better visibility, and fewer operational migraines.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="pro">{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="pro">{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="pro">Plan key: {{VLP_PRO_MONTHLY_PLAN_KEY}}</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="pro">Platform fee: {{VLP_PRO_MONTHLY_PLATFORM_FEE_PERCENT}}%</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="pro">100 transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="pro">120 tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="pro">Plan key: vlp_pro_monthly</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="pro">Platform fee: 12%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
                 <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="pro">Start Pro</a>
@@ -245,15 +245,15 @@
                 <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For higher volume</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold" data-price="advanced">${{VLP_ADVANCED_MONTHLY_COST}}</div>
+                <div class="text-4xl font-extrabold" data-price="advanced">$399</div>
                 <div class="mt-2 text-sm text-white/70" data-price-suffix="advanced">/mo</div>
               </div>
               <p class="mt-5 text-sm text-white/70">For firms with heavier throughput, broader staff usage, and the urge to stop duct-taping growth together.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="advanced">{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="advanced">{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="advanced">Plan key: {{VLP_ADVANCED_MONTHLY_PLAN_KEY}}</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="advanced">Platform fee: {{VLP_ADVANCED_MONTHLY_PLATFORM_FEE_PERCENT}}%</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="advanced">250 transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="advanced">300 tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="advanced">Plan key: vlp_advanced_monthly</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="advanced">Platform fee: 12%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
                 <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="advanced">Start Advanced</a>
@@ -297,45 +297,45 @@
               <tbody>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Monthly cost</td>
-                  <td class="p-4 text-center">${{VLP_FREE_COST}}</td>
-                  <td class="p-4 text-center">${{VLP_STARTER_MONTHLY_COST}}</td>
-                  <td class="p-4 text-center">${{VLP_PRO_MONTHLY_COST}}</td>
-                  <td class="p-4 text-center">${{VLP_ADVANCED_MONTHLY_COST}}</td>
+                  <td class="p-4 text-center">$0</td>
+                  <td class="p-4 text-center">$79</td>
+                  <td class="p-4 text-center">$199</td>
+                  <td class="p-4 text-center">$399</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Monthly transcript tokens</td>
-                  <td class="p-4 text-center">{{VLP_FREE_TRANSCRIPT_TOKENS}}</td>
-                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}</td>
-                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}}</td>
-                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}}</td>
+                  <td class="p-4 text-center">0</td>
+                  <td class="p-4 text-center">30</td>
+                  <td class="p-4 text-center">100</td>
+                  <td class="p-4 text-center">250</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Monthly tax tool game tokens</td>
-                  <td class="p-4 text-center">{{VLP_FREE_TAX_GAME_TOKENS}}</td>
-                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}}</td>
-                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}}</td>
-                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}}</td>
+                  <td class="p-4 text-center">0</td>
+                  <td class="p-4 text-center">30</td>
+                  <td class="p-4 text-center">120</td>
+                  <td class="p-4 text-center">300</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Platform fee</td>
-                  <td class="p-4 text-center">{{VLP_FREE_PLATFORM_FEE_PERCENT}}%</td>
-                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_PLATFORM_FEE_PERCENT}}%</td>
-                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_PLATFORM_FEE_PERCENT}}%</td>
-                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_PLATFORM_FEE_PERCENT}}%</td>
+                  <td class="p-4 text-center">0%</td>
+                  <td class="p-4 text-center">12%</td>
+                  <td class="p-4 text-center">12%</td>
+                  <td class="p-4 text-center">12%</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Plan key</td>
-                  <td class="p-4 text-center">{{VLP_FREE_PLAN_KEY}}</td>
-                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_PLAN_KEY}}</td>
-                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_PLAN_KEY}}</td>
-                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_PLAN_KEY}}</td>
+                  <td class="p-4 text-center">vlp_free</td>
+                  <td class="p-4 text-center">vlp_starter_monthly</td>
+                  <td class="p-4 text-center">vlp_pro_monthly</td>
+                  <td class="p-4 text-center">vlp_advanced_monthly</td>
                 </tr>
                 <tr class="align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Billing object</td>
-                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_FREE_MONTHLY}}</td>
-                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_STARTER_MONTHLY}}</td>
-                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_PRO_MONTHLY}}</td>
-                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_ADVANCED_MONTHLY}}</td>
+                  <td class="p-4 text-center">price_1TBjsM9ROeyeXOqeAPefMFfM</td>
+                  <td class="p-4 text-center">price_1T9APS9ROeyeXOqeOWjA4sq3</td>
+                  <td class="p-4 text-center">price_1T9AUi9ROeyeXOqeqyzsSOYV</td>
+                  <td class="p-4 text-center">price_1T9AXX9ROeyeXOqef7Ja1Iig</td>
                 </tr>
               </tbody>
             </table>
@@ -368,89 +368,89 @@
         free: {
           monthly: {
             checkoutHref: '#top',
-            price: '{{VLP_FREE_COST}}',
+            price: '0',
             suffix: '/mo',
-            taxGameTokens: '{{VLP_FREE_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_FREE_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_FREE_PLAN_KEY}}',
-            platformFee: '{{VLP_FREE_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_FREE_MONTHLY}}'
+            taxGameTokens: '0',
+            transcriptTokens: '0',
+            planKey: 'vlp_free',
+            platformFee: '0',
+            billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM'
           },
           yearly: {
             checkoutHref: '#top',
-            price: '{{VLP_FREE_COST}}',
+            price: '0',
             suffix: '/yr',
-            taxGameTokens: '{{VLP_FREE_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_FREE_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_FREE_PLAN_KEY}}',
-            platformFee: '{{VLP_FREE_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_FREE_MONTHLY}}'
+            taxGameTokens: '0',
+            transcriptTokens: '0',
+            planKey: 'vlp_free',
+            platformFee: '0',
+            billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM'
           }
         },
         starter: {
           monthly: {
             checkoutHref: '#top',
-            price: '{{VLP_STARTER_MONTHLY_COST}}',
+            price: '79',
             suffix: '/mo',
-            taxGameTokens: '{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_STARTER_MONTHLY_PLAN_KEY}}',
-            platformFee: '{{VLP_STARTER_MONTHLY_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_STARTER_MONTHLY}}'
+            taxGameTokens: '30',
+            transcriptTokens: '30',
+            planKey: 'vlp_starter_monthly',
+            platformFee: '12',
+            billingObject: 'price_1T9APS9ROeyeXOqeOWjA4sq3'
           },
           yearly: {
             checkoutHref: '#top',
-            price: '{{VLP_STARTER_YEARLY_COST}}',
+            price: '790',
             suffix: '/yr',
-            taxGameTokens: '{{VLP_STARTER_YEARLY_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_STARTER_YEARLY_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_STARTER_YEARLY_PLAN_KEY}}',
-            platformFee: '{{VLP_STARTER_YEARLY_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_STARTER_YEARLY}}'
+            taxGameTokens: '360',
+            transcriptTokens: '360',
+            planKey: 'vlp_starter_yearly',
+            platformFee: '12',
+            billingObject: 'price_1TBjy19ROeyeXOqeyzbwP3hW'
           }
         },
         pro: {
           monthly: {
             checkoutHref: '#top',
-            price: '{{VLP_PRO_MONTHLY_COST}}',
+            price: '199',
             suffix: '/mo',
-            taxGameTokens: '{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_PRO_MONTHLY_PLAN_KEY}}',
-            platformFee: '{{VLP_PRO_MONTHLY_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_PRO_MONTHLY}}'
+            taxGameTokens: '120',
+            transcriptTokens: '100',
+            planKey: 'vlp_pro_monthly',
+            platformFee: '12',
+            billingObject: 'price_1T9AUi9ROeyeXOqeqyzsSOYV'
           },
           yearly: {
             checkoutHref: '#top',
-            price: '{{VLP_PRO_YEARLY_COST}}',
+            price: '1990',
             suffix: '/yr',
-            taxGameTokens: '{{VLP_PRO_YEARLY_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_PRO_YEARLY_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_PRO_YEARLY_PLAN_KEY}}',
-            platformFee: '{{VLP_PRO_YEARLY_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_PRO_YEARLY}}'
+            taxGameTokens: '1440',
+            transcriptTokens: '1200',
+            planKey: 'vlp_pro_yearly',
+            platformFee: '12',
+            billingObject: 'price_1TBk0K9ROeyeXOqeC3sHQqFN'
           }
         },
         advanced: {
           monthly: {
             checkoutHref: '#top',
-            price: '{{VLP_ADVANCED_MONTHLY_COST}}',
+            price: '399',
             suffix: '/mo',
-            taxGameTokens: '{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_ADVANCED_MONTHLY_PLAN_KEY}}',
-            platformFee: '{{VLP_ADVANCED_MONTHLY_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_ADVANCED_MONTHLY}}'
+            taxGameTokens: '300',
+            transcriptTokens: '250',
+            planKey: 'vlp_advanced_monthly',
+            platformFee: '12',
+            billingObject: 'price_1T9AXX9ROeyeXOqef7Ja1Iig'
           },
           yearly: {
             checkoutHref: '#top',
-            price: '{{VLP_ADVANCED_YEARLY_COST}}',
+            price: '3990',
             suffix: '/yr',
-            taxGameTokens: '{{VLP_ADVANCED_YEARLY_TAX_GAME_TOKENS}}',
-            transcriptTokens: '{{VLP_ADVANCED_YEARLY_TRANSCRIPT_TOKENS}}',
-            planKey: '{{VLP_ADVANCED_YEARLY_PLAN_KEY}}',
-            platformFee: '{{VLP_ADVANCED_YEARLY_PLATFORM_FEE_PERCENT}}',
-            billingObject: '{{STRIPE_PRICE_VLP_ADVANCED_YEARLY}}'
+            taxGameTokens: '3600',
+            transcriptTokens: '3000',
+            planKey: 'vlp_advanced_yearly',
+            platformFee: '12',
+            billingObject: 'price_1TBk1G9ROeyeXOqeBQcj749T'
           }
         }
       };
