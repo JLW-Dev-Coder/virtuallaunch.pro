@@ -845,18 +845,35 @@ Responsibilities:
 * schedule intro and support event types
 * store booking events in canonical records
 
-### Canonical events
+### Canonical webhook endpoint
+
+VLP owns the canonical Cal.com webhook.
+VLP governs bookings, profiles, tax pro dashboard behavior,
+and booking analytics. All Cal.com webhook events route to:
+https://api.virtuallaunch.pro/v1/webhooks/cal
+
+Client-facing booking management uses Cal.com email-link
+behavior, not VLP dashboard controls.
+
+```txt
+https://api.virtuallaunch.pro/v1/webhooks/cal
+```
+
+### Supported events
 
 ```txt
 BOOKING_CANCELLED
 BOOKING_CREATED
+BOOKING_NO_SHOW_UPDATED
+BOOKING_PAID
+BOOKING_PAYMENT_INITIATED
+BOOKING_REJECTED
+BOOKING_REQUEST_RESCHEDULE
+BOOKING_REQUESTED
 BOOKING_RESCHEDULED
-```
-
-### Canonical webhook endpoint
-
-```txt
-https://transcript.taxmonitor.pro/transcript/cal/webhook
+MEETING_ENDED
+MEETING_STARTED
+OUT_OF_OFFICE_CREATED
 ```
 
 ### Canonical worker routes

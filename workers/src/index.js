@@ -1664,6 +1664,7 @@ const ROUTES = [
   },
 
   { method: 'POST', pattern: '/v1/webhooks/twilio', handler: () => json({ ok: true, received: true }) },
+  { method: 'POST', pattern: '/v1/webhooks/cal',    handler: stub },
 
   // -------------------------------------------------------------------------
   // BOOKINGS
