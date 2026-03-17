@@ -17,6 +17,7 @@ import type {
   TokenUsageEntry,
   ApiResult,
 } from './types'
+import { getSessionToken } from '../auth/session'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? ''
 const USE_MOCK = process.env.NEXT_PUBLIC_MOCK_API === 'true' || !API_URL
@@ -29,6 +30,7 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<ApiResult<
   try {
     const res = await fetch(`${API_URL}${path}`, {
       ...init,
+      cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
         ...(init?.headers ?? {}),
@@ -44,6 +46,13 @@ async function apiFetch<T>(path: string, init?: RequestInit): Promise<ApiResult<
     return { ok: true, data }
   } catch (err) {
     return { ok: false, error: { code: 'NETWORK_ERROR', message: String(err) } }
+  }
+}
+
+function getAuthHeaders(token: string): HeadersInit {
+  return {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
   }
 }
 
@@ -178,7 +187,12 @@ export async function getDashboardSummary(): Promise<DashboardSummary> {
 export async function getAccountProfile(accountId: string): Promise<AccountProfile> {
   if (USE_MOCK) return MOCK_ACCOUNT
 
-  const result = await apiFetch<AccountProfile>(`/v1/accounts/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<AccountProfile>(`/v1/accounts/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
   return result.data
 }
@@ -186,7 +200,12 @@ export async function getAccountProfile(accountId: string): Promise<AccountProfi
 export async function getNotificationPreferences(accountId: string): Promise<NotificationPreferences> {
   if (USE_MOCK) return MOCK_NOTIFICATION_PREFS
 
-  const result = await apiFetch<NotificationPreferences>(`/v1/notifications/preferences/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<NotificationPreferences>(`/v1/notifications/preferences/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
   return result.data
 }
@@ -194,7 +213,12 @@ export async function getNotificationPreferences(accountId: string): Promise<Not
 export async function getVlpPreferences(accountId: string): Promise<VlpPreferences> {
   if (USE_MOCK) return MOCK_VLP_PREFS
 
-  const result = await apiFetch<VlpPreferences>(`/v1/vlp/preferences/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<VlpPreferences>(`/v1/vlp/preferences/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
   return result.data
 }
@@ -202,39 +226,64 @@ export async function getVlpPreferences(accountId: string): Promise<VlpPreferenc
 export async function getBookingsByAccount(accountId: string): Promise<Booking[]> {
   if (USE_MOCK) return MOCK_BOOKINGS
 
-  const result = await apiFetch<Booking[]>(`/v1/bookings/by-account/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<{ ok: boolean; bookings: Booking[] }>(`/v1/bookings/by-account/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
-  return result.data
+  return result.data.bookings
 }
 
 export async function getReceiptsByAccount(accountId: string): Promise<Receipt[]> {
   if (USE_MOCK) return MOCK_RECEIPTS
 
-  const result = await apiFetch<Receipt[]>(`/v1/billing/receipts/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<{ ok: boolean; receipts: Receipt[] }>(`/v1/billing/receipts/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
-  return result.data
+  return result.data.receipts
 }
 
 export async function getSupportTicketsByAccount(accountId: string): Promise<SupportTicket[]> {
   if (USE_MOCK) return MOCK_TICKETS
 
-  const result = await apiFetch<SupportTicket[]>(`/v1/support/tickets/by-account/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<{ ok: boolean; tickets: SupportTicket[] }>(`/v1/support/tickets/by-account/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
-  return result.data
+  return result.data.tickets
 }
 
 export async function getTokenBalance(accountId: string): Promise<TokenBalance> {
   if (USE_MOCK) return MOCK_TOKEN_BALANCE
 
-  const result = await apiFetch<TokenBalance>(`/v1/tokens/balance/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<{ ok: boolean; balance: TokenBalance }>(`/v1/tokens/balance/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
-  return result.data
+  return result.data.balance
 }
 
 export async function getTokenUsage(accountId: string): Promise<TokenUsageEntry[]> {
   if (USE_MOCK) return MOCK_TOKEN_USAGE
 
-  const result = await apiFetch<TokenUsageEntry[]>(`/v1/tokens/usage/${accountId}`)
+  const token = await getSessionToken()
+  if (!token) throw new Error('No session token')
+
+  const result = await apiFetch<{ ok: boolean; usage: TokenUsageEntry[] }>(`/v1/tokens/usage/${accountId}`, {
+    headers: getAuthHeaders(token),
+  })
   if (!result.ok) throw new Error(result.error.message)
-  return result.data
+  return result.data.usage
 }
