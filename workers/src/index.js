@@ -78,6 +78,16 @@ const ROUTES = [
   { auth: true, key: null, method: "GET", mode: "token_usage_list", name: "tokens_usage_list", pattern: "/v1/tokens/usage/{accountId}" },
   { auth: true, key: "bookings/{bookingId}.json", method: "GET", mode: "single", name: "booking_get", pattern: "/v1/bookings/{bookingId}" },
   { auth: true, key: null, method: "GET", mode: "list_by_account", name: "booking_get_by_account", pattern: "/v1/bookings/by-account/{accountId}" },
+  { auth: true, key: null, method: "GET", mode: "cal_availability_get", name: "cal_availability_get", pattern: "/v1/cal/availability/{professionalId}" },
+  { auth: true, key: null, method: "PATCH", mode: "cal_availability_update", name: "cal_availability_update", pattern: "/v1/cal/availability/{professionalId}" },
+  { auth: true, key: null, method: "GET", mode: "cal_calendar_metadata_get", name: "cal_calendar_metadata_get", pattern: "/v1/cal/calendars/{professionalId}" },
+  { auth: true, key: null, method: "GET", mode: "cal_events_list", name: "cal_events_list", pattern: "/v1/cal/events/{professionalId}" },
+  { auth: true, key: null, method: "POST", mode: "cal_events_sync", name: "cal_events_sync", pattern: "/v1/cal/events/{professionalId}/sync" },
+  { auth: true, key: null, method: "GET", mode: "cal_booking_links_list", name: "cal_booking_links_list", pattern: "/v1/cal/booking-links/{professionalId}" },
+  { auth: true, key: null, method: "POST", mode: "cal_booking_links_create", name: "cal_booking_links_create", pattern: "/v1/cal/booking-links/{professionalId}" },
+  { auth: true, key: null, method: "GET", mode: "cal_booking_link_get", name: "cal_booking_link_get", pattern: "/v1/cal/booking-links/{professionalId}/{linkId}" },
+  { auth: true, key: null, method: "PATCH", mode: "cal_booking_link_update", name: "cal_booking_link_update", pattern: "/v1/cal/booking-links/{professionalId}/{linkId}" },
+  { auth: true, key: null, method: "DELETE", mode: "cal_booking_link_delete", name: "cal_booking_link_delete", pattern: "/v1/cal/booking-links/{professionalId}/{linkId}" },
   { auth: true, key: null, method: "GET", mode: "list_by_professional", name: "booking_get_by_professional", pattern: "/v1/bookings/by-professional/{professionalId}" },
   { auth: true, key: null, method: "GET", mode: "cal_oauth_start", name: "cal_app_oauth_start", pattern: "/v1/cal/app/oauth/start" },
   { auth: false, key: null, method: "GET", mode: "cal_oauth_callback", name: "cal_app_oauth_callback", pattern: "/v1/cal/app/oauth/callback" },
@@ -124,6 +134,16 @@ const SCHEMAS = {
   cal_app_oauth_start: required("accountId", "redirectUri"),
   cal_pro_oauth_callback: required("code", "state"),
   cal_pro_oauth_start: required("accountId", "redirectUri"),
+  cal_availability_get: required("professionalId"),
+  cal_availability_update: required("professionalId"),
+  cal_booking_link_delete: required("linkId", "professionalId"),
+  cal_booking_link_get: required("linkId", "professionalId"),
+  cal_booking_link_update: required("linkId", "professionalId"),
+  cal_booking_links_create: required("professionalId"),
+  cal_booking_links_list: required("professionalId"),
+  cal_calendar_metadata_get: required("professionalId"),
+  cal_events_list: required("professionalId"),
+  cal_events_sync: required("professionalId"),
   auth_magic_link_request: required("email"),
   auth_sso_oidc_callback: required("code", "state"),
   auth_sso_oidc_start: required("redirectUri"),
@@ -327,6 +347,26 @@ async function dispatchRoute(context) {
       return handleCalOAuthCallback(context);
     case "cal_oauth_start":
       return handleCalOAuthStart(context);
+    case "cal_availability_get":
+      return handleCalAvailabilityGet(context);
+    case "cal_availability_update":
+      return handleCalAvailabilityUpdate(context);
+    case "cal_booking_link_delete":
+      return handleCalBookingLinkDelete(context);
+    case "cal_booking_link_get":
+      return handleCalBookingLinkGet(context);
+    case "cal_booking_link_update":
+      return handleCalBookingLinkUpdate(context);
+    case "cal_booking_links_create":
+      return handleCalBookingLinksCreate(context);
+    case "cal_booking_links_list":
+      return handleCalBookingLinksList(context);
+    case "cal_calendar_metadata_get":
+      return handleCalCalendarMetadataGet(context);
+    case "cal_events_list":
+      return handleCalEventsList(context);
+    case "cal_events_sync":
+      return handleCalEventsSync(context);
     case "billing_customer_create":
       return handleBillingCustomerCreate(context);
     case "billing_payment_intent_create":
@@ -2943,6 +2983,377 @@ async function importGoogleServicePrivateKey(privateKeyPem) {
     false,
     ["sign"]
   );
+}
+
+async function handleCalAvailabilityGet(context) {
+  const professionalId = String(context.payload.professionalId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  return {
+    body: {
+      availability: ((profile.calSettings || {}).availability) || null,
+      ok: true,
+      professionalId,
+      status: "retrieved"
+    },
+    status: 200
+  };
+}
+
+async function handleCalAvailabilityUpdate(context) {
+  const professionalId = String(context.payload.professionalId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const availability = context.payload.availability || context.payload.rules || null;
+  const provider = getCalProviderFromPayload(context.payload, profile);
+  const connection = getCalConnectionFromProfile(profile, provider);
+  let remote = null;
+
+  if (connection && availability) {
+    remote = await calApiRequest(context, connection, "/availability", {
+      body: availability,
+      method: "POST"
+    });
+  }
+
+  const updatedProfile = {
+    ...profile,
+    calSettings: {
+      ...(profile.calSettings || {}),
+      availability
+    },
+    updatedAt: new Date().toISOString()
+  };
+  await putJson(context.env, "profiles/" + professionalId + ".json", updatedProfile);
+  await appendReceipt(context.env, context.route, context.payload, { professionalId, syncedRemote: Boolean(remote) }, "receipts/vlp/cal/availability/" + professionalId + ".json");
+
+  return {
+    body: {
+      availability,
+      ok: true,
+      professionalId,
+      remote,
+      status: "updated"
+    },
+    status: 200
+  };
+}
+
+async function handleCalCalendarMetadataGet(context) {
+  const professionalId = String(context.payload.professionalId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const provider = getCalProviderFromPayload(context.payload, profile);
+  const connection = requireCalConnectionFromProfile(profile, provider);
+  const remote = await calApiRequest(context, connection, "/calendars", { method: "GET" });
+
+  return {
+    body: {
+      calendars: remote.data || remote.calendars || remote.collection || remote,
+      ok: true,
+      professionalId,
+      provider: connection.provider,
+      status: "retrieved"
+    },
+    status: 200
+  };
+}
+
+async function handleCalEventsList(context) {
+  const professionalId = String(context.payload.professionalId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const provider = getCalProviderFromPayload(context.payload, profile);
+  const connection = requireCalConnectionFromProfile(profile, provider);
+  const qs = [];
+  if (context.payload.end) qs.push("end=" + encodeURIComponent(String(context.payload.end)));
+  if (context.payload.start) qs.push("start=" + encodeURIComponent(String(context.payload.start)));
+  if (context.payload.status) qs.push("status=" + encodeURIComponent(String(context.payload.status)));
+  const path = "/bookings" + (qs.length ? ("?" + qs.join("&")) : "");
+  const remote = await calApiRequest(context, connection, path, { method: "GET" });
+
+  return {
+    body: {
+      events: remote.data || remote.bookings || remote.collection || remote,
+      ok: true,
+      professionalId,
+      provider: connection.provider,
+      status: "retrieved"
+    },
+    status: 200
+  };
+}
+
+async function handleCalEventsSync(context) {
+  const professionalId = String(context.payload.professionalId);
+  const listed = await handleCalEventsList(context);
+  const body = listed.body || {};
+  const events = Array.isArray(body.events) ? body.events : [];
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const updatedProfile = {
+    ...profile,
+    calSync: {
+      ...(profile.calSync || {}),
+      events,
+      syncedAt: new Date().toISOString()
+    },
+    updatedAt: new Date().toISOString()
+  };
+  await putJson(context.env, "profiles/" + professionalId + ".json", updatedProfile);
+  await appendReceipt(context.env, context.route, context.payload, { count: events.length, professionalId }, "receipts/vlp/cal/events-sync/" + professionalId + ".json");
+
+  return {
+    body: {
+      count: events.length,
+      events,
+      ok: true,
+      professionalId,
+      status: "synced"
+    },
+    status: 200
+  };
+}
+
+async function handleCalBookingLinksList(context) {
+  const professionalId = String(context.payload.professionalId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  return {
+    body: {
+      bookingLinks: ((profile.calSettings || {}).bookingLinks) || [],
+      ok: true,
+      professionalId,
+      status: "retrieved"
+    },
+    status: 200
+  };
+}
+
+async function handleCalBookingLinksCreate(context) {
+  const professionalId = String(context.payload.professionalId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const provider = getCalProviderFromPayload(context.payload, profile);
+  const connection = getCalConnectionFromProfile(profile, provider);
+  const linkId = String(context.payload.linkId || crypto.randomUUID());
+  const bookingLink = {
+    active: context.payload.active !== false,
+    createdAt: new Date().toISOString(),
+    eventTypeId: context.payload.eventTypeId || null,
+    id: linkId,
+    label: context.payload.label || null,
+    slug: context.payload.slug || null,
+    url: context.payload.url || null
+  };
+  let remote = null;
+
+  if (connection) {
+    remote = await calApiRequest(context, connection, "/event-types", {
+      body: {
+        lengthInMinutes: context.payload.lengthInMinutes || 30,
+        slug: bookingLink.slug,
+        title: context.payload.title || context.payload.label || "Booking"
+      },
+      method: "POST"
+    });
+    bookingLink.remote = remote;
+  }
+
+  const bookingLinks = [bookingLink].concat((((profile.calSettings || {}).bookingLinks) || []).filter(function (item) {
+    return String(item.id) !== linkId;
+  }));
+  const updatedProfile = {
+    ...profile,
+    calSettings: {
+      ...(profile.calSettings || {}),
+      bookingLinks
+    },
+    updatedAt: new Date().toISOString()
+  };
+  await putJson(context.env, "profiles/" + professionalId + ".json", updatedProfile);
+  await appendReceipt(context.env, context.route, context.payload, { linkId, professionalId, syncedRemote: Boolean(remote) }, "receipts/vlp/cal/booking-links/" + professionalId + "/" + linkId + ".json");
+
+  return {
+    body: {
+      bookingLink,
+      ok: true,
+      professionalId,
+      status: "created"
+    },
+    status: 200
+  };
+}
+
+async function handleCalBookingLinkGet(context) {
+  const professionalId = String(context.payload.professionalId);
+  const linkId = String(context.payload.linkId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const bookingLinks = ((profile.calSettings || {}).bookingLinks) || [];
+  const bookingLink = bookingLinks.find(function (item) {
+    return String(item.id) === linkId;
+  });
+  if (!bookingLink) {
+    return { body: { error: "not_found", ok: false }, status: 404 };
+  }
+  return {
+    body: {
+      bookingLink,
+      ok: true,
+      professionalId,
+      status: "retrieved"
+    },
+    status: 200
+  };
+}
+
+async function handleCalBookingLinkUpdate(context) {
+  const professionalId = String(context.payload.professionalId);
+  const linkId = String(context.payload.linkId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const provider = getCalProviderFromPayload(context.payload, profile);
+  const connection = getCalConnectionFromProfile(profile, provider);
+  const bookingLinks = ((profile.calSettings || {}).bookingLinks) || [];
+  const current = bookingLinks.find(function (item) {
+    return String(item.id) === linkId;
+  });
+  if (!current) {
+    return { body: { error: "not_found", ok: false }, status: 404 };
+  }
+
+  const updated = {
+    ...current,
+    ...context.payload,
+    id: linkId,
+    professionalId,
+    updatedAt: new Date().toISOString()
+  };
+  let remote = null;
+
+  if (connection && updated.remote && updated.remote.id) {
+    remote = await calApiRequest(context, connection, "/event-types/" + encodeURIComponent(String(updated.remote.id)), {
+      body: {
+        active: updated.active,
+        slug: updated.slug || null,
+        title: updated.title || updated.label || null
+      },
+      method: "PATCH"
+    });
+    updated.remote = { ...(updated.remote || {}), lastResponse: remote };
+  }
+
+  const nextLinks = bookingLinks.map(function (item) {
+    return String(item.id) === linkId ? updated : item;
+  });
+  const updatedProfile = {
+    ...profile,
+    calSettings: {
+      ...(profile.calSettings || {}),
+      bookingLinks: nextLinks
+    },
+    updatedAt: new Date().toISOString()
+  };
+  await putJson(context.env, "profiles/" + professionalId + ".json", updatedProfile);
+  await appendReceipt(context.env, context.route, context.payload, { linkId, professionalId, syncedRemote: Boolean(remote) }, "receipts/vlp/cal/booking-links/" + professionalId + "/" + linkId + ".json");
+
+  return {
+    body: {
+      bookingLink: updated,
+      ok: true,
+      professionalId,
+      status: "updated"
+    },
+    status: 200
+  };
+}
+
+async function handleCalBookingLinkDelete(context) {
+  const professionalId = String(context.payload.professionalId);
+  const linkId = String(context.payload.linkId);
+  const profile = await requireProfessionalProfile(context.env, professionalId);
+  const provider = getCalProviderFromPayload(context.payload, profile);
+  const connection = getCalConnectionFromProfile(profile, provider);
+  const bookingLinks = ((profile.calSettings || {}).bookingLinks) || [];
+  const existing = bookingLinks.find(function (item) {
+    return String(item.id) === linkId;
+  });
+  if (!existing) {
+    return { body: { error: "not_found", ok: false }, status: 404 };
+  }
+
+  let remote = null;
+  if (connection && existing.remote && existing.remote.id) {
+    remote = await calApiRequest(context, connection, "/event-types/" + encodeURIComponent(String(existing.remote.id)), {
+      method: "DELETE"
+    });
+  }
+
+  const updatedProfile = {
+    ...profile,
+    calSettings: {
+      ...(profile.calSettings || {}),
+      bookingLinks: bookingLinks.filter(function (item) {
+        return String(item.id) !== linkId;
+      })
+    },
+    updatedAt: new Date().toISOString()
+  };
+  await putJson(context.env, "profiles/" + professionalId + ".json", updatedProfile);
+  await appendReceipt(context.env, context.route, context.payload, { deleted: true, linkId, professionalId, syncedRemote: Boolean(remote) }, "receipts/vlp/cal/booking-links/" + professionalId + "/" + linkId + ".json");
+
+  return {
+    body: {
+      linkId,
+      ok: true,
+      professionalId,
+      status: "deleted"
+    },
+    status: 200
+  };
+}
+
+async function calApiRequest(context, connection, path, options) {
+  const base = String(context.env.CAL_API_BASE || CAL_API_BASE).replace(/\/$/, "");
+  const response = await fetch(base + path, {
+    body: options && options.body ? JSON.stringify(options.body) : undefined,
+    headers: {
+      authorization: "Bearer " + String(connection.accessToken),
+      "content-type": "application/json"
+    },
+    method: (options && options.method) || "GET"
+  });
+  return parseJsonResponse(response, "cal_api_request_failed");
+}
+
+function getCalConnectionFromProfile(profile, preferredProvider) {
+  const cal = profile.cal || {};
+  if (preferredProvider && cal[preferredProvider]) {
+    return { ...cal[preferredProvider], provider: preferredProvider };
+  }
+  if (cal.pro) {
+    return { ...cal.pro, provider: "pro" };
+  }
+  if (cal.app) {
+    return { ...cal.app, provider: "app" };
+  }
+  return null;
+}
+
+function getCalProviderFromPayload(payload, profile) {
+  if (payload && payload.provider) {
+    return String(payload.provider);
+  }
+  const connection = getCalConnectionFromProfile(profile, null);
+  return connection ? connection.provider : null;
+}
+
+async function requireProfessionalProfile(env, professionalId) {
+  const profile = await getJson(env, "profiles/" + professionalId + ".json");
+  if (!profile) {
+    throw new Error("professional_profile_not_found");
+  }
+  return profile;
+}
+
+function requireCalConnectionFromProfile(profile, preferredProvider) {
+  const connection = getCalConnectionFromProfile(profile, preferredProvider);
+  if (!connection || !connection.accessToken) {
+    throw new Error("cal_connection_not_found");
+  }
+  return connection;
 }
 
 function withCors(request, response) {
