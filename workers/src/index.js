@@ -64,12 +64,15 @@ const ROUTES = [
   { auth: true, key: "billing_payment_intents/{eventId}.json", method: "POST", mode: "billing_payment_intent_create", name: "billing_payment_intent_create", pattern: "/v1/billing/payment-intents" },
   { auth: true, key: "billing_payment_methods/{accountId}.json", method: "POST", mode: "billing_payment_method_attach", name: "billing_payment_method_attach", pattern: "/v1/billing/payment-methods/attach" },
   { auth: true, key: null, method: "GET", mode: "billing_payment_method_list", name: "billing_payment_method_list", pattern: "/v1/billing/payment-methods/{accountId}" },
+  { auth: true, key: null, method: "GET", mode: "billing_receipts_list", name: "billing_receipts_list", pattern: "/v1/billing/receipts/{accountId}" },
   { auth: true, key: "billing_portal_sessions/{eventId}.json", method: "POST", mode: "billing_portal_session_create", name: "billing_portal_session_create", pattern: "/v1/billing/portal/sessions" },
   { auth: true, key: "billing_setup_intents/{eventId}.json", method: "POST", mode: "billing_setup_intent_create", name: "billing_setup_intent_create", pattern: "/v1/billing/setup-intents" },
   { auth: true, key: "billing_subscriptions/{membershipId}.json", method: "POST", mode: "billing_subscription_upsert", name: "billing_subscription_create", pattern: "/v1/billing/subscriptions" },
   { auth: true, key: "billing_subscriptions/{membershipId}.json", method: "PATCH", mode: "billing_subscription_update", name: "billing_subscription_update", pattern: "/v1/billing/subscriptions/{membershipId}" },
   { auth: true, key: "billing_subscriptions/{membershipId}.json", method: "POST", mode: "billing_subscription_cancel", name: "billing_subscription_cancel", pattern: "/v1/billing/subscriptions/{membershipId}/cancel" },
   { auth: true, key: "tokens/{accountId}.json", method: "POST", mode: "token_purchase", name: "billing_tokens_purchase", pattern: "/v1/billing/tokens/purchase" },
+  { auth: true, key: "tokens/{accountId}.json", method: "GET", mode: "token_balance_get", name: "tokens_balance_get", pattern: "/v1/tokens/balance/{accountId}" },
+  { auth: true, key: null, method: "GET", mode: "token_usage_list", name: "tokens_usage_list", pattern: "/v1/tokens/usage/{accountId}" },
   { auth: true, key: "bookings/{bookingId}.json", method: "GET", mode: "single", name: "booking_get", pattern: "/v1/bookings/{bookingId}" },
   { auth: true, key: null, method: "GET", mode: "list_by_account", name: "booking_get_by_account", pattern: "/v1/bookings/by-account/{accountId}" },
   { auth: true, key: null, method: "GET", mode: "list_by_professional", name: "booking_get_by_professional", pattern: "/v1/bookings/by-professional/{professionalId}" },
@@ -119,12 +122,15 @@ const SCHEMAS = {
   billing_payment_intent_create: required("accountId", "amount", "currency", "customerId", "eventId"),
   billing_payment_method_attach: required("accountId", "customerId", "eventId", "paymentMethodId", "setDefault"),
   billing_payment_method_list: required("accountId"),
+  billing_receipts_list: required("accountId"),
   billing_portal_session_create: required("accountId", "customerId", "eventId", "returnUrl"),
   billing_setup_intent_create: required("accountId", "customerId", "eventId", "usage"),
   billing_subscription_cancel: required("membershipId"),
   billing_subscription_create: required("accountId", "billingInterval", "customerId", "eventId", "membershipId", "planKey", "priceId", "productId"),
   billing_subscription_update: required("billingInterval", "eventId", "membershipId", "planKey", "priceId"),
   billing_tokens_purchase: required("accountId", "amount", "currency", "eventId", "quantity", "tokenType"),
+  tokens_balance_get: required("accountId"),
+  tokens_usage_list: required("accountId"),
   booking_create: required("accountId", "bookingId"),
   booking_get: required("bookingId"),
   booking_get_by_account: required("accountId"),
@@ -314,6 +320,8 @@ async function dispatchRoute(context) {
       return handleBillingPaymentMethodAttach(context);
     case "billing_payment_method_list":
       return handleBillingPaymentMethodList(context);
+    case "billing_receipts_list":
+      return handleBillingReceiptsList(context);
     case "billing_portal_session_create":
       return handleBillingPortalSessionCreate(context);
     case "billing_setup_intent_create":
@@ -358,6 +366,10 @@ async function dispatchRoute(context) {
       return handleListByField(context, "support_tickets/", "accountId", "tickets");
     case "token_purchase":
       return handleTokenPurchase(context);
+    case "token_balance_get":
+      return handleTokenBalanceGet(context);
+    case "token_usage_list":
+      return handleTokenUsageList(context);
     case "upsert":
       return handleUpsert(context);
     case "webhooks_stripe_receive":
@@ -648,6 +660,48 @@ async function handleBillingPaymentMethodList(context) {
 
   return {
     body: { methods: output, ok: true, status: "retrieved" },
+    status: 200
+  };
+}
+
+async function handleBillingReceiptsList(context) {
+  const limit = Number(context.payload.limit || 50);
+  const prefixes = [
+    "receipts/vlp/billing/",
+    "receipts/vlp/billing_customers/",
+    "receipts/vlp/billing_payment_intents/",
+    "receipts/vlp/billing_payment_methods/",
+    "receipts/vlp/billing_portal_sessions/",
+    "receipts/vlp/billing_setup_intents/",
+    "receipts/vlp/billing_subscriptions/",
+    "receipts/vlp/checkout/sessions/"
+  ];
+
+  const receipts = [];
+  for (const prefix of prefixes) {
+    const records = await listJson(context.env, prefix);
+    for (const record of records) {
+      const payloadAccountId = String(record?.payload?.accountId || record?.accountId || "");
+      if (payloadAccountId === String(context.payload.accountId || "")) {
+        receipts.push({
+          eventId: record?.eventId || null,
+          key: inferReceiptKey(prefix, record),
+          payload: record?.payload || {},
+          receiptSource: record?.route || null,
+          recordedAt: record?.recordedAt || record?.updatedAt || null
+        });
+      }
+    }
+  }
+
+  receipts.sort((left, right) => String(right.recordedAt || "").localeCompare(String(left.recordedAt || "")));
+
+  return {
+    body: {
+      ok: true,
+      receipts: receipts.slice(0, limit),
+      status: "retrieved"
+    },
     status: 200
   };
 }
@@ -1510,6 +1564,71 @@ async function handleTokenPurchase(context) {
   };
 }
 
+async function handleTokenBalanceGet(context) {
+  const record = (await getJson(context.env, `tokens/${context.payload.accountId}.json`)) || {
+    accountId: context.payload.accountId,
+    tax_game: 0,
+    transcript: 0,
+    updatedAt: null
+  };
+
+  return {
+    body: {
+      balance: {
+        accountId: context.payload.accountId,
+        taxGameTokens: Number(record.tax_game || 0),
+        transcriptTokens: Number(record.transcript || 0),
+        updatedAt: record.updatedAt || null
+      },
+      ok: true,
+      status: "retrieved"
+    },
+    status: 200
+  };
+}
+
+async function handleTokenUsageList(context) {
+  const limit = Number(context.payload.limit || 50);
+  const prefixes = [
+    "receipts/vlp/tokens/debits/",
+    "receipts/vlp/tokens/usage/",
+    "receipts/vlp/tokens/consumption/"
+  ];
+
+  const usage = [];
+  for (const prefix of prefixes) {
+    const records = await listJson(context.env, prefix);
+    for (const record of records) {
+      const payloadAccountId = String(record?.payload?.accountId || record?.accountId || "");
+      if (payloadAccountId === String(context.payload.accountId || "")) {
+        usage.push({
+          accountId: payloadAccountId,
+          amount: Number(record?.payload?.amount || 0),
+          eventId: record?.eventId || null,
+          feature: record?.feature || record?.payload?.feature || null,
+          quantity: Number(record?.quantity || record?.payload?.quantity || 0),
+          recordedAt: record?.recordedAt || null,
+          referenceId: record?.referenceId || record?.payload?.referenceId || null,
+          tokenField: record?.tokenField || normalizeTokenField(record?.payload?.tokenType || record?.payload?.tokenField || null),
+          tokenType: record?.tokenType || record?.payload?.tokenType || null,
+          type: record?.type || "debit"
+        });
+      }
+    }
+  }
+
+  usage.sort((left, right) => String(right.recordedAt || "").localeCompare(String(left.recordedAt || "")));
+
+  return {
+    body: {
+      ok: true,
+      status: "retrieved",
+      usage: usage.slice(0, limit)
+    },
+    status: 200
+  };
+}
+
 async function handleTwoFactorDisable(context) {
   const key = `accounts_vlp/VLP_ACCT_${context.payload.accountId}.json`;
   const current = await getJson(context.env, key);
@@ -1632,9 +1751,8 @@ function extractSamlValue(xml, pattern, fallback = "") {
 }
 
 function extractXmlBlock(xml, localName) {
-  const match = String(xml || "").match(
-    new RegExp(`<([A-Za-z0-9_:-]+:)?${localName}\b[\s\S]*?<\/([A-Za-z0-9_:-]+:)?${localName}>`, "i")
-  );
+  const pattern = String.raw`<([A-Za-z0-9_:-]+:)?${localName}\b[\s\S]*?<\/([A-Za-z0-9_:-]+:)?${localName}>`;
+  const match = String(xml || "").match(new RegExp(pattern, "i"));
   return match ? match[0] : "";
 }
 
@@ -2049,6 +2167,75 @@ async function creditPlanTokens(env, accountId, plan) {
   await putJson(env, key, current);
 }
 
+async function debitTokenBalance(env, input) {
+  const accountId = String(input?.accountId || "");
+  const quantity = Number(input?.quantity || 0);
+  const tokenField = normalizeTokenField(input?.tokenType || input?.tokenField);
+
+  if (!accountId) {
+    throw new Error("token_debit_account_id_required");
+  }
+  if (!tokenField) {
+    throw new Error("token_debit_type_required");
+  }
+  if (!Number.isFinite(quantity) || quantity <= 0) {
+    throw new Error("token_debit_quantity_invalid");
+  }
+
+  const key = `tokens/${accountId}.json`;
+  const current = (await getJson(env, key)) || { accountId, tax_game: 0, transcript: 0 };
+  const available = Number(current[tokenField] || 0);
+  if (available < quantity) {
+    throw new Error("insufficient_tokens");
+  }
+
+  current[tokenField] = available - quantity;
+  current.updatedAt = new Date().toISOString();
+
+  const eventId = String(input?.eventId || crypto.randomUUID());
+  const receiptPayload = {
+    accountId,
+    amount: Number(input?.amount || 0),
+    feature: input?.feature || null,
+    quantity,
+    referenceId: input?.referenceId || null,
+    tokenField,
+    tokenType: input?.tokenType || tokenField
+  };
+
+  await putJson(env, key, current);
+  await putJson(env, `receipts/vlp/tokens/debits/${eventId}.json`, {
+    accountId,
+    eventId,
+    feature: receiptPayload.feature,
+    payload: receiptPayload,
+    quantity,
+    recordedAt: new Date().toISOString(),
+    referenceId: receiptPayload.referenceId,
+    route: "token_debit",
+    tokenField,
+    tokenType: receiptPayload.tokenType,
+    type: "debit"
+  });
+
+  return {
+    accountId,
+    balance: Number(current[tokenField] || 0),
+    eventId,
+    ok: true,
+    quantity,
+    status: "debited",
+    tokenField
+  };
+}
+
+function normalizeTokenField(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (normalized === "tax_game" || normalized === "taxgame" || normalized === "tax-game") return "tax_game";
+  if (normalized === "transcript" || normalized === "transcripts") return "transcript";
+  return "";
+}
+
 function escapeXml(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -2056,6 +2243,10 @@ function escapeXml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
+}
+
+function inferReceiptKey(prefix, record) {
+  return `${prefix}${String(record?.eventId || "unknown")}.json`;
 }
 
 function inferBodyKey(routeName) {
