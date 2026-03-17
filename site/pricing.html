@@ -139,7 +139,7 @@
             <svg class="h-4 w-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            <span id="pricing-trust" class="text-sm text-slate-300">Choose your plan level. Upgrade anytime.</span>
+            <span id="pricing-trust" class="text-sm text-slate-300">Monthly and yearly memberships aligned to the current Worker TOML.</span>
           </div>
 
           <h1 id="pricing-headline" class="mb-6 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
@@ -147,7 +147,7 @@
           </h1>
 
           <p id="pricing-subheadline" class="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-400 md:text-2xl">
-            Start with the package that fits your stage, then build a cleaner client journey with onboarding, routing, and delivery systems that stay organized as you grow.
+            Choose Free, Starter, Pro, or Advanced with pricing, tokens, and plan keys aligned to the current Worker TOML so the page reflects the live billing structure instead of the usual mystery-meat pricing drift.
           </p>
 
           <div class="flex flex-col justify-center gap-4 sm:flex-row">
@@ -163,73 +163,100 @@
             <p class="text-xs font-semibold tracking-widest text-brand-400">PACKAGES</p>
             <h2 class="mt-4 text-4xl font-extrabold md:text-5xl">Pick the membership that fits your stage</h2>
             <p class="mx-auto mt-5 max-w-2xl text-base text-white/70">
-              Choose a monthly membership based on transcript capacity, tax tool engagement capacity, and lead access inside the network. When a taxpayer converts to a paying client through the platform intake flow, a {{VLP_PLATFORM_FEE_PERCENT}}% professional platform fee is applied before the case is assigned.
+              Toggle monthly or yearly billing. Each paid plan carries a {{VLP_PLATFORM_FEE_PERCENT}}% platform fee, while Free stays at {{VLP_FREE_PLATFORM_FEE_PERCENT}}%. Token allocations and plan keys below match the current TOML.
             </p>
+
+            <div class="mt-8 inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1">
+              <button id="billing-monthly" type="button" class="rounded-full bg-brand-500 px-4 py-2 text-sm font-bold text-ink-900 transition">Monthly</button>
+              <button id="billing-yearly" type="button" class="rounded-full px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white">Yearly</button>
+            </div>
           </div>
 
-          <div class="mt-12 grid gap-6 lg:grid-cols-3">
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+          <div class="mt-12 grid gap-6 xl:grid-cols-4">
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft" data-plan="free">
+              <div class="flex items-center justify-between">
+                <div class="text-lg font-extrabold">Free</div>
+                <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Start here</span>
+              </div>
+              <div class="mt-4">
+                <div class="text-4xl font-extrabold">${{VLP_FREE_COST}}</div>
+                <div class="mt-2 text-sm text-white/70">/mo</div>
+              </div>
+              <p class="mt-5 text-sm text-white/70">Entry access for getting inside the ecosystem before moving into recurring paid capacity.</p>
+              <ul class="mt-6 space-y-3 text-sm text-white/75">
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_FREE_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_FREE_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Plan key: {{VLP_FREE_PLAN_KEY}}</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Platform fee: {{VLP_FREE_PLATFORM_FEE_PERCENT}}%</span></li>
+              </ul>
+              <div class="mt-8 flex gap-3">
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="free">Get started</a>
+                <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
+              </div>
+            </article>
+
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft" data-plan="starter">
               <div class="flex items-center justify-between">
                 <div class="text-lg font-extrabold">Starter</div>
                 <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Best for testing</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">${{VLP_STARTER_MONTHLY_COST}}</div>
-                <div class="mt-2 text-sm text-white/70">/mo</div>
+                <div class="text-4xl font-extrabold" data-price="starter">${{VLP_STARTER_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70" data-price-suffix="starter">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">Entry network membership for firms beginning with recurring monitoring and lighter monthly usage.</p>
+              <p class="mt-5 text-sm text-white/70">Paid entry membership for smaller firms that need recurring usage without overcommitting on day one, a classic human pastime.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Active directory listing</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Access to taxpayer service pool</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="starter">{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="starter">{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="starter">Plan key: {{VLP_STARTER_MONTHLY_PLAN_KEY}}</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="starter">Platform fee: {{VLP_STARTER_MONTHLY_PLATFORM_FEE_PERCENT}}%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Get started</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="starter">Get started</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
 
-            <article class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft">
+            <article class="rounded-2xl border-2 border-brand-500/70 bg-gradient-to-b from-white/8 to-white/5 p-8 shadow-soft" data-plan="pro">
               <div class="flex items-center justify-between">
                 <div class="text-lg font-extrabold">Pro</div>
                 <span class="rounded-full border border-brand-500/40 bg-brand-500/10 px-3 py-1 text-xs text-white/90">Most popular</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">${{VLP_PRO_MONTHLY_COST}}</div>
-                <div class="mt-2 text-sm text-white/70">/mo</div>
+                <div class="text-4xl font-extrabold" data-price="pro">${{VLP_PRO_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70" data-price-suffix="pro">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">For active firms serving multiple taxpayers each month and needing stronger network visibility and capacity.</p>
+              <p class="mt-5 text-sm text-white/70">For active firms with enough client movement to justify better capacity, better visibility, and fewer operational migraines.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Featured network listing</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Priority taxpayer pool access</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="pro">{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="pro">{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="pro">Plan key: {{VLP_PRO_MONTHLY_PLAN_KEY}}</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="pro">Platform fee: {{VLP_PRO_MONTHLY_PLATFORM_FEE_PERCENT}}%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Pro</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="pro">Start Pro</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
 
-            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft">
+            <article class="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-soft" data-plan="advanced">
               <div class="flex items-center justify-between">
                 <div class="text-lg font-extrabold">Advanced</div>
                 <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">For higher volume</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">${{VLP_ADVANCED_MONTHLY_COST}}</div>
-                <div class="mt-2 text-sm text-white/70">/mo</div>
+                <div class="text-4xl font-extrabold" data-price="advanced">${{VLP_ADVANCED_MONTHLY_COST}}</div>
+                <div class="mt-2 text-sm text-white/70" data-price-suffix="advanced">/mo</div>
               </div>
-              <p class="mt-5 text-sm text-white/70">For firms with heavier taxpayer volume, higher transcript demand, and broader staff usage each month.</p>
+              <p class="mt-5 text-sm text-white/70">For firms with heavier throughput, broader staff usage, and the urge to stop duct-taping growth together.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Top-tier network promotion</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Early access to taxpayer cases</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="advanced">{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}} transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="advanced">{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}} tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="advanced">Plan key: {{VLP_ADVANCED_MONTHLY_PLAN_KEY}}</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="advanced">Platform fee: {{VLP_ADVANCED_MONTHLY_PLATFORM_FEE_PERCENT}}%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
-                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top">Start Advanced</a>
+                <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="advanced">Start Advanced</a>
                 <a class="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10" href="#comparison">Compare</a>
               </div>
             </article>
@@ -252,14 +279,16 @@
           <div class="mt-12 overflow-x-auto rounded-3xl border border-white/10 bg-white/5 shadow-soft">
             <table class="min-w-full table-fixed border-collapse text-sm text-white/75">
               <colgroup>
-                <col class="w-[36%]" />
-                <col class="w-[21.33%]" />
-                <col class="w-[21.33%]" />
-                <col class="w-[21.33%]" />
+                <col class="w-[28%]" />
+                <col class="w-[18%]" />
+                <col class="w-[18%]" />
+                <col class="w-[18%]" />
+                <col class="w-[18%]" />
               </colgroup>
               <thead>
                 <tr class="border-b border-white/10 bg-white/5 text-white">
                   <th class="p-4 font-semibold uppercase text-left">FEATURES</th>
+                  <th class="p-4 font-semibold uppercase text-center">FREE</th>
                   <th class="p-4 font-semibold uppercase text-center">STARTER</th>
                   <th class="p-4 font-semibold uppercase text-center">PRO</th>
                   <th class="p-4 font-semibold uppercase text-center">ADVANCED</th>
@@ -267,46 +296,46 @@
               </thead>
               <tbody>
                 <tr class="border-b border-white/10 align-middle">
+                  <td class="p-4 font-medium text-white">Monthly cost</td>
+                  <td class="p-4 text-center">${{VLP_FREE_COST}}</td>
+                  <td class="p-4 text-center">${{VLP_STARTER_MONTHLY_COST}}</td>
+                  <td class="p-4 text-center">${{VLP_PRO_MONTHLY_COST}}</td>
+                  <td class="p-4 text-center">${{VLP_ADVANCED_MONTHLY_COST}}</td>
+                </tr>
+                <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Monthly transcript tokens</td>
+                  <td class="p-4 text-center">{{VLP_FREE_TRANSCRIPT_TOKENS}}</td>
                   <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}</td>
                   <td class="p-4 text-center">{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}}</td>
                   <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}}</td>
                 </tr>
-                <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
+                <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Monthly tax tool game tokens</td>
+                  <td class="p-4 text-center">{{VLP_FREE_TAX_GAME_TOKENS}}</td>
                   <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}}</td>
                   <td class="p-4 text-center">{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}}</td>
                   <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}}</td>
                 </tr>
-                <tr class="border-b border-white/10 align-middle">
-                  <td class="p-4 font-medium text-white">Access to taxpayer service pool</td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
-                  <td class="p-4 font-medium text-white">Featured network listing</td>
-                  <td class="p-4 text-center text-slate-500">—</td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 font-medium text-white">Platform fee</td>
+                  <td class="p-4 text-center">{{VLP_FREE_PLATFORM_FEE_PERCENT}}%</td>
+                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_PLATFORM_FEE_PERCENT}}%</td>
+                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_PLATFORM_FEE_PERCENT}}%</td>
+                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_PLATFORM_FEE_PERCENT}}%</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
-                  <td class="p-4 font-medium text-white">Priority taxpayer pool access</td>
-                  <td class="p-4 text-center text-slate-500">—</td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                  <td class="p-4 font-medium text-white">Plan key</td>
+                  <td class="p-4 text-center">{{VLP_FREE_PLAN_KEY}}</td>
+                  <td class="p-4 text-center">{{VLP_STARTER_MONTHLY_PLAN_KEY}}</td>
+                  <td class="p-4 text-center">{{VLP_PRO_MONTHLY_PLAN_KEY}}</td>
+                  <td class="p-4 text-center">{{VLP_ADVANCED_MONTHLY_PLAN_KEY}}</td>
                 </tr>
-                <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
-                  <td class="p-4 font-medium text-white">Top-tier network promotion</td>
-                  <td class="p-4 text-center text-slate-500">—</td>
-                  <td class="p-4 text-center text-slate-500">—</td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
-                </tr>
-                <tr class="align-middle">
-                  <td class="p-4 font-medium text-white">Early access to taxpayer cases</td>
-                  <td class="p-4 text-center text-slate-500">—</td>
-                  <td class="p-4 text-center text-slate-500">—</td>
-                  <td class="p-4 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-500/10 text-emerald-300"><svg aria-hidden="true" class="h-3 w-3" fill="none" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg></span></td>
+                <tr class="align-middle bg-white/[0.02]">
+                  <td class="p-4 font-medium text-white">Billing object</td>
+                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_FREE_MONTHLY}}</td>
+                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_STARTER_MONTHLY}}</td>
+                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_PRO_MONTHLY}}</td>
+                  <td class="p-4 text-center">{{STRIPE_PRICE_VLP_ADVANCED_MONTHLY}}</td>
                 </tr>
               </tbody>
             </table>
@@ -334,15 +363,150 @@
     (function () {
       var y = document.getElementById('footer-year');
       if (y) y.textContent = String(new Date().getFullYear());
+
+      const PLAN_DATA = {
+        free: {
+          monthly: {
+            checkoutHref: '#top',
+            price: '{{VLP_FREE_COST}}',
+            suffix: '/mo',
+            taxGameTokens: '{{VLP_FREE_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_FREE_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_FREE_PLAN_KEY}}',
+            platformFee: '{{VLP_FREE_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_FREE_MONTHLY}}'
+          },
+          yearly: {
+            checkoutHref: '#top',
+            price: '{{VLP_FREE_COST}}',
+            suffix: '/yr',
+            taxGameTokens: '{{VLP_FREE_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_FREE_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_FREE_PLAN_KEY}}',
+            platformFee: '{{VLP_FREE_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_FREE_MONTHLY}}'
+          }
+        },
+        starter: {
+          monthly: {
+            checkoutHref: '#top',
+            price: '{{VLP_STARTER_MONTHLY_COST}}',
+            suffix: '/mo',
+            taxGameTokens: '{{VLP_STARTER_MONTHLY_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_STARTER_MONTHLY_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_STARTER_MONTHLY_PLAN_KEY}}',
+            platformFee: '{{VLP_STARTER_MONTHLY_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_STARTER_MONTHLY}}'
+          },
+          yearly: {
+            checkoutHref: '#top',
+            price: '{{VLP_STARTER_YEARLY_COST}}',
+            suffix: '/yr',
+            taxGameTokens: '{{VLP_STARTER_YEARLY_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_STARTER_YEARLY_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_STARTER_YEARLY_PLAN_KEY}}',
+            platformFee: '{{VLP_STARTER_YEARLY_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_STARTER_YEARLY}}'
+          }
+        },
+        pro: {
+          monthly: {
+            checkoutHref: '#top',
+            price: '{{VLP_PRO_MONTHLY_COST}}',
+            suffix: '/mo',
+            taxGameTokens: '{{VLP_PRO_MONTHLY_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_PRO_MONTHLY_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_PRO_MONTHLY_PLAN_KEY}}',
+            platformFee: '{{VLP_PRO_MONTHLY_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_PRO_MONTHLY}}'
+          },
+          yearly: {
+            checkoutHref: '#top',
+            price: '{{VLP_PRO_YEARLY_COST}}',
+            suffix: '/yr',
+            taxGameTokens: '{{VLP_PRO_YEARLY_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_PRO_YEARLY_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_PRO_YEARLY_PLAN_KEY}}',
+            platformFee: '{{VLP_PRO_YEARLY_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_PRO_YEARLY}}'
+          }
+        },
+        advanced: {
+          monthly: {
+            checkoutHref: '#top',
+            price: '{{VLP_ADVANCED_MONTHLY_COST}}',
+            suffix: '/mo',
+            taxGameTokens: '{{VLP_ADVANCED_MONTHLY_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_ADVANCED_MONTHLY_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_ADVANCED_MONTHLY_PLAN_KEY}}',
+            platformFee: '{{VLP_ADVANCED_MONTHLY_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_ADVANCED_MONTHLY}}'
+          },
+          yearly: {
+            checkoutHref: '#top',
+            price: '{{VLP_ADVANCED_YEARLY_COST}}',
+            suffix: '/yr',
+            taxGameTokens: '{{VLP_ADVANCED_YEARLY_TAX_GAME_TOKENS}}',
+            transcriptTokens: '{{VLP_ADVANCED_YEARLY_TRANSCRIPT_TOKENS}}',
+            planKey: '{{VLP_ADVANCED_YEARLY_PLAN_KEY}}',
+            platformFee: '{{VLP_ADVANCED_YEARLY_PLATFORM_FEE_PERCENT}}',
+            billingObject: '{{STRIPE_PRICE_VLP_ADVANCED_YEARLY}}'
+          }
+        }
+      };
+
+      function applyBillingCycle(cycle) {
+        Object.keys(PLAN_DATA).forEach(function(plan) {
+          var data = PLAN_DATA[plan][cycle];
+          var price = document.querySelector('[data-price="' + plan + '"]');
+          var suffix = document.querySelector('[data-price-suffix="' + plan + '"]');
+          var transcripts = document.querySelector('[data-transcripts="' + plan + '"]');
+          var taxgame = document.querySelector('[data-taxgame="' + plan + '"]');
+          var planKey = document.querySelector('[data-plan-key="' + plan + '"]');
+          var platformFee = document.querySelector('[data-platform-fee="' + plan + '"]');
+          var checkout = document.querySelector('[data-checkout-link="' + plan + '"]');
+
+          if (price) price.textContent = '$' + data.price;
+          if (suffix) suffix.textContent = data.suffix;
+          if (transcripts) transcripts.textContent = data.transcriptTokens + ' transcript tokens';
+          if (taxgame) taxgame.textContent = data.taxGameTokens + ' tax tool game tokens';
+          if (planKey) planKey.textContent = 'Plan key: ' + data.planKey;
+          if (platformFee) platformFee.textContent = 'Platform fee: ' + data.platformFee + '%';
+          if (checkout) {
+            checkout.href = data.checkoutHref;
+            checkout.dataset.billingObject = data.billingObject;
+          }
+        });
+
+        var monthlyBtn = document.getElementById('billing-monthly');
+        var yearlyBtn = document.getElementById('billing-yearly');
+
+        if (monthlyBtn && yearlyBtn) {
+          var monthlyActive = cycle === 'monthly';
+          monthlyBtn.className = monthlyActive
+            ? 'rounded-full bg-brand-500 px-4 py-2 text-sm font-bold text-ink-900 transition'
+            : 'rounded-full px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white';
+          yearlyBtn.className = !monthlyActive
+            ? 'rounded-full bg-brand-500 px-4 py-2 text-sm font-bold text-ink-900 transition'
+            : 'rounded-full px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white';
+        }
+      }
+
+      var monthlyBtn = document.getElementById('billing-monthly');
+      var yearlyBtn = document.getElementById('billing-yearly');
+      if (monthlyBtn) monthlyBtn.addEventListener('click', function () { applyBillingCycle('monthly'); });
+      if (yearlyBtn) yearlyBtn.addEventListener('click', function () { applyBillingCycle('yearly'); });
+
+      applyBillingCycle('monthly');
     })();
   </script>
 
   <script>
     const defaultConfig = {
-      pricing_headline: 'Simple Plans. Calm Delivery.',
-      pricing_subheadline: 'Start with the package that fits your stage, then build a cleaner client journey with onboarding, routing, and delivery systems that stay organized as you grow.',
-      pricing_trust: 'Choose your plan level. Upgrade anytime.',
-      footer_text: 'Virtual Launch Pro installs white-labeled onboarding and delivery systems for service businesses that need cleaner operations.',
+      pricing_headline: 'Pricing Plans Built to Match the Worker',
+      pricing_subheadline: 'Choose Free, Starter, Pro, or Advanced with pricing, tokens, and plan keys aligned to the current Worker TOML so the page reflects the live billing structure.',
+      pricing_trust: 'Monthly and yearly memberships aligned to the current Worker TOML.',
+      footer_text: 'Virtual Launch Pro pricing aligned to the current Worker configuration and billing objects.',
       background_color: '#070a10',
       text_color: '#ffffff',
       font_family: 'Raleway',
