@@ -15,6 +15,7 @@ const BLOG_ARTICLE_FILE_RE = /^(\d{4}-\d{2}-\d{2})_(\d{3})_([a-z0-9-]+)\.html$/;
 
 // Public directories to copy as-is
 const COPY_DIRS = ["assets", "blog", "features", "legal", "scripts", "site", "workers"];
+const ROOT_MOUNT_DIRS = new Set(["site"]);
 
 // Public root files to copy as-is
 const COPY_FILES = ["BLOG.md", "MARKET.md", "README.md", "styles.css"];
@@ -309,6 +310,10 @@ async function copyRootFiles() {
   }
 }
 
+function getPublicDestDir(dir) {
+  return ROOT_MOUNT_DIRS.has(dir) ? DIST : path.join(DIST, dir);
+}
+
 async function main() {
   await generateBlogManifest();
 
@@ -321,13 +326,14 @@ async function main() {
 
   for (const dir of COPY_DIRS) {
     const srcDir = path.join(ROOT, dir);
-    const destDir = path.join(DIST, dir);
+    const destDir = getPublicDestDir(dir);
     await copyDir(srcDir, destDir, {
       blogFragments,
       partials,
       transformHtmlFiles: true,
       wranglerVars,
     });
+  });
   }
 
   await copyRootFiles();
