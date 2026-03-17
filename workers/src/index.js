@@ -1632,7 +1632,9 @@ function extractSamlValue(xml, pattern, fallback = "") {
 }
 
 function extractXmlBlock(xml, localName) {
-  const match = String(xml || "").match(new RegExp(`<([A-Za-z0-9_:-]+:)?${localName}\b[\s\S]*?<\/([A-Za-z0-9_:-]+:)?${localName}>`, "i"));
+  const match = String(xml || "").match(
+    new RegExp(`<([A-Za-z0-9_:-]+:)?${localName}\b[\s\S]*?<\/([A-Za-z0-9_:-]+:)?${localName}>`, "i")
+  );
   return match ? match[0] : "";
 }
 
@@ -1705,6 +1707,12 @@ async function verifySamlSignatures(trustedCertBase64, samlXml, parsed) {
     return { reason: "signature_structure_invalid", valid: false };
   }
 
+  const canonicalizationMethodNode = getFirstDescendantByLocalName(signedInfo, "CanonicalizationMethod");
+  const canonicalizationAlgorithmUri = readAttribute(canonicalizationMethodNode, "Algorithm");
+  if (!isSupportedCanonicalizationAlgorithm(canonicalizationAlgorithmUri)) {
+    return { reason: "unsupported_canonicalization_algorithm", valid: false };
+  }
+
   const signatureMethodNode = getFirstDescendantByLocalName(signedInfo, "SignatureMethod");
   const signatureAlgorithmUri = readAttribute(signatureMethodNode, "Algorithm");
   const signatureHash = mapSignatureHash(signatureAlgorithmUri);
@@ -1717,6 +1725,11 @@ async function verifySamlSignatures(trustedCertBase64, samlXml, parsed) {
   const signedElement = findSignedElementByReference(document, referenceUri, signedRoot);
   if (!referenceNode || !signedElement) {
     return { reason: "reference_not_found", valid: false };
+  }
+
+  const transforms = getTransforms(referenceNode);
+  if (!areSupportedTransforms(transforms)) {
+    return { reason: "unsupported_reference_transform", valid: false };
   }
 
   const digestMethodNode = getFirstDescendantByLocalName(referenceNode, "DigestMethod");
@@ -1734,7 +1747,9 @@ async function verifySamlSignatures(trustedCertBase64, samlXml, parsed) {
 
   const signedClone = signedElement.cloneNode(true);
   applyInheritedNamespaces(signedElement, signedClone);
-  removeDescendantsByLocalName(signedClone, "Signature");
+  if (transforms.includes("http://www.w3.org/2000/09/xmldsig#enveloped-signature")) {
+    removeDescendantsByLocalName(signedClone, "Signature");
+  }
   const canonicalSignedElement = canonicalizeElement(signedClone);
   const actualDigest = await digestBase64(canonicalSignedElement, digestHash);
   if (actualDigest !== expectedDigest) {
@@ -1791,8 +1806,12 @@ function base64ToUint8Array(value) {
 
 function canonicalizeAttributes(node) {
   return Array.from(node.attributes || [])
-    .map((attribute) => ({ name: attribute.name, value: attribute.value || "" }))
-    .sort((left, right) => left.name.localeCompare(right.name))
+    .map((attribute) => ({
+      name: attribute.name,
+      namespaceURI: attribute.namespaceURI || "",
+      value: attribute.value || ""
+    }))
+    .sort(compareCanonicalAttributeOrder)
     .map((attribute) => ` ${attribute.name}="${escapeXmlAttributeValue(attribute.value)}"`)
     .join("");
 }
@@ -1915,18 +1934,57 @@ function mapDigestHash(algorithmUri) {
 function mapSignatureHash(algorithmUri) {
   if (algorithmUri === "http://www.w3.org/2000/09/xmldsig#rsa-sha1") return "SHA-1";
   if (algorithmUri === "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256") return "SHA-256";
+  if (algorithmUri === "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384") return "SHA-384";
   if (algorithmUri === "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512") return "SHA-512";
   return null;
 }
 
 function normalizeBase64Block(value) {
   return String(value || "")
-    .split("
-").join("")
-    .split("
-").join("")
-    .split("	").join("")
+    .split("\n").join("")
+    .split("\r").join("")
+    .split("\t").join("")
     .split(" ").join("");
+}
+
+function compareCanonicalAttributeOrder(left, right) {
+  const leftNamespace = left.name === "xmlns" ? "" : (left.name.startsWith("xmlns:") ? "http://www.w3.org/2000/xmlns/" : left.namespaceURI);
+  const rightNamespace = right.name === "xmlns" ? "" : (right.name.startsWith("xmlns:") ? "http://www.w3.org/2000/xmlns/" : right.namespaceURI);
+  if (leftNamespace !== rightNamespace) {
+    return leftNamespace.localeCompare(rightNamespace);
+  }
+  const leftLocal = left.name.includes(":") ? left.name.split(":").slice(1).join(":") : left.name;
+  const rightLocal = right.name.includes(":") ? right.name.split(":").slice(1).join(":") : right.name;
+  return leftLocal.localeCompare(rightLocal);
+}
+
+function getTransforms(referenceNode) {
+  const transformsNode = getFirstDescendantByLocalName(referenceNode, "Transforms");
+  if (!transformsNode) return [];
+  return Array.from(transformsNode.childNodes || [])
+    .filter((child) => child.nodeType === 1 && child.localName === "Transform")
+    .map((child) => readAttribute(child, "Algorithm"))
+    .filter(Boolean);
+}
+
+function isSupportedCanonicalizationAlgorithm(algorithmUri) {
+  return [
+    "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+    "http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments",
+    "http://www.w3.org/2001/10/xml-exc-c14n#",
+    "http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
+  ].includes(String(algorithmUri || ""));
+}
+
+function areSupportedTransforms(transforms) {
+  const allowed = new Set([
+    "http://www.w3.org/2000/09/xmldsig#enveloped-signature",
+    "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+    "http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments",
+    "http://www.w3.org/2001/10/xml-exc-c14n#",
+    "http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
+  ]);
+  return transforms.every((transform) => allowed.has(String(transform || "")));
 }
 
 function parseDerElement(bytes, start) {
