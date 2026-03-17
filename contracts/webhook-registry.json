@@ -1,11 +1,11 @@
-{
+﻿{
   "generatedFrom": [
     "README-VLP.txt",
     "TOML.txt"
   ],
   "registry": [
     {
-      "contractPath": "/contracts/webhooks.stripe.receive.v1.json",
+      "contractPath": "/contracts/webhooks/stripe.webhook.v1.json",
       "endpoint": "/v1/webhooks/stripe",
       "events": [
         "checkout.session.completed",
@@ -23,7 +23,7 @@
       "version": 1
     },
     {
-      "contractPath": "/contracts/webhooks.twilio.receive.v1.json",
+      "contractPath": "/contracts/webhooks/webhooks.twilio.receive.v1.json",
       "endpoint": "/v1/webhooks/twilio",
       "events": [
         "accepted",
