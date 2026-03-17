@@ -1,5 +1,61 @@
 # Virtual Launch Pro (VLP)
 
+## Current Build State
+
+Last updated: Phase 12 complete
+
+### Completed Phases
+- Phase 1: Next.js scaffold in /web (layouts, Tailwind, App Router)
+- Phase 2: React components from HTML partials
+- Phase 3: Cloudflare Worker — 64-route scaffold (deny-by-default)
+- Phase 4: Dashboard pages (account, calendar, receipts, support, token-usage)
+- Phase 5: Worker auth routes (Google OAuth, magic link, SSO, 2FA)
+- Phase 6: Worker Stripe billing (hosted + embedded checkout, webhooks)
+- Phase 7: Worker Cal.com (OAuth, bookings, profiles, webhook)
+- Phase 8: D1 migrations (11 tables applied to remote)
+- Phase 9: Frontend wired to live Worker (HttpOnly cookie session)
+- Phase 10: Deployed — virtuallaunch.pro live on Cloudflare Pages
+- Phase 11: All 64 Worker routes implemented (zero stubs)
+- Phase 12: Sign-in page (magic link + Google OAuth + verify flow)
+
+### Live URLs
+- Frontend: https://virtuallaunch.pro
+- Worker API: https://api.virtuallaunch.pro
+- D1 database: virtuallaunch-pro (id: 079dfd69-dbf4-4070-bc91-51f837021795)
+- R2 bucket: virtuallaunch-pro
+- Pages project: virtuallaunch-pro-web (GitHub auto-deploy on push)
+
+### Remaining Phases
+- Phase 13: Auth guard on dashboard routes
+- Phase 14: Marketing pages (about, pricing, features, how-it-works, contact)
+- Phase 15: Next.js security patch (CVE-2025-66478 — upgrade Next.js version)
+
+### Stack
+- Frontend: Next.js 15 + Tailwind + @cloudflare/next-on-pages
+- Backend: Cloudflare Worker (workers/src/index.js)
+- Database: Cloudflare D1 (binding: DB)
+- Storage: Cloudflare R2 (binding: R2_VIRTUAL_LAUNCH)
+- Auth: HttpOnly cookie (vlp_session), Google OAuth, Magic Link, SSO
+- Billing: Stripe (hosted + embedded checkout)
+- Booking: Cal.com OAuth + webhook
+- Deployment: Cloudflare Pages (frontend) + wrangler deploy (Worker)
+
+### Key Files
+- /web/lib/api/client.ts — API client (mock + real)
+- /web/lib/auth/session.ts — getSession() + getSessionToken()
+- /workers/src/index.js — full Worker (64 routes)
+- /workers/migrations/ — 11 D1 migration files
+- /contracts/ — 64 canonical contracts (do not modify)
+- /wrangler.toml — Worker config, bindings, env vars
+
+### Architecture Rules (never violate)
+- Contracts are authoritative — never modify without instruction
+- Write pipeline: receipt R2 → canonical R2 → D1
+- VLP owns all shared operational records
+- Worker CORS locked to https://virtuallaunch.pro
+- Session via vlp_session HttpOnly cookie only
+- All billing writes go through VLP Worker routes
+
 ## Table of Contents
 
 * [Overview](#overview)
