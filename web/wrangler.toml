@@ -1,8 +1,0 @@
-name = "virtuallaunch-pro-web"
-compatibility_date = "2026-02-28"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
-
-[vars]
-NEXT_PUBLIC_API_URL = "https://api.virtuallaunch.pro"
-NEXT_PUBLIC_MOCK_API = "false"
