@@ -46,6 +46,30 @@
  *   two_fa_verified INTEGER NOT NULL DEFAULT 0
  *   created_at TEXT NOT NULL
  *   expires_at TEXT NOT NULL
+ *
+ * memberships
+ *   membership_id TEXT PRIMARY KEY
+ *   account_id TEXT NOT NULL
+ *   plan_key TEXT NOT NULL
+ *   billing_interval TEXT
+ *   status TEXT NOT NULL DEFAULT 'free'
+ *   stripe_customer_id TEXT
+ *   stripe_subscription_id TEXT
+ *   created_at TEXT NOT NULL
+ *   updated_at TEXT
+ *
+ * billing_customers
+ *   account_id TEXT PRIMARY KEY
+ *   stripe_customer_id TEXT NOT NULL
+ *   email TEXT NOT NULL
+ *   created_at TEXT NOT NULL
+ *   updated_at TEXT
+ *
+ * tokens
+ *   account_id TEXT PRIMARY KEY
+ *   tax_game_tokens INTEGER NOT NULL DEFAULT 0
+ *   transcript_tokens INTEGER NOT NULL DEFAULT 0
+ *   updated_at TEXT NOT NULL
  */
 
 // ---------------------------------------------------------------------------
@@ -342,6 +366,93 @@ async function createSession(accountId, email, env) {
 }
 
 // ---------------------------------------------------------------------------
+// Stripe helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Flatten nested objects/arrays into Stripe's form-encoded dot-bracket notation.
+ * e.g. { metadata: { account_id: 'x' } } → { 'metadata[account_id]': 'x' }
+ *      { items: [{ price: 'p' }] }        → { 'items[0][price]': 'p' }
+ */
+function flattenStripeParams(params, prefix = '') {
+  const result = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value === null || value === undefined) continue;
+    const fullKey = prefix ? `${prefix}[${key}]` : key;
+    if (Array.isArray(value)) {
+      value.forEach((item, i) => {
+        if (item !== null && typeof item === 'object') {
+          Object.assign(result, flattenStripeParams(item, `${fullKey}[${i}]`));
+        } else {
+          result[`${fullKey}[${i}]`] = String(item);
+        }
+      });
+    } else if (typeof value === 'object') {
+      Object.assign(result, flattenStripeParams(value, fullKey));
+    } else {
+      result[fullKey] = String(value);
+    }
+  }
+  return result;
+}
+
+async function stripePost(path, params, env) {
+  const res = await fetch(`https://api.stripe.com/v1${path}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams(flattenStripeParams(params)),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.error?.message ?? `Stripe error ${res.status}`);
+  return data;
+}
+
+async function stripeGet(path, env) {
+  const res = await fetch(`https://api.stripe.com/v1${path}`, {
+    headers: { 'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}` },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.error?.message ?? `Stripe error ${res.status}`);
+  return data;
+}
+
+async function stripeDelete(path, env) {
+  const res = await fetch(`https://api.stripe.com/v1${path}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}` },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.error?.message ?? `Stripe error ${res.status}`);
+  return data;
+}
+
+function getPriceId(planKey, billingInterval, env) {
+  const map = {
+    'vlp_free/monthly':     env.STRIPE_PRICE_VLP_FREE_MONTHLY,
+    'vlp_starter/monthly':  env.STRIPE_PRICE_VLP_STARTER_MONTHLY,
+    'vlp_starter/yearly':   env.STRIPE_PRICE_VLP_STARTER_YEARLY,
+    'vlp_advanced/monthly': env.STRIPE_PRICE_VLP_ADVANCED_MONTHLY,
+    'vlp_advanced/yearly':  env.STRIPE_PRICE_VLP_ADVANCED_YEARLY,
+    'vlp_pro/monthly':      env.STRIPE_PRICE_VLP_PRO_MONTHLY,
+    'vlp_pro/yearly':       env.STRIPE_PRICE_VLP_PRO_YEARLY,
+  };
+  return map[`${planKey}/${billingInterval}`] ?? null;
+}
+
+function getTokenGrant(planKey) {
+  const grants = {
+    vlp_free:     { taxGameTokens: 0,     transcriptTokens: 0 },
+    vlp_starter:  { taxGameTokens: 10000, transcriptTokens: 25000 },
+    vlp_advanced: { taxGameTokens: 25000, transcriptTokens: 75000 },
+    vlp_pro:      { taxGameTokens: 50000, transcriptTokens: 150000 },
+  };
+  return grants[planKey] ?? { taxGameTokens: 0, transcriptTokens: 0 };
+}
+
+// ---------------------------------------------------------------------------
 // Route table
 // Each entry: { method, pattern, handler }
 // method: HTTP verb string, or '*' to match any (used for webhooks)
@@ -408,7 +519,6 @@ const ROUTES = [
       if (!code || !state) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'code and state required' }, 400);
       }
-
       try {
         const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
           method: 'POST',
@@ -421,28 +531,18 @@ const ROUTES = [
             grant_type: 'authorization_code',
           }),
         });
-        if (!tokenRes.ok) {
-          return json({ ok: false, error: 'OAUTH_ERROR', message: 'Token exchange failed' }, 502);
-        }
+        if (!tokenRes.ok) return json({ ok: false, error: 'OAUTH_ERROR', message: 'Token exchange failed' }, 502);
         const { access_token } = await tokenRes.json();
 
         const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${access_token}` },
         });
-        if (!userRes.ok) {
-          return json({ ok: false, error: 'OAUTH_ERROR', message: 'Failed to fetch user info' }, 502);
-        }
+        if (!userRes.ok) return json({ ok: false, error: 'OAUTH_ERROR', message: 'Failed to fetch user info' }, 502);
         const user = await userRes.json();
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-
-        return json({
-          ok: true,
-          status: 'callback_completed',
-          redirectTo: `${env.APP_BASE_URL}/app/dashboard`,
-          session_id: sessionId,
-        });
+        return json({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Google callback failed' }, 500);
       }
@@ -457,22 +557,16 @@ const ROUTES = [
         return json({ ok: false, error: 'BAD_REQUEST', message: 'email and redirectUri required' }, 400);
       }
       const { email, redirectUri } = body;
-
       try {
         const expMinutes = parseInt(env.MAGIC_LINK_EXPIRATION_MINUTES ?? '15', 10);
         const exp = Math.floor(Date.now() / 1000) + expMinutes * 60;
         const token = await signJwt({ email, redirect_uri: redirectUri, exp }, env.JWT_SECRET);
-
         const link = `${env.APP_BASE_URL}/v1/auth/magic-link/verify?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
         await sendEmail(email, 'Your sign-in link', `<p>Click to sign in: <a href="${link}">${link}</a></p>`, env);
-
         const eventId = `EVT_${crypto.randomUUID()}`;
         await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/auth/${eventId}.json`, {
-          email,
-          requested_at: new Date().toISOString(),
-          event: 'MAGIC_LINK_REQUESTED',
+          email, requested_at: new Date().toISOString(), event: 'MAGIC_LINK_REQUESTED',
         });
-
         return json({ ok: true, status: 'requested', email });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Magic link request failed' }, 500);
@@ -489,25 +583,13 @@ const ROUTES = [
       if (!token || !email) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'token and email required' }, 400);
       }
-
       try {
         const payload = await verifyJwt(token, env.JWT_SECRET);
-        if (!payload) {
-          return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
-        }
-        if (payload.email !== email) {
-          return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
-        }
-
+        if (!payload) return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
+        if (payload.email !== email) return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-
-        return json({
-          ok: true,
-          status: 'verified',
-          redirectTo: `${env.APP_BASE_URL}/app/dashboard`,
-          session_id: sessionId,
-        });
+        return json({ ok: true, status: 'verified', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Magic link verification failed' }, 500);
       }
@@ -537,7 +619,6 @@ const ROUTES = [
       if (!code || !state) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'code and state required' }, 400);
       }
-
       try {
         const tokenRes = await fetch(`${env.SSO_OIDC_ISSUER}/o/oauth2/token`, {
           method: 'POST',
@@ -550,28 +631,18 @@ const ROUTES = [
             grant_type: 'authorization_code',
           }),
         });
-        if (!tokenRes.ok) {
-          return json({ ok: false, error: 'OAUTH_ERROR', message: 'Token exchange failed' }, 502);
-        }
+        if (!tokenRes.ok) return json({ ok: false, error: 'OAUTH_ERROR', message: 'Token exchange failed' }, 502);
         const { access_token } = await tokenRes.json();
 
         const userRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
           headers: { Authorization: `Bearer ${access_token}` },
         });
-        if (!userRes.ok) {
-          return json({ ok: false, error: 'OAUTH_ERROR', message: 'Failed to fetch user info' }, 502);
-        }
+        if (!userRes.ok) return json({ ok: false, error: 'OAUTH_ERROR', message: 'Failed to fetch user info' }, 502);
         const user = await userRes.json();
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-
-        return json({
-          ok: true,
-          status: 'callback_completed',
-          redirectTo: `${env.APP_BASE_URL}/app/dashboard`,
-          session_id: sessionId,
-        });
+        return json({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'OIDC callback failed' }, 500);
       }
@@ -592,11 +663,8 @@ const ROUTES = [
       if (!body?.samlResponse || !body?.relayState) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'samlResponse and relayState required' }, 400);
       }
-
       try {
         const decoded = atob(body.samlResponse);
-
-        // Extract email from NameID or email attribute in XML
         let email = null;
         const nameIdMatch = decoded.match(/<(?:[^:>]+:)?NameID[^>]*>([^<]+)<\/(?:[^:>]+:)?NameID>/);
         if (nameIdMatch) email = nameIdMatch[1].trim();
@@ -604,19 +672,10 @@ const ROUTES = [
           const attrMatch = decoded.match(/email[^>]*>([^<]+@[^<]+)</i);
           if (attrMatch) email = attrMatch[1].trim();
         }
-        if (!email) {
-          return json({ ok: false, error: 'BAD_REQUEST', message: 'Could not extract email from SAML response' }, 400);
-        }
-
+        if (!email) return json({ ok: false, error: 'BAD_REQUEST', message: 'Could not extract email from SAML response' }, 400);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-
-        return json({
-          ok: true,
-          status: 'assertion_consumed',
-          redirectTo: `${env.APP_BASE_URL}/app/dashboard`,
-          session_id: sessionId,
-        });
+        return json({ ok: true, status: 'assertion_consumed', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'SAML ACS failed' }, 500);
       }
@@ -645,37 +704,18 @@ const ROUTES = [
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       const body = await parseBody(request);
-      if (!body?.accountId) {
-        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId required' }, 400);
-      }
+      if (!body?.accountId) return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId required' }, 400);
       const { accountId } = body;
-
       try {
-        // Generate TOTP secret: 32 random bytes, base32 encoded
         const secretBytes = crypto.getRandomValues(new Uint8Array(32));
         const secret = base32Encode(secretBytes);
-
-        const row = await env.DB.prepare(
-          'SELECT email FROM accounts WHERE account_id = ?'
-        ).bind(accountId).first();
+        const row = await env.DB.prepare('SELECT email FROM accounts WHERE account_id = ?').bind(accountId).first();
         if (!row) return json({ ok: false, error: 'NOT_FOUND' }, 404);
-
-        await d1Run(env.DB,
-          'UPDATE accounts SET totp_pending_secret = ? WHERE account_id = ?',
-          [secret, accountId]
-        );
-
+        await d1Run(env.DB, 'UPDATE accounts SET totp_pending_secret = ? WHERE account_id = ?', [secret, accountId]);
         const issuer = env.TWOFA_TOTP_ISSUER ?? 'VirtualLaunchPro';
         const otpauthUri = `otpauth://totp/${encodeURIComponent(issuer)}:${encodeURIComponent(row.email)}?secret=${secret}&issuer=${encodeURIComponent(issuer)}`;
-
-        return json({
-          ok: true,
-          status: 'enrollment_started',
-          accountId,
-          challenge: { otpauthUri, secret },
-        });
+        return json({ ok: true, status: 'enrollment_started', accountId, challenge: { otpauthUri, secret } });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: '2FA enrollment init failed' }, 500);
       }
@@ -687,41 +727,25 @@ const ROUTES = [
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       const body = await parseBody(request);
-      if (!body?.accountId || !body?.otpCode) {
-        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId and otpCode required' }, 400);
-      }
+      if (!body?.accountId || !body?.otpCode) return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId and otpCode required' }, 400);
       const { accountId, otpCode } = body;
-
-      if (String(otpCode).length !== 6) {
-        return json({ ok: false, error: 'INVALID_OTP' }, 401);
-      }
-
+      if (String(otpCode).length !== 6) return json({ ok: false, error: 'INVALID_OTP' }, 401);
       try {
-        const row = await env.DB.prepare(
-          'SELECT totp_pending_secret, email FROM accounts WHERE account_id = ?'
-        ).bind(accountId).first();
-        if (!row?.totp_pending_secret) {
-          return json({ ok: false, error: 'BAD_REQUEST', message: 'No pending enrollment found' }, 400);
-        }
-
+        const row = await env.DB.prepare('SELECT totp_pending_secret, email FROM accounts WHERE account_id = ?').bind(accountId).first();
+        if (!row?.totp_pending_secret) return json({ ok: false, error: 'BAD_REQUEST', message: 'No pending enrollment found' }, 400);
         const valid = await verifyTotp(row.totp_pending_secret, String(otpCode));
         if (!valid) return json({ ok: false, error: 'INVALID_OTP' }, 401);
-
         await d1Run(env.DB,
-          `UPDATE accounts SET totp_secret = totp_pending_secret,
-           totp_pending_secret = NULL, two_factor_enabled = 1 WHERE account_id = ?`,
+          'UPDATE accounts SET totp_secret = totp_pending_secret, totp_pending_secret = NULL, two_factor_enabled = 1 WHERE account_id = ?',
           [accountId]
         );
-
         const now = new Date().toISOString();
         const existing2faEnroll = await env.R2_VIRTUAL_LAUNCH.get(`accounts_vlp/VLP_ACCT_${accountId}.json`);
         const record2faEnroll = existing2faEnroll ? await existing2faEnroll.json() : {};
         record2faEnroll.twoFactorEnabled = true;
         record2faEnroll.updatedAt = now;
         await r2Put(env.R2_VIRTUAL_LAUNCH, `accounts_vlp/VLP_ACCT_${accountId}.json`, record2faEnroll);
-
         return json({ ok: true, status: 'enrollment_verified', accountId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: '2FA enrollment verify failed' }, 500);
@@ -737,23 +761,12 @@ const ROUTES = [
         return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, otpCode, and sessionToken required' }, 400);
       }
       const { accountId, otpCode, sessionToken } = body;
-
       try {
-        const row = await env.DB.prepare(
-          'SELECT totp_secret FROM accounts WHERE account_id = ?'
-        ).bind(accountId).first();
-        if (!row?.totp_secret) {
-          return json({ ok: false, error: 'BAD_REQUEST', message: '2FA not enrolled' }, 400);
-        }
-
+        const row = await env.DB.prepare('SELECT totp_secret FROM accounts WHERE account_id = ?').bind(accountId).first();
+        if (!row?.totp_secret) return json({ ok: false, error: 'BAD_REQUEST', message: '2FA not enrolled' }, 400);
         const valid = await verifyTotp(row.totp_secret, String(otpCode));
         if (!valid) return json({ ok: false, error: 'INVALID_OTP' }, 401);
-
-        await d1Run(env.DB,
-          'UPDATE sessions SET two_fa_verified = 1 WHERE session_id = ?',
-          [sessionToken]
-        );
-
+        await d1Run(env.DB, 'UPDATE sessions SET two_fa_verified = 1 WHERE session_id = ?', [sessionToken]);
         return json({ ok: true, status: 'verified', accountId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: '2FA challenge verify failed' }, 500);
@@ -766,36 +779,23 @@ const ROUTES = [
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       const body = await parseBody(request);
       if (!body?.accountId || !body?.challengeToken) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId and challengeToken required' }, 400);
       }
       const { accountId, challengeToken } = body;
-
       try {
-        const row = await env.DB.prepare(
-          'SELECT totp_secret, email FROM accounts WHERE account_id = ?'
-        ).bind(accountId).first();
-        if (!row?.totp_secret) {
-          return json({ ok: false, error: 'BAD_REQUEST', message: '2FA not enrolled' }, 400);
-        }
-
+        const row = await env.DB.prepare('SELECT totp_secret, email FROM accounts WHERE account_id = ?').bind(accountId).first();
+        if (!row?.totp_secret) return json({ ok: false, error: 'BAD_REQUEST', message: '2FA not enrolled' }, 400);
         const valid = await verifyTotp(row.totp_secret, String(challengeToken));
         if (!valid) return json({ ok: false, error: 'INVALID_OTP' }, 401);
-
-        await d1Run(env.DB,
-          'UPDATE accounts SET totp_secret = NULL, two_factor_enabled = 0 WHERE account_id = ?',
-          [accountId]
-        );
-
+        await d1Run(env.DB, 'UPDATE accounts SET totp_secret = NULL, two_factor_enabled = 0 WHERE account_id = ?', [accountId]);
         const now = new Date().toISOString();
         const existing2faDisable = await env.R2_VIRTUAL_LAUNCH.get(`accounts_vlp/VLP_ACCT_${accountId}.json`);
         const record2faDisable = existing2faDisable ? await existing2faDisable.json() : {};
         record2faDisable.twoFactorEnabled = false;
         record2faDisable.updatedAt = now;
         await r2Put(env.R2_VIRTUAL_LAUNCH, `accounts_vlp/VLP_ACCT_${accountId}.json`, record2faDisable);
-
         return json({ ok: true, status: 'disabled', accountId });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: '2FA disable failed' }, 500);
@@ -818,31 +818,25 @@ const ROUTES = [
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       const body = await parseBody(request);
       const { accountId, email, firstName, lastName, platform, role, source } = body ?? {};
       if (!accountId || !email || !firstName || !lastName || !platform || !role || !source) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, email, firstName, lastName, platform, role, source required' }, 400);
       }
-
       try {
         const eventId = `EVT_${crypto.randomUUID()}`;
         const now = new Date().toISOString();
-
         await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/accounts/${eventId}.json`, {
           accountId, email, event: 'ACCOUNT_CREATED', created_at: now, source,
         });
-
         await d1Run(env.DB,
           `INSERT OR IGNORE INTO accounts (account_id, email, first_name, last_name, platform, role, status, created_at)
            VALUES (?, ?, ?, ?, ?, ?, 'active', ?)`,
           [accountId, email, firstName, lastName, platform, role, now]
         );
-
         await r2Put(env.R2_VIRTUAL_LAUNCH, `accounts_vlp/VLP_ACCT_${accountId}.json`, {
           accountId, email, firstName, lastName, platform, role, status: 'active', createdAt: now,
         });
-
         return json({ ok: true, accountId, status: 'created' });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Account creation failed' }, 500);
@@ -855,11 +849,9 @@ const ROUTES = [
     handler: async (_method, _pattern, params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       try {
-        const row = await env.DB.prepare(
-          'SELECT * FROM accounts WHERE email = ?'
-        ).bind(decodeURIComponent(params.email)).first();
+        const row = await env.DB.prepare('SELECT * FROM accounts WHERE email = ?')
+          .bind(decodeURIComponent(params.email)).first();
         if (!row) return json({ ok: false, error: 'NOT_FOUND' }, 404);
         return json({ ok: true, account: row });
       } catch (e) {
@@ -873,11 +865,8 @@ const ROUTES = [
     handler: async (_method, _pattern, params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       try {
-        const row = await env.DB.prepare(
-          'SELECT * FROM accounts WHERE account_id = ?'
-        ).bind(params.account_id).first();
+        const row = await env.DB.prepare('SELECT * FROM accounts WHERE account_id = ?').bind(params.account_id).first();
         if (!row) return json({ ok: false, error: 'NOT_FOUND' }, 404);
         return json({ ok: true, account: row });
       } catch (e) {
@@ -891,45 +880,26 @@ const ROUTES = [
     handler: async (_method, _pattern, params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       const body = await parseBody(request);
       if (!body) return json({ ok: false, error: 'BAD_REQUEST', message: 'Request body required' }, 400);
-
       const allowed = ['email', 'firstName', 'lastName', 'phone', 'status', 'timezone'];
       const dbCols = { email: 'email', firstName: 'first_name', lastName: 'last_name', phone: 'phone', status: 'status', timezone: 'timezone' };
-      const sets = [];
-      const vals = [];
-
+      const sets = [], vals = [];
       for (const key of allowed) {
-        if (body[key] !== undefined) {
-          sets.push(`${dbCols[key]} = ?`);
-          vals.push(body[key]);
-        }
+        if (body[key] !== undefined) { sets.push(`${dbCols[key]} = ?`); vals.push(body[key]); }
       }
-
-      if (sets.length === 0) {
-        return json({ ok: false, error: 'BAD_REQUEST', message: 'No updatable fields provided' }, 400);
-      }
-
+      if (sets.length === 0) return json({ ok: false, error: 'BAD_REQUEST', message: 'No updatable fields provided' }, 400);
       const now = new Date().toISOString();
       sets.push('updated_at = ?');
       vals.push(now);
       vals.push(params.account_id);
-
       try {
-        await d1Run(env.DB,
-          `UPDATE accounts SET ${sets.join(', ')} WHERE account_id = ?`,
-          vals
-        );
-
+        await d1Run(env.DB, `UPDATE accounts SET ${sets.join(', ')} WHERE account_id = ?`, vals);
         const existing = await env.R2_VIRTUAL_LAUNCH.get(`accounts_vlp/VLP_ACCT_${params.account_id}.json`);
         let record = existing ? await existing.json() : {};
-        for (const key of allowed) {
-          if (body[key] !== undefined) record[key] = body[key];
-        }
+        for (const key of allowed) { if (body[key] !== undefined) record[key] = body[key]; }
         record.updatedAt = now;
         await r2Put(env.R2_VIRTUAL_LAUNCH, `accounts_vlp/VLP_ACCT_${params.account_id}.json`, record);
-
         return json({ ok: true, accountId: params.account_id, status: 'updated' });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Account update failed' }, 500);
@@ -942,20 +912,14 @@ const ROUTES = [
     handler: async (_method, _pattern, params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-
       try {
         const now = new Date().toISOString();
-        await d1Run(env.DB,
-          'UPDATE accounts SET status = ?, updated_at = ? WHERE account_id = ?',
-          ['archived', now, params.account_id]
-        );
-
+        await d1Run(env.DB, 'UPDATE accounts SET status = ?, updated_at = ? WHERE account_id = ?', ['archived', now, params.account_id]);
         const existing = await env.R2_VIRTUAL_LAUNCH.get(`accounts_vlp/VLP_ACCT_${params.account_id}.json`);
         let record = existing ? await existing.json() : {};
         record.status = 'archived';
         record.updatedAt = now;
         await r2Put(env.R2_VIRTUAL_LAUNCH, `accounts_vlp/VLP_ACCT_${params.account_id}.json`, record);
-
         return json({ ok: true, accountId: params.account_id, status: 'archived' });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Account archive failed' }, 500);
@@ -976,33 +940,729 @@ const ROUTES = [
   // BILLING
   // -------------------------------------------------------------------------
 
-  { method: 'GET',   pattern: '/v1/billing/config',                              handler: stub },
-  { method: 'GET',   pattern: '/v1/pricing',                                     handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/customers',                           handler: stub },
-  { method: 'GET',   pattern: '/v1/billing/payment-methods/:account_id',         handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/payment-methods/attach',              handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/setup-intents',                       handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/payment-intents',                     handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/subscriptions',                       handler: stub },
-  { method: 'PATCH', pattern: '/v1/billing/subscriptions/:membership_id',        handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/subscriptions/:membership_id/cancel', handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/portal/sessions',                     handler: stub },
-  { method: 'POST',  pattern: '/v1/billing/tokens/purchase',                     handler: stub },
-  { method: 'GET',   pattern: '/v1/billing/receipts/:account_id',                handler: stub },
+  {
+    method: 'GET', pattern: '/v1/billing/config',
+    handler: async (_method, _pattern, _params, _request, env) => {
+      return json({
+        ok: true,
+        source: 'wrangler.toml',
+        status: 'retrieved',
+        config: {
+          stripePublishableKey: env.STRIPE_PUBLISHABLE_KEY,
+          plans: {
+            vlp_free:     { monthly: env.STRIPE_PRICE_VLP_FREE_MONTHLY },
+            vlp_starter:  { monthly: env.STRIPE_PRICE_VLP_STARTER_MONTHLY,  yearly: env.STRIPE_PRICE_VLP_STARTER_YEARLY },
+            vlp_advanced: { monthly: env.STRIPE_PRICE_VLP_ADVANCED_MONTHLY, yearly: env.STRIPE_PRICE_VLP_ADVANCED_YEARLY },
+            vlp_pro:      { monthly: env.STRIPE_PRICE_VLP_PRO_MONTHLY,      yearly: env.STRIPE_PRICE_VLP_PRO_YEARLY },
+          },
+        },
+      });
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/pricing',
+    handler: async () => {
+      return json({
+        ok: true,
+        pricing: {
+          vlp_free:     { label: 'Free',     monthlyUsd: 0,      yearlyUsd: 0 },
+          vlp_starter:  { label: 'Starter',  monthlyUsd: 4900,   yearlyUsd: 47900 },
+          vlp_advanced: { label: 'Advanced', monthlyUsd: 9900,   yearlyUsd: 95900 },
+          vlp_pro:      { label: 'Pro',      monthlyUsd: 19900,  yearlyUsd: 191900 },
+        },
+      });
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/customers',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, email, eventId, fullName } = body ?? {};
+      if (!accountId || !email || !eventId || !fullName) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, email, eventId, fullName required' }, 400);
+      }
+      try {
+        const customer = await stripePost('/customers', {
+          email,
+          name: fullName,
+          metadata: { account_id: accountId },
+        }, env);
+        const customerId = customer.id;
+        const now = new Date().toISOString();
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, email, customerId, event: 'BILLING_CUSTOMER_CREATED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_customers/${accountId}.json`, {
+          accountId, email, customerId, stripeCustomerId: customerId, createdAt: now,
+        });
+        await d1Run(env.DB,
+          'INSERT OR REPLACE INTO billing_customers (account_id, stripe_customer_id, email, created_at) VALUES (?, ?, ?, ?)',
+          [accountId, customerId, email, now]
+        );
+        return json({ ok: true, customerId, eventId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/billing/payment-methods/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const row = await env.DB.prepare(
+          'SELECT stripe_customer_id FROM billing_customers WHERE account_id = ?'
+        ).bind(params.account_id).first();
+        if (!row) return json({ ok: true, methods: [], status: 'retrieved' });
+        const stripeRes = await stripeGet(`/payment_methods?customer=${row.stripe_customer_id}&type=card`, env);
+        return json({ ok: true, methods: stripeRes.data, status: 'retrieved' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/payment-methods/attach',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, customerId, eventId, paymentMethodId, setDefault } = body ?? {};
+      if (!accountId || !customerId || !eventId || !paymentMethodId || setDefault === undefined) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, customerId, eventId, paymentMethodId, setDefault required' }, 400);
+      }
+      try {
+        await stripePost(`/payment_methods/${paymentMethodId}/attach`, { customer: customerId }, env);
+        if (setDefault) {
+          await stripePost(`/customers/${customerId}`, {
+            invoice_settings: { default_payment_method: paymentMethodId },
+          }, env);
+        }
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, customerId, paymentMethodId, event: 'PAYMENT_METHOD_ATTACHED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_payment_methods/${accountId}.json`, {
+          accountId, customerId, paymentMethodId, setDefault, updatedAt: now,
+        });
+        return json({ ok: true, paymentMethodId, eventId, status: 'attached' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/setup-intents',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, customerId, eventId, usage } = body ?? {};
+      if (!accountId || !customerId || !eventId || !usage) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, customerId, eventId, usage required' }, 400);
+      }
+      if (usage !== 'off_session' && usage !== 'on_session') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'usage must be off_session or on_session' }, 400);
+      }
+      try {
+        const si = await stripePost('/setup_intents', {
+          customer: customerId,
+          usage,
+          metadata: { account_id: accountId },
+        }, env);
+        const setupIntentId = si.id;
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, customerId, setupIntentId, event: 'SETUP_INTENT_CREATED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_setup_intents/${eventId}.json`, {
+          accountId, customerId, setupIntentId, clientSecret: si.client_secret, usage, createdAt: now,
+        });
+        return json({ ok: true, setupIntentId, clientSecret: si.client_secret, eventId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/payment-intents',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, amount, currency, customerId, eventId, metadata } = body ?? {};
+      if (!accountId || !amount || !currency || !customerId || !eventId) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, amount, currency, customerId, eventId required' }, 400);
+      }
+      if (!Number.isInteger(amount) || amount < 1) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'amount must be integer >= 1' }, 400);
+      }
+      if (currency !== 'usd') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'currency must be usd' }, 400);
+      }
+      try {
+        const pi = await stripePost('/payment_intents', {
+          amount,
+          currency,
+          customer: customerId,
+          metadata: { account_id: accountId, ...(metadata ?? {}) },
+        }, env);
+        const paymentIntentId = pi.id;
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, amount, currency, paymentIntentId, event: 'PAYMENT_INTENT_CREATED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_payment_intents/${eventId}.json`, {
+          accountId, amount, currency, customerId, paymentIntentId, clientSecret: pi.client_secret, createdAt: now,
+        });
+        return json({ ok: true, paymentIntentId, clientSecret: pi.client_secret, eventId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/subscriptions',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, billingInterval, customerId, eventId, membershipId, planKey, priceId, productId } = body ?? {};
+      if (!accountId || !billingInterval || !customerId || !eventId || !membershipId || !planKey || !priceId || !productId) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, billingInterval, customerId, eventId, membershipId, planKey, priceId, productId required' }, 400);
+      }
+      if (billingInterval !== 'monthly' && billingInterval !== 'yearly') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'billingInterval must be monthly or yearly' }, 400);
+      }
+      if (!['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_pro'].includes(planKey)) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'Invalid planKey' }, 400);
+      }
+      try {
+        const sub = await stripePost('/subscriptions', {
+          customer: customerId,
+          items: [{ price: priceId }],
+          metadata: { account_id: accountId, membership_id: membershipId, plan_key: planKey },
+        }, env);
+        const subscriptionId = sub.id;
+        const tokenGrant = getTokenGrant(planKey);
+        const now = new Date().toISOString();
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, membershipId, planKey, subscriptionId, event: 'SUBSCRIPTION_CREATED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_subscriptions/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval, stripeSubscriptionId: subscriptionId,
+          stripeCustomerId: customerId, status: 'active', createdAt: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval, stripeSubscriptionId: subscriptionId,
+          stripeCustomerId: customerId, status: 'active', createdAt: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `tokens/${accountId}.json`, {
+          accountId, ...tokenGrant, updatedAt: now,
+        });
+
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, stripe_customer_id, stripe_subscription_id, created_at)
+           VALUES (?, ?, ?, ?, 'active', ?, ?, ?)`,
+          [membershipId, accountId, planKey, billingInterval, customerId, subscriptionId, now]
+        );
+        await d1Run(env.DB,
+          'INSERT OR REPLACE INTO tokens (account_id, tax_game_tokens, transcript_tokens, updated_at) VALUES (?, ?, ?, ?)',
+          [accountId, tokenGrant.taxGameTokens, tokenGrant.transcriptTokens, now]
+        );
+        return json({ ok: true, membershipId, subscriptionId, eventId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/billing/subscriptions/:membership_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { billingInterval, eventId, membershipId, planKey, priceId } = body ?? {};
+      if (!billingInterval || !eventId || !membershipId || !planKey || !priceId) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'billingInterval, eventId, membershipId, planKey, priceId required' }, 400);
+      }
+      try {
+        const row = await env.DB.prepare('SELECT * FROM memberships WHERE membership_id = ?').bind(params.membership_id).first();
+        if (!row) return json({ ok: false, error: 'NOT_FOUND' }, 404);
+
+        // GET current subscription from Stripe to find item ID
+        const sub = await stripeGet(`/subscriptions/${row.stripe_subscription_id}`, env);
+        const itemId = sub.items?.data?.[0]?.id;
+        if (!itemId) return json({ ok: false, error: 'INTERNAL_ERROR', message: 'No subscription item found' }, 502);
+
+        // Update subscription item with new price
+        await stripePost(`/subscription_items/${itemId}`, { price: priceId }, env);
+
+        const tokenGrant = getTokenGrant(planKey);
+        const now = new Date().toISOString();
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          membershipId, planKey, event: 'SUBSCRIPTION_UPDATED', created_at: now,
+        });
+
+        const existingSub = await env.R2_VIRTUAL_LAUNCH.get(`billing_subscriptions/${params.membership_id}.json`);
+        const subRecord = existingSub ? await existingSub.json() : {};
+        subRecord.planKey = planKey;
+        subRecord.billingInterval = billingInterval;
+        subRecord.updatedAt = now;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_subscriptions/${params.membership_id}.json`, subRecord);
+
+        const existingMem = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${params.membership_id}.json`);
+        const memRecord = existingMem ? await existingMem.json() : {};
+        memRecord.planKey = planKey;
+        memRecord.billingInterval = billingInterval;
+        memRecord.updatedAt = now;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${params.membership_id}.json`, memRecord);
+
+        const existingTokens = await env.R2_VIRTUAL_LAUNCH.get(`tokens/${row.account_id}.json`);
+        const tokenRecord = existingTokens ? await existingTokens.json() : {};
+        tokenRecord.taxGameTokens = tokenGrant.taxGameTokens;
+        tokenRecord.transcriptTokens = tokenGrant.transcriptTokens;
+        tokenRecord.updatedAt = now;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `tokens/${row.account_id}.json`, tokenRecord);
+
+        await d1Run(env.DB,
+          'UPDATE memberships SET plan_key = ?, billing_interval = ?, updated_at = ? WHERE membership_id = ?',
+          [planKey, billingInterval, now, params.membership_id]
+        );
+        await d1Run(env.DB,
+          'INSERT OR REPLACE INTO tokens (account_id, tax_game_tokens, transcript_tokens, updated_at) VALUES (?, ?, ?, ?)',
+          [row.account_id, tokenGrant.taxGameTokens, tokenGrant.transcriptTokens, now]
+        );
+        return json({ ok: true, membershipId: params.membership_id, eventId, status: 'updated' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/subscriptions/:membership_id/cancel',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, cancelAtPeriodEnd, eventId, membershipId, reason } = body ?? {};
+      if (!accountId || cancelAtPeriodEnd === undefined || !eventId || !membershipId) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, cancelAtPeriodEnd, eventId, membershipId required' }, 400);
+      }
+      try {
+        const row = await env.DB.prepare('SELECT stripe_subscription_id FROM memberships WHERE membership_id = ?').bind(params.membership_id).first();
+        if (!row) return json({ ok: false, error: 'NOT_FOUND' }, 404);
+
+        if (cancelAtPeriodEnd) {
+          await stripePost(`/subscriptions/${row.stripe_subscription_id}`, { cancel_at_period_end: true }, env);
+        } else {
+          await stripeDelete(`/subscriptions/${row.stripe_subscription_id}`, env);
+        }
+
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, membershipId, cancelAtPeriodEnd, reason, event: 'SUBSCRIPTION_CANCELLED', created_at: now,
+        });
+
+        const existingMem = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${params.membership_id}.json`);
+        const memRecord = existingMem ? await existingMem.json() : {};
+        memRecord.status = 'cancelled';
+        memRecord.updatedAt = now;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${params.membership_id}.json`, memRecord);
+
+        await d1Run(env.DB,
+          'UPDATE memberships SET status = \'cancelled\', updated_at = ? WHERE membership_id = ?',
+          [now, params.membership_id]
+        );
+        return json({ ok: true, membershipId, eventId, status: 'cancelled' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/portal/sessions',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, customerId, eventId, returnUrl } = body ?? {};
+      if (!accountId || !customerId || !eventId || !returnUrl) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, customerId, eventId, returnUrl required' }, 400);
+      }
+      try {
+        const portal = await stripePost('/billing_portal/sessions', {
+          customer: customerId,
+          return_url: returnUrl,
+        }, env);
+        const portalUrl = portal.url;
+        const now = new Date().toISOString();
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, customerId, portalUrl, event: 'PORTAL_SESSION_CREATED', created_at: now,
+        });
+
+        const existingCustomer = await env.R2_VIRTUAL_LAUNCH.get(`billing_customers/${accountId}.json`);
+        const customerRecord = existingCustomer ? await existingCustomer.json() : {};
+        customerRecord.lastPortalSession = portalUrl;
+        customerRecord.updatedAt = now;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_customers/${accountId}.json`, customerRecord);
+
+        return json({ ok: true, url: portalUrl, eventId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/billing/tokens/purchase',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, amount, currency, eventId, quantity, tokenType } = body ?? {};
+      if (!accountId || !amount || !currency || !eventId || !quantity || !tokenType) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, amount, currency, eventId, quantity, tokenType required' }, 400);
+      }
+      if (tokenType !== 'tax_game' && tokenType !== 'transcript') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'tokenType must be tax_game or transcript' }, 400);
+      }
+      if (currency !== 'usd') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'currency must be usd' }, 400);
+      }
+      if (!Number.isInteger(quantity) || quantity < 1) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'quantity must be integer >= 1' }, 400);
+      }
+      try {
+        const pi = await stripePost('/payment_intents', {
+          amount,
+          currency,
+          metadata: { account_id: accountId, token_type: tokenType, quantity },
+        }, env);
+        const paymentIntentId = pi.id;
+        const now = new Date().toISOString();
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/billing/${eventId}.json`, {
+          accountId, tokenType, quantity, amount, paymentIntentId, event: 'TOKENS_PURCHASED', created_at: now,
+        });
+
+        // Read-merge-write R2 tokens
+        const existingTokens = await env.R2_VIRTUAL_LAUNCH.get(`tokens/${accountId}.json`);
+        const tokenRecord = existingTokens ? await existingTokens.json() : { accountId, taxGameTokens: 0, transcriptTokens: 0 };
+        if (tokenType === 'tax_game') tokenRecord.taxGameTokens = (tokenRecord.taxGameTokens ?? 0) + quantity;
+        else tokenRecord.transcriptTokens = (tokenRecord.transcriptTokens ?? 0) + quantity;
+        tokenRecord.updatedAt = now;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `tokens/${accountId}.json`, tokenRecord);
+
+        // Read current D1 tokens, add, update
+        const tokenRow = await env.DB.prepare('SELECT * FROM tokens WHERE account_id = ?').bind(accountId).first();
+        const currentTaxGame    = tokenRow?.tax_game_tokens    ?? 0;
+        const currentTranscript = tokenRow?.transcript_tokens  ?? 0;
+        const newTaxGame        = tokenType === 'tax_game'   ? currentTaxGame + quantity    : currentTaxGame;
+        const newTranscript     = tokenType === 'transcript' ? currentTranscript + quantity : currentTranscript;
+        await d1Run(env.DB,
+          'INSERT OR REPLACE INTO tokens (account_id, tax_game_tokens, transcript_tokens, updated_at) VALUES (?, ?, ?, ?)',
+          [accountId, newTaxGame, newTranscript, now]
+        );
+        return json({ ok: true, accountId, eventId, status: 'purchased' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/billing/receipts/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const listResult = await env.R2_VIRTUAL_LAUNCH.list({ prefix: 'receipts/billing/', limit: 50 });
+        const results = await Promise.all(
+          listResult.objects.map(async (obj) => {
+            try {
+              const item = await env.R2_VIRTUAL_LAUNCH.get(obj.key);
+              if (!item) return null;
+              const data = await item.json();
+              return data.accountId === params.account_id ? data : null;
+            } catch { return null; }
+          })
+        );
+        const receipts = results.filter(Boolean);
+        return json({ ok: true, receipts, status: 'retrieved' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Receipt listing failed' }, 500);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // CHECKOUT
   // -------------------------------------------------------------------------
 
-  { method: 'POST', pattern: '/v1/checkout/sessions', handler: stub },
-  { method: 'GET',  pattern: '/v1/checkout/status',   handler: stub },
+  {
+    method: 'POST', pattern: '/v1/checkout/sessions',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { accountId, billingInterval, cancelUrl, planKey, successUrl } = body ?? {};
+      if (!accountId || !billingInterval || !cancelUrl || !planKey || !successUrl) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'accountId, billingInterval, cancelUrl, planKey, successUrl required' }, 400);
+      }
+      if (planKey === 'vlp_free') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'Free plan does not require checkout' }, 400);
+      }
+      const priceId = getPriceId(planKey, billingInterval, env);
+      if (!priceId) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'Invalid planKey or billingInterval' }, 400);
+      }
+      try {
+        const membershipId = `MEM_${crypto.randomUUID()}`;
+        const session = await stripePost('/checkout/sessions', {
+          mode: 'subscription',
+          line_items: [{ price: priceId, quantity: 1 }],
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+          metadata: { account_id: accountId, membership_id: membershipId, plan_key: planKey, billing_interval: billingInterval },
+        }, env);
+        const checkoutSessionId = session.id;
+        const now = new Date().toISOString();
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval, checkoutSessionId, status: 'pending', createdAt: now,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?)`,
+          [membershipId, accountId, planKey, billingInterval, now]
+        );
+        return json({ ok: true, checkoutSessionId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/checkout/status',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const url = new URL(request.url);
+      const sessionId = url.searchParams.get('sessionId');
+      if (!sessionId) return json({ ok: false, error: 'BAD_REQUEST', message: 'sessionId required' }, 400);
+      try {
+        const session = await stripeGet(`/checkout/sessions/${sessionId}`, env);
+        return json({
+          ok: true,
+          status: session.status,
+          paymentStatus: session.payment_status,
+          customerEmail: session.customer_details?.email,
+        });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // WEBHOOKS
   // Stripe and Twilio retry on non-200 — always return 200 immediately.
   // -------------------------------------------------------------------------
 
-  { method: 'POST', pattern: '/v1/webhooks/stripe', handler: () => json({ ok: true, received: true }) },
+  {
+    method: 'POST', pattern: '/v1/webhooks/stripe',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const rawBody = await request.text();
+      const sigHeader = request.headers.get('Stripe-Signature') ?? '';
+
+      // Parse t= and v1= from the Stripe-Signature header
+      const parts = sigHeader.split(',');
+      const tPart = parts.find(p => p.startsWith('t='));
+      const v1Parts = parts.filter(p => p.startsWith('v1='));
+      const timestamp = tPart?.slice(2);
+      const signatures = v1Parts.map(p => p.slice(3));
+
+      if (!timestamp || signatures.length === 0) {
+        return json({ ok: false, error: 'INVALID_SIGNATURE' }, 400);
+      }
+
+      // Reject stale webhooks (> 300 seconds)
+      if (Math.floor(Date.now() / 1000) - parseInt(timestamp) > 300) {
+        return json({ ok: false, error: 'INVALID_SIGNATURE' }, 400);
+      }
+
+      // Verify HMAC-SHA256 signature
+      try {
+        const enc = new TextEncoder();
+        const key = await crypto.subtle.importKey(
+          'raw', enc.encode(env.STRIPE_WEBHOOK_SECRET),
+          { name: 'HMAC', hash: 'SHA-256' },
+          false, ['sign']
+        );
+        const sigBuf = await crypto.subtle.sign('HMAC', key, enc.encode(`${timestamp}.${rawBody}`));
+        const expectedHex = Array.from(new Uint8Array(sigBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        const isValid = signatures.some(s => s === expectedHex);
+        if (!isValid) return json({ ok: false, error: 'INVALID_SIGNATURE' }, 400);
+      } catch {
+        return json({ ok: false, error: 'INVALID_SIGNATURE' }, 400);
+      }
+
+      // Parse event
+      let event;
+      try {
+        event = JSON.parse(rawBody);
+      } catch {
+        return json({ ok: true, received: true }); // malformed but always 200
+      }
+
+      // Handle event — errors are logged, never returned to Stripe
+      try {
+        const obj = event.data?.object ?? {};
+        const now = new Date().toISOString();
+
+        switch (event.type) {
+
+          case 'checkout.session.completed': {
+            const { account_id, membership_id, plan_key, billing_interval } = obj.metadata ?? {};
+            if (membership_id) {
+              const tokenGrant = getTokenGrant(plan_key);
+
+              const existingMem = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${membership_id}.json`);
+              const memRecord = existingMem ? await existingMem.json() : {};
+              memRecord.status = 'active';
+              memRecord.stripeSubscriptionId = obj.subscription;
+              memRecord.updatedAt = now;
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membership_id}.json`, memRecord);
+
+              await d1Run(env.DB,
+                'UPDATE memberships SET status = \'active\', updated_at = ? WHERE membership_id = ?',
+                [now, membership_id]
+              );
+              await d1Run(env.DB,
+                'INSERT OR REPLACE INTO tokens (account_id, tax_game_tokens, transcript_tokens, updated_at) VALUES (?, ?, ?, ?)',
+                [account_id, tokenGrant.taxGameTokens, tokenGrant.transcriptTokens, now]
+              );
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `tokens/${account_id}.json`, {
+                accountId: account_id, planKey: plan_key, billingInterval: billing_interval,
+                ...tokenGrant, updatedAt: now,
+              });
+            }
+            break;
+          }
+
+          case 'customer.subscription.updated': {
+            const { membership_id } = obj.metadata ?? {};
+            if (membership_id) {
+              const existingMem = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${membership_id}.json`);
+              const memRecord = existingMem ? await existingMem.json() : {};
+              memRecord.status = obj.status;
+              memRecord.updatedAt = now;
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membership_id}.json`, memRecord);
+              await d1Run(env.DB,
+                'UPDATE memberships SET status = ?, updated_at = ? WHERE membership_id = ?',
+                [obj.status, now, membership_id]
+              );
+            }
+            break;
+          }
+
+          case 'customer.subscription.deleted': {
+            const { membership_id } = obj.metadata ?? {};
+            if (membership_id) {
+              const existingMem = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${membership_id}.json`);
+              const memRecord = existingMem ? await existingMem.json() : {};
+              memRecord.status = 'cancelled';
+              memRecord.updatedAt = now;
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membership_id}.json`, memRecord);
+              await d1Run(env.DB,
+                'UPDATE memberships SET status = \'cancelled\', updated_at = ? WHERE membership_id = ?',
+                [now, membership_id]
+              );
+            }
+            break;
+          }
+
+          case 'invoice.paid': {
+            const invoiceId = obj.id;
+            // Look up accountId from D1 using stripe_customer_id
+            const customerRow = await env.DB.prepare(
+              'SELECT account_id FROM billing_customers WHERE stripe_customer_id = ?'
+            ).bind(obj.customer).first();
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_invoices/${invoiceId}.json`, {
+              invoiceId,
+              accountId: customerRow?.account_id ?? null,
+              amount: obj.amount_paid,
+              currency: obj.currency,
+              status: 'paid',
+              paidAt: now,
+            });
+            break;
+          }
+
+          case 'invoice.payment_failed': {
+            const invoiceId = obj.id;
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_invoices/${invoiceId}.json`, {
+              invoiceId, status: 'payment_failed', failedAt: now,
+            });
+            if (obj.subscription) {
+              await d1Run(env.DB,
+                'UPDATE memberships SET status = \'past_due\', updated_at = ? WHERE stripe_subscription_id = ?',
+                [now, obj.subscription]
+              );
+            }
+            break;
+          }
+
+          case 'payment_intent.succeeded': {
+            const piId = obj.id;
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_payment_intents/${piId}.json`, {
+              paymentIntentId: piId, amount: obj.amount, currency: obj.currency,
+              status: 'succeeded', succeededAt: now,
+            });
+            break;
+          }
+
+          case 'payment_intent.payment_failed': {
+            const piId = obj.id;
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `billing_payment_intents/${piId}.json`, {
+              paymentIntentId: piId, status: 'failed', failedAt: now,
+            });
+            break;
+          }
+
+          default:
+            // Unhandled event type — always return 200
+            break;
+        }
+      } catch (e) {
+        console.error(`[webhook] Error handling ${event?.type}: ${e.message}`);
+      }
+
+      return json({ ok: true, received: true });
+    },
+  },
+
   { method: 'POST', pattern: '/v1/webhooks/twilio', handler: () => json({ ok: true, received: true }) },
 
   // -------------------------------------------------------------------------
