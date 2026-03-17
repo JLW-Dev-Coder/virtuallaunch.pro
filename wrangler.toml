@@ -22,12 +22,18 @@ enabled = true
 invocation_logs = true
 
 # ---------------------------------------
-# Platform Bindings
+# Bindings
 # ---------------------------------------
 
 [[r2_buckets]]
 binding = "R2_VIRTUAL_LAUNCH"
 bucket_name = "virtuallaunch-pro"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "virtuallaunch-pro"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "workers/migrations"
 
 # ---------------------------------------
 # Vars (non-secret)
@@ -93,12 +99,10 @@ STRIPE_PRODUCT_VLP_PRO_YEARLY = "prod_U7PJAioATefEi7"
 STRIPE_PRODUCT_VLP_STARTER_MONTHLY = "prod_U7PDtTKvnjGuxE"
 STRIPE_PRODUCT_VLP_STARTER_YEARLY = "prod_U7PDtTKvnjGuxE"
 
-STRIPE_PUBLISHABLE_KEY = "pk_live_..."
-
-# (rest unchanged for brevity, you already know your own file better than I do)
+STRIPE_PUBLISHABLE_KEY = "pk_live_51T99pl9ROeyeXOqedzg5KIWii7uWGBxKYlTEhRymUiKOSXUA2m2AZ2uO9Pq36iKewxMg872yeZubOIKjy8jjYgrm00IhXpjxd6"
 
 # =================================================
-# Secrets (set via wrangler secret put)
+# Secrets
 # =================================================
 
 # =================================================
