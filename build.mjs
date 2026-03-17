@@ -333,7 +333,7 @@ async function main() {
       transformHtmlFiles: true,
       wranglerVars,
     });
-  });
+  }
 
   await copyRootFiles();
 
