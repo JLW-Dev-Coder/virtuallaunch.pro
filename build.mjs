@@ -334,7 +334,6 @@ async function main() {
       wranglerVars,
     });
   });
-  }
 
   await copyRootFiles();
 
