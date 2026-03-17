@@ -70,6 +70,39 @@
  *   tax_game_tokens INTEGER NOT NULL DEFAULT 0
  *   transcript_tokens INTEGER NOT NULL DEFAULT 0
  *   updated_at TEXT NOT NULL
+ *
+ * cal_connections
+ *   connection_id TEXT PRIMARY KEY
+ *   account_id TEXT NOT NULL
+ *   cal_app TEXT NOT NULL
+ *   access_token TEXT NOT NULL
+ *   refresh_token TEXT NOT NULL
+ *   expires_at TEXT NOT NULL
+ *   created_at TEXT NOT NULL
+ *   updated_at TEXT
+ *
+ * bookings
+ *   booking_id TEXT PRIMARY KEY
+ *   account_id TEXT NOT NULL
+ *   professional_id TEXT
+ *   cal_booking_uid TEXT
+ *   booking_type TEXT NOT NULL
+ *   scheduled_at TEXT NOT NULL
+ *   timezone TEXT NOT NULL
+ *   status TEXT NOT NULL DEFAULT 'pending'
+ *   created_at TEXT NOT NULL
+ *   updated_at TEXT
+ *
+ * profiles
+ *   professional_id TEXT PRIMARY KEY
+ *   account_id TEXT NOT NULL
+ *   display_name TEXT NOT NULL
+ *   title TEXT
+ *   bio TEXT
+ *   specialties TEXT
+ *   availability TEXT NOT NULL DEFAULT 'available'
+ *   created_at TEXT NOT NULL
+ *   updated_at TEXT
  */
 
 // ---------------------------------------------------------------------------
@@ -450,6 +483,32 @@ function getTokenGrant(planKey) {
     vlp_pro:      { taxGameTokens: 50000, transcriptTokens: 150000 },
   };
   return grants[planKey] ?? { taxGameTokens: 0, transcriptTokens: 0 };
+}
+
+async function calPost(path, body, accessToken) {
+  const res = await fetch(`https://api.cal.com/v1${path}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data?.message ?? `Cal.com error ${res.status}`);
+  return data;
+}
+
+async function verifyCalSignature(rawBody, signatureHeader, secret) {
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw', encoder.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sigBytes = await crypto.subtle.sign('HMAC', key, encoder.encode(rawBody));
+  const expected = Array.from(new Uint8Array(sigBytes))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+  return expected === signatureHeader;
 }
 
 // ---------------------------------------------------------------------------
@@ -1664,26 +1723,435 @@ const ROUTES = [
   },
 
   { method: 'POST', pattern: '/v1/webhooks/twilio', handler: () => json({ ok: true, received: true }) },
-  { method: 'POST', pattern: '/v1/webhooks/cal',    handler: stub },
+
+  {
+    method: 'POST', pattern: '/v1/webhooks/cal',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const rawBody = await request.text();
+      const sigHeader = request.headers.get('X-Cal-Signature-256') ?? '';
+      if (env.CAL_WEBHOOK_SECRET) {
+        const valid = await verifyCalSignature(rawBody, sigHeader, env.CAL_WEBHOOK_SECRET);
+        if (!valid) return json({ ok: false, error: 'INVALID_SIGNATURE' }, 401);
+      }
+      let payload;
+      try { payload = JSON.parse(rawBody); } catch { return json({ ok: false, error: 'INVALID_JSON' }, 400); }
+
+      const eventType = payload?.triggerEvent ?? payload?.type ?? '';
+      const now = new Date().toISOString();
+      try {
+        switch (eventType) {
+          case 'BOOKING_CREATED': {
+            const uid = payload.payload?.uid;
+            const startTime = payload.payload?.startTime;
+            const bookingId = `BOOK_${(startTime ?? now).slice(0, 10).replace(/-/g, '')}_${crypto.randomUUID().slice(0, 6).toUpperCase()}`;
+            const attendeeEmail = payload.payload?.attendees?.[0]?.email ?? '';
+            const accountRow = await env.DB.prepare('SELECT account_id FROM accounts WHERE email = ?').bind(attendeeEmail).first();
+            const booking = {
+              bookingId,
+              accountId: accountRow?.account_id ?? null,
+              professionalId: null,
+              calBookingUid: uid,
+              bookingType: payload.payload?.type ?? 'unknown',
+              scheduledAt: startTime ?? now,
+              timezone: payload.payload?.attendees?.[0]?.timeZone ?? 'UTC',
+              status: 'confirmed',
+              createdAt: now, updatedAt: now,
+            };
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, booking);
+            if (accountRow?.account_id) {
+              await d1Run(env.DB,
+                `INSERT OR IGNORE INTO bookings (booking_id, account_id, professional_id, cal_booking_uid, booking_type, scheduled_at, timezone, status, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [bookingId, accountRow.account_id, null, uid, booking.bookingType, booking.scheduledAt, booking.timezone, 'confirmed', now, now]
+              );
+            }
+            break;
+          }
+
+          case 'BOOKING_RESCHEDULED': {
+            const uid = payload.payload?.uid;
+            const newStart = payload.payload?.startTime;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              const updated = { ...existing, scheduledAt: newStart ?? existing.scheduledAt, status: 'rescheduled', updatedAt: now };
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, updated);
+              await d1Run(env.DB,
+                'UPDATE bookings SET scheduled_at = ?, status = ?, updated_at = ? WHERE cal_booking_uid = ?',
+                [newStart ?? existing.scheduledAt, 'rescheduled', now, uid]
+              );
+            }
+            break;
+          }
+
+          case 'BOOKING_CANCELLED': {
+            const uid = payload.payload?.uid;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, { ...existing, status: 'cancelled', updatedAt: now });
+              await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['cancelled', now, uid]);
+            }
+            break;
+          }
+
+          case 'BOOKING_CONFIRMED': {
+            const uid = payload.payload?.uid;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, { ...existing, status: 'confirmed', updatedAt: now });
+            }
+            await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['confirmed', now, uid]);
+            break;
+          }
+
+          case 'BOOKING_DECLINED': {
+            const uid = payload.payload?.uid;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, { ...existing, status: 'declined', updatedAt: now });
+            }
+            await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['declined', now, uid]);
+            break;
+          }
+
+          case 'BOOKING_COMPLETED': {
+            const uid = payload.payload?.uid;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, { ...existing, status: 'completed', updatedAt: now });
+            }
+            await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['completed', now, uid]);
+            break;
+          }
+
+          case 'MEETING_ENDED': {
+            const uid = payload.payload?.uid;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, { ...existing, status: 'completed', meetingEndedAt: now, updatedAt: now });
+            }
+            await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['completed', now, uid]);
+            break;
+          }
+
+          case 'FORM_SUBMITTED': {
+            const uid = payload.payload?.uid ?? crypto.randomUUID();
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_forms/${uid}.json`, { ...payload.payload, receivedAt: now });
+            break;
+          }
+
+          case 'RECORDING_READY': {
+            const uid = payload.payload?.uid;
+            const recordingUrl = payload.payload?.recordingUrl ?? payload.payload?.downloadLink;
+            const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/cal_${uid}.json`);
+            if (obj) {
+              const existing = await obj.json();
+              await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/cal_${uid}.json`, { ...existing, recordingUrl, updatedAt: now });
+            }
+            break;
+          }
+
+          case 'PAYMENT_INITIATED': {
+            const uid = payload.payload?.uid;
+            const paymentId = payload.payload?.paymentId ?? crypto.randomUUID();
+            await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_payments/${paymentId}.json`, {
+              paymentId, calBookingUid: uid,
+              amount: payload.payload?.amount, currency: payload.payload?.currency,
+              status: 'initiated', initiatedAt: now,
+            });
+            break;
+          }
+
+          case 'PAYMENT_CONFIRMED': {
+            const uid = payload.payload?.uid;
+            const paymentId = payload.payload?.paymentId;
+            if (paymentId) {
+              const obj = await env.R2_VIRTUAL_LAUNCH.get(`cal_payments/${paymentId}.json`);
+              if (obj) {
+                const existing = await obj.json();
+                await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_payments/${paymentId}.json`, { ...existing, status: 'confirmed', confirmedAt: now });
+              }
+            }
+            await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['confirmed', now, uid]);
+            break;
+          }
+
+          case 'PAYMENT_FAILED': {
+            const uid = payload.payload?.uid;
+            const paymentId = payload.payload?.paymentId;
+            if (paymentId) {
+              const obj = await env.R2_VIRTUAL_LAUNCH.get(`cal_payments/${paymentId}.json`);
+              if (obj) {
+                const existing = await obj.json();
+                await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_payments/${paymentId}.json`, { ...existing, status: 'failed', failedAt: now });
+              }
+            }
+            await d1Run(env.DB, 'UPDATE bookings SET status = ?, updated_at = ? WHERE cal_booking_uid = ?', ['payment_failed', now, uid]);
+            break;
+          }
+
+          default:
+            // Unhandled event type — always return 200
+            break;
+        }
+      } catch (e) {
+        console.error(`[cal-webhook] Error handling ${eventType}: ${e.message}`);
+      }
+      return json({ ok: true, received: true });
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // CAL OAUTH
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'GET', pattern: '/v1/cal/oauth/start',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const url = new URL('https://app.cal.com/oauth/authorize');
+      url.searchParams.set('client_id', env.CAL_APP_OAUTH_CLIENT_ID);
+      url.searchParams.set('redirect_uri', 'https://api.virtuallaunch.pro/v1/cal/oauth/callback');
+      url.searchParams.set('response_type', 'code');
+      return json({ ok: true, status: 'redirect_required', authorizationUrl: url.toString() });
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/cal/oauth/callback',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      const url = new URL(request.url);
+      const code = url.searchParams.get('code');
+      if (!code) return json({ ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' }, 400);
+
+      const tokenRes = await fetch('https://app.cal.com/oauth/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          grant_type: 'authorization_code',
+          client_id: env.CAL_APP_OAUTH_CLIENT_ID,
+          client_secret: env.CAL_APP_OAUTH_CLIENT_SECRET,
+          redirect_uri: 'https://api.virtuallaunch.pro/v1/cal/oauth/callback',
+          code,
+        }),
+      });
+      const tokenData = await tokenRes.json().catch(() => ({}));
+      if (!tokenRes.ok) return json({ ok: false, error: 'TOKEN_EXCHANGE_FAILED', message: tokenData?.error_description ?? 'Token exchange failed' }, 502);
+
+      const now = new Date().toISOString();
+      const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000).toISOString();
+      const connectionId = `cal_${session.account_id}`;
+      const connection = {
+        connectionId, accountId: session.account_id, calApp: 'cal_app',
+        accessToken: tokenData.access_token, refreshToken: tokenData.refresh_token,
+        expiresAt, createdAt: now, updatedAt: now,
+      };
+      await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_connections/${connectionId}.json`, connection);
+      await d1Run(env.DB,
+        `INSERT INTO cal_connections (connection_id, account_id, cal_app, access_token, refresh_token, expires_at, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT(connection_id) DO UPDATE SET
+           access_token = excluded.access_token,
+           refresh_token = excluded.refresh_token,
+           expires_at = excluded.expires_at,
+           updated_at = excluded.updated_at`,
+        [connectionId, session.account_id, 'cal_app', tokenData.access_token, tokenData.refresh_token, expiresAt, now, now]
+      );
+      return json({ ok: true, status: 'connected' });
+    },
+  },
 
   // -------------------------------------------------------------------------
   // BOOKINGS
   // -------------------------------------------------------------------------
 
-  { method: 'POST',  pattern: '/v1/bookings',                                    handler: stub },
-  { method: 'GET',   pattern: '/v1/bookings/by-account/:account_id',             handler: stub },
-  { method: 'GET',   pattern: '/v1/bookings/by-professional/:professional_id',   handler: stub },
-  { method: 'GET',   pattern: '/v1/bookings/:booking_id',                        handler: stub },
-  { method: 'PATCH', pattern: '/v1/bookings/:booking_id',                        handler: stub },
+  {
+    method: 'POST', pattern: '/v1/bookings',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { professionalId, bookingType, scheduledAt, timezone } = body ?? {};
+      if (!professionalId || !bookingType || !scheduledAt || !timezone) {
+        return json({ ok: false, error: 'MISSING_FIELDS', message: 'professionalId, bookingType, scheduledAt, timezone required' }, 400);
+      }
+      const connectionId = `cal_${professionalId}`;
+      const connObj = await env.R2_VIRTUAL_LAUNCH.get(`cal_connections/${connectionId}.json`);
+      if (!connObj) return json({ ok: false, error: 'PROFESSIONAL_NOT_CONNECTED', message: 'Professional not connected to Cal.com' }, 422);
+      const connection = await connObj.json();
+
+      const now = new Date().toISOString();
+      const bookingId = `BOOK_${scheduledAt.slice(0, 10).replace(/-/g, '')}_${crypto.randomUUID().slice(0, 6).toUpperCase()}`;
+      let calBookingUid = null;
+      try {
+        const calResult = await calPost('/bookings', {
+          eventTypeId: body.eventTypeId,
+          start: scheduledAt,
+          timeZone: timezone,
+          attendee: { name: session.email, email: session.email, timeZone: timezone },
+          metadata: { vlp_booking_id: bookingId, account_id: session.account_id },
+        }, connection.accessToken);
+        calBookingUid = calResult?.uid ?? null;
+      } catch (_calErr) {
+        // Cal.com call failed — store booking without UID, webhook will reconcile
+      }
+
+      const booking = {
+        bookingId, accountId: session.account_id, professionalId,
+        calBookingUid, bookingType, scheduledAt, timezone,
+        status: 'pending', createdAt: now, updatedAt: now,
+      };
+      await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/${bookingId}.json`, booking);
+      await d1Run(env.DB,
+        `INSERT INTO bookings (booking_id, account_id, professional_id, cal_booking_uid, booking_type, scheduled_at, timezone, status, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [bookingId, session.account_id, professionalId, calBookingUid, bookingType, scheduledAt, timezone, 'pending', now, now]
+      );
+      return json({ ok: true, booking }, 201);
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/bookings/by-account/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const rows = await env.DB.prepare(
+        'SELECT * FROM bookings WHERE account_id = ? ORDER BY scheduled_at DESC'
+      ).bind(params.account_id).all();
+      return json({ ok: true, bookings: rows.results ?? [] });
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/bookings/by-professional/:professional_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const rows = await env.DB.prepare(
+        'SELECT * FROM bookings WHERE professional_id = ? ORDER BY scheduled_at DESC'
+      ).bind(params.professional_id).all();
+      return json({ ok: true, bookings: rows.results ?? [] });
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/bookings/:booking_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/${params.booking_id}.json`);
+      if (!obj) return json({ ok: false, error: 'NOT_FOUND', message: 'Booking not found' }, 404);
+      return json({ ok: true, booking: await obj.json() });
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/bookings/:booking_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(`bookings/${params.booking_id}.json`);
+      if (!obj) return json({ ok: false, error: 'NOT_FOUND', message: 'Booking not found' }, 404);
+      const existing = await obj.json();
+      const now = new Date().toISOString();
+      const updated = { ...existing, updatedAt: now };
+      const setClauses = ['updated_at = ?'];
+      const vals = [now];
+      if (body?.status)      { updated.status = body.status;           setClauses.unshift('status = ?');       vals.unshift(body.status); }
+      if (body?.scheduledAt) { updated.scheduledAt = body.scheduledAt; setClauses.unshift('scheduled_at = ?'); vals.unshift(body.scheduledAt); }
+      if (body?.timezone)    { updated.timezone = body.timezone;       setClauses.unshift('timezone = ?');     vals.unshift(body.timezone); }
+      if (body?.bookingType) { updated.bookingType = body.bookingType; setClauses.unshift('booking_type = ?'); vals.unshift(body.bookingType); }
+      await r2Put(env.R2_VIRTUAL_LAUNCH, `bookings/${params.booking_id}.json`, updated);
+      await d1Run(env.DB, `UPDATE bookings SET ${setClauses.join(', ')} WHERE booking_id = ?`, [...vals, params.booking_id]);
+      return json({ ok: true, booking: updated });
+    },
+  },
 
   // -------------------------------------------------------------------------
   // PROFILES
   // -------------------------------------------------------------------------
 
-  { method: 'POST',  pattern: '/v1/profiles',                           handler: stub },
-  { method: 'GET',   pattern: '/v1/profiles/public/:professional_id',   handler: stub },
-  { method: 'GET',   pattern: '/v1/profiles/:professional_id',          handler: stub },
-  { method: 'PATCH', pattern: '/v1/profiles/:professional_id',          handler: stub },
+  {
+    method: 'POST', pattern: '/v1/profiles',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const { professionalId, displayName } = body ?? {};
+      if (!professionalId || !displayName) {
+        return json({ ok: false, error: 'MISSING_FIELDS', message: 'professionalId and displayName required' }, 400);
+      }
+      const now = new Date().toISOString();
+      const profile = {
+        professionalId, accountId: session.account_id,
+        displayName, title: body.title ?? null, bio: body.bio ?? null,
+        specialties: body.specialties ?? null, availability: body.availability ?? 'available',
+        createdAt: now, updatedAt: now,
+      };
+      await r2Put(env.R2_VIRTUAL_LAUNCH, `profiles/${professionalId}.json`, profile);
+      await d1Run(env.DB,
+        `INSERT INTO profiles (professional_id, account_id, display_name, title, bio, specialties, availability, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [professionalId, session.account_id, displayName, profile.title, profile.bio, profile.specialties, profile.availability, now, now]
+      );
+      return json({ ok: true, profile }, 201);
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/profiles/public/:professional_id',
+    handler: async (_method, _pattern, params, _request, env) => {
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(`profiles/${params.professional_id}.json`);
+      if (!obj) return json({ ok: false, error: 'NOT_FOUND', message: 'Profile not found' }, 404);
+      const { accountId: _accountId, ...publicProfile } = await obj.json();
+      return json({ ok: true, profile: publicProfile });
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/profiles/:professional_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(`profiles/${params.professional_id}.json`);
+      if (!obj) return json({ ok: false, error: 'NOT_FOUND', message: 'Profile not found' }, 404);
+      return json({ ok: true, profile: await obj.json() });
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/profiles/:professional_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      const body = await parseBody(request);
+      const obj = await env.R2_VIRTUAL_LAUNCH.get(`profiles/${params.professional_id}.json`);
+      if (!obj) return json({ ok: false, error: 'NOT_FOUND', message: 'Profile not found' }, 404);
+      const existing = await obj.json();
+      const now = new Date().toISOString();
+      const updated = { ...existing, updatedAt: now };
+      const setClauses = ['updated_at = ?'];
+      const vals = [now];
+      if (body?.displayName)  { updated.displayName = body.displayName;   setClauses.unshift('display_name = ?');  vals.unshift(body.displayName); }
+      if (body?.title)        { updated.title = body.title;               setClauses.unshift('title = ?');         vals.unshift(body.title); }
+      if (body?.bio)          { updated.bio = body.bio;                   setClauses.unshift('bio = ?');           vals.unshift(body.bio); }
+      if (body?.specialties)  { updated.specialties = body.specialties;   setClauses.unshift('specialties = ?');   vals.unshift(body.specialties); }
+      if (body?.availability) { updated.availability = body.availability; setClauses.unshift('availability = ?');  vals.unshift(body.availability); }
+      await r2Put(env.R2_VIRTUAL_LAUNCH, `profiles/${params.professional_id}.json`, updated);
+      await d1Run(env.DB, `UPDATE profiles SET ${setClauses.join(', ')} WHERE professional_id = ?`, [...vals, params.professional_id]);
+      return json({ ok: true, profile: updated });
+    },
+  },
 
   // -------------------------------------------------------------------------
   // SUPPORT TICKETS
