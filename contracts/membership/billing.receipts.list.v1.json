@@ -1,0 +1,62 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP billing receipts list retrieval",
+    "path": "/contracts/membership/billing.receipts.list.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Receipts Contract — List",
+    "usedOnPages": [
+      "/app/receipts.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": false
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/receipts/{accountId}",
+    "method": "GET",
+    "receiptKeyPattern": null,
+    "receiptSource": null,
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": null,
+    "eventIdFrom": null,
+    "readFrom": [
+      "receipts/vlp/billing/"
+    ],
+    "writeOrder": [],
+    "writes": []
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "limit": {
+        "minimum": 1,
+        "type": "number"
+      }
+    },
+    "required": [
+      "accountId"
+    ],
+    "type": "object"
+  }
+}

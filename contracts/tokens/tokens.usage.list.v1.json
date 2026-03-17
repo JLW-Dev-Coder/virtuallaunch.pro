@@ -1,0 +1,64 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP token usage history retrieval",
+    "path": "/contracts/tokens/tokens.usage.list.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Tokens Contract — Usage List",
+    "usedOnPages": [
+      "/app/token-usage.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": false
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/tokens/usage/{accountId}",
+    "method": "GET",
+    "receiptKeyPattern": null,
+    "receiptSource": null,
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": null,
+    "eventIdFrom": null,
+    "readFrom": [
+      "receipts/vlp/billing_tokens_purchase/",
+      "receipts/vlp/billing/tokens/",
+      "receipts/vlp/billing/tokens/purchase/"
+    ],
+    "writeOrder": [],
+    "writes": []
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "limit": {
+        "minimum": 1,
+        "type": "number"
+      }
+    },
+    "required": [
+      "accountId"
+    ],
+    "type": "object"
+  }
+}

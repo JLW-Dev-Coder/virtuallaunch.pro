@@ -1,0 +1,88 @@
+﻿{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP public contact submission",
+    "path": "/contracts/account/contact.submit.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Contact Contract — Submit",
+    "usedOnPages": [
+      "/site/contact.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/contact/submit",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/contact/{eventId}.json",
+    "receiptSource": "vlp_contact_submit",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/contact/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "contact_submissions/{eventId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "contact_submissions"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "email": {
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "message": {
+        "maxLength": 5000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "name": {
+        "maxLength": 200,
+        "minLength": 1,
+        "type": "string"
+      },
+      "source": {
+        "maxLength": 200,
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "email",
+      "eventId",
+      "message",
+      "name",
+      "source"
+    ],
+    "type": "object"
+  }
+}
