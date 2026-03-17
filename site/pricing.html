@@ -166,6 +166,8 @@
               Toggle monthly or yearly billing. Each paid plan carries a 12% platform fee, while Free stays at 0%. Token allocations and plan keys below match the current TOML.
             </p>
 
+            <div class="mt-6 hidden rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-100" id="pricing-status"></div>
+
             <div class="mt-8 inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1">
               <button id="billing-monthly" type="button" class="rounded-full bg-brand-500 px-4 py-2 text-sm font-bold text-ink-900 transition">Monthly</button>
               <button id="billing-yearly" type="button" class="rounded-full px-4 py-2 text-sm font-bold text-white/80 transition hover:text-white">Yearly</button>
@@ -179,15 +181,15 @@
                 <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/80">Start here</span>
               </div>
               <div class="mt-4">
-                <div class="text-4xl font-extrabold">$0</div>
-                <div class="mt-2 text-sm text-white/70">/mo</div>
+                <div class="text-4xl font-extrabold" data-price="free">$0</div>
+                <div class="mt-2 text-sm text-white/70" data-price-suffix="free">/mo</div>
               </div>
               <p class="mt-5 text-sm text-white/70">Entry access for getting inside the ecosystem before moving into recurring paid capacity.</p>
               <ul class="mt-6 space-y-3 text-sm text-white/75">
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>0 transcript tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>0 tax tool game tokens</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Plan key: vlp_free</span></li>
-                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span>Platform fee: 0%</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-transcripts="free">0 transcript tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-taxgame="free">0 tax tool game tokens</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-plan-key="free">Plan key: vlp_free</span></li>
+                <li class="flex items-start gap-3"><span class="mt-1 h-1.5 w-1.5 rounded-full bg-brand-500"></span><span data-platform-fee="free">Platform fee: 0%</span></li>
               </ul>
               <div class="mt-8 flex gap-3">
                 <a class="flex-1 rounded-xl bg-brand-500 px-5 py-3 text-center text-sm font-extrabold text-ink-900 hover:bg-brand-400" href="#top" data-checkout-link="free">Get started</a>
@@ -297,45 +299,45 @@
               <tbody>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Monthly cost</td>
-                  <td class="p-4 text-center">$0</td>
-                  <td class="p-4 text-center">$79</td>
-                  <td class="p-4 text-center">$199</td>
-                  <td class="p-4 text-center">$399</td>
+                  <td class="p-4 text-center" data-compare-price="free">$0</td>
+                  <td class="p-4 text-center" data-compare-price="starter">$79</td>
+                  <td class="p-4 text-center" data-compare-price="pro">$199</td>
+                  <td class="p-4 text-center" data-compare-price="advanced">$399</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Monthly transcript tokens</td>
-                  <td class="p-4 text-center">0</td>
-                  <td class="p-4 text-center">30</td>
-                  <td class="p-4 text-center">100</td>
-                  <td class="p-4 text-center">250</td>
+                  <td class="p-4 text-center" data-compare-transcripts="free">0</td>
+                  <td class="p-4 text-center" data-compare-transcripts="starter">30</td>
+                  <td class="p-4 text-center" data-compare-transcripts="pro">100</td>
+                  <td class="p-4 text-center" data-compare-transcripts="advanced">250</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Monthly tax tool game tokens</td>
-                  <td class="p-4 text-center">0</td>
-                  <td class="p-4 text-center">30</td>
-                  <td class="p-4 text-center">120</td>
-                  <td class="p-4 text-center">300</td>
+                  <td class="p-4 text-center" data-compare-taxgame="free">0</td>
+                  <td class="p-4 text-center" data-compare-taxgame="starter">30</td>
+                  <td class="p-4 text-center" data-compare-taxgame="pro">120</td>
+                  <td class="p-4 text-center" data-compare-taxgame="advanced">300</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Platform fee</td>
-                  <td class="p-4 text-center">0%</td>
-                  <td class="p-4 text-center">12%</td>
-                  <td class="p-4 text-center">12%</td>
-                  <td class="p-4 text-center">12%</td>
+                  <td class="p-4 text-center" data-compare-platform-fee="free">0%</td>
+                  <td class="p-4 text-center" data-compare-platform-fee="starter">12%</td>
+                  <td class="p-4 text-center" data-compare-platform-fee="pro">12%</td>
+                  <td class="p-4 text-center" data-compare-platform-fee="advanced">12%</td>
                 </tr>
                 <tr class="border-b border-white/10 align-middle">
                   <td class="p-4 font-medium text-white">Plan key</td>
-                  <td class="p-4 text-center">vlp_free</td>
-                  <td class="p-4 text-center">vlp_starter_monthly</td>
-                  <td class="p-4 text-center">vlp_pro_monthly</td>
-                  <td class="p-4 text-center">vlp_advanced_monthly</td>
+                  <td class="p-4 text-center" data-compare-plan-key="free">vlp_free</td>
+                  <td class="p-4 text-center" data-compare-plan-key="starter">vlp_starter_monthly</td>
+                  <td class="p-4 text-center" data-compare-plan-key="pro">vlp_pro_monthly</td>
+                  <td class="p-4 text-center" data-compare-plan-key="advanced">vlp_advanced_monthly</td>
                 </tr>
                 <tr class="align-middle bg-white/[0.02]">
                   <td class="p-4 font-medium text-white">Billing object</td>
-                  <td class="p-4 text-center">price_1TBjsM9ROeyeXOqeAPefMFfM</td>
-                  <td class="p-4 text-center">price_1T9APS9ROeyeXOqeOWjA4sq3</td>
-                  <td class="p-4 text-center">price_1T9AUi9ROeyeXOqeqyzsSOYV</td>
-                  <td class="p-4 text-center">price_1T9AXX9ROeyeXOqef7Ja1Iig</td>
+                  <td class="p-4 text-center" data-compare-billing-object="free">price_1TBjsM9ROeyeXOqeAPefMFfM</td>
+                  <td class="p-4 text-center" data-compare-billing-object="starter">price_1T9APS9ROeyeXOqeOWjA4sq3</td>
+                  <td class="p-4 text-center" data-compare-billing-object="pro">price_1T9AUi9ROeyeXOqeqyzsSOYV</td>
+                  <td class="p-4 text-center" data-compare-billing-object="advanced">price_1T9AXX9ROeyeXOqef7Ja1Iig</td>
                 </tr>
               </tbody>
             </table>
@@ -361,102 +363,212 @@
 
   <script>
     (function () {
+      const API_BASE_URL = 'https://api.virtuallaunch.pro';
+      const PRICING_URL = API_BASE_URL + '/v1/pricing';
+      const PLAN_ORDER = ['advanced', 'free', 'pro', 'starter'];
+      let activeCycle = 'monthly';
+
       var y = document.getElementById('footer-year');
       if (y) y.textContent = String(new Date().getFullYear());
 
       const PLAN_DATA = {
-        free: {
+        advanced: {
           monthly: {
+            billingObject: 'price_1T9AXX9ROeyeXOqef7Ja1Iig',
             checkoutHref: '#top',
-            price: '0',
+            planKey: 'vlp_advanced_monthly',
+            platformFee: '12',
+            price: '399',
             suffix: '/mo',
-            taxGameTokens: '0',
-            transcriptTokens: '0',
-            planKey: 'vlp_free',
-            platformFee: '0',
-            billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM'
+            taxGameTokens: '300',
+            transcriptTokens: '250'
           },
           yearly: {
+            billingObject: 'price_1TBk1G9ROeyeXOqeBQcj749T',
             checkoutHref: '#top',
-            price: '0',
+            planKey: 'vlp_advanced_yearly',
+            platformFee: '12',
+            price: '3990',
             suffix: '/yr',
-            taxGameTokens: '0',
-            transcriptTokens: '0',
-            planKey: 'vlp_free',
-            platformFee: '0',
-            billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM'
+            taxGameTokens: '3600',
+            transcriptTokens: '3000'
           }
         },
-        starter: {
+        free: {
           monthly: {
+            billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM',
             checkoutHref: '#top',
-            price: '79',
+            planKey: 'vlp_free',
+            platformFee: '0',
+            price: '0',
             suffix: '/mo',
-            taxGameTokens: '30',
-            transcriptTokens: '30',
-            planKey: 'vlp_starter_monthly',
-            platformFee: '12',
-            billingObject: 'price_1T9APS9ROeyeXOqeOWjA4sq3'
+            taxGameTokens: '0',
+            transcriptTokens: '0'
           },
           yearly: {
+            billingObject: 'price_1TBjsM9ROeyeXOqeAPefMFfM',
             checkoutHref: '#top',
-            price: '790',
+            planKey: 'vlp_free',
+            platformFee: '0',
+            price: '0',
             suffix: '/yr',
-            taxGameTokens: '360',
-            transcriptTokens: '360',
-            planKey: 'vlp_starter_yearly',
-            platformFee: '12',
-            billingObject: 'price_1TBjy19ROeyeXOqeyzbwP3hW'
+            taxGameTokens: '0',
+            transcriptTokens: '0'
           }
         },
         pro: {
           monthly: {
+            billingObject: 'price_1T9AUi9ROeyeXOqeqyzsSOYV',
             checkoutHref: '#top',
+            planKey: 'vlp_pro_monthly',
+            platformFee: '12',
             price: '199',
             suffix: '/mo',
             taxGameTokens: '120',
-            transcriptTokens: '100',
-            planKey: 'vlp_pro_monthly',
-            platformFee: '12',
-            billingObject: 'price_1T9AUi9ROeyeXOqeqyzsSOYV'
+            transcriptTokens: '100'
           },
           yearly: {
+            billingObject: 'price_1TBk0K9ROeyeXOqeC3sHQqFN',
             checkoutHref: '#top',
+            planKey: 'vlp_pro_yearly',
+            platformFee: '12',
             price: '1990',
             suffix: '/yr',
             taxGameTokens: '1440',
-            transcriptTokens: '1200',
-            planKey: 'vlp_pro_yearly',
-            platformFee: '12',
-            billingObject: 'price_1TBk0K9ROeyeXOqeC3sHQqFN'
+            transcriptTokens: '1200'
           }
         },
-        advanced: {
+        starter: {
           monthly: {
+            billingObject: 'price_1T9APS9ROeyeXOqeOWjA4sq3',
             checkoutHref: '#top',
-            price: '399',
-            suffix: '/mo',
-            taxGameTokens: '300',
-            transcriptTokens: '250',
-            planKey: 'vlp_advanced_monthly',
+            planKey: 'vlp_starter_monthly',
             platformFee: '12',
-            billingObject: 'price_1T9AXX9ROeyeXOqef7Ja1Iig'
+            price: '79',
+            suffix: '/mo',
+            taxGameTokens: '30',
+            transcriptTokens: '30'
           },
           yearly: {
+            billingObject: 'price_1TBjy19ROeyeXOqeyzbwP3hW',
             checkoutHref: '#top',
-            price: '3990',
-            suffix: '/yr',
-            taxGameTokens: '3600',
-            transcriptTokens: '3000',
-            planKey: 'vlp_advanced_yearly',
+            planKey: 'vlp_starter_yearly',
             platformFee: '12',
-            billingObject: 'price_1TBk1G9ROeyeXOqeBQcj749T'
+            price: '790',
+            suffix: '/yr',
+            taxGameTokens: '360',
+            transcriptTokens: '360'
           }
         }
       };
 
+      function normalizeKey(value) {
+        return String(value || '')
+          .trim()
+          .toLowerCase()
+          .replace(/^vlp_/, '')
+          .replace(/[^a-z0-9]+/g, '_')
+          .replace(/_(monthly|yearly)$/, '');
+      }
+
+      function readFirst(source, keys) {
+        for (var i = 0; i < keys.length; i += 1) {
+          var key = keys[i];
+          if (source && source[key] != null && source[key] !== '') return source[key];
+        }
+        return '';
+      }
+
+      function asPlanCycle(source, fallbackCycle) {
+        return {
+          billingObject: String(readFirst(source, ['billingObject', 'priceId', 'price_id', 'stripePriceId', 'stripe_price_id']) || ''),
+          checkoutHref: String(readFirst(source, ['checkoutHref', 'checkoutUrl', 'checkout_url', 'href']) || '#top'),
+          planKey: String(readFirst(source, ['planKey', 'plan_key', 'key', 'slug']) || ''),
+          platformFee: String(readFirst(source, ['platformFee', 'platform_fee_percent', 'platformFeePercent', 'feePercent']) || ''),
+          price: String(readFirst(source, ['cost', 'monthlyCost', 'yearlyCost', 'price', 'priceAmount', 'price_amount']) || '0'),
+          suffix: fallbackCycle === 'yearly' ? '/yr' : '/mo',
+          taxGameTokens: String(readFirst(source, ['taxGameTokens', 'tax_tool_tokens_monthly', 'taxToolTokens', 'tax_tool_game_tokens']) || '0'),
+          transcriptTokens: String(readFirst(source, ['transcriptTokens', 'transcript_tokens_monthly', 'transcriptTokenCount']) || '0')
+        };
+      }
+
+      function mergePlanCycle(target, incoming) {
+        return {
+          billingObject: incoming.billingObject || target.billingObject,
+          checkoutHref: incoming.checkoutHref || target.checkoutHref,
+          planKey: incoming.planKey || target.planKey,
+          platformFee: incoming.platformFee || target.platformFee,
+          price: incoming.price || target.price,
+          suffix: incoming.suffix || target.suffix,
+          taxGameTokens: incoming.taxGameTokens || target.taxGameTokens,
+          transcriptTokens: incoming.transcriptTokens || target.transcriptTokens
+        };
+      }
+
+      function mergeRemotePricing(payload) {
+        var buckets = [];
+
+        if (Array.isArray(payload)) buckets = payload;
+        if (payload && Array.isArray(payload.plans)) buckets = payload.plans;
+        if (payload && Array.isArray(payload.data)) buckets = payload.data;
+        if (payload && payload.pricing && Array.isArray(payload.pricing)) buckets = payload.pricing;
+        if (!buckets.length && payload && payload.plans && typeof payload.plans === 'object') {
+          Object.keys(payload.plans).forEach(function(key) {
+            var value = payload.plans[key];
+            if (value && typeof value === 'object') {
+              buckets.push(Object.assign({ plan: key }, value));
+            }
+          });
+        }
+        if (!buckets.length && payload && payload.pricing && typeof payload.pricing === 'object') {
+          Object.keys(payload.pricing).forEach(function(key) {
+            var value = payload.pricing[key];
+            if (value && typeof value === 'object') {
+              buckets.push(Object.assign({ plan: key }, value));
+            }
+          });
+        }
+
+        buckets.forEach(function(entry) {
+          var planName = normalizeKey(readFirst(entry, ['plan', 'planKey', 'plan_key', 'slug', 'name']));
+          if (!planName || !PLAN_DATA[planName]) return;
+
+          var hasNestedCycles = entry.monthly || entry.yearly;
+          if (hasNestedCycles) {
+            if (entry.monthly && typeof entry.monthly === 'object') {
+              PLAN_DATA[planName].monthly = mergePlanCycle(PLAN_DATA[planName].monthly, asPlanCycle(entry.monthly, 'monthly'));
+            }
+            if (entry.yearly && typeof entry.yearly === 'object') {
+              PLAN_DATA[planName].yearly = mergePlanCycle(PLAN_DATA[planName].yearly, asPlanCycle(entry.yearly, 'yearly'));
+            }
+            return;
+          }
+
+          var cycleRaw = String(readFirst(entry, ['billingCycle', 'billing_cycle', 'interval', 'frequency']) || '').toLowerCase();
+          var cycle = cycleRaw.indexOf('year') !== -1 ? 'yearly' : 'monthly';
+          PLAN_DATA[planName][cycle] = mergePlanCycle(PLAN_DATA[planName][cycle], asPlanCycle(entry, cycle));
+        });
+      }
+
+      function setStatus(message, isError) {
+        var status = document.getElementById('pricing-status');
+        if (!status) return;
+        if (!message) {
+          status.classList.add('hidden');
+          status.textContent = '';
+          return;
+        }
+        status.textContent = message;
+        status.classList.remove('hidden');
+        status.className = isError
+          ? 'mt-6 rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-100'
+          : 'mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100';
+      }
+
       function applyBillingCycle(cycle) {
-        Object.keys(PLAN_DATA).forEach(function(plan) {
+        activeCycle = cycle;
+
+        PLAN_ORDER.forEach(function(plan) {
           var data = PLAN_DATA[plan][cycle];
           var price = document.querySelector('[data-price="' + plan + '"]');
           var suffix = document.querySelector('[data-price-suffix="' + plan + '"]');
@@ -465,6 +577,12 @@
           var planKey = document.querySelector('[data-plan-key="' + plan + '"]');
           var platformFee = document.querySelector('[data-platform-fee="' + plan + '"]');
           var checkout = document.querySelector('[data-checkout-link="' + plan + '"]');
+          var comparePrice = document.querySelector('[data-compare-price="' + plan + '"]');
+          var compareTranscripts = document.querySelector('[data-compare-transcripts="' + plan + '"]');
+          var compareTaxgame = document.querySelector('[data-compare-taxgame="' + plan + '"]');
+          var comparePlanKey = document.querySelector('[data-compare-plan-key="' + plan + '"]');
+          var comparePlatformFee = document.querySelector('[data-compare-platform-fee="' + plan + '"]');
+          var compareBillingObject = document.querySelector('[data-compare-billing-object="' + plan + '"]');
 
           if (price) price.textContent = '$' + data.price;
           if (suffix) suffix.textContent = data.suffix;
@@ -475,7 +593,15 @@
           if (checkout) {
             checkout.href = data.checkoutHref;
             checkout.dataset.billingObject = data.billingObject;
+            checkout.dataset.planKey = data.planKey;
+            checkout.dataset.billingCycle = cycle;
           }
+          if (comparePrice) comparePrice.textContent = '$' + data.price;
+          if (compareTranscripts) compareTranscripts.textContent = data.transcriptTokens;
+          if (compareTaxgame) compareTaxgame.textContent = data.taxGameTokens;
+          if (comparePlanKey) comparePlanKey.textContent = data.planKey;
+          if (comparePlatformFee) comparePlatformFee.textContent = data.platformFee + '%';
+          if (compareBillingObject) compareBillingObject.textContent = data.billingObject;
         });
 
         var monthlyBtn = document.getElementById('billing-monthly');
@@ -492,12 +618,39 @@
         }
       }
 
+      async function hydratePricingFromApi() {
+        setStatus('Loading live pricing from the Worker…', false);
+
+        try {
+          var response = await fetch(PRICING_URL, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Pricing request failed with status ' + response.status);
+          }
+
+          var payload = await response.json();
+          mergeRemotePricing(payload);
+          applyBillingCycle(activeCycle);
+          setStatus('Live pricing loaded from ' + PRICING_URL + '.', false);
+        } catch (error) {
+          console.error('Failed to load live pricing config.', error);
+          applyBillingCycle(activeCycle);
+          setStatus('Live pricing could not be loaded, so the page is showing fallback values baked from the current TOML.', true);
+        }
+      }
+
       var monthlyBtn = document.getElementById('billing-monthly');
       var yearlyBtn = document.getElementById('billing-yearly');
       if (monthlyBtn) monthlyBtn.addEventListener('click', function () { applyBillingCycle('monthly'); });
       if (yearlyBtn) yearlyBtn.addEventListener('click', function () { applyBillingCycle('yearly'); });
 
       applyBillingCycle('monthly');
+      hydratePricingFromApi();
     })();
   </script>
 
