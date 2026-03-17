@@ -292,6 +292,10 @@ async function loadPartials() {
   partials.footer = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "footer.html"));
   partials.header = await loadPartialOrEmpty(path.join(PARTIALS_ROOT, "header.html"));
 
+  // Friendly aliases for page templates
+  partials.siteFooter = partials.footer ?? "";
+  partials.siteHeader = partials.header ?? "";
+
   return partials;
 }
 
