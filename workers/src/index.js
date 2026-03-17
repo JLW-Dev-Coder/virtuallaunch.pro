@@ -123,9 +123,6 @@ function json(body, status = 200) {
   });
 }
 
-function stub(method, path) {
-  return json({ ok: true, stub: true, route: `${method} ${path}` });
-}
 
 function notFound(path) {
   return json({ ok: false, error: 'NOT_FOUND', path }, 404);
@@ -867,7 +864,36 @@ const ROUTES = [
   // CONTACT
   // -------------------------------------------------------------------------
 
-  { method: 'POST', pattern: '/v1/contact/submit', handler: stub },
+  {
+    method: 'POST', pattern: '/v1/contact/submit',
+    handler: async (_method, _pattern, _params, request, env) => {
+      try {
+        const body = await parseBody(request);
+        const { email, eventId, message, name, source } = body ?? {};
+        if (!email || !eventId || !message || !name || !source) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'email, eventId, message, name, source are required' }, 400);
+        }
+        if (name.length > 200) return json({ ok: false, error: 'VALIDATION', message: 'name max 200 chars' }, 400);
+        if (message.length > 5000) return json({ ok: false, error: 'VALIDATION', message: 'message max 5000 chars' }, 400);
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/contact/${eventId}.json`, {
+          email, name, message, source, event: 'CONTACT_SUBMITTED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `contact_submissions/${eventId}.json`, {
+          eventId, email, name, message, source, createdAt: now,
+        });
+        await sendEmail(
+          'hello@virtuallaunch.pro',
+          `New contact form submission from ${name}`,
+          `<p>From: ${name} (${email})</p><p>Source: ${source}</p><p>Message: ${message}</p>`,
+          env
+        );
+        return json({ ok: true, eventId, status: 'submitted' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Contact submit failed' }, 500);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // ACCOUNTS
@@ -991,10 +1017,114 @@ const ROUTES = [
   // MEMBERSHIPS
   // -------------------------------------------------------------------------
 
-  { method: 'POST',  pattern: '/v1/memberships',                        handler: stub },
-  { method: 'GET',   pattern: '/v1/memberships/by-account/:account_id', handler: stub },
-  { method: 'GET',   pattern: '/v1/memberships/:membership_id',         handler: stub },
-  { method: 'PATCH', pattern: '/v1/memberships/:membership_id',         handler: stub },
+  {
+    method: 'POST', pattern: '/v1/memberships',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const { accountId, membershipId, planKey, status, stripeCustomerId } = body ?? {};
+        if (!accountId || !membershipId || !planKey || !status) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'accountId, membershipId, planKey, status are required' }, 400);
+        }
+        const validPlans = ['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_pro'];
+        if (!validPlans.includes(planKey)) {
+          return json({ ok: false, error: 'VALIDATION', message: `planKey must be one of: ${validPlans.join(', ')}` }, 400);
+        }
+        const validStatuses = ['active', 'cancelled', 'past_due', 'pending', 'trialing'];
+        if (!validStatuses.includes(status)) {
+          return json({ ok: false, error: 'VALIDATION', message: `status must be one of: ${validStatuses.join(', ')}` }, 400);
+        }
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/memberships/${membershipId}.json`, {
+          membershipId, accountId, planKey, status, event: 'MEMBERSHIP_CREATED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          membershipId, accountId, planKey, status, stripeCustomerId: stripeCustomerId ?? null, createdAt: now,
+        });
+        await d1Run(env.DB,
+          `INSERT OR IGNORE INTO memberships (membership_id, account_id, plan_key, status, stripe_customer_id, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+          [membershipId, accountId, planKey, status, stripeCustomerId ?? null, now]
+        );
+        return json({ ok: true, membershipId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Membership creation failed' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/memberships/by-account/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const rows = await env.DB.prepare(
+          `SELECT * FROM memberships WHERE account_id = ? ORDER BY created_at DESC`
+        ).bind(params.account_id).all();
+        return json({ ok: true, membership: rows.results[0] ?? null });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch membership' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/memberships/:membership_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const row = await env.DB.prepare(
+          `SELECT * FROM memberships WHERE membership_id = ?`
+        ).bind(params.membership_id).first();
+        if (!row) return json({ ok: false, error: 'NOT_FOUND', message: 'Membership not found' }, 404);
+        return json({ ok: true, membership: row });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch membership' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/memberships/:membership_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const now = new Date().toISOString();
+        const setClauses = ['updated_at = ?'];
+        const vals = [now];
+        const validPlans = ['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_pro'];
+        const validStatuses = ['active', 'cancelled', 'past_due', 'pending', 'trialing'];
+        if (body?.planKey !== undefined) {
+          if (!validPlans.includes(body.planKey)) return json({ ok: false, error: 'VALIDATION', message: `planKey must be one of: ${validPlans.join(', ')}` }, 400);
+          setClauses.push('plan_key = ?'); vals.push(body.planKey);
+        }
+        if (body?.status !== undefined) {
+          if (!validStatuses.includes(body.status)) return json({ ok: false, error: 'VALIDATION', message: `status must be one of: ${validStatuses.join(', ')}` }, 400);
+          setClauses.push('status = ?'); vals.push(body.status);
+        }
+        if (body?.stripeSubscriptionId !== undefined) { setClauses.push('stripe_subscription_id = ?'); vals.push(body.stripeSubscriptionId); }
+        await d1Run(env.DB,
+          `UPDATE memberships SET ${setClauses.join(', ')} WHERE membership_id = ?`,
+          [...vals, params.membership_id]
+        );
+        const existing = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${params.membership_id}.json`);
+        const current = existing ? await existing.json().catch(() => ({})) : {};
+        const updated = { ...current, updatedAt: now };
+        if (body?.planKey !== undefined) updated.planKey = body.planKey;
+        if (body?.status !== undefined) updated.status = body.status;
+        if (body?.stripeSubscriptionId !== undefined) updated.stripeSubscriptionId = body.stripeSubscriptionId;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${params.membership_id}.json`, updated);
+        return json({ ok: true, membershipId: params.membership_id, status: 'updated' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Membership update failed' }, 500);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // BILLING
@@ -2158,34 +2288,382 @@ const ROUTES = [
   // SUPPORT TICKETS
   // -------------------------------------------------------------------------
 
-  { method: 'POST',  pattern: '/v1/support/tickets',                        handler: stub },
-  { method: 'GET',   pattern: '/v1/support/tickets/by-account/:account_id', handler: stub },
-  { method: 'GET',   pattern: '/v1/support/tickets/:ticket_id',             handler: stub },
-  { method: 'PATCH', pattern: '/v1/support/tickets/:ticket_id',             handler: stub },
+  {
+    method: 'POST', pattern: '/v1/support/tickets',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const { accountId, message, priority, subject, ticketId } = body ?? {};
+        if (!accountId || !message || !priority || !subject || !ticketId) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'accountId, message, priority, subject, ticketId are required' }, 400);
+        }
+        const validPriorities = ['high', 'low', 'normal', 'urgent'];
+        if (!validPriorities.includes(priority)) {
+          return json({ ok: false, error: 'VALIDATION', message: `priority must be one of: ${validPriorities.join(', ')}` }, 400);
+        }
+        if (subject.length > 255) return json({ ok: false, error: 'VALIDATION', message: 'subject max 255 chars' }, 400);
+        if (message.length > 5000) return json({ ok: false, error: 'VALIDATION', message: 'message max 5000 chars' }, 400);
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/support/${ticketId}.json`, {
+          ticketId, accountId, subject, priority, event: 'SUPPORT_TICKET_CREATED', created_at: now,
+        });
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `support_tickets/${ticketId}.json`, {
+          ticketId, accountId, subject, message, priority, status: 'open', createdAt: now,
+        });
+        await d1Run(env.DB,
+          `INSERT INTO support_tickets (ticket_id, account_id, subject, message, priority, status, created_at) VALUES (?, ?, ?, ?, ?, 'open', ?)`,
+          [ticketId, accountId, subject, message, priority, now]
+        );
+        return json({ ok: true, ticketId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Support ticket creation failed' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/support/tickets/by-account/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const rows = await env.DB.prepare(
+          `SELECT * FROM support_tickets WHERE account_id = ? ORDER BY created_at DESC`
+        ).bind(params.account_id).all();
+        return json({ ok: true, tickets: rows.results });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch tickets' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/support/tickets/:ticket_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const row = await env.DB.prepare(
+          `SELECT * FROM support_tickets WHERE ticket_id = ?`
+        ).bind(params.ticket_id).first();
+        if (!row) return json({ ok: false, error: 'NOT_FOUND', message: 'Ticket not found' }, 404);
+        return json({ ok: true, ticket: row });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch ticket' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/support/tickets/:ticket_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const now = new Date().toISOString();
+        const setClauses = ['updated_at = ?'];
+        const vals = [now];
+        const validStatuses = ['closed', 'in_progress', 'open', 'reopened', 'resolved'];
+        if (body?.message !== undefined) { setClauses.push('message = ?'); vals.push(body.message); }
+        if (body?.status !== undefined) {
+          if (!validStatuses.includes(body.status)) return json({ ok: false, error: 'VALIDATION', message: `status must be one of: ${validStatuses.join(', ')}` }, 400);
+          setClauses.push('status = ?'); vals.push(body.status);
+        }
+        await d1Run(env.DB,
+          `UPDATE support_tickets SET ${setClauses.join(', ')} WHERE ticket_id = ?`,
+          [...vals, params.ticket_id]
+        );
+        const existing = await env.R2_VIRTUAL_LAUNCH.get(`support_tickets/${params.ticket_id}.json`);
+        const current = existing ? await existing.json().catch(() => ({})) : {};
+        const updated = { ...current, updatedAt: now };
+        if (body?.message !== undefined) updated.message = body.message;
+        if (body?.status !== undefined) updated.status = body.status;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `support_tickets/${params.ticket_id}.json`, updated);
+        return json({ ok: true, ticketId: params.ticket_id, status: 'updated' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Ticket update failed' }, 500);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // NOTIFICATIONS
   // -------------------------------------------------------------------------
 
-  { method: 'POST',  pattern: '/v1/notifications/in-app',                      handler: stub },
-  { method: 'GET',   pattern: '/v1/notifications/in-app',                      handler: stub },
-  { method: 'GET',   pattern: '/v1/notifications/preferences/:account_id',     handler: stub },
-  { method: 'PATCH', pattern: '/v1/notifications/preferences/:account_id',     handler: stub },
-  { method: 'POST',  pattern: '/v1/notifications/sms/send',                    handler: stub },
+  {
+    method: 'POST', pattern: '/v1/notifications/in-app',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const { accountId, message, notificationId, severity, title } = body ?? {};
+        if (!accountId || !message || !notificationId || !severity || !title) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'accountId, message, notificationId, severity, title are required' }, 400);
+        }
+        const validSeverities = ['error', 'info', 'success', 'warning'];
+        if (!validSeverities.includes(severity)) {
+          return json({ ok: false, error: 'VALIDATION', message: `severity must be one of: ${validSeverities.join(', ')}` }, 400);
+        }
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `notifications/in-app/${notificationId}.json`, {
+          notificationId, accountId, title, message, severity, read: false, createdAt: now,
+        });
+        await d1Run(env.DB,
+          `INSERT INTO notifications (notification_id, account_id, title, message, severity, read, created_at) VALUES (?, ?, ?, ?, ?, 0, ?)`,
+          [notificationId, accountId, title, message, severity, now]
+        );
+        return json({ ok: true, notificationId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Notification creation failed' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/notifications/in-app',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const url = new URL(request.url);
+        const accountId = url.searchParams.get('accountId');
+        if (!accountId) return json({ ok: false, error: 'MISSING_FIELDS', message: 'accountId query param is required' }, 400);
+        const limitParam = parseInt(url.searchParams.get('limit') ?? '20', 10);
+        const limit = Math.min(isNaN(limitParam) ? 20 : limitParam, 100);
+        const rows = await env.DB.prepare(
+          `SELECT * FROM notifications WHERE account_id = ? ORDER BY created_at DESC LIMIT ?`
+        ).bind(accountId, limit).all();
+        return json({ ok: true, notifications: rows.results });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch notifications' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/notifications/preferences/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const row = await env.DB.prepare(
+          `SELECT * FROM vlp_preferences WHERE account_id = ?`
+        ).bind(params.account_id).first();
+        if (!row) {
+          return json({ ok: true, preferences: { accountId: params.account_id, inAppEnabled: true, smsEnabled: false } });
+        }
+        return json({ ok: true, preferences: {
+          accountId: params.account_id,
+          inAppEnabled: row.in_app_enabled === 1,
+          smsEnabled: row.sms_enabled === 1,
+        }});
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch notification preferences' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/notifications/preferences/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const now = new Date().toISOString();
+        const existing = await env.DB.prepare(
+          `SELECT * FROM vlp_preferences WHERE account_id = ?`
+        ).bind(params.account_id).first();
+        const inAppEnabled = body?.inAppEnabled !== undefined ? (body.inAppEnabled ? 1 : 0) : (existing?.in_app_enabled ?? 1);
+        const smsEnabled = body?.smsEnabled !== undefined ? (body.smsEnabled ? 1 : 0) : (existing?.sms_enabled ?? 0);
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO vlp_preferences (account_id, in_app_enabled, sms_enabled, updated_at) VALUES (?, ?, ?, ?)`,
+          [params.account_id, inAppEnabled, smsEnabled, now]
+        );
+        const existingR2 = await env.R2_VIRTUAL_LAUNCH.get(`vlp_preferences/${params.account_id}.json`);
+        const current = existingR2 ? await existingR2.json().catch(() => ({})) : {};
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `vlp_preferences/${params.account_id}.json`, {
+          ...current, inAppEnabled: inAppEnabled === 1, smsEnabled: smsEnabled === 1, updatedAt: now,
+        });
+        return json({ ok: true, accountId: params.account_id, status: 'updated' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Notification preferences update failed' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/notifications/sms/send',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const { accountId, message, phone } = body ?? {};
+        if (!accountId || !message || !phone) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'accountId, message, phone are required' }, 400);
+        }
+        if (phone.length < 7) return json({ ok: false, error: 'VALIDATION', message: 'phone min 7 chars' }, 400);
+        if (message.length > 1600) return json({ ok: false, error: 'VALIDATION', message: 'message max 1600 chars' }, 400);
+        const prefs = await env.DB.prepare(
+          `SELECT sms_enabled FROM vlp_preferences WHERE account_id = ?`
+        ).bind(accountId).first();
+        if (!prefs || prefs.sms_enabled === 0) {
+          return json({ ok: false, error: 'SMS_DISABLED', message: 'SMS notifications are disabled for this account' }, 400);
+        }
+        const now = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/notifications/sms_${accountId}_${now}.json`, {
+          accountId, phone, message, event: 'SMS_NOTIFICATION_QUEUED', created_at: now,
+        });
+        const existingR2 = await env.R2_VIRTUAL_LAUNCH.get(`vlp_preferences/${accountId}.json`);
+        const current = existingR2 ? await existingR2.json().catch(() => ({})) : {};
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `vlp_preferences/${accountId}.json`, {
+          ...current, lastSmsQueued: now,
+        });
+        // Wire Twilio send here when TWILIO_ACCOUNT_SID secret is configured
+        return json({ ok: true, accountId, status: 'queued' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'SMS queue failed' }, 500);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // TOKENS
   // -------------------------------------------------------------------------
 
-  { method: 'GET', pattern: '/v1/tokens/balance/:account_id', handler: stub },
-  { method: 'GET', pattern: '/v1/tokens/usage/:account_id',   handler: stub },
+  {
+    method: 'GET', pattern: '/v1/tokens/balance/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const row = await env.DB.prepare(
+          `SELECT * FROM tokens WHERE account_id = ?`
+        ).bind(params.account_id).first();
+        if (!row) {
+          return json({ ok: true, balance: { accountId: params.account_id, taxGameTokens: 0, transcriptTokens: 0, updatedAt: null } });
+        }
+        return json({ ok: true, balance: {
+          accountId: params.account_id,
+          taxGameTokens: row.tax_game_tokens,
+          transcriptTokens: row.transcript_tokens,
+          updatedAt: row.updated_at,
+        }});
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch token balance' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/tokens/usage/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const url = new URL(request.url);
+        const limitParam = parseInt(url.searchParams.get('limit') ?? '50', 10);
+        const limit = Math.min(isNaN(limitParam) ? 50 : limitParam, 100);
+        const tokenEvents = new Set(['TOKENS_PURCHASED', 'SUBSCRIPTION_CREATED', 'SUBSCRIPTION_UPDATED']);
+        const listResult = await env.R2_VIRTUAL_LAUNCH.list({ prefix: 'receipts/billing/' });
+        const results = await Promise.all(
+          listResult.objects.slice(0, 50).map(async (obj) => {
+            try {
+              const item = await env.R2_VIRTUAL_LAUNCH.get(obj.key);
+              if (!item) return null;
+              const data = await item.json();
+              return data.accountId === params.account_id && tokenEvents.has(data.event) ? data : null;
+            } catch { return null; }
+          })
+        );
+        const usage = results
+          .filter(Boolean)
+          .sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''))
+          .slice(0, limit);
+        return json({ ok: true, usage });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch token usage' }, 500);
+      }
+    },
+  },
 
   // -------------------------------------------------------------------------
   // VLP PREFERENCES
   // -------------------------------------------------------------------------
 
-  { method: 'GET',   pattern: '/v1/vlp/preferences/:account_id', handler: stub },
-  { method: 'PATCH', pattern: '/v1/vlp/preferences/:account_id', handler: stub },
+  {
+    method: 'GET', pattern: '/v1/vlp/preferences/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const row = await env.DB.prepare(
+          `SELECT * FROM vlp_preferences WHERE account_id = ?`
+        ).bind(params.account_id).first();
+        if (!row) {
+          return json({ ok: true, preferences: {
+            accountId: params.account_id, appearance: 'system', timezone: null,
+            defaultDashboard: null, accentColor: null, inAppEnabled: true, smsEnabled: false,
+          }, accountId: params.account_id });
+        }
+        return json({ ok: true, preferences: {
+          accountId: params.account_id,
+          appearance: row.appearance,
+          timezone: row.timezone ?? null,
+          defaultDashboard: row.default_dashboard ?? null,
+          accentColor: row.accent_color ?? null,
+          inAppEnabled: row.in_app_enabled === 1,
+          smsEnabled: row.sms_enabled === 1,
+        }, accountId: params.account_id });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch VLP preferences' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/vlp/preferences/:account_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: error }, 401);
+      try {
+        const body = await parseBody(request);
+        const now = new Date().toISOString();
+        const validAppearances = ['dark', 'light', 'system'];
+        if (body?.appearance !== undefined && !validAppearances.includes(body.appearance)) {
+          return json({ ok: false, error: 'VALIDATION', message: `appearance must be one of: ${validAppearances.join(', ')}` }, 400);
+        }
+        const existing = await env.DB.prepare(
+          `SELECT * FROM vlp_preferences WHERE account_id = ?`
+        ).bind(params.account_id).first();
+        const merged = {
+          appearance: body?.appearance ?? existing?.appearance ?? 'system',
+          timezone: body?.timezone ?? existing?.timezone ?? null,
+          defaultDashboard: body?.defaultDashboard ?? existing?.default_dashboard ?? null,
+          accentColor: body?.accentColor ?? existing?.accent_color ?? null,
+          inAppEnabled: existing?.in_app_enabled ?? 1,
+          smsEnabled: existing?.sms_enabled ?? 0,
+        };
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO vlp_preferences (account_id, appearance, timezone, default_dashboard, accent_color, in_app_enabled, sms_enabled, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [params.account_id, merged.appearance, merged.timezone, merged.defaultDashboard, merged.accentColor, merged.inAppEnabled, merged.smsEnabled, now]
+        );
+        const existingR2 = await env.R2_VIRTUAL_LAUNCH.get(`vlp_preferences/${params.account_id}.json`);
+        const currentR2 = existingR2 ? await existingR2.json().catch(() => ({})) : {};
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `vlp_preferences/${params.account_id}.json`, {
+          ...currentR2, ...merged, inAppEnabled: merged.inAppEnabled === 1, smsEnabled: merged.smsEnabled === 1, updatedAt: now,
+        });
+        return json({ ok: true, accountId: params.account_id, status: 'updated' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'VLP preferences update failed' }, 500);
+      }
+    },
+  },
 ];
 
 // ---------------------------------------------------------------------------
