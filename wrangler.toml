@@ -32,7 +32,7 @@ bucket_name = "virtuallaunch-pro"
 [[d1_databases]]
 binding = "DB"
 database_name = "virtuallaunch-pro"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "079dfd69-dbf4-4070-bc91-51f837021795"
 migrations_dir = "workers/migrations"
 
 # ---------------------------------------
