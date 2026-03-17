@@ -1,0 +1,104 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Stripe customer creation",
+    "path": "/contracts/billing.customer.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Customer — Create",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/customers",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/customers/{eventId}.json",
+    "receiptSource": "billing_customer_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/customers/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_customers/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_customers"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "email": {
+        "format": "email",
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "fullName": {
+        "maxLength": 160,
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "email",
+      "eventId",
+      "fullName"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "customerId": "{canonical.stripeCustomerId}",
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "billing_customer_create_failed",
+      "ok": false
+    },
+    "success": {
+      "customerId": "{canonical.stripeCustomerId}",
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "billing_customer_create",
+    "version": 1
+  }
+}

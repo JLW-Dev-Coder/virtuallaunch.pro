@@ -1,0 +1,108 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Stripe setup intent creation",
+    "path": "/contracts/billing.setup-intent.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Setup Intent — Create",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/setup-intents",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/setup-intents/{eventId}.json",
+    "receiptSource": "billing_setup_intent_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/setup-intents/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_setup_intents/{eventId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_setup_intents"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "customerId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "usage": {
+        "enum": [
+          "off_session",
+          "on_session"
+        ],
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "customerId",
+      "eventId",
+      "usage"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "clientSecret": "{canonical.clientSecret}",
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "setupIntentId": "{canonical.setupIntentId}"
+    },
+    "error": {
+      "error": "billing_setup_intent_create_failed",
+      "ok": false
+    },
+    "success": {
+      "clientSecret": "{canonical.clientSecret}",
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "setupIntentId": "{canonical.setupIntentId}",
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "billing_setup_intent_create",
+    "version": 1
+  }
+}

@@ -1,0 +1,107 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP billing subscription cancel",
+    "path": "/contracts/billing.subscription.cancel.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Subscription — Cancel",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/subscriptions/{membershipId}/cancel",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/subscriptions/cancel/{eventId}.json",
+    "receiptSource": "billing_subscription_cancel",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/subscriptions/cancel/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_subscriptions/{membershipId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_subscriptions",
+      "memberships"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "cancelAtPeriodEnd": {
+        "type": "boolean"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "membershipId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "reason": {
+        "maxLength": 500,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "cancelAtPeriodEnd",
+      "eventId",
+      "membershipId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "membershipId": "{payload.membershipId}",
+      "ok": true
+    },
+    "error": {
+      "error": "billing_subscription_cancel_failed",
+      "ok": false
+    },
+    "success": {
+      "eventId": "{effects.eventIdFrom}",
+      "membershipId": "{payload.membershipId}",
+      "ok": true,
+      "status": "cancelled"
+    }
+  },
+  "schema": {
+    "name": "billing_subscription_cancel",
+    "version": 1
+  }
+}

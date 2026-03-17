@@ -1,0 +1,103 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Stripe billing portal session creation",
+    "path": "/contracts/billing.portal-session.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Portal Session — Create",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/portal/sessions",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/portal-sessions/{eventId}.json",
+    "receiptSource": "billing_portal_session_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/portal-sessions/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_customers/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_customers"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "customerId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "returnUrl": {
+        "format": "uri",
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "customerId",
+      "eventId",
+      "returnUrl"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "url": "{canonical.portalUrl}"
+    },
+    "error": {
+      "error": "billing_portal_session_create_failed",
+      "ok": false
+    },
+    "success": {
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "status": "created",
+      "url": "{canonical.portalUrl}"
+    }
+  },
+  "schema": {
+    "name": "billing_portal_session_create",
+    "version": 1
+  }
+}

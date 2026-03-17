@@ -1,0 +1,73 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP payment method listing",
+    "path": "/contracts/billing.payment-method.list.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Payment Method — List",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": false
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/payment-methods/{accountId}",
+    "method": "GET",
+    "receiptKeyPattern": null,
+    "receiptSource": "billing_payment_method_list",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": null,
+    "eventIdFrom": null,
+    "receiptAppend": null,
+    "canonicalUpsert": null,
+    "writeOrder": [],
+    "writes": []
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": null,
+    "error": {
+      "error": "billing_payment_method_list_failed",
+      "ok": false
+    },
+    "success": {
+      "methods": [],
+      "ok": true,
+      "status": "retrieved"
+    }
+  },
+  "schema": {
+    "name": "billing_payment_method_list",
+    "version": 1
+  }
+}

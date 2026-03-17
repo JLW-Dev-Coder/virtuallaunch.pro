@@ -1,0 +1,117 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Stripe payment intent creation",
+    "path": "/contracts/billing.payment-intent.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Payment Intent — Create",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/payment-intents",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/payment-intents/{eventId}.json",
+    "receiptSource": "billing_payment_intent_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/payment-intents/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_payment_intents/{eventId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_payment_intents"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "amount": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "currency": {
+        "enum": [
+          "usd"
+        ],
+        "type": "string"
+      },
+      "customerId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "metadata": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      }
+    },
+    "required": [
+      "accountId",
+      "amount",
+      "currency",
+      "customerId",
+      "eventId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "paymentIntentId": "{canonical.paymentIntentId}"
+    },
+    "error": {
+      "error": "billing_payment_intent_create_failed",
+      "ok": false
+    },
+    "success": {
+      "clientSecret": "{canonical.clientSecret}",
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "paymentIntentId": "{canonical.paymentIntentId}",
+      "status": "created"
+    }
+  },
+  "schema": {
+    "name": "billing_payment_intent_create",
+    "version": 1
+  }
+}

@@ -1,0 +1,107 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP Stripe payment method attach",
+    "path": "/contracts/billing.payment-method.attach.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Payment Method — Attach",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/payment-methods/attach",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/payment-methods/attach/{eventId}.json",
+    "receiptSource": "billing_payment_method_attach",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/payment-methods/attach/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_payment_methods/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_payment_methods"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "customerId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "paymentMethodId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "setDefault": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "accountId",
+      "customerId",
+      "eventId",
+      "paymentMethodId",
+      "setDefault"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "paymentMethodId": "{payload.paymentMethodId}"
+    },
+    "error": {
+      "error": "billing_payment_method_attach_failed",
+      "ok": false
+    },
+    "success": {
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "paymentMethodId": "{payload.paymentMethodId}",
+      "status": "attached"
+    }
+  },
+  "schema": {
+    "name": "billing_payment_method_attach",
+    "version": 1
+  }
+}

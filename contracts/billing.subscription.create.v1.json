@@ -1,0 +1,138 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP billing subscription creation",
+    "path": "/contracts/billing.subscription.create.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Subscription — Create",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/subscriptions",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/subscriptions/create/{eventId}.json",
+    "receiptSource": "billing_subscription_create",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/subscriptions/create/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "billing_subscriptions/{membershipId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "billing_subscriptions",
+      "memberships",
+      "tokens"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "billingInterval": {
+        "enum": [
+          "monthly",
+          "yearly"
+        ],
+        "type": "string"
+      },
+      "customerId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "membershipId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "planKey": {
+        "enum": [
+          "vlp_advanced_monthly",
+          "vlp_advanced_yearly",
+          "vlp_free",
+          "vlp_pro_monthly",
+          "vlp_pro_yearly",
+          "vlp_starter_monthly",
+          "vlp_starter_yearly"
+        ],
+        "type": "string"
+      },
+      "priceId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "productId": {
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "billingInterval",
+      "customerId",
+      "eventId",
+      "membershipId",
+      "planKey",
+      "priceId",
+      "productId"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "membershipId": "{payload.membershipId}",
+      "ok": true,
+      "subscriptionId": "{canonical.subscriptionId}"
+    },
+    "error": {
+      "error": "billing_subscription_create_failed",
+      "ok": false
+    },
+    "success": {
+      "eventId": "{effects.eventIdFrom}",
+      "membershipId": "{payload.membershipId}",
+      "ok": true,
+      "status": "created",
+      "subscriptionId": "{canonical.subscriptionId}"
+    }
+  },
+  "schema": {
+    "name": "billing_subscription_create",
+    "version": 1
+  }
+}

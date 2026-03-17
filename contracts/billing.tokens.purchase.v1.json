@@ -1,0 +1,119 @@
+﻿{
+  "auth": {
+    "required": true,
+    "trustClientIdentityFields": false,
+    "type": "session"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP token purchase orchestration",
+    "path": "/contracts/billing.tokens.purchase.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Tokens — Purchase",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": true
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/tokens/purchase",
+    "method": "POST",
+    "receiptKeyPattern": "receipts/vlp/billing/tokens/purchase/{eventId}.json",
+    "receiptSource": "billing_tokens_purchase",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": "payload.eventId",
+    "eventIdFrom": "payload.eventId",
+    "receiptAppend": {
+      "to": "receipts/vlp/billing/tokens/purchase/{eventId}.json"
+    },
+    "canonicalUpsert": {
+      "target": "tokens/{accountId}.json"
+    },
+    "writeOrder": [
+      "receiptAppend",
+      "canonicalUpsert"
+    ],
+    "writes": [
+      "tokens",
+      "billing_payment_intents"
+    ]
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {
+      "accountId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "amount": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "currency": {
+        "enum": [
+          "usd"
+        ],
+        "type": "string"
+      },
+      "eventId": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "quantity": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "tokenType": {
+        "enum": [
+          "tax_game",
+          "transcript"
+        ],
+        "type": "string"
+      }
+    },
+    "required": [
+      "accountId",
+      "amount",
+      "currency",
+      "eventId",
+      "quantity",
+      "tokenType"
+    ],
+    "type": "object"
+  },
+  "response": {
+    "deduped": {
+      "accountId": "{payload.accountId}",
+      "deduped": true,
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true
+    },
+    "error": {
+      "error": "billing_tokens_purchase_failed",
+      "ok": false
+    },
+    "success": {
+      "accountId": "{payload.accountId}",
+      "eventId": "{effects.eventIdFrom}",
+      "ok": true,
+      "status": "purchased"
+    }
+  },
+  "schema": {
+    "name": "billing_tokens_purchase",
+    "version": 1
+  }
+}

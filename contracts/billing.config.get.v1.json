@@ -1,0 +1,66 @@
+﻿{
+  "auth": {
+    "required": false,
+    "trustClientIdentityFields": false,
+    "type": "none"
+  },
+  "contract": {
+    "authority": [
+      "R2_VIRTUAL_LAUNCH"
+    ],
+    "governs": "VLP billing configuration retrieval",
+    "path": "/contracts/billing.config.get.v1.json",
+    "source": "Virtual Launch Pro",
+    "title": "Virtual Launch Pro — Billing Config — Get",
+    "usedOnPages": [
+      "/site/pricing.html"
+    ],
+    "validation": {
+      "enumStrict": true,
+      "rejectUnknownValues": true,
+      "requireJsonContentType": false
+    },
+    "version": 1
+  },
+  "delivery": {
+    "endpoint": "/v1/billing/config",
+    "method": "GET",
+    "receiptKeyPattern": null,
+    "receiptSource": "billing_config_get",
+    "signature": {
+      "header": null,
+      "required": false,
+      "secretEnvVar": null
+    }
+  },
+  "effects": {
+    "dedupeKey": null,
+    "eventIdFrom": null,
+    "receiptAppend": null,
+    "canonicalUpsert": null,
+    "writeOrder": [],
+    "writes": []
+  },
+  "payload": {
+    "additionalProperties": false,
+    "properties": {},
+    "required": [],
+    "type": "object"
+  },
+  "response": {
+    "deduped": null,
+    "error": {
+      "error": "billing_config_unavailable",
+      "ok": false
+    },
+    "success": {
+      "ok": true,
+      "source": "wrangler.toml",
+      "status": "retrieved"
+    }
+  },
+  "schema": {
+    "name": "billing_config_get",
+    "version": 1
+  }
+}
