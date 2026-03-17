@@ -1,5 +1,5 @@
-﻿/**
- * Virtual Launch Pro â€” Cloudflare Worker (professional infrastructure API)
+/**
+ * Virtual Launch Pro — Cloudflare Worker (professional infrastructure API)
  *
  * Reference sources used for this implementation:
  * - README-VLP.txt
@@ -1921,9 +1921,11 @@ function mapSignatureHash(algorithmUri) {
 
 function normalizeBase64Block(value) {
   return String(value || "")
-    .split("\n").join("")
-    .split("\r").join("")
-    .split("\t").join("")
+    .split("
+").join("")
+    .split("
+").join("")
+    .split("	").join("")
     .split(" ").join("");
 }
 
@@ -2405,4 +2407,3 @@ function withCors(request, response) {
     statusText: response.statusText
   });
 }
-
