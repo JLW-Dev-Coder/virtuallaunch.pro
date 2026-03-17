@@ -509,6 +509,32 @@ async function verifyCalSignature(rawBody, signatureHeader, secret) {
   return expected === signatureHeader;
 }
 
+function makeSessionCookie(sessionId, env) {
+  const ttl = parseInt(env.SESSION_TTL_SECONDS ?? '86400', 10);
+  const expires = new Date(Date.now() + ttl * 1000).toUTCString();
+  const domain = env.COOKIE_DOMAIN ?? '.virtuallaunch.pro';
+  return [
+    `vlp_session=${sessionId}`,
+    `Domain=${domain}`,
+    `Path=/`,
+    `Expires=${expires}`,
+    `HttpOnly`,
+    `Secure`,
+    `SameSite=Lax`,
+  ].join('; ');
+}
+
+function jsonWithCookie(body, sessionId, env, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...CORS_HEADERS,
+      'Set-Cookie': makeSessionCookie(sessionId, env),
+    },
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Route table
 // Each entry: { method, pattern, handler }
@@ -549,7 +575,22 @@ const ROUTES = [
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to delete session' }, 500);
       }
-      return json({ ok: true, status: 'logged_out' });
+      return new Response(JSON.stringify({ ok: true, status: 'logged_out' }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...CORS_HEADERS,
+          'Set-Cookie': [
+            'vlp_session=',
+            'Domain=' + (env.COOKIE_DOMAIN ?? '.virtuallaunch.pro'),
+            'Path=/',
+            'Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+            'HttpOnly',
+            'Secure',
+            'SameSite=Lax',
+          ].join('; '),
+        },
+      });
     },
   },
 
@@ -599,7 +640,7 @@ const ROUTES = [
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-        return json({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
+        return jsonWithCookie({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/app/dashboard` }, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Google callback failed' }, 500);
       }
@@ -646,7 +687,7 @@ const ROUTES = [
         if (payload.email !== email) return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-        return json({ ok: true, status: 'verified', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
+        return jsonWithCookie({ ok: true, status: 'verified', redirectTo: `${env.APP_BASE_URL}/app/dashboard` }, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Magic link verification failed' }, 500);
       }
@@ -699,7 +740,7 @@ const ROUTES = [
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-        return json({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
+        return jsonWithCookie({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/app/dashboard` }, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'OIDC callback failed' }, 500);
       }
@@ -732,7 +773,7 @@ const ROUTES = [
         if (!email) return json({ ok: false, error: 'BAD_REQUEST', message: 'Could not extract email from SAML response' }, 400);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-        return json({ ok: true, status: 'assertion_consumed', redirectTo: `${env.APP_BASE_URL}/app/dashboard`, session_id: sessionId });
+        return jsonWithCookie({ ok: true, status: 'assertion_consumed', redirectTo: `${env.APP_BASE_URL}/app/dashboard` }, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'SAML ACS failed' }, 500);
       }
