@@ -619,7 +619,7 @@
       }
 
       async function hydratePricingFromApi() {
-        setStatus('Loading live pricing from the Worker…', false);
+        
 
         try {
           var response = await fetch(PRICING_URL, {
@@ -636,11 +636,11 @@
           var payload = await response.json();
           mergeRemotePricing(payload);
           applyBillingCycle(activeCycle);
-          setStatus('Live pricing loaded from ' + PRICING_URL + '.', false);
+          
         } catch (error) {
           console.error('Failed to load live pricing config.', error);
           applyBillingCycle(activeCycle);
-          setStatus('Live pricing could not be loaded, so the page is showing fallback values baked from the current TOML.', true);
+          // silently fallback to local pricing
         }
       }
 
