@@ -23,6 +23,9 @@ const JSON_HEADERS = {
   "cache-control": "no-store",
   "content-type": "application/json; charset=utf-8"
 };
+const CAL_API_BASE = "https://api.cal.com/v2";
+const GMAIL_API_BASE = "https://gmail.googleapis.com/gmail/v1";
+const GMAIL_SEND_SCOPE = "https://www.googleapis.com/auth/gmail.send";
 const GOOGLE_OAUTH_SCOPE = "openid email profile";
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_USERINFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
@@ -76,6 +79,10 @@ const ROUTES = [
   { auth: true, key: "bookings/{bookingId}.json", method: "GET", mode: "single", name: "booking_get", pattern: "/v1/bookings/{bookingId}" },
   { auth: true, key: null, method: "GET", mode: "list_by_account", name: "booking_get_by_account", pattern: "/v1/bookings/by-account/{accountId}" },
   { auth: true, key: null, method: "GET", mode: "list_by_professional", name: "booking_get_by_professional", pattern: "/v1/bookings/by-professional/{professionalId}" },
+  { auth: true, key: null, method: "GET", mode: "cal_oauth_start", name: "cal_app_oauth_start", pattern: "/v1/cal/app/oauth/start" },
+  { auth: false, key: null, method: "GET", mode: "cal_oauth_callback", name: "cal_app_oauth_callback", pattern: "/v1/cal/app/oauth/callback" },
+  { auth: true, key: null, method: "GET", mode: "cal_oauth_start", name: "cal_pro_oauth_start", pattern: "/v1/cal/pro/oauth/start" },
+  { auth: false, key: null, method: "GET", mode: "cal_oauth_callback", name: "cal_pro_oauth_callback", pattern: "/v1/cal/pro/oauth/callback" },
   { auth: true, key: "bookings/{bookingId}.json", method: "POST", mode: "upsert", name: "booking_create", pattern: "/v1/bookings" },
   { auth: true, key: "bookings/{bookingId}.json", method: "PATCH", mode: "upsert", name: "booking_update", pattern: "/v1/bookings/{bookingId}" },
   { auth: true, key: "checkout_sessions/{accountId}.json", method: "POST", mode: "checkout_create_session", name: "checkout_create_session", pattern: "/v1/checkout/sessions" },
@@ -113,6 +120,10 @@ const SCHEMAS = {
   auth_2fa_verify_challenge: required("accountId", "challengeToken"),
   auth_google_callback: required("code", "state"),
   auth_google_start: required("redirectUri"),
+  cal_app_oauth_callback: required("code", "state"),
+  cal_app_oauth_start: required("accountId", "redirectUri"),
+  cal_pro_oauth_callback: required("code", "state"),
+  cal_pro_oauth_start: required("accountId", "redirectUri"),
   auth_magic_link_request: required("email"),
   auth_sso_oidc_callback: required("code", "state"),
   auth_sso_oidc_start: required("redirectUri"),
@@ -312,6 +323,10 @@ async function dispatchRoute(context) {
       return handleSamlStart(context);
     case "billing_config":
       return handleBillingConfig(context);
+    case "cal_oauth_callback":
+      return handleCalOAuthCallback(context);
+    case "cal_oauth_start":
+      return handleCalOAuthStart(context);
     case "billing_customer_create":
       return handleBillingCustomerCreate(context);
     case "billing_payment_intent_create":
@@ -473,6 +488,8 @@ function handleBillingConfig(context) {
     body: {
       config: {
         billingLinkVaStarterTrack: context.env.BILLING_LINK_VA_STARTER_TRACK || null,
+        calBookingDemoIntro: context.env.CAL_BOOKING_DEMO_INTRO || null,
+        calBookingSupport: context.env.CAL_BOOKING_SUPPORT || null,
         publishableKey: context.env.STRIPE_PUBLISHABLE_KEY || null
       },
       ok: true,
@@ -1039,6 +1056,124 @@ async function handleCheckoutGetStatus(context) {
   };
 }
 
+async function handleCalOAuthStart(context) {
+  const provider = context.route.name.startsWith("cal_app_") ? "app" : "pro";
+  const clientIdKey = provider === "app" ? "CAL_APP_OAUTH_CLIENT_ID" : "CAL_PRO_OAUTH_CLIENT_ID";
+  const redirectUriKey = provider === "app" ? "CAL_APP_OAUTH_REDIRECT_URI" : "CAL_PRO_OAUTH_REDIRECT_URI";
+  const authorizeUrl = String(
+    context.env[provider === "app" ? "CAL_APP_OAUTH_AUTHORIZE_URL" : "CAL_PRO_OAUTH_AUTHORIZE_URL"] ||
+    "https://app.cal.com/auth/oauth2/authorize"
+  );
+
+  requireEnv(context.env, [clientIdKey, redirectUriKey]);
+
+  const state = crypto.randomUUID();
+  await putJson(context.env, "auth/oauth-state/cal/" + state + ".json", {
+    accountId: String(context.payload.accountId || context.session?.accountId || ""),
+    createdAt: new Date().toISOString(),
+    provider,
+    redirectUri: context.payload.redirectUri,
+    state
+  });
+
+  const authUrl = new URL(authorizeUrl);
+  authUrl.searchParams.set("client_id", String(context.env[clientIdKey]));
+  authUrl.searchParams.set("redirect_uri", String(context.env[redirectUriKey]));
+  authUrl.searchParams.set("response_type", "code");
+  authUrl.searchParams.set("state", state);
+
+  return {
+    body: {
+      authorizationUrl: authUrl.toString(),
+      ok: true,
+      provider: "cal_" + provider,
+      status: "redirect_required"
+    },
+    status: 200
+  };
+}
+
+async function handleCalOAuthCallback(context) {
+  const stateRecord = await getJson(context.env, "auth/oauth-state/cal/" + String(context.payload.state) + ".json");
+  if (!stateRecord) {
+    return { body: { error: "validation_failed", message: "invalid_state", ok: false }, status: 400 };
+  }
+
+  const provider = String(stateRecord.provider || "pro");
+  const clientIdKey = provider === "app" ? "CAL_APP_OAUTH_CLIENT_ID" : "CAL_PRO_OAUTH_CLIENT_ID";
+  const clientSecretKey = provider === "app" ? "CAL_APP_OAUTH_CLIENT_SECRET" : "CAL_PRO_OAUTH_CLIENT_SECRET";
+  const redirectUriKey = provider === "app" ? "CAL_APP_OAUTH_REDIRECT_URI" : "CAL_PRO_OAUTH_REDIRECT_URI";
+  const tokenUrl = String(
+    context.env[provider === "app" ? "CAL_APP_OAUTH_TOKEN_URL" : "CAL_PRO_OAUTH_TOKEN_URL"] ||
+    (CAL_API_BASE + "/auth/oauth2/token")
+  );
+
+  requireEnv(context.env, [clientIdKey, clientSecretKey, redirectUriKey]);
+
+  const tokenResponse = await fetch(tokenUrl, {
+    body: new URLSearchParams({
+      client_id: String(context.env[clientIdKey]),
+      client_secret: String(context.env[clientSecretKey]),
+      code: String(context.payload.code),
+      grant_type: "authorization_code",
+      redirect_uri: String(context.env[redirectUriKey])
+    }),
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    method: "POST"
+  });
+  const tokenJson = await parseJsonResponse(tokenResponse, "cal_oauth_token_exchange_failed");
+
+  const accountId = String(stateRecord.accountId || "");
+  const profileKey = accountId ? ("profiles/" + accountId + ".json") : null;
+  const existingProfile = profileKey ? ((await getJson(context.env, profileKey)) || {}) : {};
+  const linkedAt = new Date().toISOString();
+  const calConnection = {
+    accessToken: tokenJson.access_token || null,
+    expiresAt: tokenJson.expires_in ? new Date(Date.now() + Number(tokenJson.expires_in) * 1000).toISOString() : null,
+    linkedAt,
+    provider,
+    refreshToken: tokenJson.refresh_token || null,
+    scope: tokenJson.scope || null,
+    tokenType: tokenJson.token_type || null
+  };
+
+  if (profileKey) {
+    await putJson(context.env, profileKey, {
+      ...existingProfile,
+      cal: {
+        ...(existingProfile.cal || {}),
+        [provider]: calConnection
+      },
+      professionalId: existingProfile.professionalId || accountId,
+      updatedAt: linkedAt
+    });
+  }
+
+  await appendReceipt(
+    context.env,
+    context.route,
+    {
+      accountId,
+      provider,
+      state: context.payload.state
+    },
+    { linked: true },
+    "receipts/vlp/cal/" + provider + "/oauth/" + String(context.payload.state) + ".json"
+  );
+  await context.env.R2_VIRTUAL_LAUNCH.delete("auth/oauth-state/cal/" + String(context.payload.state) + ".json");
+
+  return {
+    body: {
+      accountId: accountId || null,
+      ok: true,
+      provider: "cal_" + provider,
+      redirectTo: getAppDashboardUrl(context.env, stateRecord.redirectUri),
+      status: "callback_completed"
+    },
+    status: 200
+  };
+}
+
 async function handleGoogleStart(context) {
   requireEnv(context.env, ["GOOGLE_CLIENT_ID", "GOOGLE_REDIRECT_URI"]);
   const state = crypto.randomUUID();
@@ -1358,12 +1493,31 @@ async function handleMagicLinkRequest(context) {
     expiresAt,
     tokenId
   };
-  await putJson(context.env, `auth/magic-links/${tokenId}.json`, record);
-  await appendReceipt(context.env, context.route, context.payload, { tokenId });
+  await putJson(context.env, "auth/magic-links/" + tokenId + ".json", record);
+
   const verifyUrl = new URL("/v1/auth/magic-link/verify", context.request.url);
   verifyUrl.searchParams.set("token", tokenId);
+
+  const delivery = await sendMagicLinkEmail(context.env, {
+    expiresAt,
+    magicLinkUrl: verifyUrl.toString(),
+    to: context.payload.email
+  });
+
+  await appendReceipt(context.env, context.route, context.payload, {
+    deliveryStatus: delivery.status,
+    emailSent: delivery.sent,
+    tokenId
+  });
+
   return {
-    body: { magicLinkUrl: verifyUrl.toString(), ok: true, status: "issued", tokenId },
+    body: {
+      delivery,
+      magicLinkUrl: verifyUrl.toString(),
+      ok: true,
+      status: "issued",
+      tokenId
+    },
     status: 200
   };
 }
@@ -2640,6 +2794,155 @@ function buildUpsertResponse(routeName, payload, eventId) {
     default:
       return { eventId, ok: true, status: "ok" };
   }
+}
+
+async function sendMagicLinkEmail(env, input) {
+  const fromEmail = String(env.GOOGLE_WORKSPACE_USER_NO_REPLY || env.GOOGLE_WORKSPACE_USER_INFO || "");
+  const subject = "Your Virtual Launch Pro magic link";
+  const html = buildMagicLinkEmailHtml(input.magicLinkUrl, input.expiresAt);
+  const text = buildMagicLinkEmailText(input.magicLinkUrl, input.expiresAt);
+
+  if (!input.to || !fromEmail) {
+    return { reason: "missing_email_configuration", sent: false, status: "not_sent" };
+  }
+  if (!env.GOOGLE_CLIENT_EMAIL || !env.GOOGLE_PRIVATE_KEY || !env.GOOGLE_TOKEN_URI) {
+    return { reason: "google_workspace_not_configured", sent: false, status: "not_sent" };
+  }
+
+  const accessToken = await getGoogleServiceAccessToken(env, GMAIL_SEND_SCOPE, fromEmail);
+  const raw = createMimeMessage({ from: fromEmail, html, subject, text, to: input.to });
+  const response = await fetch(GMAIL_API_BASE + "/users/" + encodeURIComponent(fromEmail) + "/messages/send", {
+    body: JSON.stringify({ raw }),
+    headers: {
+      authorization: "Bearer " + accessToken,
+      "content-type": "application/json"
+    },
+    method: "POST"
+  });
+  const result = await parseJsonResponse(response, "gmail_send_failed");
+
+  return {
+    id: result.id || null,
+    sent: true,
+    status: "sent",
+    threadId: result.threadId || null
+  };
+}
+
+function buildMagicLinkEmailHtml(magicLinkUrl, expiresAt) {
+  return "<!doctype html><html><body style=\"background:#0b1020;color:#e5e7eb;font-family:Arial,sans-serif;padding:24px;\"><div style=\"margin:0 auto;max-width:560px;background:#111827;border:1px solid #1f2937;border-radius:16px;padding:32px;\"><h1 style=\"font-size:24px;line-height:1.2;margin:0 0 16px;\">Sign in to Virtual Launch Pro</h1><p style=\"font-size:16px;line-height:1.6;margin:0 0 20px;\">Use the secure magic link below to sign in.</p><p style=\"margin:0 0 24px;\"><a href=\"" + escapeHtml(magicLinkUrl) + "\" style=\"display:inline-block;background:#f59e0b;color:#111827;text-decoration:none;font-weight:700;padding:14px 20px;border-radius:10px;\">Sign in securely</a></p><p style=\"font-size:14px;line-height:1.6;margin:0 0 12px;word-break:break-all;\">" + escapeHtml(magicLinkUrl) + "</p><p style=\"font-size:13px;line-height:1.6;margin:0;color:#9ca3af;\">This link expires at " + escapeHtml(expiresAt) + ".</p></div></body></html>";
+}
+
+function buildMagicLinkEmailText(magicLinkUrl, expiresAt) {
+  return [
+    "Sign in to Virtual Launch Pro.",
+    "",
+    "Open this secure magic link:",
+    magicLinkUrl,
+    "",
+    "This link expires at " + expiresAt + "."
+  ].join("
+");
+}
+
+function createMimeMessage(input) {
+  const boundary = "vlp-" + crypto.randomUUID();
+  const lines = [
+    "From: Virtual Launch Pro <" + input.from + ">",
+    "To: " + input.to,
+    "Subject: " + input.subject,
+    "MIME-Version: 1.0",
+    "Content-Type: multipart/alternative; boundary=\"" + boundary + "\"",
+    "",
+    "--" + boundary,
+    'Content-Type: text/plain; charset="UTF-8"',
+    "",
+    input.text,
+    "",
+    "--" + boundary,
+    'Content-Type: text/html; charset="UTF-8"',
+    "",
+    input.html,
+    "",
+    "--" + boundary + "--"
+  ];
+  return toBase64Url(lines.join("
+"));
+}
+
+function createServiceJwt(assertion) {
+  const header = { alg: "RS256", typ: "JWT" };
+  return toBase64Url(JSON.stringify(header)) + "." + toBase64Url(JSON.stringify(assertion));
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .split("&").join("&amp;")
+    .split("<").join("&lt;")
+    .split(">").join("&gt;")
+    .split('"').join("&quot;")
+    .split("'").join("&#39;");
+}
+
+async function getGoogleServiceAccessToken(env, scope, subject) {
+  const issuedAt = Math.floor(Date.now() / 1000);
+  const assertion = {
+    aud: String(env.GOOGLE_TOKEN_URI),
+    exp: issuedAt + 3600,
+    iat: issuedAt,
+    iss: String(env.GOOGLE_CLIENT_EMAIL),
+    scope: String(scope),
+    sub: String(subject)
+  };
+
+  const unsignedJwt = createServiceJwt(assertion);
+  const signature = await signServiceJwt(unsignedJwt, String(env.GOOGLE_PRIVATE_KEY));
+
+  const response = await fetch(String(env.GOOGLE_TOKEN_URI), {
+    body: new URLSearchParams({
+      assertion: unsignedJwt + "." + signature,
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer"
+    }),
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    method: "POST"
+  });
+
+  const tokenJson = await parseJsonResponse(response, "google_service_token_failed");
+  return tokenJson.access_token;
+}
+
+async function signServiceJwt(unsignedJwt, privateKeyPem) {
+  const privateKey = await importGoogleServicePrivateKey(privateKeyPem);
+  const signature = await crypto.subtle.sign(
+    { name: "RSASSA-PKCS1-v1_5" },
+    privateKey,
+    new TextEncoder().encode(unsignedJwt)
+  );
+  return toBase64Url(signature);
+}
+
+async function importGoogleServicePrivateKey(privateKeyPem) {
+  const normalized = String(privateKeyPem || "").split("\n").join("
+");
+  const base64 = normalized
+    .split("-----BEGIN PRIVATE KEY-----").join("")
+    .split("-----END PRIVATE KEY-----").join("")
+    .split("
+").join("")
+    .split("
+").join("")
+    .split("	").join("")
+    .split(" ").join("");
+
+  const keyBytes = base64ToUint8Array(base64);
+
+  return crypto.subtle.importKey(
+    "pkcs8",
+    keyBytes.buffer,
+    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
 }
 
 function withCors(request, response) {
