@@ -9,6 +9,9 @@ node_modules/
 .env.local
 .env*.local
 
+# Vercel build output
+.vercel/
+
 # Misc
 .DS_Store
 *.tsbuildinfo
