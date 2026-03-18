@@ -467,8 +467,8 @@ function getPriceId(planKey, billingInterval, env) {
     'vlp_starter/yearly':   env.STRIPE_PRICE_VLP_STARTER_YEARLY,
     'vlp_advanced/monthly': env.STRIPE_PRICE_VLP_ADVANCED_MONTHLY,
     'vlp_advanced/yearly':  env.STRIPE_PRICE_VLP_ADVANCED_YEARLY,
-    'vlp_pro/monthly':      env.STRIPE_PRICE_VLP_PRO_MONTHLY,
-    'vlp_pro/yearly':       env.STRIPE_PRICE_VLP_PRO_YEARLY,
+    'vlp_scale/monthly':    env.STRIPE_PRICE_VLP_SCALE_MONTHLY,
+    'vlp_scale/yearly':     env.STRIPE_PRICE_VLP_SCALE_YEARLY,
   };
   return map[`${planKey}/${billingInterval}`] ?? null;
 }
@@ -478,7 +478,7 @@ function getTokenGrant(planKey) {
     vlp_free:     { taxGameTokens: 0,     transcriptTokens: 0 },
     vlp_starter:  { taxGameTokens: 10000, transcriptTokens: 25000 },
     vlp_advanced: { taxGameTokens: 25000, transcriptTokens: 75000 },
-    vlp_pro:      { taxGameTokens: 50000, transcriptTokens: 150000 },
+    vlp_scale:    { taxGameTokens: 50000, transcriptTokens: 150000 },
   };
   return grants[planKey] ?? { taxGameTokens: 0, transcriptTokens: 0 };
 }
@@ -1081,7 +1081,7 @@ const ROUTES = [
         if (!accountId || !membershipId || !planKey || !status) {
           return json({ ok: false, error: 'MISSING_FIELDS', message: 'accountId, membershipId, planKey, status are required' }, 400);
         }
-        const validPlans = ['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_pro'];
+        const validPlans = ['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_scale'];
         if (!validPlans.includes(planKey)) {
           return json({ ok: false, error: 'VALIDATION', message: `planKey must be one of: ${validPlans.join(', ')}` }, 400);
         }
@@ -1150,7 +1150,7 @@ const ROUTES = [
         const now = new Date().toISOString();
         const setClauses = ['updated_at = ?'];
         const vals = [now];
-        const validPlans = ['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_pro'];
+        const validPlans = ['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_scale'];
         const validStatuses = ['active', 'cancelled', 'past_due', 'pending', 'trialing'];
         if (body?.planKey !== undefined) {
           if (!validPlans.includes(body.planKey)) return json({ ok: false, error: 'VALIDATION', message: `planKey must be one of: ${validPlans.join(', ')}` }, 400);
@@ -1196,7 +1196,7 @@ const ROUTES = [
             vlp_free:     { monthly: env.STRIPE_PRICE_VLP_FREE_MONTHLY },
             vlp_starter:  { monthly: env.STRIPE_PRICE_VLP_STARTER_MONTHLY,  yearly: env.STRIPE_PRICE_VLP_STARTER_YEARLY },
             vlp_advanced: { monthly: env.STRIPE_PRICE_VLP_ADVANCED_MONTHLY, yearly: env.STRIPE_PRICE_VLP_ADVANCED_YEARLY },
-            vlp_pro:      { monthly: env.STRIPE_PRICE_VLP_PRO_MONTHLY,      yearly: env.STRIPE_PRICE_VLP_PRO_YEARLY },
+            vlp_scale:    { monthly: env.STRIPE_PRICE_VLP_SCALE_MONTHLY,    yearly: env.STRIPE_PRICE_VLP_SCALE_YEARLY },
           },
         },
       });
@@ -1212,7 +1212,7 @@ const ROUTES = [
           vlp_free:     { label: 'Free',     monthlyUsd: 0,      yearlyUsd: 0 },
           vlp_starter:  { label: 'Starter',  monthlyUsd: 4900,   yearlyUsd: 47900 },
           vlp_advanced: { label: 'Advanced', monthlyUsd: 9900,   yearlyUsd: 95900 },
-          vlp_pro:      { label: 'Pro',      monthlyUsd: 19900,  yearlyUsd: 191900 },
+          vlp_scale:    { label: 'Scale',    monthlyUsd: 19900,  yearlyUsd: 199000 },
         },
       });
     },
@@ -1388,7 +1388,7 @@ const ROUTES = [
       if (billingInterval !== 'monthly' && billingInterval !== 'yearly') {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'billingInterval must be monthly or yearly' }, 400);
       }
-      if (!['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_pro'].includes(planKey)) {
+      if (!['vlp_free', 'vlp_starter', 'vlp_advanced', 'vlp_scale'].includes(planKey)) {
         return json({ ok: false, error: 'BAD_REQUEST', message: 'Invalid planKey' }, 400);
       }
       try {

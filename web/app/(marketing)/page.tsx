@@ -3,29 +3,29 @@ import HomePricingSection from '@/components/marketing/HomePricingSection'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Virtual Launch Pro — Calm, Repeatable Client Acquisition for Tax Professionals',
-  description: 'Virtual Launch Pro gives tax professionals a repeatable client acquisition system — structured packages, network visibility, and cleaner delivery without the operational chaos.',
+  title: 'Virtual Launch Pro — Launch Systems for Tax Professionals',
+  description: 'Virtual Launch Pro gives tax professionals access to the taxpayer service network, transcript tools, booking infrastructure, and a public directory listing.',
 }
 
 const whyItems = [
-  { title: 'Clear steps', body: 'Clients follow a guided path instead of guessing what to do next. Your team works from the same checklist every time.' },
-  { title: 'Controlled scope', body: 'Deliverables define what is included so one more thing does not take over. Work stays predictable even when client complexity spikes.' },
-  { title: 'Fewer follow-ups', body: 'Automations send updates before clients feel the need to ask. Your inbox stays clear for real issues, not status checks.' },
-  { title: 'Faster onboarding', body: 'Intake, files, messages, and payments live in one calm workflow. Clients get started quickly without manual back-and-forth.' },
-  { title: 'White-labeled trust', body: 'Your client sees your brand and your process, not a patchwork of tools. Consistency builds confidence and makes the service feel premium.' },
-  { title: 'Network visibility', body: 'Member profiles are promoted across the Tax Monitor public network. Contextual visibility next to tax tools and transcript activity.' },
+  { title: 'Taxpayer network access', body: 'Connect to an active pool of taxpayers seeking professional help. Starter and above plans include direct access to the taxpayer service pool.' },
+  { title: 'Transcript tools', body: 'Request and manage IRS transcripts directly through the platform. Transcript tokens are included with every paid membership tier.' },
+  { title: 'Booking infrastructure', body: 'Cal.com integration puts scheduling on your public profile automatically. Clients book without the back-and-forth.' },
+  { title: 'Network directory listing', body: 'Your profile appears in the Tax Monitor public network directory. Scale members get featured placement for greater visibility.' },
+  { title: 'Tax tool game tokens', body: 'Access tax resolution and planning tools through a token-based system. Every paid tier includes monthly token grants.' },
+  { title: 'Profile management', body: 'Build a complete professional profile with credentials, services, bio, and contact info that appears on your public directory listing.' },
 ]
 
 const offers = [
-  { tier: 'STARTER', title: 'Clean links, calm handoff', featured: false, body: 'Built for solo operators or new service offers that need a credible intake-to-delivery path fast.', items: ['Form intake creates the work automatically.', 'Profile listed in the network directory.', 'Read-only status view reduces check-in messages.'] },
-  { tier: 'PRO', title: 'Lifecycle protected delivery', featured: true, body: 'Best for teams or active client work where tasks, assets, and checkpoints need to land in the right place every time.', items: ['Task templates and checklists match your real phases.', 'Upload links mark assets received and move work forward.', 'Workflow rules lock the lifecycle so work does not drift.'] },
-  { tier: 'ADVANCED', title: 'Multi-offer system control', featured: false, body: 'For growing teams that need routing, role logic, and client-facing status at scale.', items: ['Intake answers route work into the correct pipeline.', 'Coordinator and assignee logic keeps ownership clear.', 'Client-ready progress pages make delivery feel premium.'] },
+  { tier: 'STARTER', title: 'Network access, clean setup', featured: false, body: 'For solo tax professionals who need taxpayer pool access, a directory listing, and token tools without overcommitting.', items: ['Access to taxpayer service pool.', 'Network directory listing.', 'Tax tool game token and transcript token access.'] },
+  { tier: 'SCALE', title: 'Featured network placement', featured: true, body: 'For active tax professionals who want featured visibility, priority access to taxpayer cases, and full token capacity.', items: ['Featured network listing for greater visibility.', 'Priority taxpayer pool access.', 'Tax tool game token and transcript token access.'] },
+  { tier: 'ADVANCED', title: 'Top-tier practice growth', featured: false, body: 'For high-volume tax practices that need early case access, top-tier network promotion, and maximum throughput.', items: ['Early taxpayer case access before the general pool.', 'Top-tier network promotion.', 'Tax tool game token and transcript token access.'] },
 ]
 
 const audiences = [
-  { title: 'Solo service operators', body: 'Look established and professional without building or maintaining a complicated tech stack.' },
-  { title: 'Small, growing teams', body: 'Stay organized, reduce internal friction, and deliver consistently as more people touch the work.' },
-  { title: 'Firms ready to scale', body: 'Increase capacity and revenue without adding manual steps, scope creep, or process breakdowns.' },
+  { title: 'Solo tax professionals', body: 'Get listed in the network, access the taxpayer service pool, and book clients without building your own tech stack.' },
+  { title: 'Small tax firms', body: 'Equip your team with transcript tools, booking infrastructure, and a professional network presence that scales with client volume.' },
+  { title: 'High-volume tax practices', body: 'Unlock early taxpayer case access, top-tier network promotion, and maximum token capacity to support a full caseload.' },
 ]
 
 const faqs = [
@@ -44,11 +44,11 @@ export default function HomePage() {
             <span className="text-sm text-slate-300">Choose your plan level. Upgrade anytime.</span>
           </div>
           <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-            Become a member for{' '}
-            <span className="bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">calm delivery.</span>
+            Launch systems for{' '}
+            <span className="bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">tax professionals.</span>
           </h1>
           <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-400 md:text-2xl">
-            Start with the package that fits your stage, then build a cleaner client journey with onboarding, routing, and delivery systems that stay organized as you grow.
+            Join the taxpayer service network, access transcript tools, and get listed in the Tax Monitor directory. Pick the membership that fits your practice.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a href="#pricing" className="inline-block rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:scale-105 hover:from-amber-400 hover:to-amber-500">View packages →</a>
@@ -61,10 +61,10 @@ export default function HomePage() {
         <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.12)] md:p-8">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
-              { tier: 'FREE', title: 'Get inside the network', body: 'Best for getting started and joining the ecosystem before stepping into recurring paid usage.' },
-              { tier: 'STARTER', title: 'Fast, clean setup', body: 'Great for solo operators who need intake, status, and payment links working without a maze of tools.' },
-              { tier: 'PRO', title: 'Protected delivery flow', body: 'Best for active service businesses that need templates, uploads, routing, and lifecycle enforcement.', highlight: true },
-              { tier: 'ADVANCED', title: 'Built for team volume', body: 'Adds deeper automation, multi-offer routing, and client-ready status surfaces for growing teams.' },
+              { tier: 'FREE', title: 'Join the network', body: 'Get started, build your profile, and access platform infrastructure before stepping into paid membership.' },
+              { tier: 'STARTER', title: 'Network access', body: 'Access the taxpayer service pool, get listed in the directory, and start using token tools.' },
+              { tier: 'SCALE', title: 'Featured placement', body: 'Get featured in the network directory, priority pool access, and full token capacity.', highlight: true },
+              { tier: 'ADVANCED', title: 'High-volume practice', body: 'Early case access, top-tier promotion, and maximum token throughput for busy practices.' },
             ].map((p) => (
               <div key={p.tier} className={`rounded-2xl p-6 ${'highlight' in p && p.highlight ? 'border border-orange-500/40 bg-orange-500/10' : 'border border-white/10 bg-[#070a10]/60'}`}>
                 <div className="text-xs font-semibold tracking-widest text-orange-400">{p.tier}</div>
@@ -80,8 +80,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-[77.5rem] px-4 py-16 md:py-20">
           <div className="mx-auto max-w-4xl text-center mb-12">
             <p className="text-xs font-semibold tracking-widest text-orange-400">WHY VIRTUAL LAUNCH PRO WORKS</p>
-            <h2 className="mt-3 text-4xl font-extrabold md:text-5xl">Predictable delivery, built for calm</h2>
-            <p className="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">Service delivery breaks down when clients cannot see what happens next and your team has to answer the same questions repeatedly. Virtual Launch Pro fixes that with visible steps, defined deliverables, and automations that reduce noise.</p>
+            <h2 className="mt-3 text-4xl font-extrabold md:text-5xl">Built for tax professionals, not generic service firms</h2>
+            <p className="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">Virtual Launch Pro is built around the tools tax professionals actually use — taxpayer network access, IRS transcript requests, Cal.com booking, and a professional directory listing that drives inbound cases.</p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {whyItems.map((item) => (
@@ -101,8 +101,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-[77.5rem] px-4 py-16 md:py-20">
           <div className="mx-auto max-w-3xl text-center mb-12">
             <p className="text-xs font-semibold tracking-widest text-orange-400">OFFERS</p>
-            <h2 className="mt-4 text-4xl font-extrabold md:text-5xl">Three installs built for different stages</h2>
-            <p className="mx-auto mt-5 max-w-2xl text-base text-white/70">Start with the install that matches your delivery maturity, then add deeper automation when the workload justifies it.</p>
+            <h2 className="mt-4 text-4xl font-extrabold md:text-5xl">Three tiers built for different practice sizes</h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base text-white/70">Start with the membership that matches your volume, then upgrade when your caseload justifies it.</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {offers.map((o) => (
@@ -152,8 +152,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-[77.5rem] px-4 py-16 md:py-20">
           <div className="mx-auto max-w-3xl text-center mb-14">
             <p className="text-xs font-semibold tracking-widest text-orange-400">WHO VIRTUAL LAUNCH PRO IS FOR</p>
-            <h2 className="mt-4 text-4xl font-extrabold text-white md:text-5xl">Built for calm, scalable service delivery</h2>
-            <p className="mx-auto mt-5 max-w-2xl text-base text-white/70">Virtual Launch Pro supports service businesses at every stage, whether you are solo, managing a small team, or preparing to scale without added chaos.</p>
+            <h2 className="mt-4 text-4xl font-extrabold text-white md:text-5xl">Built for tax professionals at every scale</h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base text-white/70">Virtual Launch Pro supports tax professionals at every stage — solo practitioners, small firms, and high-volume practices that need real infrastructure to grow.</p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
             {audiences.map((a) => (

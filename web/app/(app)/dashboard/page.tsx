@@ -1,5 +1,7 @@
 ﻿import type { Metadata } from 'next'
+import Link from 'next/link'
 import Card from '@/components/ui/Card'
+import OnboardingPrompt from '@/components/app/OnboardingPrompt'
 import { getDashboardSummary } from '@/lib/api/client'
 
 export const metadata: Metadata = { title: 'Dashboard' }
@@ -7,6 +9,8 @@ export const metadata: Metadata = { title: 'Dashboard' }
 export default async function DashboardPage() {
   let summary
   try { summary = await getDashboardSummary() } catch { summary = { tokensRemaining: 0, tokensTotal: 0, upcomingBookings: 0, openTickets: 0, membership: 'free', renewalDate: 'N/A' } }
+
+  const isFree = summary.membership === 'free'
 
   return (
     <div className="space-y-8">
@@ -16,6 +20,25 @@ export default async function DashboardPage() {
           Welcome back. Here&apos;s what&apos;s happening with your practice.
         </p>
       </div>
+
+      {/* Upgrade prompt for Free members */}
+      {isFree && (
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 p-5">
+          <div className="text-sm font-semibold text-amber-300">You&apos;re on the Free plan</div>
+          <p className="mt-1 text-sm text-slate-300">
+            Upgrade to Starter, Scale, or Advanced to access the taxpayer network, transcript tokens, and booking infrastructure.
+          </p>
+          <Link
+            href="/pricing"
+            className="mt-3 inline-block rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-xs font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition"
+          >
+            View plans →
+          </Link>
+        </div>
+      )}
+
+      {/* Onboarding prompt (dismissible, client-side) */}
+      <OnboardingPrompt />
 
       {/* Stats row */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

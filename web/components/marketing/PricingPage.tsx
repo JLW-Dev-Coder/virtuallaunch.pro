@@ -29,9 +29,9 @@ const DEFAULT_PLANS: Record<string, PlanData> = {
     monthly: { billingObject: 'price_1T9APS9ROeyeXOqeOWjA4sq3', checkoutHref: '#', planKey: 'vlp_starter_monthly', platformFee: '12', price: '79', suffix: '/mo', taxGameTokens: '30', transcriptTokens: '30' },
     yearly:  { billingObject: 'price_1TBjy19ROeyeXOqeyzbwP3hW', checkoutHref: '#', planKey: 'vlp_starter_yearly', platformFee: '12', price: '790', suffix: '/yr', taxGameTokens: '360', transcriptTokens: '360' },
   },
-  pro: {
-    monthly: { billingObject: 'price_1T9AUi9ROeyeXOqeqyzsSOYV', checkoutHref: '#', planKey: 'vlp_pro_monthly', platformFee: '12', price: '199', suffix: '/mo', taxGameTokens: '120', transcriptTokens: '100' },
-    yearly:  { billingObject: 'price_1TBk0K9ROeyeXOqeC3sHQqFN', checkoutHref: '#', planKey: 'vlp_pro_yearly', platformFee: '12', price: '1990', suffix: '/yr', taxGameTokens: '1440', transcriptTokens: '1200' },
+  scale: {
+    monthly: { billingObject: 'price_1T9AUi9ROeyeXOqeqyzsSOYV', checkoutHref: '#', planKey: 'vlp_scale_monthly', platformFee: '12', price: '199', suffix: '/mo', taxGameTokens: '120', transcriptTokens: '100' },
+    yearly:  { billingObject: 'price_1TBk0K9ROeyeXOqeC3sHQqFN', checkoutHref: '#', planKey: 'vlp_scale_yearly', platformFee: '12', price: '1990', suffix: '/yr', taxGameTokens: '1440', transcriptTokens: '1200' },
   },
   advanced: {
     monthly: { billingObject: 'price_1T9AXX9ROeyeXOqef7Ja1Iig', checkoutHref: '#', planKey: 'vlp_advanced_monthly', platformFee: '12', price: '399', suffix: '/mo', taxGameTokens: '300', transcriptTokens: '250' },
@@ -39,7 +39,7 @@ const DEFAULT_PLANS: Record<string, PlanData> = {
   },
 }
 
-const PLAN_ORDER = ['free', 'starter', 'pro', 'advanced'] as const
+const PLAN_ORDER = ['free', 'starter', 'scale', 'advanced'] as const
 type PlanKey = typeof PLAN_ORDER[number]
 
 function readFirst(source: Record<string, unknown>, keys: string[]): string {
@@ -93,11 +93,18 @@ function mergeRemote(payload: any, plans: Record<string, PlanData>): Record<stri
   return next
 }
 
+const planFeatures: Record<PlanKey, string[]> = {
+  free:     ['Account Infrastructure', 'Booking & Calendar Integration', 'Profile Management', 'Support & Platform Access', 'Usage & Reports'],
+  starter:  ['Access to taxpayer service pool', 'Network directory listing', 'Tax tool game token access', 'Transcript token access'],
+  scale:    ['Featured network listing', 'Priority taxpayer pool access', 'Tax tool game token access', 'Transcript token access'],
+  advanced: ['Early taxpayer case access', 'Tax tool game token access', 'Top-tier network promotion', 'Transcript token access'],
+}
+
 const planMeta: Record<PlanKey, { label: string; badge: string; featured: boolean; body: string }> = {
-  free:     { label: 'Free',     badge: 'Start here',       featured: false, body: 'For firms getting started, exploring the platform, and easing into paid usage without overbuilding too early.' },
-  starter:  { label: 'Starter',  badge: 'Best for testing', featured: false, body: 'For smaller firms needing recurring usage, practical access, and enough room to build without overcommitting early.' },
-  pro:      { label: 'Pro',      badge: 'Most popular',     featured: true,  body: 'For active firms needing stronger capacity, better visibility, and smoother operations without constant delivery friction.' },
-  advanced: { label: 'Advanced', badge: 'For higher volume', featured: false, body: 'For firms with heavier throughput, broader staff usage, and the urge to stop duct-taping growth together.' },
+  free:     { label: 'Free',     badge: 'Start here',        featured: false, body: 'For tax professionals getting started, exploring the platform, and joining the network before stepping into paid membership.' },
+  starter:  { label: 'Starter',  badge: 'Best for solo pros', featured: false, body: 'For solo tax professionals who need taxpayer service pool access, a directory listing, and core token tools.' },
+  scale:    { label: 'Scale',    badge: 'Most popular',      featured: true,  body: 'For active tax professionals who want featured network placement, priority pool access, and full token capacity.' },
+  advanced: { label: 'Advanced', badge: 'For high volume',   featured: false, body: 'For high-volume practices that need top-tier network promotion, early case access, and maximum token throughput.' },
 }
 
 export default function PricingPage() {
@@ -158,7 +165,7 @@ export default function PricingPage() {
           </h1>
 
           <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-400 md:text-2xl">
-            Choose Free, Starter, Pro, or Advanced. Pricing, tokens, and plan keys stay aligned to the live billing structure.
+            Choose Free, Starter, Scale, or Advanced. Pricing, tokens, and plan keys stay aligned to the live billing structure.
           </p>
 
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
@@ -226,10 +233,12 @@ export default function PricingPage() {
                   </div>
                   <p className="mt-5 text-sm text-white/70">{meta.body}</p>
                   <ul className="mt-6 space-y-3 text-sm text-white/75">
-                    <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>{data.transcriptTokens} transcript tokens</span></li>
-                    <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>{data.taxGameTokens} tax tool game tokens</span></li>
-                    <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>Plan key: {data.planKey}</span></li>
-                    <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>Platform fee: {data.platformFee}%</span></li>
+                    {planFeatures[key].map((feature) => (
+                      <li key={feature} className="flex items-start gap-3">
+                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
                   </ul>
                   {checkoutError && loadingPlan === null && (
                     <p className="mt-4 text-xs text-red-400">{checkoutError}</p>

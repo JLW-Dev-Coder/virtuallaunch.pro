@@ -1,16 +1,18 @@
 import type { Metadata } from 'next'
 import Card from '@/components/ui/Card'
-import { getAccountProfile, getNotificationPreferences, getVlpPreferences } from '@/lib/api/client'
+import MembershipSection from '@/components/app/MembershipSection'
+import { getAccountProfile, getNotificationPreferences, getVlpPreferences, getDashboardSummary } from '@/lib/api/client'
 import { getSession } from '@/lib/auth/session'
 
 export const metadata: Metadata = { title: 'Account' }
 
 export default async function AccountPage() {
   const session = await getSession()
-  const [profile, notifPrefs, vlpPrefs] = await Promise.all([
+  const [profile, notifPrefs, vlpPrefs, summary] = await Promise.all([
     getAccountProfile(session.account_id),
     getNotificationPreferences(session.account_id),
     getVlpPreferences(session.account_id),
+    getDashboardSummary().catch(() => ({ membership: 'free' })),
   ])
 
   return (
@@ -19,6 +21,9 @@ export default async function AccountPage() {
         <h1 className="text-2xl font-semibold text-white">Account Settings</h1>
         <p className="mt-1 text-sm text-slate-400">Manage your profile, security, and preferences.</p>
       </div>
+
+      {/* Membership */}
+      <MembershipSection accountId={session.account_id} membership={summary.membership} />
 
       {/* Profile */}
       <Card>
