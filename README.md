@@ -1,5 +1,50 @@
 # Virtual Launch Pro (VLP)
 
+## Table of Contents
+
+* [Overview](#overview)
+# [Current Build Status] (#current-build-status)
+* [Key Features](#key-features)
+* [Membership & Plans](#membership-&-plans)
+* [Architecture Overview](#architecture-overview)
+* [Ecosystem Overview](#ecosystem-overview)
+* [Platform Responsibilities](#platform-responsibilities)
+  * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
+  * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
+  * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
+  * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
+* [Dashboards](#dashboards)
+  * [Virtual Launch Pro Dashboard (VLP)](#virtual-launch-pro-dashboard-vlp)
+  * [Tax Tools Dashboard (TTTMP)](#tax-tools-dashboard-tttmp)
+  * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
+  * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
+* [Cross-Platform Data Flow & IDs](#cross-platform-data-flow--ids)
+* [Data Storage Architecture](#data-storage-architecture)
+* [Repository Structure](#repository-structure)
+* [Environment Setup](#environment-setup)
+* [Deployment](#deployment)
+* [CloudFlare Integration](#cloudflare-integration)
+* [Contracts or Data Model](#contracts-or-data-model)
+* [Development Standards](#development-standards)
+* [Integrations](#integrations)
+  * [Account Integrations](#account-integrations)
+  * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
+  * [Login Integrations](#login-integrations)
+    * [Continue with Google](#continue-with-google)
+    * [Magic Link](#magic-link)
+    * [SSO (SAML / OIDC)](#sso-saml--oidc)
+  * [Stripe Integration](#stripe-integration)
+* [Notification Preferences](#notification-preferences)
+  * [In-App Notifications](#in-app-notifications)
+  * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
+* [2FA Integration](#2fa-integration)
+* [Support Ticket System](#support-ticket-system)
+* [Security and Secrets](#security-and-secrets)
+* [Contribution Guidelines](#contribution-guidelines)
+* [License](#license)
+
+---
+
 ## Current Build State
 
 Last updated: Phase 15 complete
@@ -54,47 +99,6 @@ Last updated: Phase 15 complete
 - Session via vlp_session HttpOnly cookie only
 - All billing writes go through VLP Worker routes
 
-## Table of Contents
-
-* [Overview](#overview)
-* [Key Features](#key-features)
-* [Architecture Overview](#architecture-overview)
-* [Ecosystem Overview](#ecosystem-overview)
-* [Platform Responsibilities](#platform-responsibilities)
-  * [Tax Monitor Pro (TMP)](#tax-monitor-pro-tmp)
-  * [Tax Tools Arcade (TTTMP)](#tax-tools-arcade-tttmp)
-  * [Transcript Tax Monitor (TTMP)](#transcript-tax-monitor-ttmp)
-  * [Virtual Launch Pro (VLP)](#virtual-launch-pro-vlp)
-* [Dashboards](#dashboards)
-  * [Virtual Launch Pro Dashboard (VLP)](#virtual-launch-pro-dashboard-vlp)
-  * [Tax Tools Dashboard (TTTMP)](#tax-tools-dashboard-tttmp)
-  * [Taxpayer Dashboard (TMP)](#taxpayer-dashboard-tmp)
-  * [Transcript Dashboard (TTMP)](#transcript-dashboard-ttmp)
-* [Cross-Platform Data Flow & IDs](#cross-platform-data-flow--ids)
-* [Data Storage Architecture](#data-storage-architecture)
-* [Repository Structure](#repository-structure)
-* [Environment Setup](#environment-setup)
-* [Deployment](#deployment)
-* [CloudFlare Integration](#cloudflare-integration)
-* [Contracts or Data Model](#contracts-or-data-model)
-* [Development Standards](#development-standards)
-* [Integrations](#integrations)
-  * [Account Integrations](#account-integrations)
-  * [Cal.com Scheduling Integration](#calcom-scheduling-integration)
-  * [Login Integrations](#login-integrations)
-    * [Continue with Google](#continue-with-google)
-    * [Magic Link](#magic-link)
-    * [SSO (SAML / OIDC)](#sso-saml--oidc)
-  * [Stripe Integration](#stripe-integration)
-* [Notification Preferences](#notification-preferences)
-  * [In-App Notifications](#in-app-notifications)
-  * [Twilio SMS Integration (Coming Soon)](#twilio-sms-integration-coming-soon)
-* [2FA Integration](#2fa-integration)
-* [Support Ticket System](#support-ticket-system)
-* [Security and Secrets](#security-and-secrets)
-* [Contribution Guidelines](#contribution-guidelines)
-* [License](#license)
-
 ---
 
 # Overview
@@ -134,6 +138,29 @@ Major capabilities include:
 * R2 canonical data storage
 * token-based tool systems
 * transcript diagnostics
+
+---
+
+# Memberships & Plans
+
+| Feature / Capability | VLP Free | VLP Starter | VLP Scale | VLP Advanced | TMP Free | TMP Essential | TMP Plus | TMP Premier | TTMP (10-pk) | TTMP (25-pk) | TTMP (100-pk) | TTTMP (30-pk) | TTTMP (80-pk) | TTTMP (200-pk) |
+|---------------------|----------|-------------|-----------|--------------|----------|---------------|----------|-------------|---------------|---------------|----------------|----------------|----------------|-----------------|
+| Account / Membership Management | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Booking Analytics | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | — | — |
+| Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Directory Profile | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Game Analytics | — | — | — | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ |
+| Monthly / Package Cost | $0 | $79 | $199 | $399 | $0 | $9 | $19 | $39 | $19 | $29 | $129 | $9 | $19 | $39 |
+| Profile Management | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Profile Visibility | Directory | Directory | Featured | Top-Tier | — | — | — | — | — | — | — | — | — | — |
+| Support Tickets | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 30 | 120 | 300 | 0 | 5 | 15 | 40 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — |
+| Token Balances | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Tool Usage History | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ | — | — | — |
+| Transcript Report History | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ | — | — | — |
+| Transcript Tokens | 0 | 30 | 100 | 250 | 0 | 2 | 5 | 10 | 10 | 25 | 100 | 30 | 80 | 200 |
 
 ---
 
