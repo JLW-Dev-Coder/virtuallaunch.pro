@@ -400,7 +400,6 @@ Capabilities include:
 * support tickets
 * token balances
 * tool usage history
-* transcript report history
 
 ---
 
@@ -417,7 +416,6 @@ Capabilities include:
 * support tickets
 * token balances
 * tool usage history
-* transcript report history
 
 ---
 
