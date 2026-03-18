@@ -5,7 +5,8 @@ import { getDashboardSummary } from '@/lib/api/client'
 export const metadata: Metadata = { title: 'Dashboard' }
 
 export default async function DashboardPage() {
-  const summary = await getDashboardSummary()
+  let summary
+  try { summary = await getDashboardSummary() } catch { summary = { tokensRemaining: 0, tokensTotal: 0, upcomingBookings: 0, openTickets: 0, membership: 'free', renewalDate: 'N/A' } }
 
   return (
     <div className="space-y-8">
