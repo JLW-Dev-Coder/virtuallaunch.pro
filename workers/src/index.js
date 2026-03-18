@@ -2750,6 +2750,21 @@ const ROUTES = [
           );
         }
 
+        // Create membership record in pending state before Stripe redirect
+        const membershipId = `MEM_${crypto.randomUUID()}`;
+        const billingInterval = planKey.endsWith('_yearly') ? 'yearly' : 'monthly';
+        const pendingNow = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval,
+          stripeCustomerId, status: 'pending', createdAt: pendingNow,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, stripe_customer_id, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?, ?)`,
+          [membershipId, accountId, planKey, billingInterval, stripeCustomerId, pendingNow]
+        );
+
         // Create Stripe Checkout session
         const origin = 'https://virtuallaunch.pro';
         const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -2766,9 +2781,13 @@ const ROUTES = [
             success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
             cancel_url: `${origin}/pricing?checkout=cancelled`,
             'metadata[account_id]': accountId,
+            'metadata[membership_id]': membershipId,
             'metadata[plan_key]': planKey,
+            'metadata[billing_interval]': billingInterval,
             'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][membership_id]': membershipId,
             'subscription_data[metadata][plan_key]': planKey,
+            'subscription_data[metadata][billing_interval]': billingInterval,
           }),
         });
         if (!sessionRes.ok) {
@@ -2827,6 +2846,21 @@ const ROUTES = [
           );
         }
 
+        // Create membership record in pending state before Stripe redirect
+        const membershipId = `MEM_${crypto.randomUUID()}`;
+        const billingInterval = planKey.endsWith('_yearly') ? 'yearly' : 'monthly';
+        const pendingNow = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval,
+          stripeCustomerId, status: 'pending', createdAt: pendingNow,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, stripe_customer_id, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?, ?)`,
+          [membershipId, accountId, planKey, billingInterval, stripeCustomerId, pendingNow]
+        );
+
         // Create Stripe Checkout session
         const origin = 'https://virtuallaunch.pro';
         const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -2843,9 +2877,13 @@ const ROUTES = [
             success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
             cancel_url: `${origin}/pricing?checkout=cancelled`,
             'metadata[account_id]': accountId,
+            'metadata[membership_id]': membershipId,
             'metadata[plan_key]': planKey,
+            'metadata[billing_interval]': billingInterval,
             'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][membership_id]': membershipId,
             'subscription_data[metadata][plan_key]': planKey,
+            'subscription_data[metadata][billing_interval]': billingInterval,
           }),
         });
         if (!sessionRes.ok) {
@@ -2904,6 +2942,21 @@ const ROUTES = [
           );
         }
 
+        // Create membership record in pending state before Stripe redirect
+        const membershipId = `MEM_${crypto.randomUUID()}`;
+        const billingInterval = planKey.endsWith('_yearly') ? 'yearly' : 'monthly';
+        const pendingNow = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval,
+          stripeCustomerId, status: 'pending', createdAt: pendingNow,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, stripe_customer_id, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?, ?)`,
+          [membershipId, accountId, planKey, billingInterval, stripeCustomerId, pendingNow]
+        );
+
         // Create Stripe Checkout session
         const origin = 'https://virtuallaunch.pro';
         const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -2920,9 +2973,13 @@ const ROUTES = [
             success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
             cancel_url: `${origin}/pricing?checkout=cancelled`,
             'metadata[account_id]': accountId,
+            'metadata[membership_id]': membershipId,
             'metadata[plan_key]': planKey,
+            'metadata[billing_interval]': billingInterval,
             'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][membership_id]': membershipId,
             'subscription_data[metadata][plan_key]': planKey,
+            'subscription_data[metadata][billing_interval]': billingInterval,
           }),
         });
         if (!sessionRes.ok) {
@@ -2990,6 +3047,21 @@ const ROUTES = [
           );
         }
 
+        // Create membership record in pending state before Stripe redirect
+        const membershipId = `MEM_${crypto.randomUUID()}`;
+        const billingInterval = planKey.endsWith('_yearly') ? 'yearly' : 'monthly';
+        const pendingNow = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval,
+          stripeCustomerId, status: 'pending', createdAt: pendingNow,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, stripe_customer_id, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?, ?)`,
+          [membershipId, accountId, planKey, billingInterval, stripeCustomerId, pendingNow]
+        );
+
         // Create Stripe Checkout session
         const origin = 'https://virtuallaunch.pro';
         const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -3006,9 +3078,13 @@ const ROUTES = [
             success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
             cancel_url: `${origin}/pricing?checkout=cancelled`,
             'metadata[account_id]': accountId,
+            'metadata[membership_id]': membershipId,
             'metadata[plan_key]': planKey,
+            'metadata[billing_interval]': billingInterval,
             'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][membership_id]': membershipId,
             'subscription_data[metadata][plan_key]': planKey,
+            'subscription_data[metadata][billing_interval]': billingInterval,
           }),
         });
         if (!sessionRes.ok) {
@@ -3076,6 +3152,21 @@ const ROUTES = [
           );
         }
 
+        // Create membership record in pending state before Stripe redirect
+        const membershipId = `MEM_${crypto.randomUUID()}`;
+        const billingInterval = planKey.endsWith('_yearly') ? 'yearly' : 'monthly';
+        const pendingNow = new Date().toISOString();
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          accountId, membershipId, planKey, billingInterval,
+          stripeCustomerId, status: 'pending', createdAt: pendingNow,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, stripe_customer_id, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?, ?)`,
+          [membershipId, accountId, planKey, billingInterval, stripeCustomerId, pendingNow]
+        );
+
         // Create Stripe Checkout session
         const origin = 'https://virtuallaunch.pro';
         const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -3092,9 +3183,13 @@ const ROUTES = [
             success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
             cancel_url: `${origin}/pricing?checkout=cancelled`,
             'metadata[account_id]': accountId,
+            'metadata[membership_id]': membershipId,
             'metadata[plan_key]': planKey,
+            'metadata[billing_interval]': billingInterval,
             'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][membership_id]': membershipId,
             'subscription_data[metadata][plan_key]': planKey,
+            'subscription_data[metadata][billing_interval]': billingInterval,
           }),
         });
         if (!sessionRes.ok) {
@@ -3160,6 +3255,7 @@ export default {
     return result.handler(method, result.pattern, result.params, request, env, ctx);
   },
 };
+
 
 
 
