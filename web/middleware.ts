@@ -9,6 +9,8 @@ const PROTECTED_PATHS = [
   '/support',
   '/token-usage',
   '/receipts',
+  '/profile',
+  '/messaging',
 ]
 
 export function middleware(request: NextRequest) {
@@ -40,5 +42,7 @@ export const config = {
     '/support/:path*',
     '/token-usage/:path*',
     '/receipts/:path*',
+    '/profile/:path*',
+    '/messaging/:path*',
   ],
 }

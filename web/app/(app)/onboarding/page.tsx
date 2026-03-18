@@ -1,11 +1,7 @@
 'use client'
 
-import type { Metadata } from 'next'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-// Metadata can't be exported from 'use client' — set in a wrapper if needed.
-// Title is set via document.title effect below for simplicity.
 
 const US_STATES = [
   'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
@@ -177,7 +173,7 @@ function MultiSelect({ options, selected, onChange }: {
   )
 }
 
-function Card({ children }: { children: React.ReactNode }) {
+function FormCard({ children }: { children: React.ReactNode }) {
   return (
     <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6">
       {children}
@@ -189,7 +185,7 @@ function Card({ children }: { children: React.ReactNode }) {
 
 function Step1({ form, set }: { form: FormData; set: (k: keyof FormData, v: unknown) => void }) {
   return (
-    <Card>
+    <FormCard>
       <h2 className="mb-6 text-lg font-bold text-white">Personal Info</h2>
       <div className="space-y-4">
         <div>
@@ -207,13 +203,13 @@ function Step1({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
           <p className="mt-1 text-xs text-slate-500">{form.bioShort.length}/220 characters</p>
         </div>
       </div>
-    </Card>
+    </FormCard>
   )
 }
 
 function Step2({ form, set }: { form: FormData; set: (k: keyof FormData, v: unknown) => void }) {
   return (
-    <Card>
+    <FormCard>
       <h2 className="mb-6 text-lg font-bold text-white">Professional Details</h2>
       <div className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -248,13 +244,13 @@ function Step2({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
           <MultiSelect options={PROFESSIONS} selected={form.professions} onChange={(v) => set('professions', v)} />
         </div>
       </div>
-    </Card>
+    </FormCard>
   )
 }
 
 function Step3({ form, set }: { form: FormData; set: (k: keyof FormData, v: unknown) => void }) {
   return (
-    <Card>
+    <FormCard>
       <h2 className="mb-6 text-lg font-bold text-white">About & Bio</h2>
       <div className="space-y-4">
         <div>
@@ -275,13 +271,13 @@ function Step3({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
           <Textarea value={form.bio3} onChange={(v) => set('bio3', v)} placeholder="Anything else you'd like clients to know…" rows={4} />
         </div>
       </div>
-    </Card>
+    </FormCard>
   )
 }
 
 function Step4({ form, set }: { form: FormData; set: (k: keyof FormData, v: unknown) => void }) {
   return (
-    <Card>
+    <FormCard>
       <h2 className="mb-6 text-lg font-bold text-white">Services & Credentials</h2>
       <div className="space-y-4">
         <div>
@@ -320,7 +316,7 @@ function Step4({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
           <Input value={form.additionalCredentials} onChange={(v) => set('additionalCredentials', v)} placeholder="e.g. MBA, LLM, CFP" />
         </div>
       </div>
-    </Card>
+    </FormCard>
   )
 }
 
@@ -335,7 +331,7 @@ function Step5({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
   }
 
   return (
-    <Card>
+    <FormCard>
       <h2 className="mb-6 text-lg font-bold text-white">Contact & Availability</h2>
       <div className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -393,9 +389,103 @@ function Step5({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
           </div>
         </div>
       </div>
-    </Card>
+    </FormCard>
   )
 }
+
+// ── Live profile preview ──────────────────────────────────────────────────────
+
+function LivePreview({ form }: { form: FormData }) {
+  const additionalCreds = form.additionalCredentials
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+
+  const ph = 'text-slate-600 italic'
+
+  return (
+    <div className="space-y-3 text-sm">
+      {/* Hero */}
+      <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+        <div className="flex items-start gap-3">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-sm font-bold text-slate-950">
+            {form.initials || <span className={ph}>??</span>}
+          </div>
+          <div className="min-w-0">
+            <div className="font-bold text-white">{form.fullName || <span className={ph}>Your Name</span>}</div>
+            <div className="mt-0.5 text-xs text-slate-400 line-clamp-2">{form.bioShort || <span className={ph}>Short bio…</span>}</div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {(form.city || form.state) ? (
+                <span className="rounded-full border border-slate-700 bg-slate-800/60 px-2 py-0.5 text-xs text-slate-300">
+                  {[form.city, form.state].filter(Boolean).join(', ')}
+                </span>
+              ) : (
+                <span className={`rounded-full border border-slate-800 px-2 py-0.5 text-xs ${ph}`}>City, State</span>
+              )}
+              {form.yearsExperience ? (
+                <span className="rounded-full border border-slate-700 bg-slate-800/60 px-2 py-0.5 text-xs text-slate-300">{form.yearsExperience} yrs</span>
+              ) : (
+                <span className={`rounded-full border border-slate-800 px-2 py-0.5 text-xs ${ph}`}>X yrs exp</span>
+              )}
+              {form.professions.map((p) => (
+                <span key={p} className="rounded-full border border-orange-500/30 bg-orange-500/10 px-2 py-0.5 text-xs text-orange-300">{p}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* About */}
+      <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4" style={{ borderLeft: '3px solid rgb(249,115,22)' }}>
+        <div className="mb-1.5 text-xs font-bold uppercase tracking-wide text-orange-400">{form.aboutHeading || 'About Me'}</div>
+        <p className="text-xs leading-relaxed text-slate-300 line-clamp-4">
+          {form.bio1 || <span className={ph}>Your bio will appear here…</span>}
+        </p>
+      </div>
+
+      {/* Services */}
+      <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+        <div className="mb-2 text-xs font-bold uppercase tracking-wide text-orange-400">{form.servicesHeading || 'Services'}</div>
+        {form.primaryService ? (
+          <div className="space-y-1">
+            <div className="text-xs font-semibold text-white">{form.primaryService}</div>
+            {form.additionalServices.slice(0, 3).map((s) => (
+              <div key={s} className="text-xs text-slate-400">{s}</div>
+            ))}
+          </div>
+        ) : (
+          <p className={`text-xs ${ph}`}>Services will appear here…</p>
+        )}
+      </div>
+
+      {/* Credentials */}
+      <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+        <div className="mb-2 text-xs font-bold uppercase tracking-wide text-orange-400">{form.credentialsHeading || 'Credentials'}</div>
+        {form.primaryCredential ? (
+          <div className="space-y-1">
+            <div className="text-xs font-semibold text-white">{form.primaryCredential}</div>
+            {additionalCreds.map((c) => (
+              <div key={c} className="text-xs text-slate-400">{c}</div>
+            ))}
+          </div>
+        ) : (
+          <p className={`text-xs ${ph}`}>Credentials will appear here…</p>
+        )}
+      </div>
+
+      {/* Contact */}
+      <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+        <div className="mb-2 text-xs font-bold uppercase tracking-wide text-orange-400">Contact</div>
+        <dl className="space-y-1 text-xs">
+          <div><dt className="text-slate-500">Email</dt><dd className="text-slate-300">{form.email || <span className={ph}>email@example.com</span>}</dd></div>
+          <div><dt className="text-slate-500">Phone</dt><dd className="text-slate-300">{form.phone || <span className={ph}>+1 (555) 000-0000</span>}</dd></div>
+        </dl>
+      </div>
+    </div>
+  )
+}
+
+// ── Full profile preview (step 6) ─────────────────────────────────────────────
 
 function ProfilePreview({ form }: { form: FormData }) {
   const additionalCreds = form.additionalCredentials
@@ -433,7 +523,6 @@ function ProfilePreview({ form }: { form: FormData }) {
         </div>
       </div>
 
-      {/* About card */}
       {form.bio1 && (
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6" style={{ borderLeft: '4px solid rgb(249,115,22)' }}>
           <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-orange-400">{form.aboutHeading || 'About Me'}</h3>
@@ -443,7 +532,6 @@ function ProfilePreview({ form }: { form: FormData }) {
         </div>
       )}
 
-      {/* Services card */}
       {form.primaryService && (
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6">
           <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-orange-400">{form.servicesHeading || 'Services'}</h3>
@@ -462,7 +550,6 @@ function ProfilePreview({ form }: { form: FormData }) {
         </div>
       )}
 
-      {/* Credentials card */}
       {form.primaryCredential && (
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6">
           <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-orange-400">{form.credentialsHeading || 'Credentials'}</h3>
@@ -481,7 +568,6 @@ function ProfilePreview({ form }: { form: FormData }) {
         </div>
       )}
 
-      {/* Contact sidebar card */}
       <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6">
         <h3 className="mb-4 text-sm font-bold uppercase tracking-wide text-orange-400">Contact</h3>
         <dl className="space-y-2 text-sm">
@@ -536,9 +622,12 @@ export default function OnboardingPage() {
     }
   }
 
+  // On mobile show preview only on step 6; on lg+ always show
+  const showPreviewColumn = step === 5
+
   return (
-    <div className="mx-auto max-w-2xl space-y-6 py-8">
-      <div className="flex items-center justify-between">
+    <div className="mx-auto max-w-6xl py-8">
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">Profile Setup</h1>
           <p className="mt-1 text-sm text-slate-400">Build your public Tax Monitor network profile.</p>
@@ -554,49 +643,73 @@ export default function OnboardingPage() {
 
       <StepIndicator current={step} total={6} />
 
-      {step === 0 && <Step1 form={form} set={set} />}
-      {step === 1 && <Step2 form={form} set={set} />}
-      {step === 2 && <Step3 form={form} set={set} />}
-      {step === 3 && <Step4 form={form} set={set} />}
-      {step === 4 && <Step5 form={form} set={set} />}
-      {step === 5 && (
-        <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
-            <p className="text-sm font-semibold text-slate-300">Profile Preview</p>
-            <p className="mt-0.5 text-xs text-slate-500">This is how your profile will appear in the Tax Monitor directory.</p>
-          </div>
-          <ProfilePreview form={form} />
-          {error && <p className="text-sm text-red-400">{error}</p>}
-        </div>
-      )}
+      <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
+        {/* Left — form */}
+        <div className="space-y-6 min-w-0">
+          {step === 0 && <Step1 form={form} set={set} />}
+          {step === 1 && <Step2 form={form} set={set} />}
+          {step === 2 && <Step3 form={form} set={set} />}
+          {step === 3 && <Step4 form={form} set={set} />}
+          {step === 4 && <Step5 form={form} set={set} />}
+          {step === 5 && (
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
+                <p className="text-sm font-semibold text-slate-300">Profile Preview</p>
+                <p className="mt-0.5 text-xs text-slate-500">This is how your profile will appear in the Tax Monitor directory.</p>
+              </div>
+              {/* Full preview on mobile (step 6 only) */}
+              <div className="lg:hidden">
+                <ProfilePreview form={form} />
+              </div>
+              {error && <p className="text-sm text-red-400">{error}</p>}
+            </div>
+          )}
 
-      <div className="flex items-center justify-between pt-2">
-        <button
-          type="button"
-          onClick={back}
-          disabled={step === 0}
-          className="rounded-xl border border-slate-700 bg-slate-900/60 px-5 py-2.5 text-sm font-semibold text-slate-300 hover:text-white transition disabled:opacity-40"
-        >
-          Back
-        </button>
-        {step < 5 ? (
-          <button
-            type="button"
-            onClick={next}
-            className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition"
-          >
-            Continue →
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={save}
-            disabled={saving}
-            className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition disabled:opacity-60"
-          >
-            {saving ? 'Saving…' : 'Save Profile'}
-          </button>
-        )}
+          {step < 5 && error && <p className="text-sm text-red-400">{error}</p>}
+
+          <div className="flex items-center justify-between pt-2">
+            <button
+              type="button"
+              onClick={back}
+              disabled={step === 0}
+              className="rounded-xl border border-slate-700 bg-slate-900/60 px-5 py-2.5 text-sm font-semibold text-slate-300 hover:text-white transition disabled:opacity-40"
+            >
+              Back
+            </button>
+            {step < 5 ? (
+              <button
+                type="button"
+                onClick={next}
+                className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition"
+              >
+                Continue →
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={save}
+                disabled={saving}
+                className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition disabled:opacity-60"
+              >
+                {saving ? 'Saving…' : 'Save Profile'}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Right — live preview (always visible on lg) */}
+        <div className={`hidden lg:block`}>
+          <div className="sticky top-8">
+            <div className="mb-3 rounded-xl border border-slate-800/60 bg-slate-900/40 px-4 py-2">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Live Preview</p>
+            </div>
+            {step < 5 ? (
+              <LivePreview form={form} />
+            ) : (
+              <ProfilePreview form={form} />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

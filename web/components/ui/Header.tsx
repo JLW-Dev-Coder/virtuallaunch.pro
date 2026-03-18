@@ -15,6 +15,7 @@ const RESOURCES_EXPLORE = [
   { href: '/blog', label: 'Blog', desc: 'Insights and growth content for tax pros' },
   { href: '/features/booking', label: 'Booking', desc: 'See the booking workflow in action' },
   { href: '/features/public-profile', label: 'Public Profile', desc: 'Preview the professional profile experience' },
+  { href: '/help', label: 'Help Center', desc: 'Answers, guides, and support' },
 ]
 
 const RESOURCES_PLATFORM = [

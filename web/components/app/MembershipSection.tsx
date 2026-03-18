@@ -28,11 +28,22 @@ interface Props {
 
 export default function MembershipSection({ accountId, membership }: Props) {
   const [tokens, setTokens] = useState<TokenBalance | null>(null)
+  const [livePlan, setLivePlan] = useState<string>(membership?.toLowerCase() ?? 'free')
   const [loadingUpgrade, setLoadingUpgrade] = useState<string | null>(null)
   const [loadingPortal, setLoadingPortal] = useState(false)
   const [upgradeError, setUpgradeError] = useState<string | null>(null)
 
-  const plan = membership?.toLowerCase() ?? 'free'
+  const plan = livePlan
+
+  useEffect(() => {
+    // Fetch live session membership so post-checkout plan is always current
+    fetch('https://api.virtuallaunch.pro/v1/auth/session', { credentials: 'include' })
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.session?.membership) setLivePlan(data.session.membership.toLowerCase())
+      })
+      .catch(() => {/* silently fall back to SSR prop */})
+  }, [])
 
   useEffect(() => {
     if (!accountId) return

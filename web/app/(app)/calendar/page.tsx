@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import Card from '@/components/ui/Card'
 
+const CAL_OAUTH_CONFIG_ERRORS = ['CAL_APP_OAUTH_CLIENT_ID', 'client_id', 'invalid_client', 'OAuth']
+
 type BookingStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'rescheduled'
 
 interface Booking {
@@ -53,9 +55,16 @@ export default function CalendarPage() {
   const [bookings, setBookings] = useState<Booking[]>([])
   const [connecting, setConnecting] = useState(false)
   const [connectError, setConnectError] = useState<string | null>(null)
+  const [tab, setTab] = useState<'upcoming' | 'past'>('upcoming')
+  const [bookingUrl, setBookingUrl] = useState('')
+  const [bookingUrlSaved, setBookingUrlSaved] = useState(false)
 
   useEffect(() => {
     document.title = 'Calendar | Virtual Launch Pro'
+
+    // Restore saved booking URL from localStorage
+    const savedUrl = typeof window !== 'undefined' ? localStorage.getItem('vlp_cal_booking_url') ?? '' : ''
+    setBookingUrl(savedUrl)
 
     async function init() {
       // Get session to get accountId
@@ -63,7 +72,7 @@ export default function CalendarPage() {
         const sessionRes = await fetch('https://api.virtuallaunch.pro/v1/auth/session', { credentials: 'include' })
         if (!sessionRes.ok) { setConnected(false); return }
         const session = await sessionRes.json()
-        const aid = session.account_id ?? session.accountId
+        const aid = session.session?.account_id ?? session.account_id ?? session.accountId
         if (!aid) { setConnected(false); return }
         setAccountId(aid)
 
@@ -91,7 +100,13 @@ export default function CalendarPage() {
       const res = await fetch('https://api.virtuallaunch.pro/v1/cal/oauth/start', { credentials: 'include' })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        setConnectError((data as { message?: string }).message || 'Failed to start Cal.com authorization.')
+        const msg = (data as { message?: string }).message || ''
+        const isConfigError = CAL_OAUTH_CONFIG_ERRORS.some((k) => msg.includes(k))
+        setConnectError(
+          isConfigError
+            ? 'Cal.com scheduling is being configured. Contact support to enable it.'
+            : msg || 'Failed to start Cal.com authorization.'
+        )
         return
       }
       const data = await res.json()
@@ -107,9 +122,22 @@ export default function CalendarPage() {
     }
   }
 
+  function saveBookingUrl() {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vlp_cal_booking_url', bookingUrl)
+    }
+    setBookingUrlSaved(true)
+    setTimeout(() => setBookingUrlSaved(false), 2000)
+  }
+
+  function copyBookingUrl() {
+    if (bookingUrl) navigator.clipboard.writeText(bookingUrl).catch(() => {/* ignore */})
+  }
+
   const now = new Date()
   const upcoming = bookings.filter((b) => new Date(b.scheduledAt) >= now && b.status !== 'cancelled')
   const past = bookings.filter((b) => new Date(b.scheduledAt) < now || b.status === 'completed' || b.status === 'cancelled')
+  const displayedBookings = tab === 'upcoming' ? upcoming : past
 
   return (
     <div className="space-y-8">
@@ -149,29 +177,61 @@ export default function CalendarPage() {
       {connected === true && (
         <>
           <Card>
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
-              Upcoming ({upcoming.length})
-            </h2>
-            {upcoming.length === 0 ? (
-              <p className="py-4 text-sm text-slate-500">No upcoming bookings.</p>
+            {/* Tabs */}
+            <div className="mb-4 flex gap-1 rounded-xl bg-slate-950/60 p-1 w-fit">
+              {(['upcoming', 'past'] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTab(t)}
+                  className={`rounded-lg px-4 py-1.5 text-sm font-semibold capitalize transition ${
+                    tab === t ? 'bg-slate-800 text-white' : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {t} ({t === 'upcoming' ? upcoming.length : past.length})
+                </button>
+              ))}
+            </div>
+            {displayedBookings.length === 0 ? (
+              <p className="py-4 text-sm text-slate-500">No {tab} bookings.</p>
             ) : (
               <div className="divide-y divide-slate-800">
-                {upcoming.map((b) => <BookingRow key={b.bookingId} booking={b} />)}
+                {displayedBookings.map((b) => <BookingRow key={b.bookingId} booking={b} />)}
               </div>
             )}
           </Card>
 
+          {/* Booking link section */}
           <Card>
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
-              Past ({past.length})
-            </h2>
-            {past.length === 0 ? (
-              <p className="py-4 text-sm text-slate-500">No past bookings.</p>
-            ) : (
-              <div className="divide-y divide-slate-800">
-                {past.map((b) => <BookingRow key={b.bookingId} booking={b} />)}
-              </div>
-            )}
+            <h2 className="mb-1 text-sm font-semibold text-white">Your booking link</h2>
+            <p className="mb-3 text-xs text-slate-500">
+              Paste your Cal.com booking URL here. It will appear on your public profile Schedule button.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={bookingUrl}
+                onChange={(e) => setBookingUrl(e.target.value)}
+                placeholder="https://cal.com/your-name"
+                className="flex-1 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-orange-500/60 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={saveBookingUrl}
+                className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition"
+              >
+                {bookingUrlSaved ? 'Saved' : 'Save'}
+              </button>
+              {bookingUrl && (
+                <button
+                  type="button"
+                  onClick={copyBookingUrl}
+                  className="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition"
+                >
+                  Copy
+                </button>
+              )}
+            </div>
           </Card>
         </>
       )}

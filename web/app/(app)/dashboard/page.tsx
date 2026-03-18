@@ -88,6 +88,7 @@ export default async function DashboardPage() {
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
+            { label: 'Profile Setup', href: '/onboarding', desc: 'Build your Tax Monitor network profile' },
             { label: 'Account Settings', href: '/account', desc: 'Manage profile and preferences' },
             { label: 'Calendar', href: '/calendar', desc: 'View and manage your schedule' },
             { label: 'Receipts', href: '/receipts', desc: 'Download invoices and receipts' },

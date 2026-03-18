@@ -564,12 +564,24 @@ const ROUTES = [
     handler: async (_method, _pattern, _params, request, env) => {
       const { session, error } = await requireSession(request, env);
       if (error) return error;
+
+      // Read current membership from memberships table (source of truth after checkout)
+      let membership = session.membership;
+      try {
+        const memRow = await env.DB.prepare(
+          "SELECT plan_key FROM memberships WHERE account_id = ? AND status = 'active' ORDER BY created_at DESC LIMIT 1"
+        ).bind(session.account_id).first();
+        if (memRow?.plan_key) {
+          membership = memRow.plan_key.replace(/^vlp_/, '').replace(/_(?:monthly|yearly)$/, '') || membership;
+        }
+      } catch {/* fall back to session.membership */}
+
       return json({
         ok: true,
         session: {
           account_id: session.account_id,
           email: session.email,
-          membership: session.membership,
+          membership,
           platform: session.platform,
           expires_at: session.expires_at,
         },
@@ -1867,6 +1879,13 @@ const ROUTES = [
                   accountId: account_id, planKey: plan_key, billingInterval: billing_interval,
                   ...tokenGrant, updatedAt: now,
                 });
+
+                // Sync session membership so GET /v1/auth/session reflects the new plan immediately
+                const tier = (plan_key ?? '').replace(/^vlp_/, '').replace(/_(?:monthly|yearly)$/, '') || 'free';
+                await d1Run(env.DB,
+                  'UPDATE sessions SET membership = ? WHERE account_id = ?',
+                  [tier, account_id]
+                );
               }
             }
             break;
@@ -2152,13 +2171,18 @@ const ROUTES = [
   // CAL OAUTH
   // -------------------------------------------------------------------------
 
+  // Hardcoded fallback Cal.com OAuth client IDs
+  // Taxpayer app:      d6839d7dccd5a878d6c5e26b52effd2ab6d241dc047ed2786f9f56de039ca7f3
+  // Tax professional:  9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420
+
   {
     method: 'GET', pattern: '/v1/cal/oauth/start',
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
+      const calClientId = env.CAL_APP_OAUTH_CLIENT_ID || '9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420';
       const url = new URL('https://app.cal.com/oauth/authorize');
-      url.searchParams.set('client_id', env.CAL_APP_OAUTH_CLIENT_ID);
+      url.searchParams.set('client_id', calClientId);
       url.searchParams.set('redirect_uri', 'https://api.virtuallaunch.pro/v1/cal/oauth/callback');
       url.searchParams.set('response_type', 'code');
       return json({ ok: true, status: 'redirect_required', authorizationUrl: url.toString() });
@@ -2174,12 +2198,13 @@ const ROUTES = [
       const code = url.searchParams.get('code');
       if (!code) return json({ ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' }, 400);
 
+      const calClientId = env.CAL_APP_OAUTH_CLIENT_ID || '9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420';
       const tokenRes = await fetch('https://app.cal.com/oauth/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           grant_type: 'authorization_code',
-          client_id: env.CAL_APP_OAUTH_CLIENT_ID,
+          client_id: calClientId,
           client_secret: env.CAL_APP_OAUTH_CLIENT_SECRET,
           redirect_uri: 'https://api.virtuallaunch.pro/v1/cal/oauth/callback',
           code,
