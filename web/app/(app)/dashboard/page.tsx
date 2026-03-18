@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Card from '@/components/ui/Card'
 import { getDashboardSummary } from '@/lib/api/client'
 
@@ -64,11 +64,11 @@ export default async function DashboardPage() {
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { label: 'Account Settings', href: '/app/account', desc: 'Manage profile and preferences' },
-            { label: 'Calendar', href: '/app/calendar', desc: 'View and manage your schedule' },
-            { label: 'Receipts', href: '/app/receipts', desc: 'Download invoices and receipts' },
-            { label: 'Support', href: '/app/support', desc: 'Get help from our team' },
-            { label: 'Token Usage', href: '/app/token-usage', desc: 'Monitor your AI token consumption' },
+            { label: 'Account Settings', href: '/account', desc: 'Manage profile and preferences' },
+            { label: 'Calendar', href: '/calendar', desc: 'View and manage your schedule' },
+            { label: 'Receipts', href: '/receipts', desc: 'Download invoices and receipts' },
+            { label: 'Support', href: '/support', desc: 'Get help from our team' },
+            { label: 'Token Usage', href: '/token-usage', desc: 'Monitor your AI token consumption' },
           ].map((link) => (
             <a
               key={link.href}
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
             >
               <div className="text-sm font-semibold text-slate-100 group-hover:text-white">
                 {link.label}
-                <span className="ml-1 text-slate-500 transition group-hover:text-amber-400"> →</span>
+                <span className="ml-1 text-slate-500 transition group-hover:text-amber-400"> â†’</span>
               </div>
               <div className="mt-1 text-xs text-slate-400">{link.desc}</div>
             </a>

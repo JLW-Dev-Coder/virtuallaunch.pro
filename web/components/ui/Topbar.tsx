@@ -1,4 +1,4 @@
-// Server component — no 'use client' needed; pathname-based active state lives in Sidebar
+﻿// Server component â€” no 'use client' needed; pathname-based active state lives in Sidebar
 import Link from 'next/link'
 import { getSession } from '@/lib/auth/session'
 
@@ -9,7 +9,7 @@ export default async function Topbar() {
   return (
     <header className="flex items-center justify-between border-b border-slate-800/60 bg-slate-950/80 px-6 py-3 backdrop-blur">
       <div className="text-sm text-slate-400">
-        {/* Breadcrumb placeholder — expand when routing is wired */}
+        {/* Breadcrumb placeholder â€” expand when routing is wired */}
       </div>
 
       <div className="flex items-center gap-4">
@@ -26,7 +26,7 @@ export default async function Topbar() {
 
         {/* Account menu */}
         <Link
-          href="/app/account"
+          href="/account"
           title={session.email}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500 text-xs font-bold text-slate-950 transition hover:opacity-90"
           aria-label="Account"
