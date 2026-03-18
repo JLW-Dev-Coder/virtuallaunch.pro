@@ -18,11 +18,11 @@ const RESOURCES_EXPLORE = [
 ]
 
 const RESOURCES_PLATFORM = [
-  { href: '/app/account', label: 'Account' },
-  { href: '/app/calendar', label: 'Calendar' },
-  { href: '/app/dashboard', label: 'Dashboard' },
-  { href: '/app/support', label: 'Support' },
-  { href: '/app/token-usage', label: 'Token Usage' },
+  { href: '/account', label: 'Account' },
+  { href: '/calendar', label: 'Calendar' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/support', label: 'Support' },
+  { href: '/token-usage', label: 'Token Usage' },
 ]
 
 const RESOURCES_TRUST = [
@@ -241,3 +241,4 @@ export default function Header() {
     </header>
   )
 }
+
