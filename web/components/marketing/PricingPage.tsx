@@ -111,12 +111,12 @@ export default function PricingPage() {
   const [cycle, setCycle] = useState<Cycle>('monthly')
   const [plans, setPlans] = useState(DEFAULT_PLANS)
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
-  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [planErrors, setPlanErrors] = useState<Record<string, string>>({})
 
   async function handleCheckout(data: PlanCycle) {
     if (data.price === '0') { window.location.href = '/sign-in'; return; }
     setLoadingPlan(data.planKey)
-    setCheckoutError(null)
+    setPlanErrors((prev) => ({ ...prev, [data.planKey]: '' }))
     try {
       const res = await fetch('https://api.virtuallaunch.pro/v1/checkout/session', {
         method: 'POST',
@@ -124,15 +124,14 @@ export default function PricingPage() {
         credentials: 'include',
         body: JSON.stringify({ billingObject: data.billingObject, planKey: data.planKey }),
       })
-      if (res.status === 401) { window.location.href = '/sign-in?next=/pricing'; return; }
       const payload = await res.json()
       if (payload.ok && payload.url) {
         window.location.href = payload.url
       } else {
-        setCheckoutError(payload.message || 'Checkout failed. Please try again.')
+        setPlanErrors((prev) => ({ ...prev, [data.planKey]: payload.message || 'Checkout failed. Please try again.' }))
       }
-    } catch (e) {
-      setCheckoutError('Network error. Please try again.')
+    } catch {
+      setPlanErrors((prev) => ({ ...prev, [data.planKey]: 'Network error. Please try again.' }))
     } finally {
       setLoadingPlan(null)
     }
@@ -240,8 +239,8 @@ export default function PricingPage() {
                       </li>
                     ))}
                   </ul>
-                  {checkoutError && loadingPlan === null && (
-                    <p className="mt-4 text-xs text-red-400">{checkoutError}</p>
+                  {planErrors[data.planKey] && loadingPlan !== data.planKey && (
+                    <p className="mt-4 text-xs text-red-400">{planErrors[data.planKey]}</p>
                   )}
                   <div className="mt-8 flex gap-3">
                     <button

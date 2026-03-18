@@ -1661,6 +1661,57 @@ const ROUTES = [
   // CHECKOUT
   // -------------------------------------------------------------------------
 
+  // Public route — no session required. Used by the pricing page for guest checkout.
+  {
+    method: 'POST', pattern: '/v1/checkout/session',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const body = await parseBody(request);
+      const { billingObject, planKey, email } = body ?? {};
+
+      if (!billingObject || !planKey) {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'billingObject and planKey are required' }, 400);
+      }
+      if (planKey === 'vlp_free') {
+        return json({ ok: false, error: 'BAD_REQUEST', message: 'Free plan does not require checkout' }, 400);
+      }
+
+      const billingInterval = planKey.endsWith('_yearly') ? 'yearly' : 'monthly';
+      const membershipId = `MEM_${crypto.randomUUID()}`;
+      const pendingAccountId = `PENDING_${crypto.randomUUID()}`;
+      const successUrl = `https://virtuallaunch.pro/onboarding?checkout=success&plan=${encodeURIComponent(planKey)}`;
+      const cancelUrl = `https://virtuallaunch.pro/pricing`;
+      const now = new Date().toISOString();
+
+      try {
+        const sessionPayload = {
+          mode: 'subscription',
+          line_items: [{ price: billingObject, quantity: 1 }],
+          success_url: successUrl,
+          cancel_url: cancelUrl,
+          metadata: { membership_id: membershipId, plan_key: planKey, billing_interval: billingInterval },
+        };
+        if (email) sessionPayload.customer_email = email;
+
+        const stripeSession = await stripePost('/checkout/sessions', sessionPayload, env);
+
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membershipId}.json`, {
+          membershipId, accountId: null, planKey, billingInterval,
+          checkoutSessionId: stripeSession.id, status: 'pending', createdAt: now,
+        });
+        await d1Run(env.DB,
+          `INSERT OR REPLACE INTO memberships
+           (membership_id, account_id, plan_key, billing_interval, status, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?)`,
+          [membershipId, pendingAccountId, planKey, billingInterval, now]
+        );
+
+        return json({ ok: true, url: stripeSession.url });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: e.message }, 502);
+      }
+    },
+  },
+
   {
     method: 'POST', pattern: '/v1/checkout/sessions',
     handler: async (_method, _pattern, _params, request, env) => {
@@ -1789,12 +1840,12 @@ const ROUTES = [
           case 'checkout.session.completed': {
             const { account_id, membership_id, plan_key, billing_interval } = obj.metadata ?? {};
             if (membership_id) {
-              const tokenGrant = getTokenGrant(plan_key);
-
               const existingMem = await env.R2_VIRTUAL_LAUNCH.get(`memberships/${membership_id}.json`);
               const memRecord = existingMem ? await existingMem.json() : {};
               memRecord.status = 'active';
               memRecord.stripeSubscriptionId = obj.subscription;
+              memRecord.stripeCustomerId = obj.customer;
+              memRecord.customerEmail = obj.customer_details?.email ?? null;
               memRecord.updatedAt = now;
               await r2Put(env.R2_VIRTUAL_LAUNCH, `memberships/${membership_id}.json`, memRecord);
 
@@ -1802,14 +1853,20 @@ const ROUTES = [
                 'UPDATE memberships SET status = \'active\', updated_at = ? WHERE membership_id = ?',
                 [now, membership_id]
               );
-              await d1Run(env.DB,
-                'INSERT OR REPLACE INTO tokens (account_id, tax_game_tokens, transcript_tokens, updated_at) VALUES (?, ?, ?, ?)',
-                [account_id, tokenGrant.taxGameTokens, tokenGrant.transcriptTokens, now]
-              );
-              await r2Put(env.R2_VIRTUAL_LAUNCH, `tokens/${account_id}.json`, {
-                accountId: account_id, planKey: plan_key, billingInterval: billing_interval,
-                ...tokenGrant, updatedAt: now,
-              });
+
+              // Only grant tokens when we have a real account_id (not a pending guest checkout).
+              const isRealAccount = account_id && !String(account_id).startsWith('PENDING_');
+              if (isRealAccount) {
+                const tokenGrant = getTokenGrant(plan_key);
+                await d1Run(env.DB,
+                  'INSERT OR REPLACE INTO tokens (account_id, tax_game_tokens, transcript_tokens, updated_at) VALUES (?, ?, ?, ?)',
+                  [account_id, tokenGrant.taxGameTokens, tokenGrant.transcriptTokens, now]
+                );
+                await r2Put(env.R2_VIRTUAL_LAUNCH, `tokens/${account_id}.json`, {
+                  accountId: account_id, planKey: plan_key, billingInterval: billing_interval,
+                  ...tokenGrant, updatedAt: now,
+                });
+              }
             }
             break;
           }
