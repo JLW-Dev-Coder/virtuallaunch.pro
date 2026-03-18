@@ -5,7 +5,7 @@
 * [Overview](#overview)
 * [Current Build State](#current-build-state)
 * [Key Features](#key-features)
-* [Membership and Plans](#membership-and-plans)
+* [Memberships and Plans](#memberships-and-plans)
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
