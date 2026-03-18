@@ -319,8 +319,7 @@ That includes:
 * support tickets
 * token balances
 
-Other platforms may **read** these records, reference them, and project them into platform-specific UX, but they should not be the canonical writer unless the governing contract explicitly says otherwise. Because apparently letting four platforms fight over the same record was never going to age well.
-
+Other platforms may **read** these records, reference them, and project them into platform-specific UX, but they should not be the canonical writer unless the governing contract explicitly says otherwise. 
 ---
 
 ## Tax Monitor Pro (TMP)
