@@ -650,7 +650,7 @@ const ROUTES = [
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-        return redirectWithCookie(`${env.APP_BASE_URL}/dashboard`, sessionId, env);
+        return redirectWithCookie(`https://virtuallaunch.pro/dashboard`, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Google callback failed' }, 500);
       }
@@ -669,7 +669,7 @@ const ROUTES = [
         const expMinutes = parseInt(env.MAGIC_LINK_EXPIRATION_MINUTES ?? '15', 10);
         const exp = Math.floor(Date.now() / 1000) + expMinutes * 60;
         const token = await signJwt({ email, redirect_uri: redirectUri, exp }, env.JWT_SECRET);
-        const link = `${env.APP_BASE_URL}/v1/auth/magic-link/verify?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
+        const link = `https://virtuallaunch.pro/v1/auth/magic-link/verify?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
         await sendEmail(email, 'Your sign-in link', `<p>Click to sign in: <a href="${link}">${link}</a></p>`, env);
         const eventId = `EVT_${crypto.randomUUID()}`;
         await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/auth/${eventId}.json`, {
@@ -697,7 +697,7 @@ const ROUTES = [
         if (payload.email !== email) return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-        return redirectWithCookie(`${env.APP_BASE_URL}/dashboard`, sessionId, env);
+        return redirectWithCookie(`https://virtuallaunch.pro/dashboard`, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Magic link verification failed' }, 500);
       }
@@ -750,7 +750,7 @@ const ROUTES = [
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-        return jsonWithCookie({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/dashboard` }, sessionId, env);
+        return jsonWithCookie({ ok: true, status: 'callback_completed', redirectTo: `https://virtuallaunch.pro/dashboard` }, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'OIDC callback failed' }, 500);
       }
@@ -783,7 +783,7 @@ const ROUTES = [
         if (!email) return json({ ok: false, error: 'BAD_REQUEST', message: 'Could not extract email from SAML response' }, 400);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-        return redirectWithCookie(`${env.APP_BASE_URL}/dashboard`, sessionId, env);
+        return redirectWithCookie(`https://virtuallaunch.pro/dashboard`, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'SAML ACS failed' }, 500);
       }
