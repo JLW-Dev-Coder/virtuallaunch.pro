@@ -5,7 +5,7 @@
 * [Overview](#overview)
 * [Current Build State](#current-build-state)
 * [Key Features](#key-features)
-* [Membership & Plans](#membership-&-plans)
+* [Membership and Plans](#membership-and-plans)
 * [Architecture Overview](#architecture-overview)
 * [Ecosystem Overview](#ecosystem-overview)
 * [Platform Responsibilities](#platform-responsibilities)
@@ -141,7 +141,7 @@ Major capabilities include:
 
 ---
 
-# Memberships & Plans
+# Memberships and Plans
 
 | Feature / Capability | VLP Free | VLP Starter | VLP Scale | VLP Advanced | TMP Free | TMP Essential | TMP Plus | TMP Premier | TTMP (10-pk) | TTMP (25-pk) | TTMP (100-pk) | TTTMP (30-pk) | TTTMP (80-pk) | TTTMP (200-pk) |
 |---------------------|----------|-------------|-----------|--------------|----------|---------------|----------|-------------|---------------|---------------|----------------|----------------|----------------|-----------------|
