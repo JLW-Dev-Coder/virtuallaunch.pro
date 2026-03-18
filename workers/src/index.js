@@ -2236,6 +2236,24 @@ const ROUTES = [
     },
   },
 
+  {
+    method: 'GET', pattern: '/v1/cal/status',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const connectionId = `cal_${session.account_id}`;
+        const row = await env.DB.prepare(
+          'SELECT access_token FROM cal_connections WHERE account_id = ? AND connection_id = ?'
+        ).bind(session.account_id, connectionId).first();
+        const connected = !!(row && row.access_token);
+        return json({ ok: true, connected, calAccountId: connected ? session.account_id : undefined });
+      } catch {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to check Cal.com status' }, 500);
+      }
+    },
+  },
+
   // -------------------------------------------------------------------------
   // BOOKINGS
   // -------------------------------------------------------------------------
@@ -2992,6 +3010,208 @@ const ROUTES = [
         return json({ ok: true, inquiryId: params.inquiry_id, status: 'responded' });
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Respond to inquiry failed' }, 500);
+      }
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // GOOGLE CALENDAR
+  // Required env vars: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI
+  // Set these in the Cloudflare Worker environment variables dashboard.
+  // GOOGLE_REDIRECT_URI should be: https://api.virtuallaunch.pro/v1/google/oauth/callback
+  // Create OAuth credentials at: https://console.cloud.google.com/apis/credentials
+  // Enable: Google Calendar API at https://console.cloud.google.com/apis/library
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'GET', pattern: '/v1/google/oauth/start',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      const redirectUri = env.GOOGLE_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/v1/google/oauth/callback';
+      const state = btoa(JSON.stringify({ accountId: session.account_id, nonce: crypto.randomUUID() }));
+      const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+      url.searchParams.set('client_id', env.GOOGLE_CLIENT_ID);
+      url.searchParams.set('redirect_uri', redirectUri);
+      url.searchParams.set('response_type', 'code');
+      url.searchParams.set('scope', 'https://www.googleapis.com/auth/calendar.readonly');
+      url.searchParams.set('access_type', 'offline');
+      url.searchParams.set('prompt', 'consent');
+      url.searchParams.set('state', state);
+      return json({ ok: true, authorizationUrl: url.toString() });
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/google/oauth/callback',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const url = new URL(request.url);
+      const code = url.searchParams.get('code');
+      const state = url.searchParams.get('state');
+      const oauthError = url.searchParams.get('error');
+      if (oauthError) {
+        return Response.redirect(`https://virtuallaunch.pro/calendar?google=error&reason=${encodeURIComponent(oauthError)}`, 302);
+      }
+      if (!code || !state) {
+        return Response.redirect('https://virtuallaunch.pro/calendar?google=error&reason=missing_params', 302);
+      }
+      let accountId;
+      try {
+        accountId = JSON.parse(atob(state)).accountId;
+      } catch {
+        return Response.redirect('https://virtuallaunch.pro/calendar?google=error&reason=invalid_state', 302);
+      }
+      const redirectUri = env.GOOGLE_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/v1/google/oauth/callback';
+      try {
+        const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            code,
+            client_id: env.GOOGLE_CLIENT_ID,
+            client_secret: env.GOOGLE_CLIENT_SECRET,
+            redirect_uri: redirectUri,
+            grant_type: 'authorization_code',
+          }),
+        });
+        if (!tokenRes.ok) {
+          return Response.redirect('https://virtuallaunch.pro/calendar?google=error&reason=token_exchange_failed', 302);
+        }
+        const tokenData = await tokenRes.json();
+        const expiresAt = new Date(Date.now() + (tokenData.expires_in ?? 3600) * 1000).toISOString();
+        await d1Run(env.DB,
+          `UPDATE accounts SET
+             google_access_token = ?,
+             google_refresh_token = ?,
+             google_token_expiry = ?
+           WHERE account_id = ?`,
+          [tokenData.access_token, tokenData.refresh_token ?? null, expiresAt, accountId]
+        );
+        return Response.redirect('https://virtuallaunch.pro/calendar?google=connected', 302);
+      } catch {
+        return Response.redirect('https://virtuallaunch.pro/calendar?google=error&reason=internal_error', 302);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/google/status',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const row = await env.DB.prepare(
+          'SELECT google_access_token FROM accounts WHERE account_id = ?'
+        ).bind(session.account_id).first();
+        const connected = !!(row && row.google_access_token);
+        return json({ ok: true, connected });
+      } catch {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to check Google status' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/google/events',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const row = await env.DB.prepare(
+          'SELECT google_access_token, google_refresh_token, google_token_expiry FROM accounts WHERE account_id = ?'
+        ).bind(session.account_id).first();
+        if (!row || !row.google_access_token) {
+          return json({ ok: false, error: 'NOT_CONNECTED', message: 'Google Calendar not connected' }, 400);
+        }
+
+        let accessToken = row.google_access_token;
+
+        // Refresh if expired or expiring within 60s
+        const expiry = row.google_token_expiry ? new Date(row.google_token_expiry).getTime() : 0;
+        if (Date.now() + 60000 > expiry && row.google_refresh_token) {
+          const refreshRes = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              refresh_token: row.google_refresh_token,
+              client_id: env.GOOGLE_CLIENT_ID,
+              client_secret: env.GOOGLE_CLIENT_SECRET,
+              grant_type: 'refresh_token',
+            }),
+          });
+          if (refreshRes.ok) {
+            const refreshData = await refreshRes.json();
+            accessToken = refreshData.access_token;
+            const newExpiry = new Date(Date.now() + (refreshData.expires_in ?? 3600) * 1000).toISOString();
+            await d1Run(env.DB,
+              'UPDATE accounts SET google_access_token = ?, google_token_expiry = ? WHERE account_id = ?',
+              [accessToken, newExpiry, session.account_id]
+            );
+          }
+        }
+
+        const now = new Date();
+        const timeMin = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
+        const timeMax = new Date(now.getFullYear(), now.getMonth() + 2, 0, 23, 59, 59).toISOString();
+
+        const calUrl = new URL('https://www.googleapis.com/calendar/v3/calendars/primary/events');
+        calUrl.searchParams.set('timeMin', timeMin);
+        calUrl.searchParams.set('timeMax', timeMax);
+        calUrl.searchParams.set('singleEvents', 'true');
+        calUrl.searchParams.set('orderBy', 'startTime');
+        calUrl.searchParams.set('maxResults', '100');
+
+        let calRes = await fetch(calUrl.toString(), {
+          headers: { 'Authorization': `Bearer ${accessToken}` },
+        });
+
+        // If 401, try one more refresh
+        if (calRes.status === 401 && row.google_refresh_token) {
+          const refreshRes = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              refresh_token: row.google_refresh_token,
+              client_id: env.GOOGLE_CLIENT_ID,
+              client_secret: env.GOOGLE_CLIENT_SECRET,
+              grant_type: 'refresh_token',
+            }),
+          });
+          if (refreshRes.ok) {
+            const refreshData = await refreshRes.json();
+            accessToken = refreshData.access_token;
+            const newExpiry = new Date(Date.now() + (refreshData.expires_in ?? 3600) * 1000).toISOString();
+            await d1Run(env.DB,
+              'UPDATE accounts SET google_access_token = ?, google_token_expiry = ? WHERE account_id = ?',
+              [accessToken, newExpiry, session.account_id]
+            );
+            calRes = await fetch(calUrl.toString(), {
+              headers: { 'Authorization': `Bearer ${accessToken}` },
+            });
+          }
+        }
+
+        if (!calRes.ok) {
+          return json({ ok: false, error: 'GOOGLE_API_ERROR', message: 'Failed to fetch Google Calendar events' }, 502);
+        }
+
+        const calData = await calRes.json();
+        const events = (calData.items ?? []).map((e) => ({
+          googleEventId: e.id ?? '',
+          title: e.summary ?? '(No title)',
+          startAt: e.start?.dateTime ?? e.start?.date ?? '',
+          endAt: e.end?.dateTime ?? e.end?.date ?? '',
+          allDay: !!(e.start?.date && !e.start?.dateTime),
+          htmlLink: e.htmlLink ?? '',
+          description: e.description ?? '',
+          location: e.location ?? '',
+          status: e.status ?? 'confirmed',
+          colorId: e.colorId ?? '',
+        }));
+
+        return json({ ok: true, events });
+      } catch {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch Google Calendar events' }, 500);
       }
     },
   },

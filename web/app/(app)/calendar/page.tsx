@@ -22,6 +22,19 @@ interface Booking {
   cancelUrl?: string
 }
 
+interface GoogleEvent {
+  googleEventId: string
+  title: string
+  startAt: string
+  endAt: string
+  allDay: boolean
+  htmlLink: string
+  description: string
+  location: string
+  status: string
+  colorId: string
+}
+
 const STATUS_STYLES: Record<BookingStatus, string> = {
   confirmed: 'bg-emerald-900/60 text-emerald-300',
   pending: 'bg-amber-900/60 text-amber-300',
@@ -38,6 +51,12 @@ function formatBookingType(t: string): string {
 
 function toDateKey(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function formatTime(iso: string, allDay: boolean): string {
+  if (allDay) return 'All day'
+  const d = new Date(iso)
+  return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
 }
 
 // ── Event Detail Modal ────────────────────────────────────────────────────────
@@ -131,34 +150,145 @@ function EventModal({ booking, onClose }: { booking: Booking; onClose: () => voi
   )
 }
 
-// ── Google Calendar Modal ─────────────────────────────────────────────────────
+// ── Google Events Modal ───────────────────────────────────────────────────────
 
-function GoogleCalModal({ onClose }: { onClose: () => void }) {
+function GoogleEventsModal({ events, onClose }: { events: GoogleEvent[]; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-800/60 bg-slate-900 p-6 shadow-2xl">
-        <div className="flex items-start justify-between mb-4">
-          <h2 className="text-base font-bold text-white">Connect Google Calendar</h2>
+      <div className="w-full max-w-md rounded-2xl border border-slate-800/60 bg-slate-900 p-6 shadow-2xl">
+        <div className="flex items-start justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <span className="h-2.5 w-2.5 rounded-full bg-blue-400" />
+            <h2 className="text-base font-bold text-white">Google Calendar Events</h2>
+          </div>
           <button type="button" onClick={onClose} className="rounded-lg p-1.5 text-slate-500 hover:text-white transition">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
-        <p className="text-sm text-slate-400 leading-relaxed">
-          Google Calendar sync lets you see your Tax Monitor Pro bookings alongside your existing calendar events.
-        </p>
-        <p className="mt-3 text-sm text-amber-400">
-          Google Calendar sync is coming soon. Your bookings are visible in the calendar above.
-        </p>
-        {/* TODO: implement Google Calendar OAuth sync */}
+        <div className="space-y-3">
+          {events.map((e) => (
+            <div key={e.googleEventId} className="rounded-xl border border-slate-800/60 bg-slate-900/60 p-3">
+              <div className="flex items-start justify-between gap-2">
+                <span className="text-sm font-medium text-white">{e.title}</span>
+                {e.status === 'tentative' && (
+                  <span className="shrink-0 rounded-full bg-amber-900/60 px-2 py-0.5 text-xs font-semibold text-amber-300">Tentative</span>
+                )}
+                {e.status === 'cancelled' && (
+                  <span className="shrink-0 rounded-full bg-red-900/60 px-2 py-0.5 text-xs font-semibold text-red-300">Cancelled</span>
+                )}
+              </div>
+              <div className="mt-1 text-xs text-slate-400">
+                {formatTime(e.startAt, e.allDay)}
+                {!e.allDay && ` – ${formatTime(e.endAt, false)}`}
+              </div>
+              {e.location && (
+                <div className="mt-1 text-xs text-slate-500 truncate">{e.location}</div>
+              )}
+              {e.htmlLink && (
+                <a
+                  href={e.htmlLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-block text-xs text-blue-400 hover:text-blue-300 transition"
+                >
+                  Open in Google Calendar →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 w-full rounded-xl bg-slate-800 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition"
+          className="mt-4 w-full rounded-xl border border-slate-800 py-2.5 text-sm font-semibold text-slate-400 hover:text-white transition"
         >
           Close
         </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Google Calendar Modal (connect / status) ──────────────────────────────────
+
+function GoogleCalModal({
+  googleConnected, googleConnecting, googleError, onConnect, onClose,
+}: {
+  googleConnected: boolean | null
+  googleConnecting: boolean
+  googleError: string | null
+  onConnect: () => void
+  onClose: () => void
+}) {
+  const [disconnectMsg, setDisconnectMsg] = useState(false)
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-800/60 bg-slate-900 p-6 shadow-2xl">
+        <div className="flex items-start justify-between mb-4">
+          <h2 className="text-base font-bold text-white">
+            {googleConnected ? 'Google Calendar Connected' : 'Connect Google Calendar'}
+          </h2>
+          <button type="button" onClick={onClose} className="rounded-lg p-1.5 text-slate-500 hover:text-white transition">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {googleConnected ? (
+          <>
+            <div className="mb-4 flex items-center gap-2">
+              <span className="rounded-full bg-emerald-900/60 px-2.5 py-0.5 text-xs font-semibold text-emerald-300">✓ Connected</span>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Your Google Calendar events are shown in blue on the calendar.
+            </p>
+            {disconnectMsg ? (
+              <p className="mt-3 text-sm text-amber-400">To disconnect Google Calendar, please contact support.</p>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setDisconnectMsg(true)}
+                className="mt-5 w-full rounded-xl border border-slate-700 py-2.5 text-sm font-semibold text-slate-400 hover:text-white transition"
+              >
+                Disconnect
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-2 w-full rounded-xl bg-slate-800 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition"
+            >
+              Close
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              Show your Google Calendar events alongside your VLP bookings.
+            </p>
+            <p className="mt-2 text-xs text-slate-500">Read-only access to your primary calendar.</p>
+            {googleError && <p className="mt-3 text-xs text-red-400">{googleError}</p>}
+            <button
+              type="button"
+              onClick={onConnect}
+              disabled={googleConnecting}
+              className="mt-5 w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 py-2.5 text-sm font-bold text-white hover:from-blue-500 hover:to-blue-400 transition disabled:opacity-60"
+            >
+              {googleConnecting ? 'Connecting…' : 'Connect Google Calendar'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-2 w-full rounded-xl border border-slate-800 py-2.5 text-sm font-semibold text-slate-400 hover:text-white transition"
+            >
+              Cancel
+            </button>
+          </>
+        )}
       </div>
     </div>
   )
@@ -210,11 +340,12 @@ function AllEventsSlideOver({ bookings, onClose, onSelect }: { bookings: Booking
 
 // ── Calendar Grid ─────────────────────────────────────────────────────────────
 
-function CalendarGrid({ year, month, bookingMap, onDayClick, onPrev, onNext }: {
+function CalendarGrid({ year, month, bookingMap, googleEventMap, onDayClick, onPrev, onNext }: {
   year: number
   month: number
   bookingMap: Record<string, Booking[]>
-  onDayClick: (bookings: Booking[]) => void
+  googleEventMap: Record<string, GoogleEvent[]>
+  onDayClick: (bookings: Booking[], googleEvts: GoogleEvent[]) => void
   onPrev: () => void
   onNext: () => void
 }) {
@@ -222,7 +353,7 @@ function CalendarGrid({ year, month, bookingMap, onDayClick, onPrev, onNext }: {
   const todayKey = toDateKey(today)
 
   const firstDay = new Date(year, month, 1)
-  const startOffset = firstDay.getDay() // 0 = Sun
+  const startOffset = firstDay.getDay()
 
   const cells: { date: Date; overflow: boolean }[] = []
   for (let i = 0; i < startOffset; i++) {
@@ -268,8 +399,11 @@ function CalendarGrid({ year, month, bookingMap, onDayClick, onPrev, onNext }: {
         {cells.map((cell, i) => {
           const key = toDateKey(cell.date)
           const cellBookings = bookingMap[key] ?? []
+          const cellGoogleEvts = googleEventMap[key] ?? []
           const hasBookings = cellBookings.length > 0
+          const hasGoogle = cellGoogleEvts.length > 0
           const isToday = key === todayKey
+          const clickable = !cell.overflow && (hasBookings || hasGoogle)
 
           let cls = 'relative flex flex-col items-center justify-start rounded-lg min-h-[52px] p-1.5 transition '
           if (cell.overflow) {
@@ -278,6 +412,8 @@ function CalendarGrid({ year, month, bookingMap, onDayClick, onPrev, onNext }: {
             cls += 'bg-amber-500/20 border border-amber-500/40 text-amber-300 font-semibold cursor-pointer hover:border-amber-500/60'
           } else if (hasBookings) {
             cls += 'bg-emerald-500/10 border border-emerald-500/30 text-slate-300 cursor-pointer hover:border-emerald-500/50'
+          } else if (hasGoogle) {
+            cls += 'bg-blue-500/10 border border-blue-500/30 text-slate-300 cursor-pointer hover:border-blue-500/50'
           } else {
             cls += 'border border-slate-800/60 bg-slate-900/40 text-slate-300 cursor-pointer hover:border-amber-500/40'
           }
@@ -286,11 +422,14 @@ function CalendarGrid({ year, month, bookingMap, onDayClick, onPrev, onNext }: {
             <div
               key={i}
               className={cls}
-              onClick={() => !cell.overflow && hasBookings && onDayClick(cellBookings)}
+              onClick={() => clickable && onDayClick(cellBookings, cellGoogleEvts)}
             >
               <span className="text-xs">{cell.date.getDate()}</span>
-              {hasBookings && !cell.overflow && (
-                <span className="absolute bottom-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              {!cell.overflow && (hasBookings || hasGoogle) && (
+                <div className="absolute bottom-1.5 flex gap-0.5">
+                  {hasBookings && <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />}
+                  {hasGoogle && <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />}
+                </div>
               )}
             </div>
           )
@@ -302,11 +441,12 @@ function CalendarGrid({ year, month, bookingMap, onDayClick, onPrev, onNext }: {
 
 // ── Upcoming Events Sidebar ───────────────────────────────────────────────────
 
-function UpcomingSidebar({ bookings, connected, connecting, connectError, onConnect, onBookingClick, onGoogleCalClick, onViewAll }: {
+function UpcomingSidebar({ bookings, connected, connecting, connectError, googleConnected, onConnect, onBookingClick, onGoogleCalClick, onViewAll }: {
   bookings: Booking[]
   connected: boolean | null
   connecting: boolean
   connectError: string | null
+  googleConnected: boolean | null
   onConnect: () => void
   onBookingClick: (b: Booking) => void
   onGoogleCalClick: () => void
@@ -364,9 +504,13 @@ function UpcomingSidebar({ bookings, connected, connecting, connectError, onConn
           <button
             type="button"
             onClick={onGoogleCalClick}
-            className="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white transition"
+            className={`w-full rounded-xl border px-3 py-2 text-xs font-semibold transition ${
+              googleConnected
+                ? 'border-blue-500/40 bg-blue-500/10 text-blue-300 hover:text-blue-200'
+                : 'border-slate-700 bg-slate-900/60 text-slate-300 hover:text-white'
+            }`}
           >
-            Connect Google Calendar
+            {googleConnected ? '● Google Calendar Connected' : 'Connect Google Calendar'}
           </button>
           <button
             type="button"
@@ -549,21 +693,52 @@ export default function CalendarPage() {
   const [connecting, setConnecting] = useState(false)
   const [connectError, setConnectError] = useState<string | null>(null)
 
+  // Google Calendar state
+  const [googleConnected, setGoogleConnected] = useState<boolean | null>(null)
+  const [googleEvents, setGoogleEvents] = useState<GoogleEvent[]>([])
+  const [googleConnecting, setGoogleConnecting] = useState(false)
+  const [googleError, setGoogleError] = useState<string | null>(null)
+
   // Calendar state
   const now = new Date()
   const [calYear, setCalYear] = useState(now.getFullYear())
   const [calMonth, setCalMonth] = useState(now.getMonth())
   const [selectedBookings, setSelectedBookings] = useState<Booking[] | null>(null)
+  const [selectedGoogleEvents, setSelectedGoogleEvents] = useState<GoogleEvent[] | null>(null)
   const [showGoogleCal, setShowGoogleCal] = useState(false)
   const [showAllEvents, setShowAllEvents] = useState(false)
 
   const calInitialized = useRef(false)
 
+  async function fetchGoogleEvents() {
+    const eventsRes = await fetch(
+      'https://api.virtuallaunch.pro/v1/google/events',
+      { credentials: 'include' }
+    ).catch(() => null)
+    if (eventsRes?.ok) {
+      const evData = await eventsRes.json()
+      setGoogleEvents(evData.events ?? [])
+    }
+  }
+
   useEffect(() => {
     document.title = 'Calendar | Virtual Launch Pro'
 
+    // Handle URL params from OAuth redirects
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('google') === 'connected') {
+      setGoogleConnected(true)
+      window.history.replaceState({}, '', '/calendar')
+      fetchGoogleEvents()
+    }
+    if (params.get('google') === 'error') {
+      setGoogleError('Google Calendar connection failed: ' + (params.get('reason') ?? 'unknown error'))
+      window.history.replaceState({}, '', '/calendar')
+    }
+
     async function init() {
       try {
+        // 1. Fetch session
         const sessionRes = await fetch('https://api.virtuallaunch.pro/v1/auth/session', { credentials: 'include' })
         if (!sessionRes.ok) { setConnected(false); return }
         const session = await sessionRes.json()
@@ -571,13 +746,46 @@ export default function CalendarPage() {
         if (!aid) { setConnected(false); return }
         setAccountId(aid)
 
-        const bookingsRes = await fetch(`https://api.virtuallaunch.pro/v1/bookings/by-account/${aid}`, { credentials: 'include' })
-        if (bookingsRes.ok) {
-          const data = await bookingsRes.json()
-          setBookings(Array.isArray(data) ? data : (data.bookings ?? []))
-          setConnected(true)
+        // 2. Check Cal.com connection status
+        const calStatusRes = await fetch('https://api.virtuallaunch.pro/v1/cal/status', { credentials: 'include' }).catch(() => null)
+        if (calStatusRes?.ok) {
+          const calStatus = await calStatusRes.json()
+          setConnected(calStatus.connected ?? false)
+
+          // 3. If connected, fetch bookings
+          if (calStatus.connected) {
+            const bookingsRes = await fetch(`https://api.virtuallaunch.pro/v1/bookings/by-account/${aid}`, { credentials: 'include' }).catch(() => null)
+            if (bookingsRes?.ok) {
+              const data = await bookingsRes.json()
+              setBookings(Array.isArray(data) ? data : (data.bookings ?? []))
+            }
+            // Bookings fetch failure doesn't change connected state
+          }
         } else {
           setConnected(false)
+        }
+
+        // 4. Check Google Calendar status
+        const googleStatusRes = await fetch(
+          'https://api.virtuallaunch.pro/v1/google/status',
+          { credentials: 'include' }
+        ).catch(() => null)
+        if (googleStatusRes?.ok) {
+          const gs = await googleStatusRes.json()
+          const isGoogleConnected = gs.connected ?? false
+          setGoogleConnected(isGoogleConnected)
+
+          // 5. If Google connected, fetch events
+          if (isGoogleConnected) {
+            const eventsRes = await fetch(
+              'https://api.virtuallaunch.pro/v1/google/events',
+              { credentials: 'include' }
+            ).catch(() => null)
+            if (eventsRes?.ok) {
+              const evData = await eventsRes.json()
+              setGoogleEvents(evData.events ?? [])
+            }
+          }
         }
       } catch {
         setConnected(false)
@@ -663,12 +871,49 @@ export default function CalendarPage() {
     }
   }
 
+  async function handleGoogleConnect() {
+    setGoogleConnecting(true)
+    setGoogleError(null)
+    try {
+      const res = await fetch(
+        'https://api.virtuallaunch.pro/v1/google/oauth/start',
+        { credentials: 'include' }
+      )
+      if (!res.ok) {
+        setGoogleError('Failed to start Google authorization.')
+        return
+      }
+      const data = await res.json()
+      if (data.authorizationUrl) window.location.href = data.authorizationUrl
+      else setGoogleError('No authorization URL returned.')
+    } catch {
+      setGoogleError('Network error. Please try again.')
+    } finally {
+      setGoogleConnecting(false)
+    }
+  }
+
   // Build bookingMap for calendar highlights
   const bookingMap: Record<string, Booking[]> = {}
   for (const b of bookings) {
     const key = toDateKey(new Date(b.scheduledAt))
     if (!bookingMap[key]) bookingMap[key] = []
     bookingMap[key].push(b)
+  }
+
+  // Build googleEventMap for calendar highlights
+  const googleEventMap: Record<string, GoogleEvent[]> = {}
+  for (const e of googleEvents) {
+    const key = e.startAt.slice(0, 10)
+    if (!googleEventMap[key]) googleEventMap[key] = []
+    googleEventMap[key].push(e)
+  }
+
+  function handleDayClick(dayBookings: Booking[], dayGoogleEvts: GoogleEvent[]) {
+    if (dayBookings.length > 0) setSelectedBookings(dayBookings)
+    else setSelectedBookings(null)
+    if (dayGoogleEvts.length > 0) setSelectedGoogleEvents(dayGoogleEvts)
+    else setSelectedGoogleEvents(null)
   }
 
   const MAIN_TABS: { key: MainTab; label: string }[] = [
@@ -710,7 +955,8 @@ export default function CalendarPage() {
               year={calYear}
               month={calMonth}
               bookingMap={bookingMap}
-              onDayClick={(bs) => setSelectedBookings(bs)}
+              googleEventMap={googleEventMap}
+              onDayClick={handleDayClick}
               onPrev={() => {
                 if (calMonth === 0) { setCalMonth(11); setCalYear((y) => y - 1) }
                 else setCalMonth((m) => m - 1)
@@ -726,6 +972,7 @@ export default function CalendarPage() {
             connected={connected}
             connecting={connecting}
             connectError={connectError}
+            googleConnected={googleConnected}
             onConnect={handleConnect}
             onBookingClick={(b) => setSelectedBookings([b])}
             onGoogleCalClick={() => setShowGoogleCal(true)}
@@ -795,7 +1042,18 @@ export default function CalendarPage() {
       {selectedBookings && selectedBookings.length > 0 && (
         <EventModal booking={selectedBookings[0]} onClose={() => setSelectedBookings(null)} />
       )}
-      {showGoogleCal && <GoogleCalModal onClose={() => setShowGoogleCal(false)} />}
+      {selectedGoogleEvents && selectedGoogleEvents.length > 0 && !selectedBookings && (
+        <GoogleEventsModal events={selectedGoogleEvents} onClose={() => setSelectedGoogleEvents(null)} />
+      )}
+      {showGoogleCal && (
+        <GoogleCalModal
+          googleConnected={googleConnected}
+          googleConnecting={googleConnecting}
+          googleError={googleError}
+          onConnect={handleGoogleConnect}
+          onClose={() => setShowGoogleCal(false)}
+        />
+      )}
       {showAllEvents && (
         <AllEventsSlideOver
           bookings={bookings}
