@@ -397,6 +397,7 @@ Capabilities include:
 * account / membership management
 * booking analytics
 * Cal.com calendar / scheduling integration
+* tax-pro-to-taxpayer inquiry messaging / history
 * profile management
 * support tickets
 * token balances
@@ -413,7 +414,7 @@ Capabilities include:
 
 * account / membership management
 * Cal.com calendar integration
-* inquiry history
+* taxpayer-to-tax-pro inquiry messaging / history
 * profile management (intake form)
 * support tickets
 * token balances
