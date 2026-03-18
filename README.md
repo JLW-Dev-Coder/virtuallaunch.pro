@@ -162,13 +162,15 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Booking Analytics | ✓ | ✓ | ✓ | ✓ |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ | ✓ |
+| Discounts / Entitlements | — | — | — | — |
 | Game Analytics | — | — | — | — |
+| Messaging (Tax-Pro ↔ Taxpayer) | ✓ | ✓ | ✓ | ✓ |
 | Monthly / Package Cost | $0 | $79 | $199 | $399 |
 | Profile Management | ✓ | ✓ | ✓ | ✓ |
 | Profile Visibility | Directory | Directory | Featured | Top-Tier |
 | Support Tickets | ✓ | ✓ | ✓ | ✓ |
 | Tax Tool Game Tokens | 0 | 30 | 120 | 300 |
-| Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ |
+| Taxpayer Intake | — | — | — | — |
 | Token Balances | ✓ | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ | ✓ |
 | Transcript Parser Tool | — | — | — | — |
@@ -187,13 +189,15 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Booking Analytics | — | — | — | — |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ | ✓ |
+| Discounts / Entitlements | ✓ | ✓ | ✓ | ✓ |
 | Game Analytics | — | — | — | — |
+| Messaging (Tax-Pro ↔ Taxpayer) | ✓ | ✓ | ✓ | ✓ |
 | Monthly / Package Cost | $0 | $9 | $19 | $39 |
 | Profile Management | ✓ | ✓ | ✓ | ✓ |
 | Profile Visibility | — | — | — | — |
 | Support Tickets | ✓ | ✓ | ✓ | ✓ |
 | Tax Tool Game Tokens | 0 | 5 | 15 | 40 |
-| Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ |
+| Taxpayer Intake | ✓ | ✓ | ✓ | ✓ |
 | Token Balances | ✓ | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ | ✓ |
 | Transcript Parser Tool | — | — | — | — |
@@ -212,13 +216,15 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Booking Analytics | — | — | — |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ |
+| Discounts / Entitlements | — | — | — |
 | Game Analytics | — | — | — |
+| Messaging (Tax-Pro ↔ Taxpayer) | — | — | — |
 | Monthly / Package Cost | $19 | $29 | $129 |
 | Profile Management | ✓ | ✓ | ✓ |
 | Profile Visibility | — | — | — |
 | Support Tickets | ✓ | ✓ | ✓ |
 | Tax Tool Game Tokens | 0 | 0 | 0 |
-| Tax-Pro ↔ Taxpayer Messaging / Inquiry | — | — | — |
+| Taxpayer Intake | — | — | — |
 | Token Balances | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ |
 | Transcript Parser Tool | ✓ | ✓ | ✓ |
@@ -237,13 +243,15 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Booking Analytics | — | — | — |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ |
+| Discounts / Entitlements | — | — | — |
 | Game Analytics | ✓ | ✓ | ✓ |
+| Messaging (Tax-Pro ↔ Taxpayer) | — | — | — |
 | Monthly / Package Cost | $9 | $19 | $39 |
 | Profile Management | ✓ | ✓ | ✓ |
 | Profile Visibility | — | — | — |
 | Support Tickets | ✓ | ✓ | ✓ |
 | Tax Tool Game Tokens | 0 | 0 | 0 |
-| Tax-Pro ↔ Taxpayer Messaging / Inquiry | — | — | — |
+| Taxpayer Intake | — | — | — |
 | Token Balances | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ |
 | Transcript Parser Tool | — | — | — |
