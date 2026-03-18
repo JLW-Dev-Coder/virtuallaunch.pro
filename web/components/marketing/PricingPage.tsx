@@ -103,6 +103,33 @@ const planMeta: Record<PlanKey, { label: string; badge: string; featured: boolea
 export default function PricingPage() {
   const [cycle, setCycle] = useState<Cycle>('monthly')
   const [plans, setPlans] = useState(DEFAULT_PLANS)
+  const [loadingPlan, setLoadingPlan] = useState(null)
+  const [checkoutError, setCheckoutError] = useState(null)
+
+  async function handleCheckout(data) {
+    if (data.price === '0') { window.location.href = '/sign-in'; return; }
+    setLoadingPlan(data.planKey)
+    setCheckoutError(null)
+    try {
+      const res = await fetch('https://api.virtuallaunch.pro/v1/checkout/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ billingObject: data.billingObject, planKey: data.planKey }),
+      })
+      if (res.status === 401) { window.location.href = '/sign-in?next=/pricing'; return; }
+      const payload = await res.json()
+      if (payload.ok && payload.url) {
+        window.location.href = payload.url
+      } else {
+        setCheckoutError(payload.message || 'Checkout failed. Please try again.')
+      }
+    } catch (e) {
+      setCheckoutError('Network error. Please try again.')
+    } finally {
+      setLoadingPlan(null)
+    }
+  }
 
   useEffect(() => {
     fetch('https://api.virtuallaunch.pro/v1/pricing', { headers: { Accept: 'application/json' } })
@@ -204,10 +231,18 @@ export default function PricingPage() {
                     <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>Plan key: {data.planKey}</span></li>
                     <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>Platform fee: {data.platformFee}%</span></li>
                   </ul>
+                  {checkoutError && loadingPlan === null && (
+                    <p className="mt-4 text-xs text-red-400">{checkoutError}</p>
+                  )}
                   <div className="mt-8 flex gap-3">
-                    <a href={data.checkoutHref} className="flex-1 rounded-xl bg-orange-500 px-5 py-3 text-center text-sm font-extrabold text-[#070a10] hover:bg-orange-400 transition-colors">
-                      Get started
-                    </a>
+                    <button
+                      type="button"
+                      onClick={() => handleCheckout(data)}
+                      disabled={loadingPlan !== null}
+                      className="flex-1 rounded-xl bg-orange-500 px-5 py-3 text-center text-sm font-extrabold text-[#070a10] hover:bg-orange-400 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {loadingPlan === data.planKey ? 'Redirecting...' : 'Get started'}
+                    </button>
                     <a href="#comparison" className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10 transition-colors">
                       Compare
                     </a>
