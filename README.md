@@ -339,6 +339,9 @@ TMP should handle canonical records such as:
 
 ```txt
 /r2/tmp_activity/{event_id}.json
+/r2/tmp_entitlements/{account_id}.json
+/r2/tmp_inquiries/{inquiry_id}.json
+/r2/tmp_intake_sessions/{session_id}.json
 /r2/tmp_preferences/{account_id}.json
 ```
 
