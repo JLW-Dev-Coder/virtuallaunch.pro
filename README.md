@@ -17,6 +17,9 @@ Last updated: Phase 12 complete
 - Phase 10: Deployed — virtuallaunch.pro live on Cloudflare Pages
 - Phase 11: All 64 Worker routes implemented (zero stubs)
 - Phase 12: Sign-in page (magic link + Google OAuth + verify flow)
+- Phase 13: Auth guard on dashboard routes
+- Phase 14: Marketing pages (about, pricing, features, how-it-works, contact)
+- Phase 15: Next.js security patch (CVE-2025-66478 — upgrade Next.js version)
 
 ### Live URLs
 - Frontend: https://virtuallaunch.pro
@@ -24,11 +27,6 @@ Last updated: Phase 12 complete
 - D1 database: virtuallaunch-pro (id: 079dfd69-dbf4-4070-bc91-51f837021795)
 - R2 bucket: virtuallaunch-pro
 - Pages project: virtuallaunch-pro-web (GitHub auto-deploy on push)
-
-### Remaining Phases
-- Phase 13: Auth guard on dashboard routes
-- Phase 14: Marketing pages (about, pricing, features, how-it-works, contact)
-- Phase 15: Next.js security patch (CVE-2025-66478 — upgrade Next.js version)
 
 ### Stack
 - Frontend: Next.js 15 + Tailwind + @cloudflare/next-on-pages
