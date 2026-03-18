@@ -726,6 +726,10 @@ export default function CalendarPage() {
 
     // Handle URL params from OAuth redirects
     const params = new URLSearchParams(window.location.search)
+    if (params.get('cal') === 'connected') {
+      setConnected(true)
+      window.history.replaceState({}, '', '/calendar')
+    }
     if (params.get('google') === 'connected') {
       setGoogleConnected(true)
       window.history.replaceState({}, '', '/calendar')

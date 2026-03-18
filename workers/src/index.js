@@ -548,6 +548,67 @@ function redirectWithCookie(url, sessionId, env) {
 }
 
 // ---------------------------------------------------------------------------
+// Cal.com OAuth helper
+// ---------------------------------------------------------------------------
+
+/**
+ * Exchanges the OAuth code for tokens, saves to R2 + D1 cal_connections,
+ * and updates the accounts table with the token for quick status checks.
+ * Returns { ok: true } on success or { ok: false, error, message } on failure.
+ */
+async function handleCalOAuthCallback(request, env, session) {
+  const url = new URL(request.url);
+  const code = url.searchParams.get('code');
+  if (!code) return { ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' };
+
+  // Cal.com VLP App client ID and registered redirect URI
+  const calClientId = env.CAL_VLP_OAUTH_CLIENT_ID ?? '782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb';
+  const redirectUri = env.CAL_VLP_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/cal/app/oauth/callback';
+
+  const tokenRes = await fetch('https://app.cal.com/oauth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      client_id: calClientId,
+      client_secret: env.CAL_APP_OAUTH_CLIENT_SECRET,
+      redirect_uri: redirectUri,
+      code,
+    }),
+  });
+  const tokenData = await tokenRes.json().catch(() => ({}));
+  if (!tokenRes.ok) {
+    return { ok: false, error: 'TOKEN_EXCHANGE_FAILED', message: tokenData?.error_description ?? 'Token exchange failed' };
+  }
+
+  const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + (tokenData.expires_in ?? 3600) * 1000).toISOString();
+  const connectionId = `cal_${session.account_id}`;
+  const connection = {
+    connectionId, accountId: session.account_id, calApp: 'cal_app',
+    accessToken: tokenData.access_token, refreshToken: tokenData.refresh_token,
+    expiresAt, createdAt: now, updatedAt: now,
+  };
+  await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_connections/${connectionId}.json`, connection);
+  await d1Run(env.DB,
+    `INSERT INTO cal_connections (connection_id, account_id, cal_app, access_token, refresh_token, expires_at, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(connection_id) DO UPDATE SET
+       access_token = excluded.access_token,
+       refresh_token = excluded.refresh_token,
+       expires_at = excluded.expires_at,
+       updated_at = excluded.updated_at`,
+    [connectionId, session.account_id, 'cal_app', tokenData.access_token, tokenData.refresh_token, expiresAt, now, now]
+  );
+  // Also persist tokens on accounts row for fast status checks
+  await d1Run(env.DB,
+    'UPDATE accounts SET cal_access_token = ?, cal_refresh_token = ?, cal_token_expiry = ?, updated_at = ? WHERE account_id = ?',
+    [tokenData.access_token, tokenData.refresh_token, expiresAt, now, session.account_id]
+  );
+  return { ok: true };
+}
+
+// ---------------------------------------------------------------------------
 // Route table
 // Each entry: { method, pattern, handler }
 // method: HTTP verb string, or '*' to match any (used for webhooks)
@@ -2171,19 +2232,25 @@ const ROUTES = [
   // CAL OAUTH
   // -------------------------------------------------------------------------
 
-  // Hardcoded fallback Cal.com OAuth client IDs
-  // Taxpayer app:      d6839d7dccd5a878d6c5e26b52effd2ab6d241dc047ed2786f9f56de039ca7f3
-  // Tax professional:  9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420
+  // Cal.com OAuth Client IDs
+  // VLP App (book/view bookings for VLP users):
+  //   782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb
+  //   Redirect URI: https://api.virtuallaunch.pro/cal/app/oauth/callback
+  // Tax Pro App (tax professionals connecting their Cal.com account):
+  //   9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420
+  // Taxpayer App (TMP repo — not this repo):
+  //   d6839d7dccd5a878d6c5e26b52effd2ab6d241dc047ed2786f9f56de039ca7f3
 
   {
     method: 'GET', pattern: '/v1/cal/oauth/start',
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
       if (error) return error;
-      const calClientId = env.CAL_APP_OAUTH_CLIENT_ID || '9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420';
+      const calClientId = env.CAL_VLP_OAUTH_CLIENT_ID ?? '782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb';
+      const redirectUri = env.CAL_VLP_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/cal/app/oauth/callback';
       const url = new URL('https://app.cal.com/oauth/authorize');
       url.searchParams.set('client_id', calClientId);
-      url.searchParams.set('redirect_uri', 'https://api.virtuallaunch.pro/v1/cal/oauth/callback');
+      url.searchParams.set('redirect_uri', redirectUri);
       url.searchParams.set('response_type', 'code');
       return json({ ok: true, status: 'redirect_required', authorizationUrl: url.toString() });
     },
@@ -2194,45 +2261,27 @@ const ROUTES = [
     handler: async (_method, _pattern, _params, request, env) => {
       const { session, error } = await requireSession(request, env);
       if (error) return error;
-      const url = new URL(request.url);
-      const code = url.searchParams.get('code');
-      if (!code) return json({ ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' }, 400);
-
-      const calClientId = env.CAL_APP_OAUTH_CLIENT_ID || '9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420';
-      const tokenRes = await fetch('https://app.cal.com/oauth/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          grant_type: 'authorization_code',
-          client_id: calClientId,
-          client_secret: env.CAL_APP_OAUTH_CLIENT_SECRET,
-          redirect_uri: 'https://api.virtuallaunch.pro/v1/cal/oauth/callback',
-          code,
-        }),
-      });
-      const tokenData = await tokenRes.json().catch(() => ({}));
-      if (!tokenRes.ok) return json({ ok: false, error: 'TOKEN_EXCHANGE_FAILED', message: tokenData?.error_description ?? 'Token exchange failed' }, 502);
-
-      const now = new Date().toISOString();
-      const expiresAt = new Date(Date.now() + tokenData.expires_in * 1000).toISOString();
-      const connectionId = `cal_${session.account_id}`;
-      const connection = {
-        connectionId, accountId: session.account_id, calApp: 'cal_app',
-        accessToken: tokenData.access_token, refreshToken: tokenData.refresh_token,
-        expiresAt, createdAt: now, updatedAt: now,
-      };
-      await r2Put(env.R2_VIRTUAL_LAUNCH, `cal_connections/${connectionId}.json`, connection);
-      await d1Run(env.DB,
-        `INSERT INTO cal_connections (connection_id, account_id, cal_app, access_token, refresh_token, expires_at, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-         ON CONFLICT(connection_id) DO UPDATE SET
-           access_token = excluded.access_token,
-           refresh_token = excluded.refresh_token,
-           expires_at = excluded.expires_at,
-           updated_at = excluded.updated_at`,
-        [connectionId, session.account_id, 'cal_app', tokenData.access_token, tokenData.refresh_token, expiresAt, now, now]
-      );
+      const result = await handleCalOAuthCallback(request, env, session);
+      if (!result.ok) {
+        const status = result.error === 'TOKEN_EXCHANGE_FAILED' ? 502 : 400;
+        return json({ ok: false, error: result.error, message: result.message }, status);
+      }
       return json({ ok: true, status: 'connected' });
+    },
+  },
+
+  {
+    // Matches the redirect URI registered in the Cal.com VLP App OAuth settings:
+    // https://api.virtuallaunch.pro/cal/app/oauth/callback (no /v1/ prefix)
+    method: 'GET', pattern: '/cal/app/oauth/callback',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return Response.redirect('https://virtuallaunch.pro/calendar?cal=error&reason=session', 302);
+      const result = await handleCalOAuthCallback(request, env, session);
+      if (!result.ok) {
+        return Response.redirect(`https://virtuallaunch.pro/calendar?cal=error&reason=${encodeURIComponent(result.error ?? 'unknown')}`, 302);
+      }
+      return Response.redirect('https://virtuallaunch.pro/calendar?cal=connected', 302);
     },
   },
 
@@ -2242,11 +2291,10 @@ const ROUTES = [
       const { session, error } = await requireSession(request, env);
       if (error) return error;
       try {
-        const connectionId = `cal_${session.account_id}`;
         const row = await env.DB.prepare(
-          'SELECT access_token FROM cal_connections WHERE account_id = ? AND connection_id = ?'
-        ).bind(session.account_id, connectionId).first();
-        const connected = !!(row && row.access_token);
+          'SELECT cal_access_token FROM accounts WHERE account_id = ?'
+        ).bind(session.account_id).first();
+        const connected = !!(row && row.cal_access_token);
         return json({ ok: true, connected, calAccountId: connected ? session.account_id : undefined });
       } catch {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to check Cal.com status' }, 500);
