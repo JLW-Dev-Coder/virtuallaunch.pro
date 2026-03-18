@@ -1,4 +1,4 @@
-# VLP Ecosystem — ChatGPT Working Context
+﻿# VLP Ecosystem — ChatGPT Working Context
 ### For: Restructuring TMP, TTMP, TTTMP to Next.js Standard
 ### Version: Phase 15+ (post-CVE patch)
 
@@ -6,7 +6,7 @@
 
 ## HOW TO USE THIS DOCUMENT (READ FIRST)
 
-You are ChatGPT. This document is your complete source of truth for the VLP ecosystem.
+This document is your complete source of truth for the VLP ecosystem.
 Do not invent routes, payloads, storage paths, or IDs that are not defined here.
 Do not modify contracts. Do not duplicate ownership.
 
@@ -74,7 +74,7 @@ Deploy:     Cloudflare Pages (frontend) + wrangler deploy (Worker)
 /web/lib/api/client.ts         — API client (mock + real modes)
 /web/lib/auth/session.ts       — getSession() + getSessionToken()
 /workers/src/index.js          — full Worker (64 routes, deny-by-default)
-/workers/migrations/           — 11 D1 migration files
+/workers/migrations/           — 15 D1 migration files (NOTE: VLP has duplicate 0002_ prefix and no 0014_*.sql — use clean sequential numbering in TMP/TTMP/TTTMP repos)
 /contracts/                    — 64 canonical contracts (never modify)
 /wrangler.toml                 — Worker config, bindings, env vars
 ```
@@ -177,6 +177,20 @@ Root directory:  workers
 ---
 
 ## PART 3 — PLATFORM-SPECIFIC RESPONSIBILITIES
+
+### VLP (Virtual Launch Pro)
+
+VLP plan tiers: Free | Starter ($79) | Scale ($199) | Advanced ($399)
+
+Token grants per plan:
+```r
+Free:     0 game tokens,   0 transcript tokens
+Starter:  30 game tokens,  30 transcript tokens
+Scale:    120 game tokens, 100 transcript tokens
+Advanced: 300 game tokens, 250 transcript tokens
+```r
+
+---
 
 ### TMP (Tax Monitor Pro)
 
@@ -417,6 +431,20 @@ GET   /v1/support/tickets/by-account/{account_id}
 GET   /v1/support/tickets/{ticket_id}
 PATCH /v1/support/tickets/{ticket_id}
 POST  /v1/support/tickets
+
+### Token routes (all platforms must implement)
+
+```r
+GET /v1/tokens/balance/{account_id}
+GET /v1/tokens/usage/{account_id}
+```r
+
+### Preferences routes (all platforms must implement)
+
+```r
+GET   /v1/vlp/preferences/{account_id}
+PATCH /v1/vlp/preferences/{account_id}
+```r
 ```
 
 ### Booking routes (all platforms must implement — VLP is canonical writer)
@@ -448,6 +476,7 @@ POST   /v1/billing/setup-intents
 POST   /v1/billing/subscriptions
 POST   /v1/billing/subscriptions/{membership_id}/cancel
 POST   /v1/billing/tokens/purchase
+GET    /v1/billing/receipts/{account_id}
 POST   /v1/checkout/sessions
 POST   /v1/webhooks/stripe
 ```
@@ -719,74 +748,6 @@ Refer to the uploaded CHATGPT_CONTEXT.md for all routes, paths, and IDs.
 
 ---
 
-## PART 12 — ADDITIONAL FILES TO CREATE BEFORE STARTING
-
-The following reference files will significantly reduce errors and context resets.
-Create these in each repo before starting the main migration:
-
-### 1. `/ROUTES.md` (per repo)
-
-A flat list of every Worker route for that platform. Use Part 6 of this doc filtered to the platform.
-ChatGPT can use this as a quick reference without needing the full context doc.
-
-### 2. `/STORAGE.md` (per repo)
-
-A flat list of every R2 path that platform owns and may write to.
-Use Part 7 of this doc filtered to the platform.
-Include a clear header: "This platform DOES NOT write to any VLP-owned path."
-
-### 3. `/CONTRACTS.md` (per repo)
-
-List every contract this platform needs, with its filename, route, and method.
-Excludes any VLP-governed contract (billing, shared memberships, support tickets, tokens).
-
-### 4. `/EVENTS.md` (per repo)
-
-Flat list of canonical events that platform emits. Use Part 8 filtered to the platform.
-
-### 5. `/web/lib/api/vlp-client.ts`
-
-A typed API client that calls VLP API routes for shared operational writes.
-This is how TMP, TTMP, and TTTMP call VLP instead of writing shared records themselves.
-
-Example stub:
-```ts
-const VLP_API = 'https://api.virtuallaunch.pro';
-
-export async function createBillingCustomer(payload: unknown) {
-  return fetch(`${VLP_API}/v1/billing/customers`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-    credentials: 'include',
-  });
-}
-```
-
-### 6. `/workers/migrations/001_init.sql` (per repo)
-
-Platform-specific D1 tables only. Do not replicate VLP tables.
-
-TMP needs:
-```sql
--- tmp_activity, tmp_entitlements, tmp_inquiries, tmp_intake_sessions, tmp_preferences
--- Plus projection tables for reading VLP-owned data: memberships, tokens, support_tickets
-```
-
-TTMP needs:
-```sql
--- ttmp_activity, ttmp_preferences, ttmp_transcript_jobs, ttmp_transcript_results
--- Plus projection tables for reading VLP-owned data
-```
-
-TTTMP needs:
-```sql
--- tttmp_activity, tttmp_preferences, tttmp_tool_sessions
--- Plus projection tables for reading VLP-owned data
-```
-
----
-
 ## PART 13 — LIVE ENVIRONMENT REFERENCE
 
 ```
@@ -795,6 +756,8 @@ VLP Worker API: https://api.virtuallaunch.pro
 VLP D1:         virtuallaunch-pro (id: 079dfd69-dbf4-4070-bc91-51f837021795)
 VLP R2:         virtuallaunch-pro
 VLP Pages:      virtuallaunch-pro-web (GitHub auto-deploy on push)
+CAL_APPT_DEMO:    https://cal.com/tax-monitor-pro/virtual-launch-pro-demo-intro
+CAL_APPT_SUPPORT: https://cal.com/tax-monitor-pro/virtual-launch-pro-support
 ```
 
 When TMP, TTMP, and TTTMP call VLP API routes, they must target `https://api.virtuallaunch.pro`.
@@ -808,3 +771,6 @@ CORS is locked on VLP Worker to `https://virtuallaunch.pro`. Platform frontends 
 Last updated: Phase 15 complete (post-CVE-2025-66478 Next.js patch)
 This document is authoritative. When in doubt, stop generating and re-read the relevant section.
 ```
+
+
+
