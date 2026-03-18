@@ -3,7 +3,7 @@
 ## Table of Contents
 
 * [Overview](#overview)
-* [Current Build Status] (#current-build-status)
+* [Current Build Status](#current-build-status)
 * [Key Features](#key-features)
 * [Membership & Plans](#membership-&-plans)
 * [Architecture Overview](#architecture-overview)
