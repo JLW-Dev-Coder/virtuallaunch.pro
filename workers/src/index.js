@@ -541,6 +541,8 @@ function redirectWithCookie(url, sessionId, env) {
     headers: {
       'Location': url,
       'Set-Cookie': makeSessionCookie(sessionId, env),
+      'Access-Control-Allow-Origin': 'https://virtuallaunch.pro',
+      'Access-Control-Allow-Credentials': 'true',
     },
   });
 }
