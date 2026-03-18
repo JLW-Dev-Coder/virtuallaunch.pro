@@ -535,6 +535,16 @@ function jsonWithCookie(body, sessionId, env, status = 200) {
   });
 }
 
+function redirectWithCookie(url, sessionId, env) {
+  return new Response(null, {
+    status: 302,
+    headers: {
+      'Location': url,
+      'Set-Cookie': makeSessionCookie(sessionId, env),
+    },
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Route table
 // Each entry: { method, pattern, handler }
@@ -640,7 +650,7 @@ const ROUTES = [
 
         const { accountId } = await upsertAccount(user.email, user.given_name ?? '', user.family_name ?? '', env);
         const { sessionId } = await createSession(accountId, user.email, env);
-        return jsonWithCookie({ ok: true, status: 'callback_completed', redirectTo: `${env.APP_BASE_URL}/dashboard` }, sessionId, env);
+        return redirectWithCookie(`${env.APP_BASE_URL}/dashboard`, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Google callback failed' }, 500);
       }
@@ -687,7 +697,7 @@ const ROUTES = [
         if (payload.email !== email) return json({ ok: false, error: 'INVALID_TOKEN' }, 401);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-        return jsonWithCookie({ ok: true, status: 'verified', redirectTo: `${env.APP_BASE_URL}/dashboard` }, sessionId, env);
+        return redirectWithCookie(`${env.APP_BASE_URL}/dashboard`, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Magic link verification failed' }, 500);
       }
@@ -773,7 +783,7 @@ const ROUTES = [
         if (!email) return json({ ok: false, error: 'BAD_REQUEST', message: 'Could not extract email from SAML response' }, 400);
         const { accountId } = await upsertAccount(email, '', '', env);
         const { sessionId } = await createSession(accountId, email, env);
-        return jsonWithCookie({ ok: true, status: 'assertion_consumed', redirectTo: `${env.APP_BASE_URL}/dashboard` }, sessionId, env);
+        return redirectWithCookie(`${env.APP_BASE_URL}/dashboard`, sessionId, env);
       } catch (e) {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'SAML ACS failed' }, 500);
       }
