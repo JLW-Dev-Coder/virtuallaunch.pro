@@ -256,7 +256,7 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Tool Usage History | ✓ | ✓ | ✓ |
 | Transcript Parser Tool | — | — | — |
 | Transcript Report History | — | — | — |
-| Transcript Tokens | 30 | 80 | 200 |
+| Game Tokens | 30 | 80 | 200 |
 ```
 
 ---
