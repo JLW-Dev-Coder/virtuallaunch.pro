@@ -103,8 +103,8 @@ const planMeta: Record<PlanKey, { label: string; badge: string; featured: boolea
 export default function PricingPage() {
   const [cycle, setCycle] = useState<Cycle>('monthly')
   const [plans, setPlans] = useState(DEFAULT_PLANS)
-  const [loadingPlan, setLoadingPlan] = useState(null)
-  const [checkoutError, setCheckoutError] = useState(null)
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   async function handleCheckout(data: PlanCycle) {
     if (data.price === '0') { window.location.href = '/sign-in'; return; }
