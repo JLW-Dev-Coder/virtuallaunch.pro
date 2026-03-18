@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+﻿import { cookies } from 'next/headers'
 
 export interface SessionPayload {
   account_id: string
@@ -15,11 +15,10 @@ const MOCK_SESSION: SessionPayload = {
   platform: 'vlp',
 }
 
-const USE_MOCK = process.env.NEXT_PUBLIC_MOCK_API === 'true'
-  || !process.env.NEXT_PUBLIC_API_URL
+const USE_MOCK =
+  process.env.NEXT_PUBLIC_MOCK_API === 'true' ||
+  !process.env.NEXT_PUBLIC_API_URL
 
-// Replace mock with real Worker session validation
-// when /v1/auth/session is live
 export async function getSession(): Promise<SessionPayload> {
   if (USE_MOCK) return MOCK_SESSION
 
@@ -34,7 +33,7 @@ export async function getSession(): Promise<SessionPayload> {
     `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/session`,
     {
       headers: {
-        Authorization: `Bearer ${sessionToken}`,
+        Cookie: `vlp_session=${sessionToken}`,
       },
       cache: 'no-store',
     }
@@ -48,7 +47,6 @@ export async function getSession(): Promise<SessionPayload> {
   return data.session as SessionPayload
 }
 
-// Export session token for use in API calls
 export async function getSessionToken(): Promise<string | null> {
   if (USE_MOCK) return 'mock-session-token'
 

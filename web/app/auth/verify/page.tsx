@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -32,7 +32,7 @@ export default function VerifyPage() {
         const data = await res.json().catch(() => ({}))
         if (!res.ok) throw new Error(data?.message ?? 'Verification failed.')
         setState('redirecting')
-        router.push(data.redirectTo ?? '/app/dashboard')
+        router.push(data.redirectTo ?? '/dashboard')
       })
       .catch((err) => {
         setErrorMsg(err instanceof Error ? err.message : 'This link has expired or is invalid.')
@@ -42,14 +42,11 @@ export default function VerifyPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4 py-16">
-      {/* Logo */}
       <div className="mb-8 flex flex-col items-center gap-3">
         <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 text-sm font-bold text-slate-950">
           VLP
         </span>
       </div>
-
-      {/* Card */}
       <div className="w-full max-w-sm rounded-2xl border border-slate-800/70 bg-slate-900/60 p-8 text-center shadow-2xl">
         {(state === 'loading' || state === 'redirecting') && (
           <>
@@ -64,30 +61,18 @@ export default function VerifyPage() {
             </p>
           </>
         )}
-
         {state === 'invalid' && (
           <>
-            <p className="mb-4 text-sm text-red-400">
-              Invalid sign-in link — please request a new one.
-            </p>
-            <Link
-              href="/sign-in"
-              className="text-sm text-amber-400 underline underline-offset-2 hover:text-amber-300"
-            >
+            <p className="mb-4 text-sm text-red-400">Invalid sign-in link — please request a new one.</p>
+            <Link href="/sign-in" className="text-sm text-amber-400 underline underline-offset-2 hover:text-amber-300">
               Back to sign in
             </Link>
           </>
         )}
-
         {state === 'error' && (
           <>
-            <p className="mb-4 text-sm text-red-400">
-              {errorMsg ?? 'This link has expired or is invalid.'}
-            </p>
-            <Link
-              href="/sign-in"
-              className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:from-orange-400 hover:to-amber-400"
-            >
+            <p className="mb-4 text-sm text-red-400">{errorMsg ?? 'This link has expired or is invalid.'}</p>
+            <Link href="/sign-in" className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:from-orange-400 hover:to-amber-400">
               Request a new sign-in link
             </Link>
           </>
