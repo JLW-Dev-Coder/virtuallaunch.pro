@@ -552,15 +552,51 @@ function redirectWithCookie(url, sessionId, env) {
 // ---------------------------------------------------------------------------
 
 /**
+ * PKCE helper — generates a code_verifier and S256 code_challenge.
+ */
+async function generatePKCE() {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  const codeVerifier = btoa(String.fromCharCode(...array))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+
+  const encoder = new TextEncoder();
+  const data = encoder.encode(codeVerifier);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+
+  const codeChallenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
+
+  return { codeVerifier, codeChallenge };
+}
+
+/**
  * FLOW A — VLP user connects to read back their bookings with the VLP team.
  * App: Virtual Launch Pro App (782133b...)
  * Redirect: https://api.virtuallaunch.pro/cal/app/oauth/callback
  * Tokens stored in: accounts.cal_access_token (fast status check)
+ * PKCE: ON (S256)
  */
 async function handleCalVlpOAuthCallback(request, env, session) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   if (!code) return { ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' };
+
+  const state = url.searchParams.get('state');
+  if (!state) return { ok: false, error: 'MISSING_STATE', message: 'Missing state parameter' };
+
+  // Look up and consume the stored code_verifier for this state
+  const stateRow = await env.DB.prepare(
+    'SELECT code_verifier FROM oauth_state WHERE state_key = ?'
+  ).bind(state).first();
+  if (!stateRow) return { ok: false, error: 'INVALID_STATE', message: 'State not found or already used' };
+
+  await d1Run(env.DB, 'DELETE FROM oauth_state WHERE state_key = ?', [state]);
+  const codeVerifier = stateRow.code_verifier;
 
   const calClientId = env.CAL_VLP_OAUTH_CLIENT_ID ?? '782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb';
   const redirectUri = env.CAL_VLP_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/cal/app/oauth/callback';
@@ -571,9 +607,9 @@ async function handleCalVlpOAuthCallback(request, env, session) {
     body: new URLSearchParams({
       grant_type: 'authorization_code',
       client_id: calClientId,
-      client_secret: env.CAL_APP_OAUTH_CLIENT_SECRET,
       redirect_uri: redirectUri,
       code,
+      code_verifier: codeVerifier,
     }),
   });
   const tokenData = await tokenRes.json().catch(() => ({}));
@@ -2289,14 +2325,31 @@ const ROUTES = [
     // FLOW A start — Calendar page "Connect Your Cal.com Account"
     method: 'GET', pattern: '/v1/cal/oauth/start',
     handler: async (_method, _pattern, _params, request, env) => {
-      const { error } = await requireSession(request, env);
+      const { session, error } = await requireSession(request, env);
       if (error) return error;
       const calClientId = env.CAL_VLP_OAUTH_CLIENT_ID ?? '782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb';
       const redirectUri = env.CAL_VLP_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/cal/app/oauth/callback';
+
+      const { codeVerifier, codeChallenge } = await generatePKCE();
+      const state = btoa(JSON.stringify({
+        accountId: session.account_id,
+        nonce: crypto.randomUUID(),
+        flow: 'vlp',
+      }));
+
+      const now = new Date().toISOString();
+      await d1Run(env.DB,
+        'INSERT OR REPLACE INTO oauth_state (state_key, code_verifier, account_id, flow, created_at) VALUES (?, ?, ?, ?, ?)',
+        [state, codeVerifier, session.account_id, 'vlp', now]
+      );
+
       const url = new URL('https://app.cal.com/oauth/authorize');
       url.searchParams.set('client_id', calClientId);
       url.searchParams.set('redirect_uri', redirectUri);
       url.searchParams.set('response_type', 'code');
+      url.searchParams.set('state', state);
+      url.searchParams.set('code_challenge', codeChallenge);
+      url.searchParams.set('code_challenge_method', 'S256');
       return json({ ok: true, status: 'redirect_required', authorizationUrl: url.toString() });
     },
   },
