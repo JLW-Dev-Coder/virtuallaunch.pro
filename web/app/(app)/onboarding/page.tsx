@@ -59,6 +59,7 @@ interface FormData {
   languages: string[]
   availabilityText: string
   weeklyAvailability: Record<string, { enabled: boolean; start: string; end: string }>
+  calBookingUrl: string
 }
 
 const defaultAvailability = Object.fromEntries(
@@ -73,6 +74,7 @@ const INITIAL: FormData = {
   credentialsHeading: 'Credentials', primaryCredential: '', additionalCredentials: '',
   email: '', phone: '', languages: [], availabilityText: '',
   weeklyAvailability: defaultAvailability,
+  calBookingUrl: '',
 }
 
 const STEP_LABELS = [
@@ -387,6 +389,20 @@ function Step5({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
               )
             })}
           </div>
+        </div>
+        <div>
+          <Label>Your Cal.com Booking Link (optional)</Label>
+          <input
+            type="url"
+            value={form.calBookingUrl}
+            onChange={(e) => {
+              set('calBookingUrl', e.target.value)
+              localStorage.setItem('vlp_cal_booking_url', e.target.value)
+            }}
+            placeholder="https://cal.com/your-username/event-type"
+            className="w-full rounded-xl border border-slate-800/60 bg-slate-900/60 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-orange-500/60 focus:outline-none"
+          />
+          <p className="mt-1 text-xs text-slate-500">This URL appears as the Schedule button on your public profile.</p>
         </div>
       </div>
     </FormCard>

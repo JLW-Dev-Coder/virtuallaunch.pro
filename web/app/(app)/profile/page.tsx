@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const TIMEZONES = [
   'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
@@ -38,9 +38,14 @@ export default function ProfilePage() {
   const [prefsSaved, setPrefsSaved] = useState(false)
 
   const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     document.title = 'Profile | Virtual Launch Pro'
+
+    const saved = localStorage.getItem('vlp_avatar_b64')
+    if (saved) setAvatarSrc(saved)
 
     async function init() {
       try {
@@ -155,6 +160,25 @@ export default function ProfilePage() {
     window.location.href = '/sign-in'
   }
 
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 2 * 1024 * 1024) {
+      setProfileError('Image must be under 2MB.')
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => {
+      const b64 = reader.result as string
+      localStorage.setItem('vlp_avatar_b64', b64)
+      setAvatarSrc(b64)
+      setProfileSaved(true)
+      setTimeout(() => setProfileSaved(false), 2000)
+      // TODO: upload to /v1/accounts/{accountId}/avatar when Worker endpoint is available
+    }
+    reader.readAsDataURL(file)
+  }
+
   const initials = ((profile.firstName[0] ?? '') + (profile.lastName[0] ?? '')).toUpperCase() || '??'
 
   return (
@@ -171,8 +195,34 @@ export default function ProfilePage() {
           {/* Profile hero */}
           <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6">
             <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-xl font-bold text-slate-950">
-                {initials}
+              <div className="flex flex-col items-center gap-1">
+                <div className="relative">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-xl font-bold text-slate-950 overflow-hidden">
+                    {avatarSrc
+                      ? <img src={avatarSrc} alt="Avatar" className="h-full w-full object-cover" />
+                      : initials
+                    }
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 hover:bg-orange-400 transition shadow-lg"
+                    aria-label="Change photo"
+                  >
+                    <svg className="h-3.5 w-3.5 text-white" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={handleAvatarChange}
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-1">400×400px · PNG or WebP · Max 2MB</p>
               </div>
               <div>
                 <div className="text-lg font-bold text-white">{[profile.firstName, profile.lastName].filter(Boolean).join(' ') || 'Your Name'}</div>
