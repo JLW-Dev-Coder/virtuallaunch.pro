@@ -204,16 +204,10 @@ export default function PricingPage() {
                     <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>Plan key: {data.planKey}</span></li>
                     <li className="flex items-start gap-3"><span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" /><span>Platform fee: {data.platformFee}%</span></li>
                   </ul>
-                  {checkoutError && <p className="mt-4 text-xs text-red-400">{checkoutError}</p>}
                   <div className="mt-8 flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => handleCheckout(data)}
-                      disabled={loadingPlan === data.planKey}
-                      className="flex-1 rounded-xl bg-orange-500 px-5 py-3 text-center text-sm font-extrabold text-[#070a10] hover:bg-orange-400 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                      {loadingPlan === data.planKey ? "Redirecting�" : "Get started"}
-                    </button>
+                    <a href={data.checkoutHref} className="flex-1 rounded-xl bg-orange-500 px-5 py-3 text-center text-sm font-extrabold text-[#070a10] hover:bg-orange-400 transition-colors">
+                      Get started
+                    </a>
                     <a href="#comparison" className="rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-center text-sm font-extrabold text-white hover:bg-white/10 transition-colors">
                       Compare
                     </a>
