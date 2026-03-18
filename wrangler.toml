@@ -79,6 +79,9 @@ TWOFA_TOTP_ISSUER = "VirtualLaunchPro"
 CAL_APP_OAUTH_CLIENT_ID = "d6839d7dccd5a878d6c5e26b52effd2ab6d241dc047ed2786f9f56de039ca7f3"
 CAL_PRO_OAUTH_CLIENT_ID = "9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420"
 
+CAL_APPT_DEMO_INFO = "https://cal.com/tax-monitor-pro/virtual-launch-pro-demo-intro"
+CAL_APPT_SUPPORT = "https://cal.com/tax-monitor-pro/virtual-launch-pro-support"
+
 # =================================================
 # Billing
 # =================================================

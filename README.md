@@ -143,30 +143,123 @@ Major capabilities include:
 
 # Memberships and Plans
 
-| Feature / Capability | VLP Free | VLP Starter | VLP Scale | VLP Advanced | TMP Free | TMP Essential | TMP Plus | TMP Premier | TTMP (10-pk) | TTMP (25-pk) | TTMP (100-pk) | TTTMP (30-pk) | TTTMP (80-pk) | TTTMP (200-pk) |
-|---------------------|----------|-------------|-----------|--------------|----------|---------------|----------|-------------|---------------|---------------|----------------|----------------|----------------|-----------------|
-| Account / Membership Management | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Booking Analytics | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | — | — |
-| Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Directory Profile | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Game Analytics | — | — | — | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ |
-| Monthly / Package Cost | $0 | $79 | $199 | $399 | $0 | $9 | $19 | $39 | $19 | $29 | $129 | $9 | $19 | $39 |
-| Profile Management | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Profile Visibility | Directory | Directory | Featured | Top-Tier | — | — | — | — | — | — | — | — | — | — |
-| Support Tickets | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Tax Tool Game Tokens | 0 | 30 | 120 | 300 | 0 | 5 | 15 | 40 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — |
-| Token Balances | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Tool Usage History | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Transcript Parser Tool | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ | — | — | — |
-| Transcript Report History | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ | — | — | — |
-| Transcript Tokens | 0 | 30 | 100 | 250 | 0 | 2 | 5 | 10 | 10 | 25 | 100 | 30 | 80 | 200 |
+You finally accepted that a 15-column table is a crime against readability. Growth. Love to see it.
 
-**Notes**
+Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane system instead of a spreadsheet fever dream.
 
+---
+
+# Memberships & Plans
+
+---
+
+## Virtual Launch Pro (VLP)
+
+```md id="vlp-table"
+| Feature / Capability | Free | Starter ($79) | Scale ($199) | Advanced ($399) |
+|---------------------|------|---------------|--------------|------------------|
+| Account / Membership Management | ✓ | ✓ | ✓ | ✓ |
+| Booking Analytics | ✓ | ✓ | ✓ | ✓ |
+| Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ |
+| Directory Profile | ✓ | ✓ | ✓ | ✓ |
+| Game Analytics | — | — | — | — |
+| Monthly / Package Cost | $0 | $79 | $199 | $399 |
+| Profile Management | ✓ | ✓ | ✓ | ✓ |
+| Profile Visibility | Directory | Directory | Featured | Top-Tier |
+| Support Tickets | ✓ | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 30 | 120 | 300 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ |
+| Token Balances | ✓ | ✓ | ✓ | ✓ |
+| Tool Usage History | ✓ | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — | — |
+| Transcript Report History | — | — | — | — |
+| Transcript Tokens | 0 | 30 | 100 | 250 |
+```
+
+---
+
+## Tax Monitor Pro (TMP)
+
+```md id="tmp-table"
+| Feature / Capability | Free | Essential ($9) | Plus ($19) | Premier ($39) |
+|---------------------|------|----------------|------------|----------------|
+| Account / Membership Management | ✓ | ✓ | ✓ | ✓ |
+| Booking Analytics | — | — | — | — |
+| Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ |
+| Directory Profile | ✓ | ✓ | ✓ | ✓ |
+| Game Analytics | — | — | — | — |
+| Monthly / Package Cost | $0 | $9 | $19 | $39 |
+| Profile Management | ✓ | ✓ | ✓ | ✓ |
+| Profile Visibility | — | — | — | — |
+| Support Tickets | ✓ | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 5 | 15 | 40 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ |
+| Token Balances | ✓ | ✓ | ✓ | ✓ |
+| Tool Usage History | ✓ | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — | — |
+| Transcript Report History | — | — | — | — |
+| Transcript Tokens | 0 | 2 | 5 | 10 |
+```
+
+---
+
+## Transcript Tax Monitor (TTMP)
+
+```md id="ttmp-table"
+| Feature / Capability | 10-pack ($19) | 25-pack ($29) | 100-pack ($129) |
+|---------------------|----------------|----------------|------------------|
+| Account / Membership Management | ✓ | ✓ | ✓ |
+| Booking Analytics | — | — | — |
+| Calendar / Scheduling Integration | ✓ | ✓ | ✓ |
+| Directory Profile | ✓ | ✓ | ✓ |
+| Game Analytics | — | — | — |
+| Monthly / Package Cost | $19 | $29 | $129 |
+| Profile Management | ✓ | ✓ | ✓ |
+| Profile Visibility | — | — | — |
+| Support Tickets | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 0 | 0 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | — | — | — |
+| Token Balances | ✓ | ✓ | ✓ |
+| Tool Usage History | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | ✓ | ✓ | ✓ |
+| Transcript Report History | ✓ | ✓ | ✓ |
+| Transcript Tokens | 10 | 25 | 100 |
+```
+
+---
+
+## Tax Tools Arcade (TTTMP)
+
+```md id="tttmp-table"
+| Feature / Capability | 30-pack ($9) | 80-pack ($19) | 200-pack ($39) |
+|---------------------|---------------|---------------|----------------|
+| Account / Membership Management | ✓ | ✓ | ✓ |
+| Booking Analytics | — | — | — |
+| Calendar / Scheduling Integration | ✓ | ✓ | ✓ |
+| Directory Profile | ✓ | ✓ | ✓ |
+| Game Analytics | ✓ | ✓ | ✓ |
+| Monthly / Package Cost | $9 | $19 | $39 |
+| Profile Management | ✓ | ✓ | ✓ |
+| Profile Visibility | — | — | — |
+| Support Tickets | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 0 | 0 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | — | — | — |
+| Token Balances | ✓ | ✓ | ✓ |
+| Tool Usage History | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — |
+| Transcript Report History | — | — | — |
+| Transcript Tokens | 30 | 80 | 200 |
+```
+
+---
+
+## Notes
+
+```md id="notes-table"
 - Booking Analytics = Created / Cancelled / Pending / Rescheduled / Profile Clicks / Profile Views  
 - Game Analytics = Wins / Loss / Score  
-- Top-Tier = TTMP or TTTMP Sponsored Ads
+- Top-Tier = TTMP or TTTMP Sponsored Ads  
+```
   
 ---
 
@@ -226,7 +319,7 @@ That includes:
 * support tickets
 * token balances
 
-Other platforms may **read** these records, reference them, and project them into platform-specific UX, but they should not be the canonical writer unless the governing contract explicitly says otherwise. Because apparently letting four platforms fight over the same record was never going to age well.
+Other platforms may **read** these records, reference them, and project them into platform-specific UX, but they should not be the canonical writer unless the governing contract explicitly says otherwise. 
 
 ---
 
@@ -273,7 +366,6 @@ TTTMP should handle canonical records such as:
 /r2/tttmp_activity/{event_id}.json
 /r2/tttmp_preferences/{account_id}.json
 /r2/tttmp_tool_sessions/{session_id}.json
-/r2/tttmp_tool_usage/{event_id}.json
 ```
 
 ---
@@ -296,7 +388,6 @@ TTMP should handle canonical records such as:
 ```txt
 /r2/ttmp_activity/{event_id}.json
 /r2/ttmp_preferences/{account_id}.json
-/r2/ttmp_tool_usage/{event_id}.json
 /r2/ttmp_transcript_jobs/{job_id}.json
 /r2/ttmp_transcript_results/{result_id}.json
 ```
