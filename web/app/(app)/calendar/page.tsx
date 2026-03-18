@@ -730,6 +730,10 @@ export default function CalendarPage() {
       setConnected(true)
       window.history.replaceState({}, '', '/calendar')
     }
+    if (params.get('cal') === 'error') {
+      setConnectError(params.get('reason') ?? 'Connection failed')
+      window.history.replaceState({}, '', '/calendar')
+    }
     if (params.get('google') === 'connected') {
       setGoogleConnected(true)
       window.history.replaceState({}, '', '/calendar')
@@ -754,10 +758,10 @@ export default function CalendarPage() {
         const calStatusRes = await fetch('https://api.virtuallaunch.pro/v1/cal/status', { credentials: 'include' }).catch(() => null)
         if (calStatusRes?.ok) {
           const calStatus = await calStatusRes.json()
-          setConnected(calStatus.connected ?? false)
+          setConnected(calStatus.vlpConnected ?? false)
 
           // 3. If connected, fetch bookings
-          if (calStatus.connected) {
+          if (calStatus.vlpConnected) {
             const bookingsRes = await fetch(`https://api.virtuallaunch.pro/v1/bookings/by-account/${aid}`, { credentials: 'include' }).catch(() => null)
             if (bookingsRes?.ok) {
               const data = await bookingsRes.json()

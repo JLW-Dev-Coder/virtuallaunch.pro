@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const US_STATES = [
@@ -322,7 +322,13 @@ function Step4({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
   )
 }
 
-function Step5({ form, set }: { form: FormData; set: (k: keyof FormData, v: unknown) => void }) {
+function Step5({ form, set, calProConnected, calConnecting, onCalConnect }: {
+  form: FormData
+  set: (k: keyof FormData, v: unknown) => void
+  calProConnected: boolean
+  calConnecting: boolean
+  onCalConnect: () => void
+}) {
   const toggleDay = (day: string) => {
     const current = form.weeklyAvailability[day]
     set('weeklyAvailability', { ...form.weeklyAvailability, [day]: { ...current, enabled: !current.enabled } })
@@ -389,6 +395,24 @@ function Step5({ form, set }: { form: FormData; set: (k: keyof FormData, v: unkn
               )
             })}
           </div>
+        </div>
+        <div>
+          <Label>Cal.com Account</Label>
+          <div className="flex items-center gap-3 mb-2">
+            <button
+              type="button"
+              onClick={onCalConnect}
+              disabled={calConnecting || calProConnected}
+              className={`rounded-xl px-4 py-2.5 text-sm font-bold transition disabled:opacity-60 ${
+                calProConnected
+                  ? 'bg-emerald-900/60 text-emerald-300 cursor-default'
+                  : 'bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 hover:from-orange-400 hover:to-amber-400'
+              }`}
+            >
+              {calProConnected ? '✓ Cal.com Connected' : calConnecting ? 'Connecting…' : 'Connect Cal.com Account'}
+            </button>
+          </div>
+          <p className="mb-3 text-xs text-slate-500">Connect your Cal.com account so clients can book you directly from your public profile.</p>
         </div>
         <div>
           <Label>Your Cal.com Booking Link (optional)</Label>
@@ -606,9 +630,33 @@ export default function OnboardingPage() {
   const [form, setForm] = useState<FormData>(INITIAL)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [calProConnected, setCalProConnected] = useState(false)
+  const [calConnecting, setCalConnecting] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('cal') === 'connected') {
+      setCalProConnected(true)
+      window.history.replaceState({}, '', '/onboarding')
+    }
+  }, [])
 
   const set = (key: keyof FormData, value: unknown) => {
     setForm((prev) => ({ ...prev, [key]: value }))
+  }
+
+  async function handleCalProConnect() {
+    setCalConnecting(true)
+    try {
+      const res = await fetch('https://api.virtuallaunch.pro/v1/cal/pro/oauth/start', { credentials: 'include' })
+      if (!res.ok) return
+      const data = await res.json()
+      if (data.authorizationUrl) window.location.href = data.authorizationUrl
+    } catch {
+      // ignore — user can retry
+    } finally {
+      setCalConnecting(false)
+    }
   }
 
   const next = () => setStep((s) => Math.min(s + 1, 5))
@@ -666,7 +714,7 @@ export default function OnboardingPage() {
           {step === 1 && <Step2 form={form} set={set} />}
           {step === 2 && <Step3 form={form} set={set} />}
           {step === 3 && <Step4 form={form} set={set} />}
-          {step === 4 && <Step5 form={form} set={set} />}
+          {step === 4 && <Step5 form={form} set={set} calProConnected={calProConnected} calConnecting={calConnecting} onCalConnect={handleCalProConnect} />}
           {step === 5 && (
             <div className="space-y-4">
               <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">

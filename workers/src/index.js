@@ -548,20 +548,20 @@ function redirectWithCookie(url, sessionId, env) {
 }
 
 // ---------------------------------------------------------------------------
-// Cal.com OAuth helper
+// Cal.com OAuth helpers
 // ---------------------------------------------------------------------------
 
 /**
- * Exchanges the OAuth code for tokens, saves to R2 + D1 cal_connections,
- * and updates the accounts table with the token for quick status checks.
- * Returns { ok: true } on success or { ok: false, error, message } on failure.
+ * FLOW A — VLP user connects to read back their bookings with the VLP team.
+ * App: Virtual Launch Pro App (782133b...)
+ * Redirect: https://api.virtuallaunch.pro/cal/app/oauth/callback
+ * Tokens stored in: accounts.cal_access_token (fast status check)
  */
-async function handleCalOAuthCallback(request, env, session) {
+async function handleCalVlpOAuthCallback(request, env, session) {
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   if (!code) return { ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' };
 
-  // Cal.com VLP App client ID and registered redirect URI
   const calClientId = env.CAL_VLP_OAUTH_CLIENT_ID ?? '782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb';
   const redirectUri = env.CAL_VLP_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/cal/app/oauth/callback';
 
@@ -583,9 +583,48 @@ async function handleCalOAuthCallback(request, env, session) {
 
   const now = new Date().toISOString();
   const expiresAt = new Date(Date.now() + (tokenData.expires_in ?? 3600) * 1000).toISOString();
-  const connectionId = `cal_${session.account_id}`;
+  await d1Run(env.DB,
+    'UPDATE accounts SET cal_access_token = ?, cal_refresh_token = ?, cal_token_expiry = ?, updated_at = ? WHERE account_id = ?',
+    [tokenData.access_token, tokenData.refresh_token, expiresAt, now, session.account_id]
+  );
+  return { ok: true };
+}
+
+/**
+ * FLOW B — Tax pro connects their own Cal.com so clients can book them.
+ * App: Tax Monitor Pro Tax Professionals (9d03bcaa...)
+ * Redirect: https://api.virtuallaunch.pro/v1/cal/oauth/callback
+ * Tokens stored in: cal_connections table
+ */
+async function handleCalProOAuthCallback(request, env, session) {
+  const url = new URL(request.url);
+  const code = url.searchParams.get('code');
+  if (!code) return { ok: false, error: 'MISSING_CODE', message: 'Missing authorization code' };
+
+  const calClientId = env.CAL_PRO_OAUTH_CLIENT_ID ?? '9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420';
+  const redirectUri = env.CAL_PRO_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/v1/cal/oauth/callback';
+
+  const tokenRes = await fetch('https://app.cal.com/oauth/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      client_id: calClientId,
+      client_secret: env.CAL_PRO_OAUTH_CLIENT_SECRET,
+      redirect_uri: redirectUri,
+      code,
+    }),
+  });
+  const tokenData = await tokenRes.json().catch(() => ({}));
+  if (!tokenRes.ok) {
+    return { ok: false, error: 'TOKEN_EXCHANGE_FAILED', message: tokenData?.error_description ?? 'Token exchange failed' };
+  }
+
+  const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + (tokenData.expires_in ?? 3600) * 1000).toISOString();
+  const connectionId = `cal_pro_${session.account_id}`;
   const connection = {
-    connectionId, accountId: session.account_id, calApp: 'cal_app',
+    connectionId, accountId: session.account_id, calApp: 'cal_pro',
     accessToken: tokenData.access_token, refreshToken: tokenData.refresh_token,
     expiresAt, createdAt: now, updatedAt: now,
   };
@@ -598,12 +637,7 @@ async function handleCalOAuthCallback(request, env, session) {
        refresh_token = excluded.refresh_token,
        expires_at = excluded.expires_at,
        updated_at = excluded.updated_at`,
-    [connectionId, session.account_id, 'cal_app', tokenData.access_token, tokenData.refresh_token, expiresAt, now, now]
-  );
-  // Also persist tokens on accounts row for fast status checks
-  await d1Run(env.DB,
-    'UPDATE accounts SET cal_access_token = ?, cal_refresh_token = ?, cal_token_expiry = ?, updated_at = ? WHERE account_id = ?',
-    [tokenData.access_token, tokenData.refresh_token, expiresAt, now, session.account_id]
+    [connectionId, session.account_id, 'cal_pro', tokenData.access_token, tokenData.refresh_token, expiresAt, now, now]
   );
   return { ok: true };
 }
@@ -2228,20 +2262,31 @@ const ROUTES = [
     },
   },
 
-  // -------------------------------------------------------------------------
-  // CAL OAUTH
-  // -------------------------------------------------------------------------
-
-  // Cal.com OAuth Client IDs
-  // VLP App (book/view bookings for VLP users):
-  //   782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb
-  //   Redirect URI: https://api.virtuallaunch.pro/cal/app/oauth/callback
-  // Tax Pro App (tax professionals connecting their Cal.com account):
-  //   9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420
-  // Taxpayer App (TMP repo — not this repo):
-  //   d6839d7dccd5a878d6c5e26b52effd2ab6d241dc047ed2786f9f56de039ca7f3
+  // ── Cal.com OAuth Flows ──────────────────────────────────────────────
+  //
+  // FLOW A — VLP user reads back their bookings with the VLP team
+  //   App: Virtual Launch Pro App
+  //   Client ID: 782133b560b9ee33174a7a765b8cd73343ffeb2ece517be73a3061f370e21eeb
+  //   Redirect: https://api.virtuallaunch.pro/cal/app/oauth/callback
+  //   PKCE: ON
+  //   Tokens stored in: accounts.cal_access_token
+  //   Entry point: GET /v1/cal/oauth/start
+  //   Used on: Calendar page "Connect Your Cal.com Account" section
+  //
+  // FLOW B — Tax pro connects their own Cal.com (clients book them)
+  //   App: Tax Monitor Pro Tax Professionals
+  //   Client ID: 9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420
+  //   Redirect: https://api.virtuallaunch.pro/v1/cal/oauth/callback
+  //   Tokens stored in: cal_connections table
+  //   Entry point: GET /v1/cal/pro/oauth/start
+  //   Used on: Profile Setup step 5, Calendar page (secondary section)
+  //
+  // NOT IN THIS REPO:
+  //   Taxpayer App (d6839d7...) — lives in taxmonitor.pro repo only
+  // ────────────────────────────────────────────────────────────────────
 
   {
+    // FLOW A start — Calendar page "Connect Your Cal.com Account"
     method: 'GET', pattern: '/v1/cal/oauth/start',
     handler: async (_method, _pattern, _params, request, env) => {
       const { error } = await requireSession(request, env);
@@ -2257,27 +2302,45 @@ const ROUTES = [
   },
 
   {
-    method: 'GET', pattern: '/v1/cal/oauth/callback',
+    // FLOW B start — Profile Setup step 5 (tax pro connects their own Cal.com)
+    method: 'GET', pattern: '/v1/cal/pro/oauth/start',
     handler: async (_method, _pattern, _params, request, env) => {
-      const { session, error } = await requireSession(request, env);
+      const { error } = await requireSession(request, env);
       if (error) return error;
-      const result = await handleCalOAuthCallback(request, env, session);
-      if (!result.ok) {
-        const status = result.error === 'TOKEN_EXCHANGE_FAILED' ? 502 : 400;
-        return json({ ok: false, error: result.error, message: result.message }, status);
-      }
-      return json({ ok: true, status: 'connected' });
+      const calClientId = env.CAL_PRO_OAUTH_CLIENT_ID ?? '9d03bcaa8ee24644d21dc7af5c3c17722ffa314c9790f2c7c83a1f88032b8420';
+      const redirectUri = env.CAL_PRO_REDIRECT_URI ?? 'https://api.virtuallaunch.pro/v1/cal/oauth/callback';
+      const url = new URL('https://app.cal.com/oauth/authorize');
+      url.searchParams.set('client_id', calClientId);
+      url.searchParams.set('redirect_uri', redirectUri);
+      url.searchParams.set('response_type', 'code');
+      return json({ ok: true, status: 'redirect_required', authorizationUrl: url.toString() });
     },
   },
 
   {
+    // FLOW B callback — tax pro's Cal.com connection
+    // Registered redirect URI: https://api.virtuallaunch.pro/v1/cal/oauth/callback
+    method: 'GET', pattern: '/v1/cal/oauth/callback',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return Response.redirect('https://virtuallaunch.pro/onboarding?cal=error&reason=session', 302);
+      const result = await handleCalProOAuthCallback(request, env, session);
+      if (!result.ok) {
+        return Response.redirect(`https://virtuallaunch.pro/onboarding?cal=error&reason=${encodeURIComponent(result.error ?? 'unknown')}`, 302);
+      }
+      return Response.redirect('https://virtuallaunch.pro/onboarding?cal=connected', 302);
+    },
+  },
+
+  {
+    // FLOW A callback — VLP user reads back their bookings
     // Matches the redirect URI registered in the Cal.com VLP App OAuth settings:
     // https://api.virtuallaunch.pro/cal/app/oauth/callback (no /v1/ prefix)
     method: 'GET', pattern: '/cal/app/oauth/callback',
     handler: async (_method, _pattern, _params, request, env) => {
       const { session, error } = await requireSession(request, env);
       if (error) return Response.redirect('https://virtuallaunch.pro/calendar?cal=error&reason=session', 302);
-      const result = await handleCalOAuthCallback(request, env, session);
+      const result = await handleCalVlpOAuthCallback(request, env, session);
       if (!result.ok) {
         return Response.redirect(`https://virtuallaunch.pro/calendar?cal=error&reason=${encodeURIComponent(result.error ?? 'unknown')}`, 302);
       }
@@ -2286,16 +2349,23 @@ const ROUTES = [
   },
 
   {
+    // Returns connection status for both Cal.com flows
     method: 'GET', pattern: '/v1/cal/status',
     handler: async (_method, _pattern, _params, request, env) => {
       const { session, error } = await requireSession(request, env);
       if (error) return error;
       try {
-        const row = await env.DB.prepare(
+        const accountRow = await env.DB.prepare(
           'SELECT cal_access_token FROM accounts WHERE account_id = ?'
         ).bind(session.account_id).first();
-        const connected = !!(row && row.cal_access_token);
-        return json({ ok: true, connected, calAccountId: connected ? session.account_id : undefined });
+        const vlpConnected = !!(accountRow && accountRow.cal_access_token);
+
+        const proRow = await env.DB.prepare(
+          'SELECT connection_id FROM cal_connections WHERE account_id = ? AND cal_app = ? LIMIT 1'
+        ).bind(session.account_id, 'cal_pro').first();
+        const proConnected = !!proRow;
+
+        return json({ ok: true, vlpConnected, proConnected });
       } catch {
         return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to check Cal.com status' }, 500);
       }
