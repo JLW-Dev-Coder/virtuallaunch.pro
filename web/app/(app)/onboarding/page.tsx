@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { CalConnectionCard } from '@/components/cal/CalConnectionCard'
 
 const US_STATES = [
   'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
@@ -398,21 +399,15 @@ function Step5({ form, set, calProConnected, calConnecting, onCalConnect }: {
         </div>
         <div>
           <Label>Cal.com Account</Label>
-          <div className="flex items-center gap-3 mb-2">
-            <button
-              type="button"
-              onClick={onCalConnect}
-              disabled={calConnecting || calProConnected}
-              className={`rounded-xl px-4 py-2.5 text-sm font-bold transition disabled:opacity-60 ${
-                calProConnected
-                  ? 'bg-emerald-900/60 text-emerald-300 cursor-default'
-                  : 'bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 hover:from-orange-400 hover:to-amber-400'
-              }`}
-            >
-              {calProConnected ? '✓ Cal.com Connected' : calConnecting ? 'Connecting…' : 'Connect Cal.com Account'}
-            </button>
-          </div>
-          <p className="mb-3 text-xs text-slate-500">Connect your Cal.com account so clients can book you directly from your public profile.</p>
+          <CalConnectionCard
+            variant="profile"
+            vlpConnected={false}
+            proConnected={calProConnected}
+            onConnectVlp={() => {}}
+            onConnectPro={onCalConnect}
+            connecting={calConnecting}
+            error={null}
+          />
         </div>
         <div>
           <Label>Your Cal.com Booking Link (optional)</Label>

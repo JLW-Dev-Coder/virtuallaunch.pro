@@ -3,24 +3,11 @@
 declare global { interface Window { Cal?: (...args: unknown[]) => void } }
 
 import { useEffect, useRef, useState } from 'react'
-
-const CAL_OAUTH_CONFIG_ERRORS = ['CAL_APP_OAUTH_CLIENT_ID', 'client_id', 'invalid_client', 'OAuth']
+import { useCal, type Booking } from '@/components/cal/useCal'
+import { CalConnectionCard } from '@/components/cal/CalConnectionCard'
+import { BookingList } from '@/components/cal/BookingList'
 
 type BookingStatus = 'confirmed' | 'pending' | 'completed' | 'cancelled' | 'rescheduled'
-type BookingTab = 'all' | 'created' | 'cancelled' | 'rescheduled' | 'completed'
-
-interface Booking {
-  bookingId: string
-  bookingType: 'demo_intro' | 'support' | string
-  scheduledAt: string
-  durationMinutes?: number
-  status: BookingStatus
-  timezone: string
-  description?: string
-  meetingUrl?: string
-  rescheduleUrl?: string
-  cancelUrl?: string
-}
 
 interface GoogleEvent {
   googleEventId: string
@@ -69,7 +56,7 @@ function EventModal({ booking, onClose }: { booking: Booking; onClose: () => voi
         <div className="flex items-start justify-between mb-5">
           <div>
             <div className="text-base font-bold text-white">{formatBookingType(booking.bookingType)}</div>
-            <span className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${STATUS_STYLES[booking.status]}`}>
+            <span className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${STATUS_STYLES[booking.status as BookingStatus]}`}>
               {booking.status}
             </span>
           </div>
@@ -322,7 +309,7 @@ function AllEventsSlideOver({ bookings, onClose, onSelect }: { bookings: Booking
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-sm font-medium text-white">{formatBookingType(b.bookingType)}</span>
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${STATUS_STYLES[b.status]}`}>{b.status}</span>
+                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${STATUS_STYLES[b.status as BookingStatus]}`}>{b.status}</span>
                 </div>
                 <div className="mt-0.5 text-xs text-slate-500">
                   {d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -441,23 +428,13 @@ function CalendarGrid({ year, month, bookingMap, googleEventMap, onDayClick, onP
 
 // ── Upcoming Events Sidebar ───────────────────────────────────────────────────
 
-function UpcomingSidebar({ bookings, connected, connecting, connectError, googleConnected, onConnect, onBookingClick, onGoogleCalClick, onViewAll }: {
+function UpcomingSidebar({ bookings, googleConnected, onGoogleCalClick, onViewAll, onSelect }: {
   bookings: Booking[]
-  connected: boolean | null
-  connecting: boolean
-  connectError: string | null
   googleConnected: boolean | null
-  onConnect: () => void
-  onBookingClick: (b: Booking) => void
   onGoogleCalClick: () => void
   onViewAll: () => void
+  onSelect: (b: Booking) => void
 }) {
-  const now = new Date()
-  const upcoming = bookings
-    .filter((b) => new Date(b.scheduledAt) >= now && b.status !== 'cancelled')
-    .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
-    .slice(0, 5)
-
   return (
     <div className="w-64 shrink-0 sticky top-8 self-start space-y-3">
       <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-4">
@@ -472,33 +449,15 @@ function UpcomingSidebar({ bookings, connected, connecting, connectError, google
           <div>Auto-sync every 6 hours</div>
         </div>
 
-        {upcoming.length === 0 ? (
-          <p className="text-xs text-slate-500">No upcoming bookings.</p>
-        ) : (
-          <div className="space-y-2">
-            {upcoming.map((b) => {
-              const d = new Date(b.scheduledAt)
-              return (
-                <button
-                  key={b.bookingId}
-                  type="button"
-                  onClick={() => onBookingClick(b)}
-                  className="w-full rounded-xl border border-slate-800/60 bg-slate-900/40 p-2.5 text-left hover:border-amber-500/30 transition"
-                >
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-xs font-medium text-white truncate">{formatBookingType(b.bookingType)}</span>
-                    <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-semibold capitalize ${STATUS_STYLES[b.status]}`}>{b.status}</span>
-                  </div>
-                  <div className="mt-0.5 text-xs text-slate-500">
-                    {d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                    {' · '}
-                    {d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        )}
+        <BookingList
+          bookings={bookings}
+          filter="upcoming"
+          onFilterChange={() => {}}
+          onSelect={onSelect}
+          selectedId={null}
+          loading={false}
+          hideFilters
+        />
 
         <div className="mt-3 space-y-2">
           <button
@@ -525,173 +484,12 @@ function UpcomingSidebar({ bookings, connected, connecting, connectError, google
   )
 }
 
-// ── Cal.com Connect Section ───────────────────────────────────────────────────
-
-const CAL_TABS: { key: BookingTab; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'created', label: 'Created' },
-  { key: 'cancelled', label: 'Cancelled' },
-  { key: 'rescheduled', label: 'Rescheduled' },
-  { key: 'completed', label: 'Completed' },
-]
-
-function CalConnectSection({ connected, bookings, connecting, connectError, onConnect }: {
-  connected: boolean | null
-  bookings: Booking[]
-  connecting: boolean
-  connectError: string | null
-  onConnect: () => void
-}) {
-  const [bookingUrl, setBookingUrl] = useState(() =>
-    typeof window !== 'undefined' ? localStorage.getItem('vlp_cal_booking_url') ?? '' : ''
-  )
-  const [bookingUrlSaved, setBookingUrlSaved] = useState(false)
-  const [bookingTab, setBookingTab] = useState<BookingTab>('all')
-
-  function saveBookingUrl() {
-    localStorage.setItem('vlp_cal_booking_url', bookingUrl)
-    setBookingUrlSaved(true)
-    setTimeout(() => setBookingUrlSaved(false), 2000)
-  }
-
-  function copyBookingUrl() {
-    if (bookingUrl) navigator.clipboard.writeText(bookingUrl).catch(() => {})
-  }
-
-  const filteredBookings = bookings.filter((b) => {
-    if (bookingTab === 'all') return true
-    if (bookingTab === 'created') return b.status === 'confirmed' || b.status === 'pending'
-    if (bookingTab === 'cancelled') return b.status === 'cancelled'
-    if (bookingTab === 'rescheduled') return b.status === 'rescheduled'
-    if (bookingTab === 'completed') return b.status === 'completed'
-    return true
-  })
-
-  return (
-    <div className="rounded-2xl border border-slate-800/60 bg-slate-900/60 p-6">
-      {connected === false || connected === null ? (
-        <>
-          <h2 className="mb-2 text-base font-semibold text-white">Connect Your Cal.com Account</h2>
-          <p className="mb-4 text-sm text-slate-400">
-            Connect your Cal.com account to enable scheduling on your public profile. Once connected, bookings will appear in the calendar above.
-          </p>
-          <ul className="mb-5 space-y-1.5 text-sm text-slate-400">
-            {['View and manage event types','View and manage bookings','View and manage availability','View connected apps','Access personal info'].map((s) => (
-              <li key={s} className="flex items-center gap-2">
-                <svg className="h-4 w-4 shrink-0 text-emerald-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                {s}
-              </li>
-            ))}
-          </ul>
-          {connectError && <p className="mb-3 text-xs text-red-400">{connectError}</p>}
-          <button
-            type="button"
-            onClick={onConnect}
-            disabled={connecting}
-            className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-2.5 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition disabled:opacity-60"
-          >
-            {connecting ? 'Connecting…' : 'Connect Cal.com'}
-          </button>
-        </>
-      ) : (
-        <>
-          <div className="flex items-center gap-2 mb-5">
-            <h2 className="text-base font-semibold text-white">Cal.com Connected</h2>
-            <span className="rounded-full bg-emerald-900/60 px-2.5 py-0.5 text-xs font-semibold text-emerald-300">✓ Connected</span>
-          </div>
-
-          <div className="mb-5">
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500">Your Booking Link</label>
-            <div className="flex gap-2">
-              <input
-                type="url"
-                value={bookingUrl}
-                onChange={(e) => setBookingUrl(e.target.value)}
-                placeholder="https://cal.com/your-name"
-                className="flex-1 rounded-xl border border-slate-800/60 bg-slate-950/40 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-orange-500/60 focus:outline-none"
-              />
-              <button
-                type="button"
-                onClick={saveBookingUrl}
-                className="rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-sm font-bold text-slate-950 hover:from-orange-400 hover:to-amber-400 transition"
-              >
-                {bookingUrlSaved ? 'Saved' : 'Save'}
-              </button>
-              {bookingUrl && (
-                <button
-                  type="button"
-                  onClick={copyBookingUrl}
-                  className="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white transition"
-                >
-                  Copy
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Booking analytics tabs */}
-          <div className="mb-4 flex flex-wrap gap-1">
-            {CAL_TABS.map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setBookingTab(key)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                  bookingTab === key
-                    ? 'bg-amber-500/15 border border-amber-500/35 text-white'
-                    : 'border border-slate-800/60 text-slate-300 hover:text-white'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-
-          {filteredBookings.length === 0 ? (
-            <p className="text-sm text-slate-500">No bookings in this category.</p>
-          ) : (
-            <div className="divide-y divide-slate-800/60">
-              {filteredBookings.map((b) => {
-                const d = new Date(b.scheduledAt)
-                return (
-                  <div key={b.bookingId} className="flex items-center justify-between gap-4 py-3">
-                    <div className="min-w-0">
-                      <div className="text-sm font-medium text-white">{formatBookingType(b.bookingType)}</div>
-                      <div className="mt-0.5 text-xs text-slate-500">
-                        {d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
-                        {' · '}
-                        {d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
-                        {' · '}
-                        {b.timezone}
-                      </div>
-                    </div>
-                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${STATUS_STYLES[b.status]}`}>
-                      {b.status}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  )
-}
-
 // ── Main Page ─────────────────────────────────────────────────────────────────
 
 type MainTab = 'calendar' | 'demo' | 'support'
 
 export default function CalendarPage() {
-  const [mainTab, setMainTab] = useState<MainTab>('calendar')
-  const [accountId, setAccountId] = useState<string | null>(null)
-  const [connected, setConnected] = useState<boolean | null>(null)
-  const [bookings, setBookings] = useState<Booking[]>([])
-  const [connecting, setConnecting] = useState(false)
-  const [connectError, setConnectError] = useState<string | null>(null)
+  const cal = useCal()
 
   // Google Calendar state
   const [googleConnected, setGoogleConnected] = useState<boolean | null>(null)
@@ -700,6 +498,7 @@ export default function CalendarPage() {
   const [googleError, setGoogleError] = useState<string | null>(null)
 
   // Calendar state
+  const [mainTab, setMainTab] = useState<MainTab>('calendar')
   const now = new Date()
   const [calYear, setCalYear] = useState(now.getFullYear())
   const [calMonth, setCalMonth] = useState(now.getMonth())
@@ -724,16 +523,8 @@ export default function CalendarPage() {
   useEffect(() => {
     document.title = 'Calendar | Virtual Launch Pro'
 
-    // Handle URL params from OAuth redirects
+    // Handle Google OAuth redirect params only (Cal.com params handled by useCal)
     const params = new URLSearchParams(window.location.search)
-    if (params.get('cal') === 'connected') {
-      setConnected(true)
-      window.history.replaceState({}, '', '/calendar')
-    }
-    if (params.get('cal') === 'error') {
-      setConnectError(params.get('reason') ?? 'Connection failed')
-      window.history.replaceState({}, '', '/calendar')
-    }
     if (params.get('google') === 'connected') {
       setGoogleConnected(true)
       window.history.replaceState({}, '', '/calendar')
@@ -746,34 +537,6 @@ export default function CalendarPage() {
 
     async function init() {
       try {
-        // 1. Fetch session
-        const sessionRes = await fetch('https://api.virtuallaunch.pro/v1/auth/session', { credentials: 'include' })
-        if (!sessionRes.ok) { setConnected(false); return }
-        const session = await sessionRes.json()
-        const aid = session.session?.account_id ?? session.account_id ?? session.accountId
-        if (!aid) { setConnected(false); return }
-        setAccountId(aid)
-
-        // 2. Check Cal.com connection status
-        const calStatusRes = await fetch('https://api.virtuallaunch.pro/v1/cal/status', { credentials: 'include' }).catch(() => null)
-        if (calStatusRes?.ok) {
-          const calStatus = await calStatusRes.json()
-          setConnected(calStatus.vlpConnected ?? false)
-
-          // 3. If connected, fetch bookings
-          if (calStatus.vlpConnected) {
-            const bookingsRes = await fetch(`https://api.virtuallaunch.pro/v1/bookings/by-account/${aid}`, { credentials: 'include' }).catch(() => null)
-            if (bookingsRes?.ok) {
-              const data = await bookingsRes.json()
-              setBookings(Array.isArray(data) ? data : (data.bookings ?? []))
-            }
-            // Bookings fetch failure doesn't change connected state
-          }
-        } else {
-          setConnected(false)
-        }
-
-        // 4. Check Google Calendar status
         const googleStatusRes = await fetch(
           'https://api.virtuallaunch.pro/v1/google/status',
           { credentials: 'include' }
@@ -782,21 +545,12 @@ export default function CalendarPage() {
           const gs = await googleStatusRes.json()
           const isGoogleConnected = gs.connected ?? false
           setGoogleConnected(isGoogleConnected)
-
-          // 5. If Google connected, fetch events
           if (isGoogleConnected) {
-            const eventsRes = await fetch(
-              'https://api.virtuallaunch.pro/v1/google/events',
-              { credentials: 'include' }
-            ).catch(() => null)
-            if (eventsRes?.ok) {
-              const evData = await eventsRes.json()
-              setGoogleEvents(evData.events ?? [])
-            }
+            await fetchGoogleEvents()
           }
         }
       } catch {
-        setConnected(false)
+        // ignore
       }
     }
 
@@ -853,32 +607,6 @@ export default function CalendarPage() {
     }
   }, [mainTab])
 
-  async function handleConnect() {
-    setConnecting(true)
-    setConnectError(null)
-    try {
-      const res = await fetch('https://api.virtuallaunch.pro/v1/cal/oauth/start', { credentials: 'include' })
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        const msg = (data as { message?: string }).message || ''
-        const isConfigError = CAL_OAUTH_CONFIG_ERRORS.some((k) => msg.includes(k))
-        setConnectError(
-          isConfigError
-            ? 'Cal.com scheduling is being configured. Contact support to enable it.'
-            : msg || 'Failed to start Cal.com authorization.'
-        )
-        return
-      }
-      const data = await res.json()
-      if (data.authorizationUrl) window.location.href = data.authorizationUrl
-      else setConnectError('No authorization URL returned.')
-    } catch {
-      setConnectError('Network error. Please try again.')
-    } finally {
-      setConnecting(false)
-    }
-  }
-
   async function handleGoogleConnect() {
     setGoogleConnecting(true)
     setGoogleError(null)
@@ -903,7 +631,7 @@ export default function CalendarPage() {
 
   // Build bookingMap for calendar highlights
   const bookingMap: Record<string, Booking[]> = {}
-  for (const b of bookings) {
+  for (const b of cal.bookings) {
     const key = toDateKey(new Date(b.scheduledAt))
     if (!bookingMap[key]) bookingMap[key] = []
     bookingMap[key].push(b)
@@ -976,15 +704,11 @@ export default function CalendarPage() {
             />
           </div>
           <UpcomingSidebar
-            bookings={bookings}
-            connected={connected}
-            connecting={connecting}
-            connectError={connectError}
+            bookings={cal.bookings}
             googleConnected={googleConnected}
-            onConnect={handleConnect}
-            onBookingClick={(b) => setSelectedBookings([b])}
             onGoogleCalClick={() => setShowGoogleCal(true)}
             onViewAll={() => setShowAllEvents(true)}
+            onSelect={(b) => setSelectedBookings([b])}
           />
         </div>
       )}
@@ -1037,13 +761,15 @@ export default function CalendarPage() {
         </div>
       )}
 
-      {/* Cal.com connect section — always visible */}
-      <CalConnectSection
-        connected={connected}
-        bookings={bookings}
-        connecting={connecting}
-        connectError={connectError}
-        onConnect={handleConnect}
+      {/* Cal.com connection — always visible */}
+      <CalConnectionCard
+        variant="calendar"
+        vlpConnected={cal.vlpConnected ?? false}
+        proConnected={cal.proConnected ?? false}
+        onConnectVlp={cal.connectVlp}
+        onConnectPro={cal.connectPro}
+        connecting={cal.connecting}
+        error={cal.connectError}
       />
 
       {/* Modals / slide-overs */}
@@ -1064,7 +790,7 @@ export default function CalendarPage() {
       )}
       {showAllEvents && (
         <AllEventsSlideOver
-          bookings={bookings}
+          bookings={cal.bookings}
           onClose={() => setShowAllEvents(false)}
           onSelect={(b) => { setSelectedBookings([b]); setShowAllEvents(false) }}
         />
