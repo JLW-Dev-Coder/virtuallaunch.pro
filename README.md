@@ -162,7 +162,8 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Booking Analytics | ✓ | ✓ | ✓ | ✓ |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ | ✓ |
-| Monthly Cost | $0 | $79 | $199 | $399 |
+| Game Analytics | — | — | — | — |
+| Monthly / Package Cost | $0 | $79 | $199 | $399 |
 | Profile Management | ✓ | ✓ | ✓ | ✓ |
 | Profile Visibility | Directory | Directory | Featured | Top-Tier |
 | Support Tickets | ✓ | ✓ | ✓ | ✓ |
@@ -170,6 +171,8 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ |
 | Token Balances | ✓ | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — | — |
+| Transcript Report History | — | — | — | — |
 | Transcript Tokens | 0 | 30 | 100 | 250 |
 ```
 
@@ -181,15 +184,20 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Feature / Capability | Free | Essential ($9) | Plus ($19) | Premier ($39) |
 |---------------------|------|----------------|------------|----------------|
 | Account / Membership Management | ✓ | ✓ | ✓ | ✓ |
+| Booking Analytics | — | — | — | — |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ | ✓ |
-| Monthly Cost | $0 | $9 | $19 | $39 |
+| Game Analytics | — | — | — | — |
+| Monthly / Package Cost | $0 | $9 | $19 | $39 |
 | Profile Management | ✓ | ✓ | ✓ | ✓ |
+| Profile Visibility | — | — | — | — |
 | Support Tickets | ✓ | ✓ | ✓ | ✓ |
 | Tax Tool Game Tokens | 0 | 5 | 15 | 40 |
 | Tax-Pro ↔ Taxpayer Messaging / Inquiry | ✓ | ✓ | ✓ | ✓ |
 | Token Balances | ✓ | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — | — |
+| Transcript Report History | — | — | — | — |
 | Transcript Tokens | 0 | 2 | 5 | 10 |
 ```
 
@@ -201,11 +209,16 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Feature / Capability | 10-pack ($19) | 25-pack ($29) | 100-pack ($129) |
 |---------------------|----------------|----------------|------------------|
 | Account / Membership Management | ✓ | ✓ | ✓ |
+| Booking Analytics | — | — | — |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ |
+| Game Analytics | — | — | — |
 | Monthly / Package Cost | $19 | $29 | $129 |
 | Profile Management | ✓ | ✓ | ✓ |
+| Profile Visibility | — | — | — |
 | Support Tickets | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 0 | 0 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | — | — | — |
 | Token Balances | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ |
 | Transcript Parser Tool | ✓ | ✓ | ✓ |
@@ -221,14 +234,20 @@ Here’s the **clean 4-table Markdown layout**, grouped by repo like a sane syst
 | Feature / Capability | 30-pack ($9) | 80-pack ($19) | 200-pack ($39) |
 |---------------------|---------------|---------------|----------------|
 | Account / Membership Management | ✓ | ✓ | ✓ |
+| Booking Analytics | — | — | — |
 | Calendar / Scheduling Integration | ✓ | ✓ | ✓ |
 | Directory Profile | ✓ | ✓ | ✓ |
 | Game Analytics | ✓ | ✓ | ✓ |
 | Monthly / Package Cost | $9 | $19 | $39 |
 | Profile Management | ✓ | ✓ | ✓ |
+| Profile Visibility | — | — | — |
 | Support Tickets | ✓ | ✓ | ✓ |
+| Tax Tool Game Tokens | 0 | 0 | 0 |
+| Tax-Pro ↔ Taxpayer Messaging / Inquiry | — | — | — |
 | Token Balances | ✓ | ✓ | ✓ |
 | Tool Usage History | ✓ | ✓ | ✓ |
+| Transcript Parser Tool | — | — | — |
+| Transcript Report History | — | — | — |
 | Transcript Tokens | 30 | 80 | 200 |
 ```
 
