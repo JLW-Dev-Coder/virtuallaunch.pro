@@ -1688,6 +1688,7 @@ const ROUTES = [
           line_items: [{ price: billingObject, quantity: 1 }],
           success_url: successUrl,
           cancel_url: cancelUrl,
+          allow_promotion_codes: 'true',
           metadata: { membership_id: membershipId, plan_key: planKey, billing_interval: billingInterval },
         };
         if (email) sessionPayload.customer_email = email;
