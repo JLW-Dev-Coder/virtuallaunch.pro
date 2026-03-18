@@ -320,6 +320,7 @@ That includes:
 * token balances
 
 Other platforms may **read** these records, reference them, and project them into platform-specific UX, but they should not be the canonical writer unless the governing contract explicitly says otherwise. 
+
 ---
 
 ## Tax Monitor Pro (TMP)
