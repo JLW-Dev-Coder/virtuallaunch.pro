@@ -162,6 +162,12 @@ Major capabilities include:
 | Transcript Report History | — | — | — | — | — | — | — | — | ✓ | ✓ | ✓ | — | — | — |
 | Transcript Tokens | 0 | 30 | 100 | 250 | 0 | 2 | 5 | 10 | 10 | 25 | 100 | 30 | 80 | 200 |
 
+**Notes**
+
+- Booking Analytics = Created / Cancelled / Pending / Rescheduled / Profile Clicks / Profile Views  
+- Game Analytics = Wins / Loss / Score  
+- Top-Tier = TTMP or TTTMP Sponsored Ads
+  
 ---
 
 # Architecture Overview
