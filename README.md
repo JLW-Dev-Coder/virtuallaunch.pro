@@ -338,9 +338,6 @@ TMP should handle canonical records such as:
 
 ```txt
 /r2/tmp_activity/{event_id}.json
-/r2/tmp_entitlements/{account_id}.json
-/r2/tmp_inquiries/{inquiry_id}.json
-/r2/tmp_intake_sessions/{session_id}.json
 /r2/tmp_preferences/{account_id}.json
 ```
 
@@ -365,7 +362,6 @@ TTTMP should handle canonical records such as:
 /r2/tttmp_activity/{event_id}.json
 /r2/tttmp_preferences/{account_id}.json
 /r2/tttmp_tool_sessions/{session_id}.json
-/r2/tttmp_tool_usage/{event_id}.json
 ```
 
 ---
@@ -388,7 +384,6 @@ TTMP should handle canonical records such as:
 ```txt
 /r2/ttmp_activity/{event_id}.json
 /r2/ttmp_preferences/{account_id}.json
-/r2/ttmp_tool_usage/{event_id}.json
 /r2/ttmp_transcript_jobs/{job_id}.json
 /r2/ttmp_transcript_results/{result_id}.json
 ```
