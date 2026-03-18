@@ -2706,8 +2706,408 @@ const ROUTES = [
     },
   },
 ];
+  // -------------------------------------------------------------------------
+  // CHECKOUT
+  // -------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
+  {
+    method: 'POST', pattern: '/v1/checkout/session',
+    handler: async (_method, _pattern, _params, request, env) => {
+      try {
+        const body = await parseBody(request);
+        const { billingObject, planKey, accountId, email } = body ?? {};
+        if (!billingObject || !planKey || !accountId || !email) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'billingObject, planKey, accountId, email are required' }, 400);
+        }
+
+        // Look up or create Stripe customer
+        let stripeCustomerId = null;
+        const existing = await env.DB.prepare(
+          'SELECT stripe_customer_id FROM billing_customers WHERE account_id = ?'
+        ).bind(accountId).first();
+
+        if (existing?.stripe_customer_id) {
+          stripeCustomerId = existing.stripe_customer_id;
+        } else {
+          const customerRes = await fetch('https://api.stripe.com/v1/customers', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ email, 'metadata[account_id]': accountId, 'metadata[plan_key]': planKey }),
+          });
+          if (!customerRes.ok) {
+            const err = await customerRes.json().catch(() => ({}));
+            return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create customer' }, 502);
+          }
+          const customer = await customerRes.json();
+          stripeCustomerId = customer.id;
+          const now = new Date().toISOString();
+          await d1Run(env.DB,
+            'INSERT OR REPLACE INTO billing_customers (account_id, stripe_customer_id, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+            [accountId, stripeCustomerId, email, now, now]
+          );
+        }
+
+        // Create Stripe Checkout session
+        const origin = 'https://virtuallaunch.pro';
+        const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            customer: stripeCustomerId,
+            mode: 'subscription',
+            'line_items[0][price]': billingObject,
+            'line_items[0][quantity]': '1',
+            success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
+            cancel_url: `${origin}/pricing?checkout=cancelled`,
+            'metadata[account_id]': accountId,
+            'metadata[plan_key]': planKey,
+            'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][plan_key]': planKey,
+          }),
+        });
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create checkout session' }, 502);
+        }
+        const session = await sessionRes.json();
+        return json({ ok: true, url: session.url, sessionId: session.id });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Checkout session creation failed' }, 500);
+      }
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // CHECKOUT
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'POST', pattern: '/v1/checkout/session',
+    handler: async (_method, _pattern, _params, request, env) => {
+      try {
+        const body = await parseBody(request);
+        const { billingObject, planKey, accountId, email } = body ?? {};
+        if (!billingObject || !planKey || !accountId || !email) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'billingObject, planKey, accountId, email are required' }, 400);
+        }
+
+        // Look up or create Stripe customer
+        let stripeCustomerId = null;
+        const existing = await env.DB.prepare(
+          'SELECT stripe_customer_id FROM billing_customers WHERE account_id = ?'
+        ).bind(accountId).first();
+
+        if (existing?.stripe_customer_id) {
+          stripeCustomerId = existing.stripe_customer_id;
+        } else {
+          const customerRes = await fetch('https://api.stripe.com/v1/customers', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ email, 'metadata[account_id]': accountId, 'metadata[plan_key]': planKey }),
+          });
+          if (!customerRes.ok) {
+            const err = await customerRes.json().catch(() => ({}));
+            return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create customer' }, 502);
+          }
+          const customer = await customerRes.json();
+          stripeCustomerId = customer.id;
+          const now = new Date().toISOString();
+          await d1Run(env.DB,
+            'INSERT OR REPLACE INTO billing_customers (account_id, stripe_customer_id, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+            [accountId, stripeCustomerId, email, now, now]
+          );
+        }
+
+        // Create Stripe Checkout session
+        const origin = 'https://virtuallaunch.pro';
+        const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            customer: stripeCustomerId,
+            mode: 'subscription',
+            'line_items[0][price]': billingObject,
+            'line_items[0][quantity]': '1',
+            success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
+            cancel_url: `${origin}/pricing?checkout=cancelled`,
+            'metadata[account_id]': accountId,
+            'metadata[plan_key]': planKey,
+            'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][plan_key]': planKey,
+          }),
+        });
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create checkout session' }, 502);
+        }
+        const session = await sessionRes.json();
+        return json({ ok: true, url: session.url, sessionId: session.id });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Checkout session creation failed' }, 500);
+      }
+    },
+  },
+
+  // -------------------------------------------------------------------------
+  // CHECKOUT
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'POST', pattern: '/v1/checkout/session',
+    handler: async (_method, _pattern, _params, request, env) => {
+      try {
+        const body = await parseBody(request);
+        const { billingObject, planKey, accountId, email } = body ?? {};
+        if (!billingObject || !planKey || !accountId || !email) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'billingObject, planKey, accountId, email are required' }, 400);
+        }
+
+        // Look up or create Stripe customer
+        let stripeCustomerId = null;
+        const existing = await env.DB.prepare(
+          'SELECT stripe_customer_id FROM billing_customers WHERE account_id = ?'
+        ).bind(accountId).first();
+
+        if (existing?.stripe_customer_id) {
+          stripeCustomerId = existing.stripe_customer_id;
+        } else {
+          const customerRes = await fetch('https://api.stripe.com/v1/customers', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ email, 'metadata[account_id]': accountId, 'metadata[plan_key]': planKey }),
+          });
+          if (!customerRes.ok) {
+            const err = await customerRes.json().catch(() => ({}));
+            return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create customer' }, 502);
+          }
+          const customer = await customerRes.json();
+          stripeCustomerId = customer.id;
+          const now = new Date().toISOString();
+          await d1Run(env.DB,
+            'INSERT OR REPLACE INTO billing_customers (account_id, stripe_customer_id, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+            [accountId, stripeCustomerId, email, now, now]
+          );
+        }
+
+        // Create Stripe Checkout session
+        const origin = 'https://virtuallaunch.pro';
+        const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            customer: stripeCustomerId,
+            mode: 'subscription',
+            'line_items[0][price]': billingObject,
+            'line_items[0][quantity]': '1',
+            success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
+            cancel_url: `${origin}/pricing?checkout=cancelled`,
+            'metadata[account_id]': accountId,
+            'metadata[plan_key]': planKey,
+            'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][plan_key]': planKey,
+          }),
+        });
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create checkout session' }, 502);
+        }
+        const session = await sessionRes.json();
+        return json({ ok: true, url: session.url, sessionId: session.id });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Checkout session creation failed' }, 500);
+      }
+    },
+  },
+  // -------------------------------------------------------------------------
+  // CHECKOUT
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'POST', pattern: '/v1/checkout/session',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: 'Valid session required' }, 401);
+
+      try {
+        const body = await parseBody(request);
+        const { billingObject, planKey } = body ?? {};
+        if (!billingObject || !planKey) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'billingObject and planKey are required' }, 400);
+        }
+
+        const accountId = session.account_id;
+        const email = session.email;
+
+        // Look up or create Stripe customer
+        let stripeCustomerId = null;
+        const existing = await env.DB.prepare(
+          'SELECT stripe_customer_id FROM billing_customers WHERE account_id = ?'
+        ).bind(accountId).first();
+
+        if (existing?.stripe_customer_id) {
+          stripeCustomerId = existing.stripe_customer_id;
+        } else {
+          const customerRes = await fetch('https://api.stripe.com/v1/customers', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              email,
+              'metadata[account_id]': accountId,
+              'metadata[plan_key]': planKey,
+            }),
+          });
+          if (!customerRes.ok) {
+            const err = await customerRes.json().catch(() => ({}));
+            return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create customer' }, 502);
+          }
+          const customer = await customerRes.json();
+          stripeCustomerId = customer.id;
+          const now = new Date().toISOString();
+          await d1Run(env.DB,
+            'INSERT OR REPLACE INTO billing_customers (account_id, stripe_customer_id, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+            [accountId, stripeCustomerId, email, now, now]
+          );
+        }
+
+        // Create Stripe Checkout session
+        const origin = 'https://virtuallaunch.pro';
+        const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            customer: stripeCustomerId,
+            mode: 'subscription',
+            'line_items[0][price]': billingObject,
+            'line_items[0][quantity]': '1',
+            success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
+            cancel_url: `${origin}/pricing?checkout=cancelled`,
+            'metadata[account_id]': accountId,
+            'metadata[plan_key]': planKey,
+            'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][plan_key]': planKey,
+          }),
+        });
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create checkout session' }, 502);
+        }
+        const stripeSession = await sessionRes.json();
+        return json({ ok: true, url: stripeSession.url, sessionId: stripeSession.id });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Checkout session creation failed' }, 500);
+      }
+    },
+  },
+  // -------------------------------------------------------------------------
+  // CHECKOUT
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'POST', pattern: '/v1/checkout/session',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { session, error } = await requireSession(request, env);
+      if (error) return json({ ok: false, error: 'UNAUTHORIZED', message: 'Valid session required for checkout' }, 401);
+
+      try {
+        const body = await parseBody(request);
+        const { billingObject, planKey } = body ?? {};
+        if (!billingObject || !planKey) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'billingObject and planKey are required' }, 400);
+        }
+
+        const accountId = session.account_id;
+        const email     = session.email;
+
+        // Look up or create Stripe customer
+        let stripeCustomerId = null;
+        const existing = await env.DB.prepare(
+          'SELECT stripe_customer_id FROM billing_customers WHERE account_id = ?'
+        ).bind(accountId).first();
+
+        if (existing?.stripe_customer_id) {
+          stripeCustomerId = existing.stripe_customer_id;
+        } else {
+          const customerRes = await fetch('https://api.stripe.com/v1/customers', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              email,
+              'metadata[account_id]': accountId,
+              'metadata[plan_key]': planKey,
+            }),
+          });
+          if (!customerRes.ok) {
+            const err = await customerRes.json().catch(() => ({}));
+            return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create Stripe customer' }, 502);
+          }
+          const customer = await customerRes.json();
+          stripeCustomerId = customer.id;
+          const now = new Date().toISOString();
+          await d1Run(env.DB,
+            'INSERT OR REPLACE INTO billing_customers (account_id, stripe_customer_id, email, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
+            [accountId, stripeCustomerId, email, now, now]
+          );
+        }
+
+        // Create Stripe Checkout session
+        const origin = 'https://virtuallaunch.pro';
+        const sessionRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            customer: stripeCustomerId,
+            mode: 'subscription',
+            'line_items[0][price]': billingObject,
+            'line_items[0][quantity]': '1',
+            success_url: `${origin}/dashboard?checkout=success&plan=${planKey}`,
+            cancel_url: `${origin}/pricing?checkout=cancelled`,
+            'metadata[account_id]': accountId,
+            'metadata[plan_key]': planKey,
+            'subscription_data[metadata][account_id]': accountId,
+            'subscription_data[metadata][plan_key]': planKey,
+          }),
+        });
+        if (!sessionRes.ok) {
+          const err = await sessionRes.json().catch(() => ({}));
+          return json({ ok: false, error: 'STRIPE_ERROR', message: err?.error?.message ?? 'Failed to create checkout session' }, 502);
+        }
+        const stripeSession = await sessionRes.json();
+        return json({ ok: true, url: stripeSession.url, sessionId: stripeSession.id });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Checkout session creation failed' }, 500);
+      }
+    },
+  },// ---------------------------------------------------------------------------
 // Router
 // ---------------------------------------------------------------------------
 
@@ -2760,3 +3160,6 @@ export default {
     return result.handler(method, result.pattern, result.params, request, env, ctx);
   },
 };
+
+
+
