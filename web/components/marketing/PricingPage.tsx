@@ -106,7 +106,7 @@ export default function PricingPage() {
   const [loadingPlan, setLoadingPlan] = useState(null)
   const [checkoutError, setCheckoutError] = useState(null)
 
-  async function handleCheckout(data) {
+  async function handleCheckout(data: PlanCycle) {
     if (data.price === '0') { window.location.href = '/sign-in'; return; }
     setLoadingPlan(data.planKey)
     setCheckoutError(null)
