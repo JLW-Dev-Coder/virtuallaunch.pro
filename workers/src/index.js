@@ -2800,6 +2800,201 @@ const ROUTES = [
       }
     },
   },
+
+  // -------------------------------------------------------------------------
+  // INQUIRIES
+  // -------------------------------------------------------------------------
+
+  {
+    method: 'POST', pattern: '/v1/inquiries',
+    handler: async (_method, _pattern, _params, request, env) => {
+      try {
+        const body = await parseBody(request);
+        const { inquiryId, firstName, lastName, email, phone } = body ?? {};
+        if (!inquiryId || !firstName || !lastName || !email || !phone) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'inquiryId, firstName, lastName, email, phone are required' }, 400);
+        }
+        const now = new Date().toISOString();
+        const businessTypes = body.businessTypes ?? [];
+        const servicesNeeded = body.servicesNeeded ?? [];
+        // 1. R2 receipt
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `receipts/inquiries/${inquiryId}.json`, {
+          inquiryId, email, event: 'INQUIRY_CREATED', created_at: now,
+        });
+        // 2. R2 canonical
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `inquiries/${inquiryId}.json`, {
+          inquiryId, firstName, lastName, email, phone,
+          businessTypes,
+          irsNoticeReceived: body.irsNoticeReceived ?? '',
+          irsNoticeType: body.irsNoticeType ?? '',
+          irsNoticeDate: body.irsNoticeDate ?? '',
+          budgetPreference: body.budgetPreference ?? '',
+          taxYearsAffected: body.taxYearsAffected ?? '',
+          servicesNeeded,
+          preferredState: body.preferredState ?? '',
+          preferredCity: body.preferredCity ?? '',
+          priorAuditExperience: body.priorAuditExperience ? 1 : 0,
+          membershipInterest: body.membershipInterest ?? '',
+          status: 'new',
+          createdAt: now,
+        });
+        // 3. D1
+        await d1Run(env.DB,
+          `INSERT INTO inquiries (
+            inquiry_id, first_name, last_name, email, phone,
+            business_types, irs_notice_received, irs_notice_type, irs_notice_date,
+            budget_preference, tax_years_affected, services_needed,
+            preferred_state, preferred_city, prior_audit_experience,
+            membership_interest, status, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', ?)`,
+          [
+            inquiryId, firstName, lastName, email, phone,
+            JSON.stringify(businessTypes),
+            body.irsNoticeReceived ?? '',
+            body.irsNoticeType ?? '',
+            body.irsNoticeDate ?? '',
+            body.budgetPreference ?? '',
+            body.taxYearsAffected ?? '',
+            JSON.stringify(servicesNeeded),
+            body.preferredState ?? '',
+            body.preferredCity ?? '',
+            body.priorAuditExperience ? 1 : 0,
+            body.membershipInterest ?? '',
+            now,
+          ]
+        );
+        return json({ ok: true, inquiryId, status: 'created' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Inquiry creation failed' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/inquiries',
+    handler: async (_method, _pattern, _params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const url = new URL(request.url);
+        const status = url.searchParams.get('status');
+        const limit = parseInt(url.searchParams.get('limit') ?? '50', 10);
+        const validStatuses = ['new', 'responded', 'archived'];
+        let rows;
+        if (status && validStatuses.includes(status)) {
+          rows = await env.DB.prepare(
+            `SELECT * FROM inquiries WHERE status = ? ORDER BY created_at DESC LIMIT ?`
+          ).bind(status, limit).all();
+        } else {
+          rows = await env.DB.prepare(
+            `SELECT * FROM inquiries ORDER BY created_at DESC LIMIT ?`
+          ).bind(limit).all();
+        }
+        const inquiries = (rows.results ?? []).map((row) => ({
+          ...row,
+          business_types: (() => { try { return JSON.parse(row.business_types ?? '[]'); } catch { return []; } })(),
+          services_needed: (() => { try { return JSON.parse(row.services_needed ?? '[]'); } catch { return []; } })(),
+        }));
+        return json({ ok: true, inquiries });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch inquiries' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'GET', pattern: '/v1/inquiries/:inquiry_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const obj = await env.R2_VIRTUAL_LAUNCH.get(`inquiries/${params.inquiry_id}.json`);
+        if (!obj) return json({ ok: false, error: 'NOT_FOUND', message: 'Inquiry not found' }, 404);
+        const inquiry = await obj.json();
+        return json({ ok: true, inquiry });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Failed to fetch inquiry' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'PATCH', pattern: '/v1/inquiries/:inquiry_id',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const body = await parseBody(request);
+        const now = new Date().toISOString();
+        const validStatuses = ['new', 'responded', 'archived'];
+        const setClauses = ['updated_at = ?'];
+        const vals = [now];
+        if (body?.status !== undefined) {
+          if (!validStatuses.includes(body.status)) {
+            return json({ ok: false, error: 'VALIDATION', message: `status must be one of: ${validStatuses.join(', ')}` }, 400);
+          }
+          setClauses.push('status = ?');
+          vals.push(body.status);
+        }
+        if (body?.responseMessage !== undefined) {
+          setClauses.push('response_message = ?');
+          vals.push(body.responseMessage);
+        }
+        if (body?.assignedProfessionalId !== undefined) {
+          setClauses.push('assigned_professional_id = ?');
+          vals.push(body.assignedProfessionalId);
+        }
+        await d1Run(env.DB,
+          `UPDATE inquiries SET ${setClauses.join(', ')} WHERE inquiry_id = ?`,
+          [...vals, params.inquiry_id]
+        );
+        const existing = await env.R2_VIRTUAL_LAUNCH.get(`inquiries/${params.inquiry_id}.json`);
+        const current = existing ? await existing.json().catch(() => ({})) : {};
+        const updated = { ...current, updatedAt: now };
+        if (body?.status !== undefined) updated.status = body.status;
+        if (body?.responseMessage !== undefined) updated.responseMessage = body.responseMessage;
+        if (body?.assignedProfessionalId !== undefined) updated.assignedProfessionalId = body.assignedProfessionalId;
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `inquiries/${params.inquiry_id}.json`, updated);
+        return json({ ok: true, inquiryId: params.inquiry_id, status: 'updated' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Inquiry update failed' }, 500);
+      }
+    },
+  },
+
+  {
+    method: 'POST', pattern: '/v1/inquiries/:inquiry_id/respond',
+    handler: async (_method, _pattern, params, request, env) => {
+      const { error } = await requireSession(request, env);
+      if (error) return error;
+      try {
+        const body = await parseBody(request);
+        const { message, professionalName } = body ?? {};
+        if (!message || !message.trim()) {
+          return json({ ok: false, error: 'MISSING_FIELDS', message: 'message is required' }, 400);
+        }
+        const now = new Date().toISOString();
+        await d1Run(env.DB,
+          `UPDATE inquiries SET response_message = ?, status = 'responded', updated_at = ? WHERE inquiry_id = ?`,
+          [message, now, params.inquiry_id]
+        );
+        const existing = await env.R2_VIRTUAL_LAUNCH.get(`inquiries/${params.inquiry_id}.json`);
+        const current = existing ? await existing.json().catch(() => ({})) : {};
+        await r2Put(env.R2_VIRTUAL_LAUNCH, `inquiries/${params.inquiry_id}.json`, {
+          ...current,
+          status: 'responded',
+          responseMessage: message,
+          respondedAt: now,
+          respondedBy: professionalName ?? '',
+          updatedAt: now,
+        });
+        // Wire Twilio/email notification here when ready
+        return json({ ok: true, inquiryId: params.inquiry_id, status: 'responded' });
+      } catch (e) {
+        return json({ ok: false, error: 'INTERNAL_ERROR', message: 'Respond to inquiry failed' }, 500);
+      }
+    },
+  },
 ];
 // ---------------------------------------------------------------------------
 // Router
