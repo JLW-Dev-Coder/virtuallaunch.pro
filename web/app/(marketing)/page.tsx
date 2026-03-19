@@ -4,28 +4,28 @@ import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Virtual Launch Pro — Launch Systems for Tax Professionals',
-  description: 'Virtual Launch Pro gives tax professionals access to the taxpayer service network, transcript tools, booking infrastructure, and a public directory listing.',
+  description: 'Virtual Launch Pro gives tax professionals access to membership management, booking analytics, scheduling, directory profiles, messaging, and token-based tools at multiple plan levels.',
 }
 
 const whyItems = [
-  { title: 'Taxpayer network access', body: 'Connect to an active pool of taxpayers seeking professional help. Starter and above plans include direct access to the taxpayer service pool.' },
-  { title: 'Transcript tools', body: 'Request and manage IRS transcripts directly through the platform. Transcript tokens are included with every paid membership tier.' },
-  { title: 'Booking infrastructure', body: 'Cal.com integration puts scheduling on your public profile automatically. Clients book without the back-and-forth.' },
-  { title: 'Network directory listing', body: 'Your profile appears in the Tax Monitor public network directory. Scale members get featured placement for greater visibility.' },
-  { title: 'Tax tool game tokens', body: 'Access tax resolution and planning tools through a token-based system. Every paid tier includes monthly token grants.' },
-  { title: 'Profile management', body: 'Build a complete professional profile with credentials, services, bio, and contact info that appears on your public directory listing.' },
+  { title: 'Membership management', body: 'Manage your account, profile, and membership settings with ease. All plans include core management features.' },
+  { title: 'Transcript tools', body: 'Request and manage IRS transcripts directly through the platform. Transcript tokens are included with Starter, Scale, and Advanced plans.' },
+  { title: 'Booking analytics & scheduling', body: 'Integrated scheduling and analytics help you manage appointments and track client engagement across all plans.' },
+  { title: 'Directory profile & visibility', body: 'Your profile appears in the public directory. Scale and Advanced plans receive featured or top-tier placement for greater visibility.' },
+  { title: 'Tax tool game tokens', body: 'Access tax resolution and planning tools with tokens. Starter, Scale, and Advanced plans include monthly token allocations.' },
+  { title: 'Profile management', body: 'Build a complete professional profile with credentials, services, bio, and contact info that appears in the directory.' },
 ]
 
 const offers = [
-  { tier: 'STARTER', title: 'Network access, clean setup', featured: false, body: 'For solo tax professionals who need taxpayer pool access, a directory listing, and token tools without overcommitting.', items: ['Access to taxpayer service pool.', 'Network directory listing.', 'Tax tool game token and transcript token access.'] },
-  { tier: 'SCALE', title: 'Featured network placement', featured: true, body: 'For active tax professionals who want featured visibility, priority access to taxpayer cases, and full token capacity.', items: ['Featured network listing for greater visibility.', 'Priority taxpayer pool access.', 'Tax tool game token and transcript token access.'] },
-  { tier: 'ADVANCED', title: 'Top-tier practice growth', featured: false, body: 'For high-volume tax practices that need early case access, top-tier network promotion, and maximum throughput.', items: ['Early taxpayer case access before the general pool.', 'Top-tier network promotion.', 'Tax tool game token and transcript token access.'] },
+  { tier: 'STARTER', title: 'Directory access & token tools', featured: false, body: 'For solo tax professionals who want a directory profile, basic messaging, and monthly token allocations.', items: ['Directory profile listing.', 'Messaging (Pro ↔ Taxpayer).', '30 Tax Tool Game Tokens & 30 Transcript Tokens per month.'] },
+  { tier: 'SCALE', title: 'Featured directory & more tokens', featured: true, body: 'For growing practices that want featured directory placement and higher monthly token limits.', items: ['Featured directory profile.', 'Messaging (Pro ↔ Taxpayer).', '120 Tax Tool Game Tokens & 100 Transcript Tokens per month.'] },
+  { tier: 'ADVANCED', title: 'Top-tier visibility & max tokens', featured: false, body: 'For high-volume practices needing top-tier directory placement and the highest monthly token limits.', items: ['Top-tier directory profile.', 'Messaging (Pro ↔ Taxpayer).', '300 Tax Tool Game Tokens & 250 Transcript Tokens per month.'] },
 ]
 
 const audiences = [
-  { title: 'Solo tax professionals', body: 'Get listed in the network, access the taxpayer service pool, and book clients without building your own tech stack.' },
-  { title: 'Small tax firms', body: 'Equip your team with transcript tools, booking infrastructure, and a professional network presence that scales with client volume.' },
-  { title: 'High-volume tax practices', body: 'Unlock early taxpayer case access, top-tier network promotion, and maximum token capacity to support a full caseload.' },
+  { title: 'Solo tax professionals', body: 'Get a directory profile, manage your practice, and access essential tools without building your own tech stack.' },
+  { title: 'Small tax firms', body: 'Equip your team with transcript tools, booking analytics, and a professional directory presence that scales with client volume.' },
+  { title: 'High-volume tax practices', body: 'Unlock top-tier directory placement and maximum token capacity to support a full caseload.' },
 ]
 
 const faqs = [
@@ -48,7 +48,7 @@ export default function HomePage() {
             <span className="bg-gradient-to-r from-orange-400 to-amber-500 bg-clip-text text-transparent">tax professionals.</span>
           </h1>
           <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-slate-400 md:text-2xl">
-            Join the taxpayer service network, access transcript tools, and get listed in the Tax Monitor directory. Pick the membership that fits your practice.
+            Join Virtual Launch Pro to access membership management, booking analytics, scheduling, directory profiles, messaging, and token-based tools. Pick the membership that fits your practice.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a href="#pricing" className="inline-block rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-4 text-lg font-semibold text-slate-950 shadow-lg shadow-amber-500/25 transition-all duration-200 hover:scale-105 hover:from-amber-400 hover:to-amber-500">View packages →</a>
@@ -61,10 +61,10 @@ export default function HomePage() {
         <div className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.12)] md:p-8">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
-              { tier: 'FREE', title: 'Join the network', body: 'Get started, build your profile, and access platform infrastructure before stepping into paid membership.' },
-              { tier: 'STARTER', title: 'Network access', body: 'Access the taxpayer service pool, get listed in the directory, and start using token tools.' },
-              { tier: 'SCALE', title: 'Featured placement', body: 'Get featured in the network directory, priority pool access, and full token capacity.', highlight: true },
-              { tier: 'ADVANCED', title: 'High-volume practice', body: 'Early case access, top-tier promotion, and maximum token throughput for busy practices.' },
+              { tier: 'FREE', title: 'Get started', body: 'Build your profile and access core platform features. Upgrade anytime for more tools.' },
+              { tier: 'STARTER', title: 'Directory & tokens', body: 'Get a directory profile, messaging, and monthly token allocations for tax tools and transcripts.' },
+              { tier: 'SCALE', title: 'Featured & more tokens', body: 'Get featured directory placement and higher monthly token limits for growing practices.', highlight: true },
+              { tier: 'ADVANCED', title: 'Top-tier & max tokens', body: 'Get top-tier directory placement and the highest monthly token limits for high-volume practices.' },
             ].map((p) => (
               <div key={p.tier} className={`rounded-2xl p-6 ${'highlight' in p && p.highlight ? 'border border-orange-500/40 bg-orange-500/10' : 'border border-white/10 bg-[#070a10]/60'}`}>
                 <div className="text-xs font-semibold tracking-widest text-orange-400">{p.tier}</div>
@@ -81,10 +81,10 @@ export default function HomePage() {
           <div className="mx-auto max-w-4xl text-center mb-12">
             <p className="text-xs font-semibold tracking-widest text-orange-400">WHY VIRTUAL LAUNCH PRO WORKS</p>
             <h2 className="mt-3 text-4xl font-extrabold md:text-5xl">Built for tax professionals, not generic service firms</h2>
-            <p className="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">Virtual Launch Pro is built around the tools tax professionals actually use — taxpayer network access, IRS transcript requests, Cal.com booking, and a professional directory listing that drives inbound cases.</p>
+            <p className="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">Virtual Launch Pro is built around the tools tax professionals actually use — membership management, transcript requests, booking analytics, and a professional directory listing that drives inbound cases.</p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {whyItems.map((item) => (
+            {[whyItems.map](http://whyItems.map)((item) => (
               <div key={item.title} className="rounded-2xl border border-white/10 bg-white/5 p-8 shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
                 <h3 className="text-lg font-extrabold mb-3">{item.title}</h3>
                 <p className="text-sm text-white/70">{item.body}</p>
@@ -105,13 +105,13 @@ export default function HomePage() {
             <p className="mx-auto mt-5 max-w-2xl text-base text-white/70">Start with the membership that matches your volume, then upgrade when your caseload justifies it.</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {offers.map((o) => (
+            {[offers.map](http://offers.map)((o) => (
               <article key={o.tier} className={`rounded-2xl p-8 shadow-[0_10px_30px_rgba(0,0,0,0.12)] ${o.featured ? 'border-2 border-orange-500/70 bg-gradient-to-b from-white/8 to-white/5' : 'border border-white/10 bg-white/5'}`}>
                 <div className="text-sm font-semibold tracking-widest text-orange-400">{o.tier}</div>
                 <h3 className="mt-3 text-2xl font-extrabold">{o.title}</h3>
                 <p className="mt-4 text-sm text-white/70">{o.body}</p>
                 <ul className="mt-6 space-y-3 text-sm text-white/75">
-                  {o.items.map((item) => (
+                  {[o.items.map](http://o.items.map)((item) => (
                     <li key={item} className="flex items-start gap-3">
                       <span className="mt-1 h-1.5 w-1.5 rounded-full bg-orange-500 shrink-0" aria-hidden="true" />
                       <span>{item}</span>
@@ -156,7 +156,7 @@ export default function HomePage() {
             <p className="mx-auto mt-5 max-w-2xl text-base text-white/70">Virtual Launch Pro supports tax professionals at every stage — solo practitioners, small firms, and high-volume practices that need real infrastructure to grow.</p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
-            {audiences.map((a) => (
+            {[audiences.map](http://audiences.map)((a) => (
               <div key={a.title} className="rounded-2xl border-2 border-amber-500 bg-amber-500/10 p-8 backdrop-blur-sm">
                 <h3 className="text-lg font-extrabold text-white mb-3">{a.title}</h3>
                 <p className="text-sm text-white/70">{a.body}</p>
@@ -175,7 +175,7 @@ export default function HomePage() {
             <h2 className="text-3xl font-extrabold md:text-4xl">Frequently asked questions</h2>
           </div>
           <div className="mx-auto max-w-3xl space-y-4">
-            {faqs.map((f) => (
+            {[faqs.map](http://faqs.map)((f) => (
               <details key={f.q} className="group rounded-2xl border border-white/10 bg-white/5 p-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between text-left font-semibold">
                   {f.q}<span className="ml-4 text-white/60 transition-transform group-open:rotate-180">▾</span>
